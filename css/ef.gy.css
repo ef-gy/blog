@@ -1,0 +1,197 @@
+*
+{
+	padding: 0;
+	margin: 0;
+/*
+        stroke-width: 0.001
+*/
+}
+
+html
+{
+}
+
+body
+{
+	font-family: Arial, sans-serif;
+	font-size: 14px;
+	padding: 20px;
+}
+
+h1, h2, h3, h4, h5, h6
+{
+	font-family: Verdana, Helvetica, sans-serif;
+	font-weight: normal;
+	margin: 0.5em 0.5em 0.5em 0;
+}
+
+h1
+{
+	font-size: 1em;
+	border-bottom: 1px solid black;
+	margin: -20px -20px 0.5em -20px;
+	padding: 10px 20px 0.5em 20px;
+	font-weight: bold;
+}
+
+h2
+{
+	font-size: 1.4em;
+}
+
+h3
+{
+	font-size: 1.3em;
+}
+
+h4
+{
+	font-size: 1.2em;
+}
+
+h5
+{
+	font-size: 1.1em;
+}
+
+h6
+{
+	font-size: 1.0em;
+}
+
+h1 + p
+{
+	font-size: 1em;
+	margin: -2.2em -20px 20px -20px;
+	padding: 0 20px 0.5em 20px;
+	text-align: right;
+}
+
+h1 + p + ul
+{
+        margin: -20px -20px 0.5em -20px;
+	padding: 0.2em 15px;
+}
+
+h1 + p + ul li
+{
+	display: inline-block;
+	padding: 5px;
+	font-size: 0.9em;
+	color: #666;
+}
+
+h1 + p + ul li + li + li
+{
+	float: right;
+}
+
+div img
+{
+	width: 100%;
+}
+
+div object
+{
+	width: 39em;
+	height: 39em;
+}
+
+div
+{
+	margin: 2em;
+	width: 40em;
+	float: left;
+}
+
+div h2
+{
+	font-size: 1em;
+	margin: 0;
+	padding: 5px;
+	font-weight: bold;
+	text-align: right;
+	border-bottom: 1px solid black;
+}
+
+div p
+{
+	padding: 0.5em;
+}
+
+div + div
+{
+	float: right;
+	width: 20em;
+}
+
+p.explanation
+{
+	display: none;
+	font-size: 0.9em;
+	color: #666;
+}
+
+div:hover p.explanation
+{
+	display: block;
+}
+
+a
+{
+	color: #222;
+	text-decoration: underline;
+}
+
+a:hover
+{
+	color: #999;
+}
+
+p, code
+{
+	margin: 0.5em 0;
+}
+
+blockquote
+{
+    width: 50em;
+    margin: 0.5em auto;
+}
+
+blockquote pre
+{
+    width: 46em;
+    margin: 0.5em auto;
+}
+
+blockquote pre:before
+{
+    display: block;
+    content: "\201c";
+    font-size: 5em;
+    color: #ccc;
+    margin: 0 -0.5em;
+}
+
+blockquote pre:after
+{
+    display: block;
+    content: "\201d";
+    font-size: 5em;
+    color: #ccc;
+    text-align: right;
+    margin: 0 -0.5em;
+}
+
+blockquote[cite]:after {
+    display: block;
+    content: attr(cite);
+    width: 40em;
+    color: #999;
+    margin: -4em 0 0 7em;
+    font-style: italic;
+    text-align: right;
+}
+
+

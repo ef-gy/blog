@@ -1,0 +1,139 @@
+# This is the configuration file for http://ef.gy/
+# Evidently, this server is running nginx with the native XSLT processor.
+
+server {
+
+	listen   80;
+
+	server_name  ef.gy;
+
+	access_log  /var/log/nginx/ef.gy.access.log;
+
+	xslt_types application/xhtml+xml image/svg+xml;
+
+	root /srv/http/ef.gy;
+
+	location / {
+		add_header Vary Accept;
+
+        if ($uri ~ ^/\.git)
+        {
+            break;
+        }
+
+		if ($http_accept ~* application/xhtml\+xml)
+		{
+			rewrite ^/$ /xhtml/fortune redirect;
+			rewrite ^(.*)$ /xhtml$1 redirect;
+		}
+
+		rewrite ^/$ /html/fortune redirect;
+		rewrite ^(.*)$ /html$1 redirect;
+	}
+
+	location /.git {
+        error_page 403 /source-code;
+	}
+
+	location /css {
+		try_files $uri.css $uri =404;
+	}
+
+	location /js {
+		try_files $uri.js $uri =404;
+	}
+
+	location /svg {
+		alias /srv/http/ef.gy;
+		try_files $uri.xml $uri.svg $uri $uri.cache.xml =404;
+
+		xslt_stylesheet /srv/http/ef.gy/xslt/js-disabled.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/svg-style-ef.gy.xslt;
+	}
+
+	location /svg+js {
+		alias /srv/http/ef.gy;
+		try_files $uri.xml $uri.svg $uri $uri.cache.xml =404;
+
+		xslt_stylesheet /srv/http/ef.gy/xslt/js-enabled.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/svg-style-ef.gy.xslt;
+	}
+
+	location /xhtml {
+		alias /srv/http/ef.gy;
+		try_files $uri.xml $uri.xhtml $uri $uri.cache.xml =404;
+
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
+	}
+
+	location /xhtml+js {
+		alias /srv/http/ef.gy;
+		try_files $uri.xml $uri.xhtml $uri $uri.cache.xml =404;
+
+		xslt_stylesheet /srv/http/ef.gy/xslt/js-enabled.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
+	}
+
+	location /html {
+		alias /srv/http/ef.gy;
+		try_files $uri.xml $uri.xhtml $uri $uri.cache.xml =404;
+
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/html-post-process.xslt;
+	}
+
+	location /html+js {
+		alias /srv/http/ef.gy;
+		try_files $uri.xml $uri.xhtml $uri $uri.cache.xml =404;
+
+		xslt_stylesheet /srv/http/ef.gy/xslt/js-enabled.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/html-post-process.xslt;
+	}
+
+	location /svg/fortune {
+		proxy_pass http://unix:/var/tmp/fortune.socket:/fortune;
+
+		xslt_stylesheet /srv/http/ef.gy/xslt/js-disabled.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/svg-style-ef.gy.xslt;
+	}
+
+	location /svg+js/fortune {
+		proxy_pass http://unix:/var/tmp/fortune.socket:/fortune;
+
+		xslt_stylesheet /srv/http/ef.gy/xslt/js-enabled.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/svg-style-ef.gy.xslt;
+	}
+
+	location /xhtml/fortune {
+		proxy_pass http://unix:/var/tmp/fortune.socket:/fortune;
+
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-fortune.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
+	}
+
+	location /xhtml+js/fortune {
+		proxy_pass http://unix:/var/tmp/fortune.socket:/fortune;
+
+		xslt_stylesheet /srv/http/ef.gy/xslt/js-enabled.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-fortune.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
+	}
+
+	location /html/fortune {
+		proxy_pass http://unix:/var/tmp/fortune.socket:/fortune;
+
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-fortune.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/html-post-process.xslt;
+	}
+
+	location /html+js/fortune {
+		proxy_pass http://unix:/var/tmp/fortune.socket:/fortune;
+
+		xslt_stylesheet /srv/http/ef.gy/xslt/js-enabled.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-fortune.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/html-post-process.xslt;
+	}
+}
