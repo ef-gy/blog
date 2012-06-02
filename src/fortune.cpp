@@ -228,9 +228,9 @@ class processFortune
             snprintf (nbuf, 20, "%i", id);
             string sc = string(c);
 
+            replace_all (sc, "&", "&amp;");
             replace_all (sc, "<", "&lt;");
             replace_all (sc, ">", "&gt;");
-            replace_all (sc, "&", "&amp;");
 
             a.reply (200,
                      "Content-Type: text/xml; charset=utf-8\r\n",
