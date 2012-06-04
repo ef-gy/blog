@@ -40,8 +40,8 @@
   <xsl:template match="xhtml:body">
     <xsl:copy>
       <xsl:apply-templates select="@*" />
-      <h1>http://ef.gy/ :: <xsl:value-of select="/xhtml:html/xhtml:head/xhtml:title"/></h1>
-      <p>The random hackings of the MAD man.</p>
+      <h1><xsl:value-of select="/xhtml:html/xhtml:head/xhtml:title"/></h1>
+      <p>http://ef.gy/ :: The random hackings of the MAD man.</p>
       <ul>
         <li><a href="fortune">Fortune</a></li>
         <li><a href="irc://irc.freenode.org/kyuba">IRC</a></li>
