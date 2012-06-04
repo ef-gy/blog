@@ -228,6 +228,19 @@ class processFortune
             snprintf (nbuf, 20, "%i", id);
             string sc = string(c);
 
+            /* note: this escaping is not exactly efficient, but it's fairly simple
+               and the strings are fairly short, so it shouldn't be much of an issue. */
+            for (char i = 0; i < 0x20; i++)
+            {
+                if ((i == '\n') || (i == '\t'))
+                {
+                    continue;
+                }
+                const char org [2] = { i, 0 };
+                const char rep [3] = { '^', (('A'-1) + i), 0 };
+                replace_all (sc, org, rep);
+            }
+
             sc = "<![CDATA[" + sc + "]]>";
 
             a.reply (200,
@@ -238,6 +251,7 @@ class processFortune
                      + c.file + "'>"
                      + sc
                      + "</fortune>");
+
             return true;
         }
 };
