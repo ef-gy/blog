@@ -41,13 +41,21 @@
     <xsl:copy>
       <xsl:apply-templates select="@*" />
       <h1><xsl:value-of select="/xhtml:html/xhtml:head/xhtml:title"/></h1>
-      <p>http://ef.gy/ :: The random hackings of the MAD man.</p>
       <ul>
+        <li><a href="about">About</a></li>
         <li><a href="fortune">Fortune</a></li>
+        <li><a href="articles">Articles</a></li>
         <li><a href="irc://irc.freenode.org/kyuba">IRC</a></li>
         <li><a href="source-code">Source Code</a></li>
       </ul>
       <xsl:apply-templates select="node()" />
+      <xsl:if test="//xhtml:meta[@name='author'][@content='Magnus Achim Deininger']"><address>
+        <a rel="author" href="about">
+          <img src="/jpeg/mdeininger" alt="Magnus Achim Deininger" />
+          <span>Written by <span>Magnus Achim Deininger</span>.</span>
+          Magnus Achim Deininger is a <del>sellsword</del> freelance programmer specialising in peculiar problems, such as embedded development, formal language theory and experiments in minimalistic design. This website serves as his personal journal and testing ground for unusual and/or crazy ideas.
+        </a>
+      </address></xsl:if>
     </xsl:copy>
   </xsl:template>
 

@@ -12,7 +12,7 @@ body
 {
 	font-family: Arial, sans-serif;
 	font-size: 14px;
-	padding: 20px;
+	padding: 3.5em 20px 20px 20px;
 }
 
 h1, h2, h3, h4, h5, h6
@@ -24,18 +24,33 @@ h1, h2, h3, h4, h5, h6
 
 h1
 {
+    position: fixed;
     display: inline-block;
 	font-size: 1em;
 	border-bottom: 1px solid black;
-	margin: -20px -20px 0.5em -20px;
+	margin: -3.5em -20px 0.5em -20px;
 	padding: 10px 20px 0.5em 20px;
 	font-weight: bold;
+    white-space:nowrap;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    z-Index: 2;
+}
+h1:after
+{
+    content: " ";
+    display: inline-block;
+    height: 2em;
+    width: 0.75em;
+    border: 1px solid black;
+    margin: -30px -20px -0.75em 1em;
+    background: blue;
 }
 
 h2
 {
 	font-size: 1.4em;
-    margin: 1.5em 0 1.5em 0;
+    margin: 2em 0 1.5em 0;
 }
 h2:before
 {
@@ -46,6 +61,11 @@ h2:before
     border: 1px solid black;
     background: blue;
     margin: 0.1em 0.5em -0.2em 0;
+}
+
+h2 ~ h2
+{
+    margin: 1.5em 0;
 }
 
 h3
@@ -79,23 +99,35 @@ h6
 	font-size: 1.0em;
 }
 
-h1 + p
+h1:hover + ul,
+h1 + ul:hover
 {
-    display: inline-block;
-	font-size: 1em;
-	margin: -2.2em -20px 20px 1em;
-	padding: 0 20px 0.5em 20px;
-	text-align: right;
-    color: #ccc;
+    position: fixed;
+    background: white;
+    background: rgba(255,255,255,0.9);
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+    border-top: 1px solid #ddd;
+    z-Index: 3;
 }
 
-h1 + p + ul
+h1 + ul
 {
-    margin: -20px -20px 0.5em -20px;
+    position: absolute;
+    display: block;
+    margin: -1.1em -20px 0.5em -20px;
 	padding: 0.2em 15px;
+    border-top: 1px solid white;
+    z-Index: 1;
+}
+h1 + ul:before
+{
+    content: "http://ef.gy/";
+    padding: 0.1em;
+    color: #999;
 }
 
-h1 + p + ul li
+h1 + ul li
 {
 	display: inline-block;
 	padding: 5px;
@@ -103,71 +135,34 @@ h1 + p + ul li
 	color: #666;
 }
 
-h1 + p + ul li + li + li
-{
-	float: right;
-}
-
-div img
-{
-	width: 100%;
-}
-
-div object
-{
-	width: 39em;
-	height: 39em;
-}
-
-div
-{
-	margin: 2em;
-	width: 40em;
-	float: left;
-}
-
-div h2
-{
-	font-size: 1em;
-	margin: 0;
-	padding: 5px;
-	font-weight: bold;
-	text-align: right;
-	border-bottom: 1px solid black;
-}
-
-div p
-{
-	padding: 0.5em;
-}
-
-div + div
-{
-	float: right;
-	width: 20em;
-}
-
-p.explanation
-{
-	display: none;
-	font-size: 0.9em;
-	color: #666;
-}
-
-div:hover p.explanation
-{
-	display: block;
-}
-
 a
 {
 	color: #222;
-	text-decoration: underline;
+}
+
+h1 + ul a
+{
+	text-decoration: none;
+}
+h1 + ul a:before
+{
+    content: " ";
+    display: inline-block;
+    width: 0.5em;
+    height: 0.5em;
+    margin: 0.15em 0.25em;
+    border: 1px solid black;
 }
 
 a:hover
 {
 	color: #999;
+}
+h1 + ul a:hover:before
+{
+    height: 0.8em;
+    margin: 0 0.25em;
+    background: blue;
 }
 
 p, code
@@ -178,6 +173,11 @@ p, code
 blockquote
 {
     width: 50em;
+    margin: 3.5em auto;
+}
+
+h2 ~ blockquote
+{
     margin: 0.5em auto;
 }
 
@@ -227,4 +227,150 @@ pre code
     border-left: 2px solid blue;
     margin: 0 0 0 1em;
     padding: 0 0 0 1em;
+}
+
+address
+{
+    display: block;
+    width: 38em;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    padding: 0.5em 3em;
+    margin: 2em 0;
+    font-style: normal;
+}
+
+address img
+{
+    float: right;
+    border: 0.5em solid white;
+    padding: 0;
+    margin: -0.5em 0.5em;
+    height: 9em;
+}
+
+address ul li
+{
+    display: inline-block;
+}
+
+address a
+{
+    display: block;
+    height: 9em;
+    padding: 0.5em 3em;
+    margin: -0.5em -3em;
+    text-decoration: none;
+}
+
+address a:hover
+{
+    color: black;
+    background: #eee;
+}
+
+address a:before
+{
+    display: none;
+}
+
+address a span
+{
+    display: block;
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #999;
+    margin: 0 0 0.5em 0;
+}
+
+address a span span
+{
+    display: inline;
+    font-size: 1em;
+    color: black;
+    margin: 0;
+}
+
+div.figure
+{
+    float: right;
+    border: 0.4em solid white;
+}
+
+th
+{
+    text-align: right;
+    vertical-align: top;
+}
+
+th, td
+{
+    padding: 0 0.3em;
+}
+
+ul li
+{
+    display: block;
+}
+
+body#feed h2 + ul
+{
+    display: inline;
+    margin: 0;
+}
+
+body#feed h2 + ul li
+{
+    display: block;
+    width: 23em;
+    height: 10em;
+    padding: 1em;
+    margin: 1.5em;
+    float: left;
+}
+
+body#feed h2
+{
+    display: block;
+    width: 18.6em;
+    height: 1.8em;
+    padding: 4em 1em;
+    margin: 1.5em;
+    font-size: 1em;
+    float: left;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+body#feed h2:before
+{
+    display: none;
+}
+
+body#feed h2 + ul li a
+{
+    display: block;
+    text-decoration: none;
+    padding: 1em;
+    height: 10em;
+    margin: -1em;
+    border: 1px solid #ccc;
+}
+
+body#feed h2 + ul li a span
+{
+    display: block;
+    color: #444;
+    font-weight: bold;
+    font-size: 1.2em;
+    margin: 0 0 1em 0;
+}
+
+body#feed h2 + ul li a:hover
+{
+    background: #dda;
+    color: #444;
 }

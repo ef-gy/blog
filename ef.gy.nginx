@@ -9,7 +9,7 @@ server {
 
 	access_log  /var/log/nginx/ef.gy.access.log;
 
-	xslt_types application/xhtml+xml image/svg+xml;
+	xslt_types application/xhtml+xml application/atom+xml image/svg+xml;
 
 	root /srv/http/ef.gy;
 
@@ -39,8 +39,27 @@ server {
 		try_files $uri.css $uri =404;
 	}
 
+	location /png {
+		try_files $uri.png $uri =404;
+	}
+
+	location /jpeg {
+		try_files $uri.jpeg $uri.jpg $uri =404;
+	}
+
+	location /pdf {
+		try_files $uri.pdf $uri =404;
+	}
+
 	location /js {
 		try_files $uri.js $uri =404;
+	}
+
+	location /atom {
+		alias /srv/http/ef.gy;
+		try_files $uri.atom $uri =404;
+
+		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
 	}
 
 	location /svg {
@@ -61,32 +80,40 @@ server {
 
 	location /xhtml {
 		alias /srv/http/ef.gy;
-		try_files $uri.xml $uri.xhtml $uri $uri.cache.xml =404;
+		try_files $uri.xml $uri.xhtml $uri.atom $uri $uri.cache.xml =404;
 
+		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-transcode-atom.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
 	}
 
 	location /xhtml+js {
 		alias /srv/http/ef.gy;
-		try_files $uri.xml $uri.xhtml $uri $uri.cache.xml =404;
+		try_files $uri.xml $uri.xhtml $uri.atom $uri $uri.cache.xml =404;
 
 		xslt_stylesheet /srv/http/ef.gy/xslt/js-enabled.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-transcode-atom.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
 	}
 
 	location /html {
 		alias /srv/http/ef.gy;
-		try_files $uri.xml $uri.xhtml $uri $uri.cache.xml =404;
+		try_files $uri.xml $uri.xhtml $uri.atom $uri $uri.cache.xml =404;
 
+		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-transcode-atom.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/html-post-process.xslt;
 	}
 
 	location /html+js {
 		alias /srv/http/ef.gy;
-		try_files $uri.xml $uri.xhtml $uri $uri.cache.xml =404;
+		try_files $uri.xml $uri.xhtml $uri.atom $uri $uri.cache.xml =404;
 
 		xslt_stylesheet /srv/http/ef.gy/xslt/js-enabled.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-transcode-atom.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/html-post-process.xslt;
 	}

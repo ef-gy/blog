@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Using nginx as a forward proxy server for fun and glory</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="How to fix poor web design and other annoyances by transparently applying XSLT stylesheets to pages you visit using an nginx forward proxy." />
+<meta name="date" content="2012-06-05T15:00:00Z" />
+<meta name="mtime" content="2012-06-05T15:00:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="using-nginx-as-a-proxy-server" />
+</head>
+<body>
+<h1>Preface</h1>
+<p>I like XSLT. I really like XSLT. I'd say I'm loving it, except I hate modern technology in general, so it's more a thing of really not hating it all that much. Still, it's probably the most useful and powerful W3C recommendation at the moment. For those of you who don't know, it's a declarative, turing complete, XML-based language, which lets you transform XML-based documents to other text-based documents. It's like a template engine on steroids, or DSSSL with interpeters that won't constantly blow up in your face.</p>
+<p>By extension, I also really like nginx. Here's a webserver that lets you serve content rather efficiently while still having built in support for applying XSLT transformations on the fly. Even cascaded. With XSLT being turing complete, you get to do geeky fun stuff like transparently transforming XML data files to proper XHTML. Or you could rearrange plain XHTML to presentable XHTML.</p>
+<p>On the other hand, I absolutely loathe current web design trends. I hate it when you try to read an article, and the content width is forced by the author for no apparent reason whatsoever. I also loathe when their code is bloated and fugly, because I'm on a slow link at home. Further, I also loathe when some of those little shits serve half a dozen video advertisements at the same bloody time. Given my constant exposure to the web, I dare say stuff like that is the reason why I hate modern tech in general. At best it makes my browser sluggish when I happen to be sitting at my iMac. At worst it crashes the web browser because the Flash plugin or the Java VM can't handle all that crap. Or it needlessly drains the battery on my laptop. Or my iPod.</p>
+<p>Wouldn't it be great if you could filter this crap before it ever got to your computer? I mean, if you could put a proxy server on your web server and filter everything there. Given that I like XSLT, I'd figure it'd be pretty awesome if we could use that for the purpose, because it could be used to clean up and rearrange the whole page while it's filtering. Sadly, web proxy authors do not seem to share my enthusiasm for XSLT... or proper filtering in general, for that matter. Or do they?</p>
+<p>All the forward proxy software I looked at either had their own, limited filter engine or no content filtering at all. None of them allowed for an XSLT stylesheet to be used, or for an external programme to perform the filtering. The closest I got was some proxies that allowed an external programme to test whether a URL should be served at all. There is, however, nginx, which is quite often used as a load balancing front end for other, slower web servers. Irrespective of why people wouldn't just use nginx instead of the slower backends, this does point to one very interesting feature of nginx: its proxy module. Most web servers can talk to backend servers via, e.g. FastCGI. nginx can also talk with backend servers via HTTP. And it is able to filter this content through XSLT stylesheets.</p>
+<p>While the feature is only designed for use as a reverse proxy, i.e. for clients that talk "normal" HTTP and think they're contacting the origin server, maybe we can abuse it to do the inverse? Turns out we can!</p>
+<h1>Using nginx to serve as a forward HTTP proxy</h1>
+<p>Important note: We're not using nginx as a reverse proxy, we're using it as a "regular" HTTP proxy. "Regular" as in the kind you set in your browser's network options. This is called a "forward proxy". If you google for how to use nginx as a proxy, virtually all hits will tell you how to use it as a reverse proxy. This is different. Now that we've cleared that up, let's get started!</p>
+<h2>Installing nginx</h2>
+<p>First things first: we need to install nginx. If you're on a sane operating system, you could just use your operating system's package manager. The thing is, as of the time of this writing, nginx's XSLT module can only handle well formed XML as input. Sadly, well formed XML is rather scarce on the net, because web browsers are rather lenient about enforcing XML rules. nginx's XSLT module is based on libxslt, however, which is actually able to handle typical HTML as input as well.</p>
+<p>Fortunately, there is a patchset for this. There's talk about it on the nginx mailing list, so with a bit of luck it'll be included in the main release sometime soon. For now, we can just <a href="https://bitbucket.org/lrowe/nginx-xslt-html-parser">grab the nginx fork with this patch applied</a>. Note that you only need to do this if you care for the XSLT filtering and you'd like to be able to filter HTML and shoddy XHTML. If you know you'll only be filtering proper XML, you can just grab a binary package or the regular distribution tarball.</p>
+<p>Assuming you will compile from source, open a terminal, cd to the appropriate directory and use the typical compilation procedure:</p>
+<pre><code>$ ./configure --prefix=$HOME --with-http_xslt_module
+$ make
+$ make install</code></pre>
+<p>You may need to use su or sudo for the last step, depending on which --prefix you chose. Nginx will work fine from your home directory, however.</p>
+<p>If you chose to use a binary package, it should come with instructions on how to install so follow those.</p>
+<h2>Configuring nginx as a forward proxy</h2>
+<p>Open the nginx configuration file in a text editor. If you went with the $HOME directory above, then you should edit the file $HOME/conf/nginx.conf. If you used a binary installer from your distribution, it's probably in /etc/nginx/nginx.conf or similar.</p>
+<pre><code>$ vim $HOME/conf/nginx.conf</code></pre>
+<p>Substitute vim for your favourite text editor. Also, as above you may need to use sudo if it's installed anywhere but your home directory.</p>
+<p>You need to either replace the "normal" http server section or create a new one, depending on whether you'd also like to use nginx as a regular web server. The following snippet, which should go in your http section, will create a normal web proxy on port 8080:</p>
+<pre><code>    server {
+        listen       8080;
+
+        location / {
+            resolver 8.8.8.8;
+            proxy_pass http://$http_host$uri$is_args$args;
+        }
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+    }</code></pre>
+<p>For a plain http proxy, your configuration file should now look something like this:</p>
+<pre><code>worker_processes  1;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    sendfile        on;
+    keepalive_timeout  65;
+
+    gzip  on;
+
+    server {
+        listen       8080;
+
+        location / {
+            resolver 8.8.8.8;
+            proxy_pass http://$http_host$uri$is_args$args;
+        }
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+    }
+}</code></pre>
+<p>Fairly simple so far, right? Save the file, run nginx and verify that it's working by setting your browser's http proxy to localhost, port 8080, and surfing to, e.g. google.com. You can verify that your browser was using nginx by opening the logs/access.log file, which should list the requests your browser sent. If it doesn't work, open the logs/error.log file and see why. Make sure it's working before heading to the next part.</p>
+<h1>Applying XSLT stylesheets to web sites on the proxy</h1>
+<p>Now that your shiny new proxy is working, let's get to the fun part! (Queue evil laughter right about here)</p>
+<p>To apply your own XSLT stylesheet to pages on your favourite website you proceed very much like you would if you were configuring nginx as a web server and you'd like to add a new virtual host. Basically, all you need to do is define a new server section with a specific host name. I'm going to use xkcd.com as an example here, because it's one of my favourite web comics:</p>
+<pre><code>    server {
+        listen       8080;
+        server_name  xkcd.com;
+        server_name  www.xkcd.com;
+
+        location /.css {
+            alias /path/to/local/directory/css;
+            try_files $uri.css =404;
+        }
+
+        location / {
+            resolver 8.8.8.8;
+            proxy_set_header Accept-Encoding "";
+            proxy_pass http://xkcd.com$uri$is_args$args;
+        }
+
+        location ~ ^/([0-9]+/)?$ {
+            resolver 8.8.8.8;
+            proxy_set_header Accept-Encoding "";
+            proxy_pass http://xkcd.com$uri$is_args$args;
+
+            xslt_types application/xhtml+xml text/html;
+            xslt_stylesheet /path/to/local/directory/xslt/xkcd.com.xslt;
+        }
+    }</code></pre>
+<p>This new server section goes right next to your previous server section, still in the http section. Make sure the listen port in both match up.</p>
+<p>In this example, we're doing two things: first, we inject a /.css directory onto the server, which we serve from a local directory, and second we apply a style sheet to all the URLs that contain comics on xkcd.com. xkcd.com is, fortunately, serving proper xhtml, although it does so with the text/html mime type, which is why we use xslt_types to add text/html to the mime types to filter. If it were serving plain HTML or broken XHTML, we would use the following instruction right before xslt_types:</p>
+<pre><code>            xslt_html_parser on;</code></pre>
+<p>This would require the patched version of nginx we compiled from scratch earlier, and this is why I recommended using that version.</p>
+<p>As an example, we could use the following xkcd.com.xslt (in the xslt/ directory):</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;xsl:stylesheet
+              xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+              xmlns:xhtml="http://www.w3.org/1999/xhtml"
+              xmlns="http://www.w3.org/1999/xhtml"
+              version="1.0"
+              exclude-result-prefixes="xhtml"&gt;
+  &lt;xsl:output method="xml" version="1.0" encoding="UTF-8"
+              doctype-public="-//W3C//DTD XHTML 1.1//EN"
+              doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"
+              indent="no"
+              media-type="application/xhtml+xml" /&gt;
+
+  &lt;xsl:strip-space elements="*" /&gt;
+  &lt;xsl:preserve-space elements="xhtml:pre" /&gt;
+
+  &lt;xsl:template match="@*|node()"&gt;
+    &lt;xsl:copy&gt;
+      &lt;xsl:apply-templates select="@*|node()" /&gt;
+    &lt;/xsl:copy&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;xsl:template match="xhtml:form"&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;xsl:template match="xhtml:div[@id='bottom']"&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;xsl:template match="xhtml:div[@id='topContainer']"&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;xsl:template match="xhtml:div[@id='transcript']"&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;xsl:template match="xhtml:meta[@http-equiv]"&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;xsl:template match="xhtml:link[@rel='shortcut icon']"&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;xsl:template match="xhtml:link[@rel='icon']"&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;xsl:template match="xhtml:link[@rel='apple-touch-icon-precomposed']"&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;xsl:template match="xhtml:link[@rel='stylesheet']"&gt;
+    &lt;link rel='stylesheet' type='text/css' href='/.css/xkcd.com' /&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;xsl:template match="xhtml:link[@type='application/atom+xml']"&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;xsl:template match="xhtml:ul[@class='comicNav'][position()&gt;1]"&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;xsl:template match="xhtml:br"&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;xsl:template match="text()[preceding-sibling::xhtml:br]"&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;xsl:template match="comment()"&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;xsl:template match="xhtml:script"&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;xsl:template match="xhtml:div[@id='ctitle']"&gt;
+    &lt;h1&gt;&lt;xsl:apply-templates select="node()" /&gt;&lt;/h1&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;xsl:template match="xhtml:div[@id='middleContainer']"&gt;
+    &lt;xsl:apply-templates select="node()" /&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;xsl:template match="xhtml:a/@accesskey"&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;xsl:template match="xhtml:ul"&gt;
+    &lt;ul&gt;&lt;xsl:apply-templates select="node()" /&gt;&lt;/ul&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;xsl:template match="xhtml:div[@id='comic']"&gt;
+    &lt;xsl:choose&gt;
+      &lt;xsl:when test="xhtml:noscript"&gt;
+        &lt;p&gt;
+          &lt;a&gt;&lt;xsl:copy-of select="xhtml:noscript/@href"/&gt;
+            &lt;img&gt;&lt;xsl:copy-of select="xhtml:noscript/xhtml:img/@src"/&gt;&lt;xsl:copy-of select="xhtml:noscript/xhtml:img/@alt"/&gt;&lt;/img&gt;
+          &lt;/a&gt;
+          &lt;blockquote&gt;&lt;p&gt;&lt;xsl:value-of select="string(xhtml:noscript/xhtml:img/@title)"/&gt;&lt;/p&gt;&lt;/blockquote&gt;
+        &lt;/p&gt;
+      &lt;/xsl:when&gt;
+      &lt;xsl:when test="xhtml:a"&gt;
+        &lt;p&gt;
+          &lt;a&gt;&lt;xsl:copy-of select="xhtml:a/@href"/&gt;
+            &lt;img&gt;&lt;xsl:copy-of select="xhtml:a/xhtml:img/@src"/&gt;&lt;xsl:copy-of select="xhtml:a/xhtml:img/@alt"/&gt;&lt;/img&gt;
+          &lt;/a&gt;
+          &lt;blockquote&gt;&lt;p&gt;&lt;xsl:value-of select="string(xhtml:a/xhtml:img/@title)"/&gt;&lt;/p&gt;&lt;/blockquote&gt;
+        &lt;/p&gt;
+      &lt;/xsl:when&gt;
+      &lt;xsl:otherwise&gt;
+        &lt;p&gt;
+          &lt;img&gt;&lt;xsl:copy-of select="xhtml:img/@src"/&gt;&lt;xsl:copy-of select="xhtml:img/@alt"/&gt;&lt;/img&gt;
+          &lt;blockquote&gt;&lt;p&gt;&lt;xsl:value-of select="string(xhtml:img/@title)"/&gt;&lt;/p&gt;&lt;/blockquote&gt;
+        &lt;/p&gt;
+      &lt;/xsl:otherwise&gt;
+    &lt;/xsl:choose&gt;
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;</code></pre>
+<p>... and the following xkcd.com.css (in the css/ directory):</p>
+<pre><code>html
+{
+  background: #96A8C8;
+  font-size:16px;
+  font-variant:small-caps;
+  font-family:Lucida,Helvetica,sans-serif;
+  font-weight:500;
+  text-decoration: none;
+  padding: 10px;
+}
+
+body
+{
+  width: 780px;
+  margin: 0 auto;
+  background:white;
+  border-style:solid;
+  border-width:1.5px;
+  border-color:#071419;
+  border-radius: 12px;
+  padding: 10px 0;
+  text-align: center;
+}
+
+ul
+{
+  padding:0;
+  list-style-type:none;
+}
+
+ul li
+{
+  display: inline;
+}
+
+ul li a
+{
+  background-color:#6E7B91;
+  color: #FFF;
+  border: 1.5px solid #333;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 1.5px 12px;
+  margin: 0 4px;
+  text-decoration: none;
+  border-radius: 3px;
+  box-shadow: 0 0 5px 0 gray;
+}
+
+ul a:hover
+{
+  background-color: #FFF;
+  color: #6E7B91;
+  box-shadow: none;
+}
+</code></pre>
+<p>Now that you have nginx all set up, just save and restart nginx, then visit xkcd.com. The example style sheet should apply a transformation much like this:</p>
+<p><img src="/png/xkcd.com-before" alt="xkcd.com: before"/> ... becomes ... <img src="/png/xkcd.com-after" alt="xkcd.com: after"/></p>
+<p>Now, admittedly, xkcd.com doesn't have any advertisements that would need removing and there is the mobile version of xkcd.com which looks pretty much the same as the output from our XSLT. This is just an example to demonstrate the technique as such. Remember: XSLT is turing complete. That means you can actually perform any transformation you could think of.</p>
+<h1>Conclusion</h1>
+<p>You should now be able to apply any custom XSLT style sheet to any website of your liking. Congratulations! Now you can actually do something about it if the webdesigner of a given page you need to use regularly should be taken behind the barn to meet a nice, friendly neighbourbood bullet... *cough*</p>
+<p>About the only limitation at this point is that you can't transform https websites because those can't be intercepted. Fortunately, that's not too many of the annoying ones, mwahaha.</p>
+<p>I may put up a demonstration web proxy on my server, I'm still undecided about that. Either way, enjoy and spread the news! And if you happen to write some awesome stylesheets for some annoying pages, do tell and I may put 'em up right here.</p>
+</body>
+</html>

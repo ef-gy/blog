@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:source="http://ef.gy/2012/source">
+  <title>http://ef.gy/ Articles</title>
+  <link href="http://ef.gy/atom/articles" rel="self" />
+  <link href="http://ef.gy/" />
+
+  <entry source:local="/srv/http/ef.gy/using-nginx-as-a-proxy-server.xhtml" />
+</feed>
