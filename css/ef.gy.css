@@ -407,15 +407,18 @@ body#feed h2 + ul li
 
 body#feed h2
 {
+    border: 1px solid white;
     display: inline-block;
-    width: 16.8em;
-    height: 3.8em;
-    padding: 2em 1em;
+    width: 21em;
+    height: 4em;
+    padding: 4em 1em;
     margin: 0.5em;
-    font-size: 1em;
     text-align: center;
     font-size: 1.2em;
     font-weight: bold;
+    font-size: 1em;
+    color: #555;
+    background: #efefef;
 }
 body#feed h2:before
 {
