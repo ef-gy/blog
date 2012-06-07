@@ -34,5 +34,11 @@
       </author>
     </entry>
   </xsl:template>
+
+  <xsl:template match="source:merge">
+    <xsl:for-each select="document(@local)/atom:feed">
+      <xsl:apply-templates select="atom:entry"/>
+    </xsl:for-each>
+  </xsl:template>
 </xsl:stylesheet>
 

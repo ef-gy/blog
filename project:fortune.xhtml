@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Fortune</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="An online programme that displays 'fortune cookies,' random epigrams, as found on pretty much all modern Unices." />
+<meta name="date" content="2012-06-07T16:38:00Z" />
+<meta name="mtime" content="2012-06-07T17:25:00Z" />
+<meta name="category" content="Projects" />
+<meta name="unix:name" content="project:fortune" />
+</head>
+<body>
+<div class="figure">
+<h2>Summary</h2>
+<p>Displays random epigrams, just like the programme with the same name found on your favourite UNIX derivative's terminal.</p>
+<ul>
+<li><a href="fortune">see it in action</a></li>
+<li><a href="http://ef.gy/fortune">canonical link</a></li>
+</ul>
+</div>
+<h1>Project Goals</h1>
+<p>The idea behind this programme is dead simple: a port of the terminal programme 'fortune', found on most Unices, so that it works on your favourite web browser. This isn't exactly a novel idea. You'll find this programme implemented several dozen times with a simple Google query.</p>
+<p>The reason why I went and wrote this version anyway, is that I needed a simple testing environment for two things: writing web applications in C++, and using HTTP as the wire protocol between the web server and the application. Turns out both of these are rather simple. As an added bonus, I've made this version of fortune choose random epigrames from both the offensive and inoffensive ones, which is a feature I've missed in nearly all of the other implementations.</p>
+<h1>Details</h1>
+<p>As a daemon, upon starting, this version maps all the files in /usr/share/games/fortunes into memory, scans them for the characteristic '%' lines, maintains a list of start/stop locations of the individual epigrams and whether to decode them with ROT13, then opens a local socket for the web server to connect to. I've used the fortune-mod data files that came with the debian for this particular project.</p>
+<p>If you'd like to examine the source code, just download it via this site's git repository and see the file 'src/fortune.cpp' for the programme's code and 'include/ef.gy/http.h' for the http server code. If you do examine the source code, you'll find that the daemon doesn't actually produce XHTML output. Instead, it generates extremely simple XML, which is post-processed by 'xslt/xhtml-fortune.xslt' to produce plain XHTML. This makes this particular implementation a good example of how to separate logic and content from design elements.</p>
+</body>
+</html>

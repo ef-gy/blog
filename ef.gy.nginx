@@ -60,6 +60,7 @@ server {
 		try_files $uri.atom $uri =404;
 
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/atom-style-ef.gy.xslt;
 	}
 
 	location /svg {

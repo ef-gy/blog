@@ -30,6 +30,12 @@
     <xsl:copy>
       <link href="/css/ef.gy" rel="stylesheet" type="text/css" />
       <xsl:apply-templates select="@*|node()" />
+      <xsl:choose>
+        <xsl:when test="//xhtml:link[@href='http://ef.gy/atom/site']" />
+        <xsl:otherwise>
+          <link rel="alternate" type="application/atom+xml" href="/atom/site" />
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:copy>
   </xsl:template>
 
@@ -44,20 +50,32 @@
       <ul>
         <li><a href="about">About</a></li>
         <li><a href="fortune">Fortune</a></li>
-        <li><a href="articles">Articles</a></li>
-        <li><a href="irc://irc.freenode.org/kyuba">IRC</a></li>
+        <li><a href="site">Articles &amp; Projects</a></li>
         <li><a href="source-code">Source Code</a></li>
       </ul>
       <xsl:apply-templates select="node()" />
       <xsl:if test="//xhtml:meta[@name='author'][@content='Magnus Achim Deininger']"><address>
         <a rel="author" href="about">
           <img src="/jpeg/mdeininger" alt="Magnus Achim Deininger" />
-          <span>Written by <span>Magnus Achim Deininger</span>.</span>
-          Magnus Achim Deininger is a <del>sellsword</del> freelance programmer specialising in peculiar problems, such as embedded development, formal language theory and experiments in minimalistic design. This website serves as his personal journal and testing ground for unusual and/or crazy ideas.
-        </a>
+          <span>Written by <span>Magnus Achim Deininger</span>.</span>Magnus Achim Deininger is a <del>sellsword</del> freelance programmer specialising in peculiar problems, such as embedded development, formal language theory and experiments in minimalistic design. This website serves as his personal journal and testing ground for unusual and/or crazy ideas.</a>
       </address></xsl:if>
+      <xsl:if test="//xhtml:meta[@name='date']">
+        <table>
+          <tbody>
+            <tr><th>Published on</th><td><xsl:value-of select="//xhtml:meta[@name='date']/@content" /></td></tr>
+            <xsl:if test="//xhtml:meta[@name='mtime']">
+              <tr><th>Last Modified</th><td><xsl:value-of select="//xhtml:meta[@name='mtime']/@content" /></td></tr>
+            </xsl:if>
+            <xsl:if test="//xhtml:meta[@name='category']">
+              <tr><th>Category</th><td><xsl:value-of select="//xhtml:meta[@name='category']/@content" /></td></tr>
+            </xsl:if>
+          </tbody>
+        </table>
+      </xsl:if>
     </xsl:copy>
   </xsl:template>
+
+  <xsl:template match="xhtml:meta[@name='unix:name']" />
 
   <xsl:template match="xhtml:h1">
     <h2>

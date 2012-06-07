@@ -25,22 +25,31 @@ h1, h2, h3, h4, h5, h6
 h1
 {
     position: fixed;
-    display: inline-block;
 	font-size: 1em;
 	border-bottom: 1px solid black;
-	margin: -3.5em -20px 0.5em -20px;
+    left: 0;
+    right: 0;
+    top: 0;
+	margin: 0;
 	padding: 10px 20px 0.5em 20px;
 	font-weight: bold;
-    white-space:nowrap;
     background: white;
     background: rgba(255,255,255,0.8);
+    height: 1.2em;
+    overflow: hidden;
     z-Index: 2;
+}
+h1:before
+{
+    content: "http://ef.gy/";
+    padding: 0.1em;
+    color: #999;
 }
 h1:after
 {
     content: " ";
     display: inline-block;
-    height: 2em;
+    height: 1em;
     width: 0.75em;
     border: 1px solid black;
     margin: -30px -20px -0.75em 1em;
@@ -106,25 +115,18 @@ h1 + ul:hover
     background: white;
     background: rgba(255,255,255,0.9);
     border-bottom: 1px solid black;
-    border-right: 1px solid black;
-    border-top: 1px solid #ddd;
+    border-left: 1px solid black;
     z-Index: 3;
 }
 
 h1 + ul
 {
     position: absolute;
+    top: 2.4em;
+    right: 0;
     display: block;
-    margin: -1.1em -20px 0.5em -20px;
 	padding: 0.2em 15px;
-    border-top: 1px solid white;
     z-Index: 1;
-}
-h1 + ul:before
-{
-    content: "http://ef.gy/";
-    padding: 0.1em;
-    color: #999;
 }
 
 h1 + ul li
@@ -240,6 +242,7 @@ address
     padding: 0.5em 3em;
     margin: 2em 0;
     font-style: normal;
+    float: left;
 }
 
 address img
@@ -293,10 +296,53 @@ address a span span
     margin: 0;
 }
 
-div.figure
+address + table
+{
+    float: left;
+    border-left: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    padding: 0.5em 3em;
+    margin: 2em 0;
+}
+
+.figure
 {
     float: right;
-    border: 0.4em solid white;
+    margin: 2em 0 1em 2em;
+}
+
+div.figure
+{
+    display: block;
+    width: 20em;
+    padding: 1em;
+}
+
+div.figure img
+{
+    display: block;
+    margin: 0 auto;
+}
+
+div.figure h3
+{
+    margin: 0;
+}
+
+div.figure li a
+{
+    font-size: 1.2em;
+    text-decoration: none;
+}
+
+div.figure li a:before
+{
+    content: "> ";
+}
+
+div.figure li + li a
+{
+    font-size: 1em;
 }
 
 th
@@ -315,6 +361,11 @@ ul li
     display: block;
 }
 
+body#feed
+{
+    padding: 5em 2em 1em 2em;
+}
+
 body#feed h2 + ul
 {
     display: inline;
@@ -323,23 +374,22 @@ body#feed h2 + ul
 
 body#feed h2 + ul li
 {
-    display: block;
-    width: 23em;
+    display: inline-block;
+    width: 22em;
     height: 10em;
     padding: 1em;
-    margin: 1.5em;
-    float: left;
+    margin: 0.5em;
+    border: 0.1em solid #ccc;
 }
 
 body#feed h2
 {
-    display: block;
-    width: 18.6em;
-    height: 1.8em;
-    padding: 4em 1em;
-    margin: 1.5em;
+    display: inline-block;
+    width: 17.8em;
+    height: 3.8em;
+    padding: 2em 1em;
+    margin: 0.5em;
     font-size: 1em;
-    float: left;
     vertical-align: middle;
     text-align: center;
     font-size: 1.2em;
@@ -357,7 +407,6 @@ body#feed h2 + ul li a
     padding: 1em;
     height: 10em;
     margin: -1em;
-    border: 1px solid #ccc;
 }
 
 body#feed h2 + ul li a span
