@@ -132,6 +132,7 @@ h1 + ul
 h1 + ul li
 {
 	display: inline-block;
+    margin: 0;
 	padding: 5px;
 	font-size: 0.9em;
 	color: #666;
@@ -234,7 +235,7 @@ pre code
 address
 {
     display: block;
-    width: 38em;
+    width: 32em;
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
     background: white;
@@ -324,7 +325,18 @@ div.figure img
     margin: 0 auto;
 }
 
-div.figure h3
+div.figure h2
+{
+    margin: 0;
+    font-size: 1.2em;
+    font-weight: normal;
+}
+div.figure h2:before
+{
+    display: none;
+}
+
+div.figure li
 {
     margin: 0;
 }
@@ -358,12 +370,23 @@ th, td
 
 ul li
 {
+    margin: 0.5em 0.5em 0.5em 2em;
+}
+
+div ul li
+{
     display: block;
 }
 
 body#feed
 {
-    padding: 5em 2em 1em 2em;
+    padding: 6.5em 2em 1em 2em;
+    vertical-align: top;
+}
+
+body#feed *
+{
+    vertical-align: top;
 }
 
 body#feed h2 + ul
@@ -375,7 +398,7 @@ body#feed h2 + ul
 body#feed h2 + ul li
 {
     display: inline-block;
-    width: 22em;
+    width: 21em;
     height: 10em;
     padding: 1em;
     margin: 0.5em;
@@ -385,12 +408,11 @@ body#feed h2 + ul li
 body#feed h2
 {
     display: inline-block;
-    width: 17.8em;
+    width: 16.8em;
     height: 3.8em;
     padding: 2em 1em;
     margin: 0.5em;
     font-size: 1em;
-    vertical-align: middle;
     text-align: center;
     font-size: 1.2em;
     font-weight: bold;

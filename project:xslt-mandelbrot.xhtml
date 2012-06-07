@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>XSLT: Mandelbrot</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="Example code that demonstrates how to write functions in XSLT by recursively calling templates. Generates an image of the Mandelbrot set." />
+<meta name="date" content="2012-06-07T20:13:00Z" />
+<meta name="mtime" content="2012-06-07T21:07:00Z" />
+<meta name="category" content="Projects" />
+<meta name="unix:name" content="project:xslt-mandelbrot" />
+</head>
+<body>
+<div class="figure">
+<h1>Summary</h1>
+<p>Renders an image of the Mandelbrot set by generating an SVG file with an XSLT stylesheet. Warning: this may take quite a while to render.</p>
+<ul>
+<li><a href="/raw/example/xslt-mandelbrot.xml">see it in action</a></li>
+<li><a href="/raw/example/xslt-mandelbrot.xslt">get the stylesheet</a></li>
+</ul>
+</div>
+<h1>Project Goals</h1>
+<p>As most of you know, there are three customary topics for your first programme in a new programming language. There's the traditional one, which is to print the string 'Hello World!' on the console, or wherever would be appropriate for the language. There's the functional one, which is writing a recursive function that calculates the factorial of a number. And there's the more advanced one, which is writing a programme that renders an image of the Mandelbrot set.</p>
+<p>The latter one is obviously the geekiest, but it also has the advantage of strongly suggesting that any language that such a programme can be implemented in is Turing complete. While there is already a stylesheet that proves the Turing completeness of XSLT by implementing a Universal Turing Machine, at least back when I wrote this I couldn't find a stylesheet to render this most geekiest of introductory programmes.</p>
+<h1>Details</h1>
+<p>Conceptually, the XSLT stylesheet is rather straightforward to implement. The primary issues we have are looping over individual pixels and finding out whether those pixels are in the set or not. In most languages we would simply write a for()-loop for both of these. However, XSLT is a declarative language, and like many other declarative languages, XSLT does not allow for mutable state in any way. This complicates things slightly, since we don't get any loop constructs in the language.</p>
+<p>What we do instead is, we use XSLT "templates" as functions and generate the output recursively by passing the current loop position as an explicit parameter. We do so by always increasing this extra parameter when passing it to the next iteration. This leaves us with the following templates:</p>
+<ul>
+<li>mandelbrot-pixel, which gets the position on the complex plane and recursively calls itself to find out if the point is in the set or not. The output is an SVG circle element with a colour similar to the colouring we've all come to love in Mandelbrot set renditions.</li>
+<li>mandelbrot-loop and mandelbrot-loop-y, which loop over a range of points on the complex plane and call mandelbrot-pixel.</li>
+<li>gfx:mandelbrot, which matches the root element of our input file to the transformation, sets up some constants and calls mandelbrot-loop.</li>
+</ul>
+<p>Since we can't -- and don't actually want to -- define global variables, the data from the source node is passed with each call. XSLT's call-template construct makes this less annoying than it sounds, as parameters in XSLT are always named.</p>
+<p>Feel free to examine the XSLT stylesheet (linked above) if you're curious about the actual implementation or just go straight for the output. Do note that this particular stylesheet is fairly slow -- looks like XSLT was never designed to do something like this. Also, for anything to happen at all, the example I've linked requires XSLT support in your browser. Most modern browsers support this, but some may not.</p>
+</body>
+</html>

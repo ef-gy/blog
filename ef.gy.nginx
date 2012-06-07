@@ -63,6 +63,11 @@ server {
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-style-ef.gy.xslt;
 	}
 
+	location /raw {
+		alias /srv/http/ef.gy;
+		try_files $uri =404;
+	}
+
 	location /svg {
 		alias /srv/http/ef.gy;
 		try_files $uri.xml $uri.svg $uri $uri.cache.xml =404;

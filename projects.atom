@@ -5,4 +5,5 @@
   <link href="http://ef.gy/" />
 
   <entry source:local="/srv/http/ef.gy/project:fortune.xhtml" />
+  <entry source:local="/srv/http/ef.gy/project:xslt-mandelbrot.xhtml" />
 </feed>

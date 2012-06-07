@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<?xml-stylesheet type="text/xsl" href="xslt-mandelbrot.xslt" ?>
+<mandelbrot
+  xmlns="http://becquerel.org/graphics/2011"
+  iterations="80"
+  width="400"
+  height="200"
+  zr0="-2.5" zi0="-1"
+  zr1="1" zi1="1" />
