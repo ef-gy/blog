@@ -373,9 +373,15 @@ ul li
     margin: 0.5em 0.5em 0.5em 2em;
 }
 
-div ul li
+div ul li,
+table ul li
 {
     display: block;
+}
+
+table ul li
+{
+    margin: 0;
 }
 
 body#feed
