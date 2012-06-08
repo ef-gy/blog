@@ -13,7 +13,7 @@
               indent="no"
               media-type="application/xhtml+xml" />
 
-  <xsl:key name="entry-by-category" match="atom:entry" use="atom:category" />
+  <xsl:key name="entry-by-category" match="atom:entry" use="atom:category/@term" />
 
   <xsl:template match="@*|node()">
     <xsl:copy>
@@ -35,11 +35,11 @@
         <link rel="alternate" type="application/atom+xml" href="{atom:link[@rel='self']/@href}" />
       </head>
       <body id="feed">
-        <xsl:for-each select="atom:entry[count(. | key('entry-by-category', atom:category)[1]) = 1]">
-          <xsl:sort select="atom:category" />
-          <h1><xsl:value-of select="atom:category" /></h1>
+        <xsl:for-each select="atom:entry[count(. | key('entry-by-category', atom:category/@term)[1]) = 1]">
+          <xsl:sort select="atom:category/@term" />
+          <h1><xsl:value-of select="atom:category/@term" /></h1>
           <ul>
-            <xsl:for-each select="key('entry-by-category', atom:category)">
+            <xsl:for-each select="key('entry-by-category', atom:category/@term)">
               <li>
                 <a href="{atom:link/@href}">
                   <span><xsl:value-of select="atom:title" /></span>

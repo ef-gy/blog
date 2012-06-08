@@ -5,7 +5,7 @@
               xmlns:source="http://ef.gy/2012/source"
               xmlns:atom="http://www.w3.org/2005/Atom"
               xmlns="http://www.w3.org/2005/Atom"
-              exclude-result-prefixes="source"
+              exclude-result-prefixes="source xhtml atom"
               version="1.0">
   <xsl:output method="xml" version="1.0" encoding="UTF-8"
               indent="no"
@@ -22,16 +22,22 @@
       <xsl:variable name="source" select="document(@source:local)" />
 
       <title><xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:title" /></title>
+      <id>http://ef.gy/<xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content" /></id>
       <link href="http://ef.gy/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}" />
       <summary><xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='description']/@content" /></summary>
       <updated><xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='mtime']/@content" /></updated>
-      <category><xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='category']/@content" /></category>
+      <category term="{$source/xhtml:html/xhtml:head/xhtml:meta[@name='category']/@content}" />
       <author>
         <name><xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='author']/@content" /></name>
         <xsl:if test="$source/xhtml:html/xhtml:head/xhtml:meta[@name='author'][@content='Magnus Achim Deininger']">
           <email>mdeininger@becquerel.org</email>
         </xsl:if>
       </author>
+
+      <source>
+        <xsl:copy-of select="../atom:title" />
+        <xsl:copy-of select="../atom:link" />
+      </source>
     </entry>
   </xsl:template>
 

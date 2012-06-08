@@ -19,6 +19,33 @@
     </xsl:copy>
   </xsl:template>
 
+  <xsl:template match="/atom:feed">
+    <xsl:copy>
+      <xsl:choose>
+        <xsl:when test="atom:id" />
+
+        <xsl:otherwise>
+          <id><xsl:value-of select="atom:link[@rel='self']/@href" /></id>
+        </xsl:otherwise>
+      </xsl:choose>
+
+      <xsl:choose>
+        <xsl:when test="atom:updated" />
+
+        <xsl:otherwise>
+          <xsl:for-each select="//atom:entry">
+            <xsl:sort select="atom:updated" order="descending" />
+            <xsl:if test="position()=1">
+              <updated><xsl:value-of select="atom:updated"/></updated>
+            </xsl:if>
+          </xsl:for-each>
+        </xsl:otherwise>
+      </xsl:choose>
+
+      <xsl:apply-templates select="node()"/>
+    </xsl:copy>
+  </xsl:template>
+
   <xsl:template match="/atom:feed/atom:title">
     <title>http://ef.gy/ :: <xsl:value-of select="."/></title>
   </xsl:template>
