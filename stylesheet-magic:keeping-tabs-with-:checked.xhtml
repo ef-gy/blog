@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>CSS Magic: Keeping Tabs with :checked</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="This article demonstrates some creative uses for the CSS3 :checked selector: showing additional elements in a form and creating a rather pure tabs without any scripting." />
+<meta name="date" content="2012-06-11T20:11:00Z" />
+<meta name="mtime" content="2012-06-11T20:11:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="stylesheet-magic:keeping-tabs-with-:checked" />
+<style type="text/css">
+div#example1 input:checked + label
+{
+  color: red;
+}
+
+div#example2 input ~ label ~ div
+{
+  display: none;
+}
+
+div#example2 input:checked ~ label ~ div
+{
+  display: block;
+}
+
+div#example3 input
+{
+  display: none;
+}
+
+div#example3 input + label
+{
+  display: block;
+  float: left;
+  background: #eee;
+  border: 1px solid #aaa;
+  padding: 0.5em;
+  margin: -2em 0.5em 2em 0.5em;
+  cursor: pointer;
+}
+
+div#example3 input:checked + label
+{
+  background: #ccc;
+}
+
+div#example3 p
+{
+  clear: both;
+}
+
+div#example3 .tab-hello,
+div#example3 .tab-lorem,
+div#example3 .tab-foo
+{
+  display: none;
+}
+
+div#example3 #hello:checked ~ p.tab-hello,
+div#example3 #lorem:checked ~ p.tab-lorem,
+div#example3 #baz:checked ~ p.tab-foo
+{
+  display: block;
+}
+
+div#example3
+{
+  background: #ffc;
+  border: 1px solid black;
+  padding: 1em 0.5em 0.5em 0.5em;
+  margin: 2em;
+}
+</style>
+</head>
+<body>
+<h1>CSS3's :checked Selector</h1>
+<p>CSS3 introduces a fair number of new selectors. :checked doesn't seem all that interesting at first, but with a bit of creativity it might just be the most interesting of the lot. :checked is used to select "checked" input elements, i.e. those of type "checkbox" or "radio" which are currently ticked.</p>
+<p>NOTE: CSS3 is fairly new, so not all browsers support it. Support is getting better, but it's not quite there yet. The examples on this page are, however, known to work with the latest versions of Opera and WebKit-Browsers (Chrome, Safari, Konqueror).</p>
+<h2>Example</h2>
+<p>Consider the following example:</p>
+<pre><code><![CDATA[input:checked + label
+{
+  color: red;
+}]]></code></pre>
+<p>This bit of CSS is fairly straightforward: any label that follows a checked check box or radio box will be rendered in red. We could see this in action with the following bit of XHTML:</p>
+<pre><code><![CDATA[<p>
+  <input name="foo" id="foo" type="checkbox"/>
+  <label for="foo">FOO</label>
+</p>]]></code></pre>
+<p>The output of this snippet looks like this:</p>
+<div id="example1">
+<p><input name="foo" id="foo" type="checkbox"/>
+  <label for="foo">FOO</label></p>
+</div>
+<p>You can click either the label or the check box to see if :checked is supported in your browser. If it is, the label should turn red.</p>
+<p>This example is, of course, still rather boring. Let's see if we can't use it a bit more creatively, shall we?</p>
+<h1>Conditionally Showing Additional Elements</h1>
+<p>Consider an online store. You're selling products that may be engraved with a phrase of the customer's choosing. The easy way to let your users add this engraving is by adding a text field on the product page for the user to enter the phrase they want on their product. You might expect them to just leave it blank if they don't want an engraving on their product, but we all know that somewhere down the road, someone is going to enter "I don't want an engraving on mine" in that text field. This is going to lead to confusion: does the customer not want an engraving at all, or is the customer trying to be funny?</p>
+<p>Since you don't want to have to call customers about things like that, you decide to add a check box before your text field, which reads "Add a free engraving to my product". This is going to work for most users, and your marketing crowd is going to drool over the slightly more positive looking product page. The problem with this approach is, what do you do when someone enters some text in the text field, but does not check that check box? Maybe they just missed it, or they figured it'd be obvious that you want it engraved since they wrote down the engraving they want. Or maybe they wanted one at first, but then decided they'd rather not have one and just unchecked the box.</p>
+<p>To avoid this ambiguity, it'll be best to either hide or disable the text field when the check box controlling it is not enabled. Your average web developer is going to do this with JavaScript. It's simple enough, too. Except, it's unnecessary scripting, which is always a bad idea. But with :checked, we can now do that without having to rely on JavaScript.</p>
+<p>Here's the bit of CSS we use for this:</p>
+<pre><code><![CDATA[input ~ label ~ div
+{
+  display: none;
+}
+
+input:checked ~ label ~ div
+{
+  display: block;
+}]]></code></pre>
+<p>... here's the XHTML to go with that:</p>
+<pre><code><![CDATA[<div>
+  <input name="free-engraving" id="free-engraving" type="checkbox" />
+  <label for="free-engraving">Add a free engraving!</label>
+  <div>
+    <label for="free-engraving:text">... which reads:</label>
+    <input name="free-engraving:text" id="free-engraving:text" />
+  </div>
+</div>]]></code></pre>
+<p>... and here's how that looks in your browser:</p>
+<div id="example2">
+  <input name="free-engraving" id="free-engraving" type="checkbox" />
+  <label for="free-engraving">Add a free engraving!</label>
+  <div>
+    <label for="free-engraving:text">... which reads:</label>
+    <input name="free-engraving:text" id="free-engraving:text" />
+  </div>
+</div>
+<p>Nice and simple, right? We can use the same approach to do simple input checking in cases where we have a lot of check boxes and some of them are mutually exclusive. For that we'd use css classes like properties and select on that in the style sheet. I'm sure you can figure this one out for yourself, so let's try something even more creative.</p>
+<h1>Creating Tabs Without Scripting or Involving the Server</h1>
+<p>So far we've only used check boxes, so for our last trick of the day we'll be using radio boxes. This idea is really easy to describe: we'll create tabs by using blind radio boxes to "remember" which of the tabs is currently active, label elements which act as the actual tabs that a user clicks on, and css classes to mark content elements to decide which elements to show and which to hide. The advantage of this approach is also obvious: clicking on a tab to change the current view requires neither scripting nor asking the server for the content. Instead you deliver all the content at once when the page is first loaded.</p>
+<p>By making use of the "checked" attribute of the input element and placing its content first in the file, you can effectively make the page load the visible content first, and have it load the invisible content on the other tabs in the background. Selecting the other tabs will switch to those without much flicker either, making for a nicely smooth user experience. And for browsers that do not support CSS3 selectors you can degrade the content nicely to a plain (X)HTML page without the tabs but with all the content.</p>
+<p>The CSS for our following example is going to be this:</p>
+<pre><code><![CDATA[input
+{
+  display: none;
+}
+
+input + label
+{
+  display: block;
+  float: left;
+  background: #eee;
+  border: 1px solid #aaa;
+  padding: 0.5em;
+  margin: -2em 0.5em 2em 0.5em;
+  cursor: pointer;
+}
+
+input:checked + label
+{
+  background: #ccc;
+}
+
+p
+{
+  clear: both;
+}
+
+.tab-hello,
+.tab-lorem,
+.tab-foo
+{
+  display: none;
+}
+
+#hello:checked ~ p.tab-hello,
+#lorem:checked ~ p.tab-lorem,
+#baz:checked ~ p.tab-foo
+{
+  display: block;
+}
+
+div
+{
+  background: #ffc;
+  border: 1px solid black;
+  padding: 1em 0.5em 0.5em 0.5em;
+  margin: 2em;
+}]]></code></pre>
+<p>... and our XHTML this time:</p>
+<pre><code><![CDATA[<div>
+  <input name="menu" id="hello" type="radio" value="hello" checked="checked" />
+  <label for="hello">Hello</label>
+  <input name="menu" id="lorem" type="radio" value="lorem" />
+  <label for="lorem">Lorem Ipsum</label>
+  <input name="menu" id="baz" type="radio" value="foo" />
+  <label for="baz">Foo</label>
+  <p class="tab-hello">Hello World!</p>
+  <p class="tab-lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+  <p class="tab-foo">Foo bar!</p>
+  <p class="tab-lorem tab-foo">This paragraph is shown on both of the latter two tabs.</p>
+</div>
+]]></code></pre>
+<p>This should look something like this:</p>
+<div id="example3">
+  <input name="menu" id="hello" type="radio" value="hello" checked="checked" />
+  <label for="hello">Hello</label>
+  <input name="menu" id="lorem" type="radio" value="lorem" />
+  <label for="lorem">Lorem Ipsum</label>
+  <input name="menu" id="baz" type="radio" value="foo" />
+  <label for="baz">Foo</label>
+  <p class="tab-hello">Hello World!</p>
+  <p class="tab-lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+  <p class="tab-foo">Foo bar!</p>
+  <p class="tab-lorem tab-foo">This paragraph is shown on both of the latter two tabs.</p>
+</div>
+<p>Neat huh? The CSS might look a bit scary at first, but it's not all that bad. Most of it is to style the output, which means you're not really wasting much CSS on the hack either.</p>
+<h1>Conclusion</h1>
+<p>CSS3 selectors are extremely powerful, making a lot of JavaScript obsolete. You now know how to handle one of the really useful new selectors, and hopefully you also got some fresh new ideas for your next project. The only sad part is that using this technique will often require blind input elements. It's somewhat hard to justify them semantically, but it should still be better than using scripting and at least they serve some logical purpose by tracking state on the page.</p>
+<p>Just remember to make sure to make your CSS degrade gracefully when you use these techniques, and stay tuned for more CSS3 articles.</p>
+</body>
+</html>

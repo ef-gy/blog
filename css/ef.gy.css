@@ -224,12 +224,23 @@ pre
     margin: 2em 0;
 }
 
-pre code
+pre code,
+#example1, #example2, #example3, #example4, #example5
 {
     display: block;
+    padding: 0 0 0 1em;
+}
+
+pre code
+{
     border-left: 2px solid blue;
     margin: 0 0 0 1em;
-    padding: 0 0 0 1em;
+}
+
+#example1, #example2, #example3, #example4, #example5
+{
+    border-left: 2px solid purple;
+    margin: 1em;
 }
 
 address
