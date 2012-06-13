@@ -6,7 +6,7 @@
 
 html
 {
-    background: white;
+    background: #eee;
 }
 
 body
@@ -469,20 +469,28 @@ body#feed h2 + ul li a:hover
     color: #444;
 }
 
+pre
+{
+    white-space pre-wrap;
+}
+
 @media (min-width:60em)
 {
     html
     {
         min-height: 100%;
-        background: -moz-linear-gradient(top, #ccc, #fff);
-        background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#fff));
     }
 
     body
     {
         margin: 0 10em 10em 2em;
         padding-bottom: 14em;
-        box-shadow: 10px 10px 5px #aaa;
+        box-shadow: 5px 5px 2px #aaa;
+    }
+
+    h1
+    {
+        padding-left: 3em;
     }
 
     h1 + ul
@@ -497,10 +505,8 @@ body#feed h2 + ul li a:hover
         float: right;
         margin-right: -10em;
         border: 0;
-        background: #eee;
-        background: -moz-linear-gradient(top, #ddd, #eee);
-        background: -webkit-gradient(linear, left top, left bottom, from(#ddd), to(#eee));
-        box-shadow: 15px 15px 7.5px #aaa;
+        background: #eef;
+        box-shadow: 7px 7px 4px #aaa;
     }
 }
 

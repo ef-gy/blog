@@ -53,6 +53,12 @@
         <li><a href="site">Articles &amp; Projects</a></li>
         <li><a href="source-code">Source Code</a></li>
       </ul>
+      <xsl:if test="(//xhtml:meta[@name='description']/@content) and not(xhtml:div[@class='figure']/xhtml:h1)">
+        <div class="figure">
+          <h2>Summary</h2>
+          <p><xsl:value-of select="//xhtml:meta[@name='description']/@content"/></p>
+        </div>
+      </xsl:if>
       <xsl:apply-templates select="node()" />
       <xsl:if test="//xhtml:meta[@name='author'][@content='Magnus Achim Deininger']"><address>
         <a rel="author" href="about">
