@@ -5,7 +5,7 @@
 <meta name="author" content="Magnus Achim Deininger" />
 <meta name="description" content="How to fix poor web design and other annoyances by transparently applying XSLT stylesheets to pages you visit using an nginx forward proxy." />
 <meta name="date" content="2012-06-05T15:00:00Z" />
-<meta name="mtime" content="2012-06-05T15:00:00Z" />
+<meta name="mtime" content="2012-06-13T16:03:00Z" />
 <meta name="category" content="Articles" />
 <meta name="unix:name" content="using-nginx-as-a-proxy-server" />
 </head>
@@ -198,23 +198,32 @@ http {
       &lt;xsl:when test="xhtml:noscript"&gt;
         &lt;p&gt;
           &lt;a&gt;&lt;xsl:copy-of select="xhtml:noscript/@href"/&gt;
-            &lt;img&gt;&lt;xsl:copy-of select="xhtml:noscript/xhtml:img/@src"/&gt;&lt;xsl:copy-of select="xhtml:noscript/xhtml:img/@alt"/&gt;&lt;/img&gt;
+            &lt;img&gt;&lt;xsl:copy-of select="xhtml:noscript/xhtml:img/@src"/&gt;
+              &lt;xsl:copy-of select="xhtml:noscript/xhtml:img/@alt"/&gt;&lt;/img&gt;
           &lt;/a&gt;
-          &lt;blockquote&gt;&lt;p&gt;&lt;xsl:value-of select="string(xhtml:noscript/xhtml:img/@title)"/&gt;&lt;/p&gt;&lt;/blockquote&gt;
+          &lt;blockquote&gt;
+            &lt;p&gt;&lt;xsl:value-of select="string(xhtml:noscript/xhtml:img/@title)"/&gt;&lt;/p&gt;
+          &lt;/blockquote&gt;
         &lt;/p&gt;
       &lt;/xsl:when&gt;
       &lt;xsl:when test="xhtml:a"&gt;
         &lt;p&gt;
           &lt;a&gt;&lt;xsl:copy-of select="xhtml:a/@href"/&gt;
-            &lt;img&gt;&lt;xsl:copy-of select="xhtml:a/xhtml:img/@src"/&gt;&lt;xsl:copy-of select="xhtml:a/xhtml:img/@alt"/&gt;&lt;/img&gt;
+            &lt;img&gt;&lt;xsl:copy-of select="xhtml:a/xhtml:img/@src"/&gt;
+              &lt;xsl:copy-of select="xhtml:a/xhtml:img/@alt"/&gt;&lt;/img&gt;
           &lt;/a&gt;
-          &lt;blockquote&gt;&lt;p&gt;&lt;xsl:value-of select="string(xhtml:a/xhtml:img/@title)"/&gt;&lt;/p&gt;&lt;/blockquote&gt;
+          &lt;blockquote&gt;
+            &lt;p&gt;&lt;xsl:value-of select="string(xhtml:a/xhtml:img/@title)"/&gt;&lt;/p&gt;
+          &lt;/blockquote&gt;
         &lt;/p&gt;
       &lt;/xsl:when&gt;
       &lt;xsl:otherwise&gt;
         &lt;p&gt;
-          &lt;img&gt;&lt;xsl:copy-of select="xhtml:img/@src"/&gt;&lt;xsl:copy-of select="xhtml:img/@alt"/&gt;&lt;/img&gt;
-          &lt;blockquote&gt;&lt;p&gt;&lt;xsl:value-of select="string(xhtml:img/@title)"/&gt;&lt;/p&gt;&lt;/blockquote&gt;
+          &lt;img&gt;&lt;xsl:copy-of select="xhtml:img/@src"/&gt;
+            &lt;xsl:copy-of select="xhtml:img/@alt"/&gt;&lt;/img&gt;
+          &lt;blockquote&gt;&lt;p&gt;
+            &lt;xsl:value-of select="string(xhtml:img/@title)"/&gt;
+          &lt;/p&gt;&lt;/blockquote&gt;
         &lt;/p&gt;
       &lt;/xsl:otherwise&gt;
     &lt;/xsl:choose&gt;

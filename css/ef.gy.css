@@ -127,6 +127,7 @@ h1 + ul
     display: block;
 	padding: 0.2em 15px;
     z-Index: 1;
+    border-bottom-left-radius: 1em;
 }
 
 h1 + ul li
