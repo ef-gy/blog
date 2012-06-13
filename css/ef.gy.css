@@ -14,7 +14,7 @@ body
     background: white;
 	font-family: Arial, sans-serif;
 	font-size: 14px;
-	padding: 3.5em 20px 20px 20px;
+	padding: 3.5em 30px 20px 30px;
 }
 
 h1, h2, h3, h4, h5, h6
@@ -63,16 +63,6 @@ h2
 	font-size: 1.4em;
     margin: 2em 0 1.5em 0;
 }
-h2:before
-{
-    content: " ";
-    display: inline-block;
-    width: 1em;
-    height: 1em;
-    border: 1px solid black;
-    background: blue;
-    margin: 0.1em 0.5em -0.2em 0;
-}
 
 h2 ~ h2
 {
@@ -83,16 +73,6 @@ h3
 {
 	font-size: 1.3em;
     margin: 1em 0 1em 0;
-}
-h3:before
-{
-    content: " ";
-    display: inline-block;
-    width: 0.5em;
-    height: 0.5em;
-    border: 1px solid black;
-    background: green;
-    margin: 0.25em 0.75em 0.05em 0.25em;
 }
 
 h4
@@ -116,8 +96,8 @@ h1 + ul:hover
     position: fixed;
     background: white;
     background: rgba(255,255,255,0.9);
-    border-bottom: 1px solid black;
-    border-left: 1px solid black;
+    border-bottom: 1px solid #aaa;
+    border-left: 1px solid #aaa;
     z-Index: 3;
 }
 
@@ -150,25 +130,10 @@ h1 + ul a
 {
 	text-decoration: none;
 }
-h1 + ul a:before
-{
-    content: " ";
-    display: inline-block;
-    width: 0.5em;
-    height: 0.5em;
-    margin: 0.15em 0.25em;
-    border: 1px solid black;
-}
 
 a:hover
 {
 	color: #999;
-}
-h1 + ul a:hover:before
-{
-    height: 0.8em;
-    margin: 0 0.25em;
-    background: blue;
 }
 
 p, code
@@ -289,11 +254,6 @@ address a:hover
     background: #eee;
 }
 
-address a:before
-{
-    display: none;
-}
-
 address a span
 {
     display: block;
@@ -344,10 +304,6 @@ div.figure h2
     margin: 0;
     font-size: 1.2em;
     font-weight: normal;
-}
-div.figure h2:before
-{
-    display: none;
 }
 
 div.figure li
@@ -439,10 +395,6 @@ body#feed h2
     font-size: 1em;
     color: #555;
     background: #efefef;
-}
-body#feed h2:before
-{
-    display: none;
 }
 
 body#feed h2 + ul li a
