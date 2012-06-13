@@ -6,10 +6,12 @@
 
 html
 {
+    background: white;
 }
 
 body
 {
+    background: white;
 	font-family: Arial, sans-serif;
 	font-size: 14px;
 	padding: 3.5em 20px 20px 20px;
@@ -465,4 +467,70 @@ body#feed h2 + ul li a:hover
 {
     background: #dda;
     color: #444;
+}
+
+@media (min-width:69em)
+{
+    html
+    {
+        min-height: 100%;
+        background: -moz-linear-gradient(top, #ccc, #fff);
+        background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#fff));
+    }
+
+    body
+    {
+        margin: 0 10em 10em 2em;
+        padding-bottom: 14em;
+        box-shadow: 10px 10px 5px #aaa;
+    }
+
+    h1 + ul
+    {
+        padding-right: 12em;
+    }
+}
+
+@media (max-width:69em)
+{
+    html
+    {
+        min-height: 100%;
+        background: white;
+    }
+
+    body
+    {
+        margin: 0;
+    }
+}
+
+@media (max-width:55em)
+{
+    div.figure,
+    address + table,
+    address
+    {
+        clear: both;
+        float: none;
+        display: block;
+        border-top: 1px solid #aaa;
+        border-bottom: 1px solid #aaa;
+        border-left: none;
+        border-right: none;
+        width: auto;
+        height: auto;
+        margin: 1em 2em;
+    }
+
+    address a
+    {
+        height: auto;
+        min-height: 9em;
+    }
+
+    address a img
+    {
+        margin-bottom: 1em;
+    }
 }
