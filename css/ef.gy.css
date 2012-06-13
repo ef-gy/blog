@@ -469,7 +469,7 @@ body#feed h2 + ul li a:hover
     color: #444;
 }
 
-@media (min-width:69em)
+@media (min-width:60em)
 {
     html
     {
@@ -489,9 +489,22 @@ body#feed h2 + ul li a:hover
     {
         padding-right: 12em;
     }
+
+    div.figure,
+    address + table
+    {
+        display: block;
+        float: right;
+        margin-right: -10em;
+        border: 0;
+        background: #eee;
+        background: -moz-linear-gradient(top, #ddd, #eee);
+        background: -webkit-gradient(linear, left top, left bottom, from(#ddd), to(#eee));
+        box-shadow: 15px 15px 7.5px #aaa;
+    }
 }
 
-@media (max-width:69em)
+@media (max-width:60em)
 {
     html
     {
@@ -505,7 +518,7 @@ body#feed h2 + ul li a:hover
     }
 }
 
-@media (max-width:55em)
+@media (max-width:58em)
 {
     div.figure,
     address + table,
