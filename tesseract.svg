@@ -50,7 +50,7 @@ svg
 <line x1="18em" y1="3.2em" x2="100%" y2="3.2em" stroke="black" stroke-width="0.05em" />
 <text x="23em" y="5.3em" font-size="0.9em">A hypercube, or n-cube, is a generalisation of a cube to an n-dimensional space. Shown below is a 4-cube.</text>
 <text x="23em" y="6.5em" font-size="0.9em">Rotate the 4D camera by dragging the left mouse button. Hold ALT while dragging to change axes.</text>
-<text x="23em" y="7.7em" font-size="0.9em">Drag with the middle mouse button to rotate the 3D camera. <a xlink:href="http://ef.gy/" fill="#33a"><tspan>Visit http://ef.gy/ for more info.</tspan></a></text>
+<text x="23em" y="7.7em" font-size="0.9em">Drag with the middle mouse button to rotate the 3D camera. <a xlink:href="http://ef.gy/" fill="#33a">Visit http://ef.gy/ for more info.</a></text>
 
 <svg x="1em" y="0.5em" height="7em" width="7em" viewBox="-2.5 -2.5 5 5" id="hud1">
 <g id="axis3" />
