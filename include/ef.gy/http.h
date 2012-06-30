@@ -131,7 +131,7 @@ namespace efgy
 
                         if (!error)
                         {
-                            static const boost::regex req("(\\w+)\\s+([\\w\\d%/]+)\\s+HTTP/1.[01]\\s*");
+                            static const boost::regex req("(\\w+)\\s+([\\w\\d%/.:;()+-]+)\\s+HTTP/1.[01]\\s*");
                             static const boost::regex mime("([\\w-]+):\\s*(.*)\\s*");
                             static const boost::regex mimeContinued("[ \t]\\s*(.*)\\s*");
 
