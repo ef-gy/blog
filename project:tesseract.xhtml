@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>SVG+JS Tesseract Renderer</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="Renders an interactive projection of a 4-cube in a browser window. Hail to the mathematicians, baby." />
+<meta name="date" content="2012-06-30T17:45:00Z" />
+<meta name="mtime" content="2012-06-30T17:45:00Z" />
+<meta name="category" content="Projects" />
+<meta name="unix:name" content="project:tesseract" />
+</head>
+<body>
+<div class="figure">
+<h1>Summary</h1>
+<p>Renders a perspective projection of a 4-cube by creating SVG line data in JavaScript. Warning: may use lots of memory and probably won't work in Opera. Definitely won't work in IE8 or earlier.</p>
+<ul>
+<li><a href="/svg/tesseract">see it in action</a></li>
+</ul>
+</div>
+<h1>Project Goals</h1>
+<p>The original idea was (and still is) to create an OpenGL programme to render arbitrary n-dimensional polytopes. Since I felt that would take quite a while, I've taken the time to use the code I wrote for that to try and see if we can't get a decent, interactive rendition in a browser window. At the very least, this doubles as a nice way to test the aforementioned programme's projection code.</p>
+<p>See the link to the right for the result of this little "diversion." It turned out surprisingly well. Source code will be committed to the site's GIT repository as soon as I've cleaned it up a bit.</p>
+<p>If you've never seen an interactive 4D projection of a tesseract before, you should definitely have a look at this one. YouTube videos and animated gifs will only get you that far in figuring out how higher dimensional projections really work.</p>
+<h1>Details</h1>
+<p>The two distinct pieces of work here are the perspective projections (4D to 3D and then again from 3D to 2D) and generating the hypercube. The interactive component is fairly trivial once those are defined. Since I already had a working perspective projection class for arbitrary n-D to (n-1)-D projections in C++ (which I will describe in more detail at a later time) that only left porting this to JavaScript.</p>
+<p>Fortunately, there is a project called "emscripten" which transforms LLVM bytecode (produced by the clang++ compiler and others) to JavaScript. This programme is fairly straightforward to use, so the only difficulty left was finding a way to talk to the C++ code once it was compiled to JavaScript. That bit was surprisingly hard, and as it turns out I had to generate JSON in the C++ bits to feed to the JavaScript code. Feel free to examine the code to see how that went.</p>
+</body>
+</html>

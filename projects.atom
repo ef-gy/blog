@@ -6,4 +6,5 @@
 
   <entry source:local="/srv/http/ef.gy/project:fortune.xhtml" />
   <entry source:local="/srv/http/ef.gy/project:xslt-mandelbrot.xhtml" />
+  <entry source:local="/srv/http/ef.gy/project:tesseract.xhtml" />
 </feed>
