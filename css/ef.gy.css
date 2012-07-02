@@ -2,60 +2,55 @@
 {
 	padding: 0;
 	margin: 0;
+	font-family: sans-serif;
 }
 
 html
 {
-    background: #eee;
+    background: #ddd;
+    font-size: 0.9em;
+}
+
+body:before
+{
+  content: "http://ef.gy/";
+  position: absolute;
+  display: block;
+  left: 0;
+  top: 0.6em;
+  right: 0;
+  font-size: 4em;
+  color: #ddd;
+  z-Index: -1;
+  font-weight: bold;
+  padding: 0.3em 1em;
+  border-top: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
+  background: #fff;
 }
 
 body
 {
-    background: white;
-	font-family: Arial, sans-serif;
-	font-size: 14px;
-	padding: 3.5em 30px 20px 30px;
+    margin: 0 0 2em 24em;
+    background: #eee;
+    background: rgba(255,255,255,0.9);
+	padding: 3.5em 2em;
+    border-left: 0.1em solid #aaa;
+    border-bottom: 0.1em solid #aaa;
+    border-bottom-left-radius: 2em;
 }
 
 h1, h2, h3, h4, h5, h6
 {
 	font-family: Verdana, Helvetica, sans-serif;
 	font-weight: normal;
-	margin: 0.5em 0.5em 0.5em 0;
+	margin: 0.5em 0;
 }
 
 h1
 {
-    position: fixed;
-	font-size: 1em;
-	border-bottom: 1px solid black;
-    left: 0;
-    right: 0;
-    top: 0;
-	margin: 0;
-	padding: 10px 20px 0.5em 20px;
-	font-weight: bold;
-    background: white;
-    background: rgba(255,255,255,0.8);
-    height: 1.2em;
-    overflow: hidden;
-    z-Index: 2;
-}
-h1:before
-{
-    content: "http://ef.gy/";
-    padding: 0.1em;
-    color: #999;
-}
-h1:after
-{
-    content: " ";
-    display: inline-block;
-    height: 1em;
-    width: 0.75em;
-    border: 1px solid black;
-    margin: -30px -20px -0.75em 1em;
-    background: blue;
+    font-size: 2em;
+    font-weight: bold;
 }
 
 h2
@@ -90,26 +85,14 @@ h6
 	font-size: 1.0em;
 }
 
-h1:hover + ul,
-h1 + ul:hover
-{
-    position: fixed;
-    background: white;
-    background: rgba(255,255,255,0.9);
-    border-bottom: 1px solid #aaa;
-    border-left: 1px solid #aaa;
-    z-Index: 3;
-}
-
 h1 + ul
 {
     position: absolute;
-    top: 2.4em;
+    top: 0.25em;
     right: 0;
     display: block;
 	padding: 0.2em 15px;
     z-Index: 1;
-    border-bottom-left-radius: 1em;
 }
 
 h1 + ul li
@@ -214,24 +197,26 @@ pre code
 address
 {
     display: block;
-    width: 32em;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-    background: white;
-    background: rgba(255,255,255,0.8);
-    padding: 0.5em 3em;
-    margin: 2em 0;
+    width: 16em;
+    border: 1px solid #aaa;
+    background: #eee;
+    background: rgba(255,255,255,0.9);
+    padding: 2em;
+    margin: -8em 0 0 -24em;
     font-style: normal;
-    float: left;
+    border-radius: 0.5em;
 }
 
 address img
 {
     float: right;
     border: 0.5em solid white;
-    padding: 0;
-    margin: -0.5em 0.5em;
+    padding: 0.5em;
+    margin: -5em -3em 0.5em 0.5em;
     height: 9em;
+    border: 0.1em solid #aaa;
+    background: #eee;
+    background: rgba(255,255,255,0.9);
 }
 
 address ul li
@@ -242,9 +227,8 @@ address ul li
 address a
 {
     display: block;
-    height: 9em;
-    padding: 0.5em 3em;
-    margin: -0.5em -3em;
+    padding: 2em;
+    margin: -2em;
     text-decoration: none;
 }
 
@@ -252,6 +236,7 @@ address a:hover
 {
     color: black;
     background: #eee;
+    border-radius: 0.5em;
 }
 
 address a span
@@ -273,24 +258,21 @@ address a span span
 
 address + table
 {
-    float: left;
-    border-left: 1px solid #ccc;
-    border-top: 1px solid #ccc;
+    border-top: 0.1em solid #ccc;
     padding: 0.5em 3em;
-    margin: 2em 0;
-}
-
-.figure
-{
-    float: right;
-    margin: 2em 0 1em 2em;
+    margin: -10em 0 2em 0;
 }
 
 div.figure
 {
     display: block;
-    width: 20em;
+    position: absolute;
+    width: 18em;
     padding: 1em;
+    margin: -2em 0 0 -24em;
+    border-radius: 0.5em;
+    background: rgba(255,255,255,0.9);
+    border: 0.1em solid #aaa;
 }
 
 div.figure img
@@ -356,7 +338,6 @@ table ul li
 
 body#feed
 {
-    padding: 6.5em 2em 1em 2em;
     vertical-align: top;
 }
 
@@ -379,22 +360,23 @@ body#feed h2 + ul li
     padding: 1em;
     margin: 0.5em;
     border: 0.1em solid #ccc;
+    background: rgba(255,255,255,0.7);
 }
 
 body#feed h2
 {
     border: 1px solid white;
     display: inline-block;
-    width: 21em;
-    height: 4em;
-    padding: 4em 1em;
+    width: 31.2em;
+    padding: 3.62em 1em;
     margin: 0.5em;
     text-align: center;
-    font-size: 1.2em;
     font-weight: bold;
-    font-size: 1em;
+    font-size: 1.4em;
     color: #555;
     background: #efefef;
+    background: rgba(230,230,230,0.8);
+    border: 1px solid #aaa;
 }
 
 body#feed h2 + ul li a
@@ -426,82 +408,44 @@ pre
     white-space pre-wrap;
 }
 
-@media (min-width:60em)
+@media (max-width: 68em)
 {
-    html
-    {
-        min-height: 100%;
-    }
-
-    body
-    {
-        margin: 0 10em 2em 2em;
-        padding-bottom: 14em;
-        box-shadow: 5px 5px 2px #aaa;
-    }
-
-    h1
-    {
-        padding-left: 3em;
-    }
-
-    h1 + ul
-    {
-        padding-right: 12em;
-    }
-
-    div.figure,
-    address + table
-    {
-        display: block;
-        float: right;
-        margin-right: -10em;
-        border: 0;
-        background: #eef;
-        box-shadow: 7px 7px 4px #aaa;
-    }
-}
-
-@media (max-width:60em)
-{
-    html
-    {
-        min-height: 100%;
-        background: white;
-    }
-
     body
     {
         margin: 0;
     }
-}
 
-@media (max-width:58em)
-{
-    div.figure,
-    address + table,
+    div.figure, address, address + table
+    {
+        position: relative;
+        margin: 1em auto 1em auto;
+        border-left: 0;
+        border-right: 0;
+        border-radius: 0;
+        background: none;
+        width: 30em;
+    }
+
     address
     {
-        clear: both;
-        float: none;
-        display: block;
-        border-top: 1px solid #aaa;
-        border-bottom: 1px solid #aaa;
-        border-left: none;
-        border-right: none;
+        margin: 5em auto 1em auto;
+    }
+
+    address + table
+    {
+        margin: 1em auto 1em auto;
+    }
+}
+
+@media (max-width: 47em)
+{
+    body#feed h2
+    {
+        background: none;
+        border: none;
         width: auto;
-        height: auto;
-        margin: 1em 2em;
-    }
-
-    address a
-    {
-        height: auto;
-        min-height: 9em;
-    }
-
-    address a img
-    {
-        margin-bottom: 1em;
+        display: block;
+        padding: 0;
+        text-align: left;
     }
 }
