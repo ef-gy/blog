@@ -23,11 +23,11 @@ server {
 
 		if ($http_accept ~* application/xhtml\+xml)
 		{
-			rewrite ^/$ /xhtml/fortune redirect;
+			rewrite ^/$ /xhtml/site redirect;
 			rewrite ^(.*)$ /xhtml$1 redirect;
 		}
 
-		rewrite ^/$ /html/fortune redirect;
+		rewrite ^/$ /html/site redirect;
 		rewrite ^(.*)$ /html$1 redirect;
 	}
 

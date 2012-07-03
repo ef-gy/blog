@@ -13,27 +13,28 @@ html
 
 body:before
 {
-  content: "http://ef.gy/";
-  position: absolute;
-  display: block;
-  left: 0;
-  top: 0.6em;
-  right: 0;
-  font-size: 4em;
-  color: #ddd;
-  z-Index: -1;
-  font-weight: bold;
-  padding: 0.3em 1em;
-  border-top: 1px solid #aaa;
-  border-bottom: 1px solid #aaa;
-  background: #fff;
+    content: "http://ef.gy/";
+    position: fixed;
+    display: block;
+    left: 0;
+    top: 0.6em;
+    right: 0;
+    font-size: 4em;
+    color: #ddd;
+    z-Index: -1;
+    font-weight: bold;
+    padding: 0.3em 1em;
+    border-top: 0.02em solid #aaa;
+    border-bottom: 0.02em solid #aaa;
+    background: #fff;
+    background: rgba(255,255,255,0.8);
 }
 
 body
 {
     margin: 0 0 2em 24em;
     background: #eee;
-    background: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.7);
 	padding: 3.5em 2em;
     border-left: 0.1em solid #aaa;
     border-bottom: 0.1em solid #aaa;
@@ -93,6 +94,7 @@ h1 + ul
     display: block;
 	padding: 0.2em 15px;
     z-Index: 1;
+    border-left: 0.4em solid #22c;
 }
 
 h1 + ul li
@@ -100,7 +102,6 @@ h1 + ul li
 	display: inline-block;
     margin: 0;
 	padding: 5px;
-	font-size: 0.9em;
 	color: #666;
 }
 
@@ -200,7 +201,7 @@ address
     width: 16em;
     border: 1px solid #aaa;
     background: #eee;
-    background: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.7);
     padding: 2em;
     margin: -8em 0 0 -24em;
     font-style: normal;
@@ -216,7 +217,7 @@ address img
     height: 9em;
     border: 0.1em solid #aaa;
     background: #eee;
-    background: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.7);
 }
 
 address ul li
@@ -271,7 +272,7 @@ div.figure
     padding: 1em;
     margin: -2em 0 0 -24em;
     border-radius: 0.5em;
-    background: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.7);
     border: 0.1em solid #aaa;
 }
 
@@ -336,6 +337,24 @@ table ul li
     margin: 0;
 }
 
+/*
+body#feed:after
+{
+    content: "ATOM Transcript";
+    display: block;
+    position: absolute;
+    width: 18em;
+    padding: 1em;
+    top: 6em;
+    left: 2em;
+    height: 8em;
+    border-radius: 0.5em;
+    background: rgba(255,255,255,0.9);
+    border: 0.1em solid #aaa;
+    font-weight: bold;
+}
+*/
+
 body#feed
 {
     vertical-align: top;
@@ -375,7 +394,7 @@ body#feed h2
     font-size: 1.4em;
     color: #555;
     background: #efefef;
-    background: rgba(230,230,230,0.8);
+    background: rgba(230,230,230,0.7);
     border: 1px solid #aaa;
 }
 
@@ -408,7 +427,7 @@ pre
     white-space pre-wrap;
 }
 
-@media (max-width: 68em)
+@media (max-width: 70em)
 {
     body
     {
