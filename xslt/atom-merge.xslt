@@ -34,6 +34,10 @@
         </xsl:if>
       </author>
 
+      <content type="application/xhtml+xml">
+        <xsl:copy-of select="$source" />
+      </content>
+
       <source>
         <xsl:copy-of select="../atom:title" />
         <xsl:copy-of select="../atom:link" />

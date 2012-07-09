@@ -386,7 +386,7 @@ body#feed h2
 {
     border: 1px solid white;
     display: inline-block;
-    width: 31.2em;
+    width: 14.1em;
     padding: 3.62em 1em;
     margin: 0.5em;
     text-align: center;
@@ -418,13 +418,38 @@ body#feed h2 + ul li a span
 
 body#feed h2 + ul li a:hover
 {
-    background: #dda;
-    color: #444;
+    background: #fff;
+    background: rgba(255,255,2550,0.5);
+    color: #555;
 }
 
 pre
 {
     white-space pre-wrap;
+}
+
+body#feed h2
+{
+    background: #afefaf;
+    background: rgba(210,230,210,0.7);
+}
+
+body#feed h2 + ul li
+{
+    background: #aca;
+    background: rgba(230,255,230,0.7);
+}
+
+body#feed h2 + ul + h2
+{
+    background: #afafef;
+    background: rgba(210,210,230,0.7);
+}
+
+body#feed h2 + ul + h2 + ul li
+{
+    background: #aac;
+    background: rgba(230,230,255,0.7);
 }
 
 @media (max-width: 70em)
