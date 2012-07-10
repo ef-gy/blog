@@ -14,6 +14,7 @@
               media-type="application/xhtml+xml" />
 
   <xsl:key name="entry-by-category" match="atom:entry" use="atom:category/@term" />
+  <xsl:key name="entry-by-updated" match="atom:entry" use="atom:updated" />
 
   <xsl:template match="@*|node()">
     <xsl:copy>

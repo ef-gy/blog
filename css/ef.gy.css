@@ -7,7 +7,8 @@
 
 html
 {
-    background: #ddd;
+    background: url(/svg/stripes) #ddd no-repeat top left;
+    background-attachment: fixed;
     font-size: 0.9em;
 }
 
@@ -272,7 +273,7 @@ div.figure
     padding: 2em;
     margin: -2em 0 0 -24em;
     border-radius: 0.5em;
-    background: rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.8);
     border: 0.1em solid #aaa;
 }
 
@@ -374,7 +375,7 @@ body#feed h2 + ul
 body#feed h2 + ul li
 {
     display: inline-block;
-    width: 21em;
+    width: 18em;
     height: 10em;
     padding: 1em;
     margin: 0.5em;
@@ -386,7 +387,7 @@ body#feed h2
 {
     border: 1px solid white;
     display: inline-block;
-    width: 14.1em;
+    width: 12.0em;
     padding: 3.62em 1em;
     margin: 0.5em;
     text-align: center;
