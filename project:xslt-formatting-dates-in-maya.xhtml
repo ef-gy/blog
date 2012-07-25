@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>XSLT: Formatting Dates in Maya</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="An XSLT stylesheet that formats UNIX time stamps as Maya dates. The article also tries to explain the different calendars used by the Maya." />
+<meta name="date" content="2012-07-25T20:00:00Z" />
+<meta name="mtime" content="2012-07-25T20:00:00Z" />
+<meta name="category" content="Projects" />
+<meta name="unix:name" content="project:xslt-formatting-dates-in-maya" />
+</head>
+<body>
+<div class="figure">
+<h1>Summary</h1>
+<p>An XSLT stylesheet that formats UNIX time stamps as Maya dates.</p>
+<ul>
+<li><a href="/raw/example/xslt-date-maya.xml">see it in action</a></li>
+<li><a href="/xslt/date-time-maya.xslt">get the stylesheet</a></li>
+</ul>
+</div>
+<h1>Introduction</h1>
+<p>It's been a fairly busy couple of weeks, but I've been reminded of this over a game of Shadowrun last weekend. While working on another website, I'd written an XSLT stylesheet that translates UNIX time stamps to Maya dates.</p>
+<p>The linked XSLT stylesheet transforms &lt;date/&gt; nodes with a given UNIX time stamp to a string comprised of the Long Count and the Calendar Round. See the example for the format of this node.</p>
+<h1>Details</h1>
+<p>There are three distinct calendars to consider for this: the Maya Tzolk'in and Haab', and the slightly more common Mesoamerican Long Count. Dates are typically expressed as either a combination of the former two, called a "Calendar Round", just the latter or all three of them. One interesting property of all three of these calendars is how easy it is to calculate them. Unlike the Gregorian and Julian calendars, there are no leap rules, making for extremely simple calculations.</p>
+<p>If you examine the XSLT, you will notice that the named components of the calendars are integrated into the stylesheet itself. That's a fairly nice technique to pick up that is often overlooked by stylesheet authors. Just remember that in XSLT node lists start with one and not zero, which is why we have to adjust some of the calculated values.</p>
+<h2>The Mesoamerican Long Count</h2>
+<p>This calendar was used by several distinct mesoamerican peoples. It is very similar to the integer part of a Julian Day Number, in that a date in this calendar is basically the number of days since an epoch. The date is expressed as a series of vegisimal digits with the most significant digit written first, and with the exception that the second-to-last digit is in base 18. As Arabian numerals are based on the decimal system, it is customary to write each of these digits in decimal and separate them by dots, like so: 12.19.19.10.11. Given a UNIX time stamp, the day number is easily calculated as:</p>
+<pre><code>$unixEpoch + floor($unix div $unixSecondsPerDay)</code></pre>
+<p>...where $unixEpoch depends on the correlation in use and represents the number of days that had passed on the first of January 1970, $unix is the UNIX time to convert and $unixSecondsPerDay is 24*60*60 seconds.</p>
+<p>One source of controversy among scholars about this calendar is the epoch (i.e. "day zero") to use. A fairly large number of scholars have deduced several conflicting correlations between this calendar and the Gregorian calendar, and there is still some debate as to which of the correlations is the most accurate one. The most popular at the time of this writing seems to be the Goodman-Martinez-Thompson correlation, which correlates 0.0.0.0.0 with Julian Day Number 584282.5.</p>
+<p>Contrary to popular belief, this "Maya Calendar" does not "end" in December 2012. People claiming this typically refer to the part in Maya mythology that describes how "this world" was created by the respective deities when the long count of the "last world" reached 13.0.0.0.0. While I've seen that part confirmed, I've not been able to find any actual primary sources for the part where "this world" would also end on 13.0.0.0.0. The calendar itself certainly has no problem "working" after this alleged Doomsday. Further, I've not been able to find any primary sources that would indicate this particular digit would be in base-13 or base-14, meaning that the calendar rules will continue to apply until 19.19.19.17.19. That would be sometime in 4772 CE.</p>
+<p>Now, if you'd think the calendar would stop working then and by extension that would have to be the next Doomsday you'd still be wrong. There are primary sources using several more digits (presumably also in base 20). There is precedent for at least another four digits, which would last for about another 1.26 billion years. Since the calendar is really just a vegisimal number, there's nothing to stop people from extending the calendar beyond that, either.</p>
+<p>The linked XSLT stylesheet uses the Goodman-Martinez-Thompson correlation and it displays the common five-digit version of the calendar for dates before 19.19.19.17.19 and the nine-digit version of the calendar after that date. For dates beyond 19.19.19.19.19.19.19.17.19, the stylesheet will silently drop any additional digits.</p>
+<h2>The Haab'</h2>
+<p>This calendar most closely resembles calendars as used in western societies. A period of 365 days is divided into 18 periods of 20 days and one period of 5 days. These 19 periods are named and are often referred to as "months." These "months" start on day 0, referred to as the "seating" of the month. (Although some scholars seem to prefer to call these zeroeth days the twentieth of the preceding month, so that months start on day 1.)</p>
+<p>The length of this calendar suggests that unlike the Tzolk'in, this one was intended to approximate the solar year. There are no sources that would indicate any further synchronisation with the solar year, meaning the calendar just repeats every 365 days. The formulas for determining the month and day of the month in this calendar are:</p>
+<pre><code>$kin := floor((($unixEpoch + ($unix div $unixSecondsPerDay)) - 17) mod 365)
+$dayNumber := floor($kin mod 20)
+$month := floor($kin div 20)</code></pre>
+<p>... with the variables as explained above. Given a list of month names, it may be necessary to offset $month by one, depending on the programming language.</p>
+<h2>The Tzolk'in</h2>
+<p>Unlike the Haab', this calendar has no apparent relation to either solar, lunar or other astronomical events. Sources indicate that this calendar was used to coordinate religious events.</p>
+<p>This calendar is based on two concurrent cycles, one of 20 days and one of 13 days. The 13 day component is written as a plain number ranging from 1 to 13, while the 20 day component has specific names for each day. Think of the cycles as weekdays, except that where you ordinarily have one cycle for weekdays, here you have two of them. These two cycles combined allow for 260 distinct named days. The formula is fairly easy to deduce:</p>
+<pre><code>$kin := $unixEpoch + floor($unix div $unixSecondsPerDay)
+$num := floor(($kin + 4) mod 13)
+$day := floor($kin mod 20)</code></pre>
+<p>... again with the same variables as above. As with the Haab' dates, in XSLT we have to add 1 to the $day number when looking up the named portion of the day. Also, before displaying the $num component, we have to test whether it's zero -- if it is, we need to substitute 13.</p>
+<h2>The Calendar Round</h2>
+<p>Neither the Haab' nor the Tzolk'in have the concept of a "year number", which means that individually they cannot be used to keep track of time beyond 365 or 260 days, respectively. Similar to the Chinese, the Maya used both of these calendars in concert. This allows for distinct dates within a time frame of 52 Haab' years, after which the calendar dates start to repeat.</p>
+<p>For most uses, this time frame was probably deemed sufficient. For longer periods of time the Long Count was used.</p>
+</body>
+</html>

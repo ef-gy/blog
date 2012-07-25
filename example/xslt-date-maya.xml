@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<?xml-stylesheet type="text/xsl" href="/xslt/date-time-maya.xslt" ?>
+<html xmlns:dt="http://ef.gy/2012/date-time" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>XSLT Maya Dates</title>
+  </head>
+  <body>
+    <h1>Maya Date at UNIX Time 123456789</h1>
+    <p><dt:date unix="123456789" to="maya"/></p>
+  </body>
+</html>
