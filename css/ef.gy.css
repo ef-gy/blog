@@ -12,25 +12,6 @@ html
     font-size: 0.9em;
 }
 
-body:before
-{
-    content: "http://ef.gy/";
-    position: fixed;
-    display: block;
-    left: 0;
-    top: 0.6em;
-    right: 0;
-    font-size: 4em;
-    color: #ddd;
-    z-Index: -1;
-    font-weight: bold;
-    padding: 0.3em 1em;
-    border-top: 0.02em solid #aaa;
-    border-bottom: 0.02em solid #aaa;
-    background: #fff;
-    background: rgba(255,255,255,0.8);
-}
-
 body
 {
     margin: 0 0 2em 24em;
@@ -444,7 +425,7 @@ body#feed h2 + ul li a:hover
 
 pre
 {
-    white-space pre-wrap;
+    white-space: pre-wrap;
 }
 
 body#feed h2
@@ -500,9 +481,9 @@ body#feed h2 + ul + h2 + ul li
     }
 }
 
-@media (max-width: 47em)
+@media (max-width: 60.5em)
 {
-    body#feed h2
+    body#feed h2, body#feed h2 + ul + h2
     {
         background: none;
         border: none;
