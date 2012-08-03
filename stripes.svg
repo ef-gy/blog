@@ -20,6 +20,6 @@ rect, polygon { fill: rgba(255,255,255,0.8); stroke: #aaa; stroke-width: 1px }]]
 
 <rect x="0" y="40" width="100%" height="130"/>
 <text x="40" y="105">http://ef.gy/</text>
-<text x="40" y="150" style="font-size: 30px">Ephemeris Magnae</text>
+<text x="40" y="150" style="font-size: 33.5px">ephemeris magni</text>
 
 </svg>
