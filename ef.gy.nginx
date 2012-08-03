@@ -2,8 +2,7 @@
 # Evidently, this server is running nginx with the native XSLT processor.
 
 server {
-
-	listen   80;
+    listen [::]:80;
 
 	server_name  ef.gy;
 
