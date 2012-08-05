@@ -67,6 +67,10 @@ server {
 		try_files $uri =404;
 	}
 
+	location /download {
+		try_files $uri =404;
+	}
+
 	location /svg {
 		alias /srv/http/ef.gy;
 		try_files $uri.xml $uri.svg $uri $uri.cache.xml =404;

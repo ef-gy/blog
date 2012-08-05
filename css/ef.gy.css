@@ -485,14 +485,26 @@ body#feed h2 + ul + h2 + ul li
 
 body#feed h2 + ul + h2 + ul + h2
 {
-    background: #afafef;
+    background: #efafaf;
     background: rgba(230,210,210,0.7);
 }
 
 body#feed h2 + ul + h2 + ul + h2 + ul li
 {
-    background: #aac;
+    background: #caa;
     background: rgba(255,230,230,0.7);
+}
+
+body#feed h2 + ul + h2 + ul + h2 + ul + h2
+{
+    background: #efafef;
+    background: rgba(230,210,230,0.7);
+}
+
+body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul li
+{
+    background: #cac;
+    background: rgba(255,230,255,0.7);
 }
 
 @media (max-width: 70em)
@@ -526,7 +538,7 @@ body#feed h2 + ul + h2 + ul + h2 + ul li
 
 @media (max-width: 60.5em)
 {
-    body#feed h2, body#feed h2 + ul + h2, body#feed h2 + ul + h2 + ul + h2
+    body#feed h2, body#feed h2 + ul + h2, body#feed h2 + ul + h2 + ul + h2, body#feed h2 + ul + h2 + ul + h2 + ul + h2
     {
         background: none;
         border: none;
