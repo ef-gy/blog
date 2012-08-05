@@ -55,7 +55,7 @@
         <li><a href="source-code">Source Code</a></li>
       </ul>
       <xsl:if test="//xhtml:meta[@name='unix:name']"><ul>
-        <li><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" data-via="jyujinX">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></li>
+        <li><a href="https://twitter.com/share?url=http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}&amp;via=jyujinX" class="twitter-share-button">Tweet</a><script type="text/javascript">!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></li>
         <xsl:if test="//xhtml:meta[@name='author'][@content='Magnus Achim Deininger']">
         <li><a class="FlattrButton" href="http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" title="{/xhtml:html/xhtml:head/xhtml:title}" lang="en"><xsl:value-of select="//xhtml:meta[@name='description']/@content"/></a></li>
         </xsl:if>
