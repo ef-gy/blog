@@ -45,6 +45,7 @@
                 <a href="{atom:link/@href}">
                   <span><xsl:value-of select="atom:title" /></span>
                   <xsl:value-of select="atom:summary" />
+                  <span class="author"><xsl:value-of select="substring-before(atom:author/atom:name,' ')" /></span>
                 </a>
               </li>
             </xsl:for-each>

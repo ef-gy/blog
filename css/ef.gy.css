@@ -79,12 +79,23 @@ h1 + ul
     border-left: 0.4em solid #22c;
 }
 
-h1 + ul li
+h1 + ul + ul
+{
+    display: block;
+}
+
+h1 + ul li,
+h1 + ul + ul li
 {
 	display: inline-block;
     margin: 0;
 	padding: 5px;
 	color: #666;
+}
+
+iframe
+{
+    border: 0;
 }
 
 a
@@ -243,7 +254,7 @@ address + table
 {
     border-top: 0.1em solid #ccc;
     padding: 0.5em 3em;
-    margin: -10em 0 2em 0;
+    margin: -6em auto 2em auto;
 }
 
 div.figure
@@ -375,7 +386,7 @@ body#feed h2 + ul li
 {
     display: inline-block;
     width: 18em;
-    height: 10em;
+    height: 12em;
     padding: 1em;
     margin: 0.5em;
     border: 0.1em solid #ccc;
@@ -387,7 +398,7 @@ body#feed h2
     border: 1px solid white;
     display: inline-block;
     width: 12.0em;
-    padding: 3.62em 1em;
+    padding: 4.3em 1em;
     margin: 0.5em;
     text-align: center;
     font-weight: bold;
@@ -401,9 +412,10 @@ body#feed h2
 body#feed h2 + ul li a
 {
     display: block;
+    position: relative;
     text-decoration: none;
     padding: 1em;
-    height: 10em;
+    height: 12em;
     margin: -1em;
 }
 
@@ -414,6 +426,25 @@ body#feed h2 + ul li a span
     font-weight: bold;
     font-size: 1.2em;
     margin: 0 0 1em 0;
+}
+
+body#feed h2 + ul li a span.author
+{
+    display: block;
+    position: absolute;
+    bottom: 1em;
+    right: 1em;
+    color: #aaa;
+    font-weight: bold;
+    font-size: 1em;
+    margin: 1em 0 0 0;
+    text-align: right;
+}
+
+body#feed h2 + ul li a span.author:before
+{
+    content: "by ";
+    color: #ccc;
 }
 
 body#feed h2 + ul li a:hover
@@ -495,7 +526,7 @@ body#feed h2 + ul + h2 + ul + h2 + ul li
 
 @media (max-width: 60.5em)
 {
-    body#feed h2, body#feed h2 + ul + h2
+    body#feed h2, body#feed h2 + ul + h2, body#feed h2 + ul + h2 + ul + h2
     {
         background: none;
         border: none;
