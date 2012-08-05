@@ -452,6 +452,18 @@ body#feed h2 + ul + h2 + ul li
     background: rgba(230,230,255,0.7);
 }
 
+body#feed h2 + ul + h2 + ul + h2
+{
+    background: #afafef;
+    background: rgba(230,210,210,0.7);
+}
+
+body#feed h2 + ul + h2 + ul + h2 + ul li
+{
+    background: #aac;
+    background: rgba(255,230,230,0.7);
+}
+
 @media (max-width: 70em)
 {
     body
