@@ -54,12 +54,14 @@
         <li><a href="site">Articles &amp; Projects</a></li>
         <li><a href="source-code">Source Code</a></li>
       </ul>
-      <xsl:if test="//xhtml:meta[@name='unix:name']"><ul>
-        <li><a href="https://twitter.com/share?url=http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}&amp;via=jyujinX" class="twitter-share-button">Tweet</a><script type="text/javascript">!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></li>
+      <ul>
+       <li><a href="https://twitter.com/jyujinX" class="twitter-follow-button">Follow @jyujinX</a><script type="text/javascript">!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></li>
+       <xsl:if test="//xhtml:meta[@name='unix:name']">
+        <li><a href="https://twitter.com/share?url=http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}&amp;via=jyujinX" class="twitter-share-button">Tweet</a></li>
         <xsl:if test="//xhtml:meta[@name='author'][@content='Magnus Achim Deininger']">
         <li><a class="FlattrButton" href="http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" title="{/xhtml:html/xhtml:head/xhtml:title}" lang="en"><xsl:value-of select="//xhtml:meta[@name='description']/@content"/></a></li>
         </xsl:if>
-      </ul></xsl:if>
+      </xsl:if></ul>
       <xsl:if test="(//xhtml:meta[@name='description']/@content) and not(xhtml:div[@class='figure']/xhtml:h1)">
         <div class="figure">
           <h2>Summary</h2>
@@ -70,7 +72,7 @@
       <xsl:if test="//xhtml:meta[@name='author'][@content='Magnus Achim Deininger']"><address>
         <a rel="author" href="about">
           <img src="/jpeg/mdeininger" alt="Magnus Achim Deininger" />
-          <span>Written by <span>Magnus Achim Deininger</span>.</span> Magnus Achim Deininger is a <del>sellsword</del> freelance programmer specialising in peculiar problems, such as embedded development, formal language theory and experiments in minimalistic design. This website serves as his personal journal and testing ground for unusual and/or crazy ideas.</a>
+          <span>Written by <span>Magnus Achim Deininger</span>.</span> Magnus Achim Deininger is a <del>sellsword</del> freelance computer scientist specialising in peculiar problems, such as embedded development, formal language theory and experiments in minimalistic design. This website serves as his personal journal and testing ground for unusual and/or crazy ideas.</a>
       </address></xsl:if>
       <xsl:if test="//xhtml:meta[@name='author'][@content='Nadja Klein']"><address>
         <a rel="author" href="http://www.facebook.com/nadja.klein.967">
@@ -89,6 +91,7 @@
           </tbody>
         </table>
       </xsl:if>
+      <div id="ScribCode940130255"/>
     </xsl:copy>
   </xsl:template>
 
