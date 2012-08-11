@@ -268,7 +268,6 @@ namespace efgy
             return primitive<Q,u>(std::atan(vA.data));
         }
 
-        
         template <typename Q, typename u>
         primitive<Q,u> atan2 (const primitive<Q,u> &vA, const primitive<Q,u> &vB)
         {

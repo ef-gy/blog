@@ -45,9 +45,27 @@ namespace efgy
                     {}
 
                 typename euclidian::space<Q,d>::vector operator *
-                    (const typename euclidian::space<Q,d>::vector &pV)
+                    (const typename euclidian::space<Q,d>::vector &pV) const
                 {
                     typename euclidian::space<Q,d>::vector rv;
+
+                    math::matrix<Q,1,d+1> vectorMatrix;
+
+                    for (unsigned int i = 0; i < d; i++)
+                    {
+                        vectorMatrix.data[0][i] = pV.data[i];
+                    }
+
+                    vectorMatrix.data[0][d] = 1;
+
+                    vectorMatrix
+                        = vectorMatrix
+                        * transformationMatrix;
+
+                    for (unsigned int i = 0; i < d; i++)
+                    {
+                        rv.data[i] = vectorMatrix.data[0][i] / vectorMatrix.data[0][d];
+                    }
 
                     return rv;
                 }
@@ -77,7 +95,8 @@ namespace efgy
                         {
                             if ((i == d) && (j < d))
                             {
-                                transformationMatrix.data[i][j] = -from.data[j];
+//                                transformationMatrix.data[j][i] = from.data[j];
+                                transformationMatrix.data[i][j] = from.data[j];
 //                                transformationMatrix.data[i][j] = 0;
                             }
                             else if (i == j)
@@ -245,13 +264,15 @@ namespace efgy
                 {
                     lookAtTransformation = lookAt<Q,d>(from, to);
 
-                    translation<Q,d> translationTransformation(from);
+                    translation<Q,d> translationTransformation(from * Q(-1));
                     perspective<Q,d> perspectiveTransformation(0.25,500,1.2,eyeAngle);
 
                     worldTransformation.transformationMatrix
-                        //= translationTransformation.transformationMatrix
-                    = lookAtTransformation.transformationMatrix;
-                        // * perspectiveTransformation.transformationMatrix;
+                        = translationTransformation.transformationMatrix
+                        * lookAtTransformation.transformationMatrix
+                        //* translationTransformation.transformationMatrix
+                        //* perspectiveTransformation.transformationMatrix
+                    ;
 
                     T = 1 / tan(eyeAngle / Q(2));
                 }
@@ -260,71 +281,55 @@ namespace efgy
                     (const typename euclidian::space<Q,d>::vector &pP) const
                 {
                     typename euclidian::space<Q,(d-1)>::vector result;
+
+                    translation<Q,d> translationTransformation(from * Q(-1));
+
+                    typename euclidian::space<Q,d>::vector V = translationTransformation * pP;
+
 #if 0
                     math::matrix<Q,1,d+1> vectorMatrix;
 
-                    typename euclidian::space<Q,d>::vector point = pP;
-                    
                     for (unsigned int i = 0; i < d; i++)
                     {
-                        /*
-                        if (i < (d-1))
-                        {
-                            vectorMatrix.data[0][i] = pP.data[i] / pP.data[(d-1)];
-                        }
-                        else
-                         */
-                        {
-                            vectorMatrix.data[0][i] = point.data[i];
-                        }
+                        vectorMatrix.data[0][i] = pP.data[i];
                     }
 
-//                    vectorMatrix.data[0][d] = sqrt(euclidian::lengthSquared<Q,d>(pP - from));
-//                    vectorMatrix.data[0][d] = 1;
+                    vectorMatrix.data[0][d] = 1;
 
+                    /*
                     math::matrix<Q,1,d+1> resultMatrix
                         = vectorMatrix
                         * worldTransformation.transformationMatrix;
+                     */
 
-                    Q divisor = 1;
-//                    const Q divisor = (1 / tan(eyeAngle/2)) / dotProduct();
+                    math::matrix<Q,1,d+1> resultMatrix
+                        = vectorMatrix
+                        * lookAtTransformation.transformationMatrix;
 
-//                    divisor  = 1/atan(eyeAngle/2)/divisor;
-//                    divisor *= euclidian::dotProduct<Q,d>(pP, euclidian::normalise<Q,d>(from - to));
-//                    divisor *= sqrt(euclidian::lengthSquared<Q,d>(euclidian::dotProduct<Q,d>(point, euclidian::normalise<Q,d>(from - to))));
-                    divisor = 1/sqrt(euclidian::lengthSquared<Q,d>(point - from));
+//                    typename euclidian::space<Q,d>::vector V = pP - from;
 
-//                    divisor *= 1/resultMatrix.data[0][d];
-//                    divisor *= 1/resultMatrix.data[0][(d-1)];
-//                    divisor *= atan(eyeAngle/2);
-//                    divisor = 1;
+                    Q S = (Q(1) / resultMatrix.data[0][d])
+                        * T
+                    //    / resultMatrix.data[0][(d-1)]
+                    //    / euclidian::dotProduct<Q,d>(V, lookAtTransformation.columns.data[(d-1)])
+                        / euclidian::dotProduct<Q,d>(pP, from)
+                    ;
 
                     for (unsigned int i = 0; i < (d-1); i++)
                     {
-                        result.data[i]  = resultMatrix.data[0][i];
-                        result.data[i] *= divisor;
+                        result.data[i] 
+                            = S * resultMatrix.data[0][i];
                     }
-
-/*
-                    for (unsigned int i = 0; i < (d-1); i++)
-                    {
-                        result.data[i] =
-                            (resultMatrix.data[0][i] - from.data[i]) *
-                            (from.data[(d-1)] / resultMatrix.data[0][(d-1)]);
-
-                        result.data[i]  = resultMatrix.data[0][i] / resultMatrix.data[0][d];
-                        result.data[i]  = (result.data[i] - from.data[i]);
-                    }
- */
 
 #else
-                    typename euclidian::space<Q,d>::vector V = pP - from;
+//                    typename euclidian::space<Q,d>::vector V = pP - from;
 
                     Q S = T / euclidian::dotProduct<Q,d>(V, lookAtTransformation.columns.data[(d-1)]);
 
                     for (unsigned int i = 0; i < (d-1); i++)
                     {
-                        result.data[i] = S * euclidian::dotProduct<Q,d>(V, lookAtTransformation.columns.data[i]);
+                        result.data[i]
+                            = S * euclidian::dotProduct<Q,d>(V, lookAtTransformation.columns.data[i]);
                     }
 #endif
                     return result;

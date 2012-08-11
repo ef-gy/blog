@@ -42,9 +42,19 @@ namespace efgy
             class space : public math::coordinateSpace<F,n>
             {
                 public:
-                    using typename math::coordinateSpace<F,n>::base;
-                    using typename math::coordinateSpace<F,n>::scalar;
-                    using typename math::coordinateSpace<F,n>::vector;
+                    typedef typename math::coordinateSpace<F,n>::base base;
+                    typedef typename math::coordinateSpace<F,n>::scalar scalar;
+
+                    class vector : public math::coordinateSpace<F,n>::vector
+                    {
+                        public:
+                            vector () : math::coordinateSpace<F,n>::vector() {}
+                            vector (const scalar t[n]) : math::coordinateSpace<F,n>::vector(t) {}
+                            vector (const math::tuple<n, scalar> &t) : math::coordinateSpace<F,n>::vector(t) {}
+                            explicit vector (const typename math::coordinateSpace<F,n>::vector &t) : math::coordinateSpace<F,n>::vector(t) {}
+
+                            using math::coordinateSpace<F,n>::vector::data;
+                    };
             };
 
             template <typename F, unsigned int n>

@@ -47,13 +47,17 @@ namespace efgy
             public:
                 opengl
                     (const geometry::perspectiveProjection<Q,d> &pProjection,
-                     const opengl<Q,d-1> &pLowerRenderer)
-                    : projection(pProjection), lowerRenderer(pLowerRenderer)
+                     const opengl<Q,d-1> &pLoweRenderer)
+                    : projection(pProjection), lowerRenderer(pLoweRenderer)
                     {}
 
                 void drawLine
                     (const typename geometry::euclidian::space<Q,d>::vector &pA,
                      const typename geometry::euclidian::space<Q,d>::vector &pB) const;
+
+                template<unsigned int q>
+                void drawFace
+                    (const math::tuple<q, typename geometry::euclidian::space<Q,d>::vector> &pV) const;
 
             protected:
                 const geometry::perspectiveProjection<Q,d> &projection;
@@ -69,6 +73,10 @@ namespace efgy
                     (const typename geometry::euclidian::space<Q,3>::vector &pA,
                      const typename geometry::euclidian::space<Q,3>::vector &pB) const;
 
+                template<unsigned int q>
+                void drawFace
+                    (const math::tuple<q, typename geometry::euclidian::space<Q,3>::vector> &pV) const;
+
             protected:
         };
 #endif
@@ -80,6 +88,10 @@ namespace efgy
                 void drawLine
                     (const typename geometry::euclidian::space<Q,2>::vector &pA,
                      const typename geometry::euclidian::space<Q,2>::vector &pB) const;
+
+                template<unsigned int q>
+                void drawFace
+                    (const math::tuple<q, typename geometry::euclidian::space<Q,2>::vector> &pV) const;
 
             protected:
         };
@@ -96,6 +108,21 @@ namespace efgy
             B = projection.project(pB);
 
             lowerRenderer.drawLine(A, B);
+        }
+
+        template<typename Q, unsigned int d>
+        template<unsigned int q>
+        void opengl<Q,d>::drawFace
+            (const math::tuple<q, typename geometry::euclidian::space<Q,d>::vector> &pV) const
+        {
+            math::tuple<q, typename geometry::euclidian::space<Q,d-1>::vector> V;
+
+            for (unsigned int i = 0; i < q; i++)
+            {
+                V.data[i] = projection.project(pV.data[i]);
+            }
+
+            lowerRenderer.drawFace(V);
         }
 
 #if defined(GL3D)
@@ -116,6 +143,22 @@ namespace efgy
             glVertex3d(b0, b1, b2);
             glEnd();
         }
+
+        template<typename Q>
+        template<unsigned int q>
+        void opengl<Q,3>::drawFace
+            (const math::tuple<q, typename geometry::euclidian::space<Q,3>::vector> &pV) const
+        {
+            glBegin(GL_POLYGON);
+            for (unsigned int i = 0; i < q; i++)
+            {
+                const GLdouble a0 = Q(pV.data[i].data[0]);
+                const GLdouble a1 = Q(pV.data[i].data[1]);
+                const GLdouble a2 = Q(pV.data[i].data[2]);
+                glVertex3d(a0, a1, a2);
+            }
+            glEnd();
+        }
 #endif
 
         template<typename Q>
@@ -131,6 +174,21 @@ namespace efgy
             glBegin(GL_LINES);
             glVertex2d(a0, a1);
             glVertex2d(b0, b1);
+            glEnd();
+        }
+
+        template<typename Q>
+        template<unsigned int q>
+        void opengl<Q,2>::drawFace
+            (const math::tuple<q, typename geometry::euclidian::space<Q,2>::vector> &pV) const
+        {
+            glBegin(GL_POLYGON);
+            for (unsigned int i = 0; i < q; i++)
+            {
+                const GLdouble a0 = Q(pV.data[i].data[0]);
+                const GLdouble a1 = Q(pV.data[i].data[1]);
+                glVertex2d(a0, a1);
+            }
             glEnd();
         }
     };
