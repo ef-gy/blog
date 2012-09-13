@@ -90,7 +90,6 @@
           </tbody>
         </table>
       </xsl:if>
-      <div id="ScribCode940130255"/>
     </xsl:copy>
   </xsl:template>
 
