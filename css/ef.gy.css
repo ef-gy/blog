@@ -542,9 +542,25 @@ body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul li
     border-radius: 0.3em;
 }
 
+@media (max-width: 84em)
+{
+    body#feed
+    {
+        margin-left: 16em;
+    }
+}
+
+@media (max-width: 80em)
+{
+    body#feed
+    {
+        margin-left: 10em;
+    }
+}
+
 @media (max-width: 70em)
 {
-    body
+    body, body#feed
     {
         margin: 0;
     }
