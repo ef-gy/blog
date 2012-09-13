@@ -36,7 +36,6 @@
           <link rel="alternate" type="application/atom+xml" href="/atom/site" />
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:if test="//xhtml:meta[@name='unix:name'] and //xhtml:meta[@name='author'][@content='Magnus Achim Deininger']"><script type="text/javascript"><![CDATA[(function() { var s = document.createElement('script'); var t = document.getElementsByTagName('script')[0]; s.type = 'text/javascript'; s.async = true; s.src = '//api.flattr.com/js/0.6/load.js?mode=auto&uid=magnus.deininger&button=compact&language=en_GB&category=text'; t.parentNode.insertBefore(s, t); })();]]></script></xsl:if>
     </xsl:copy>
   </xsl:template>
 
@@ -54,14 +53,14 @@
         <li><a href="site">Articles &amp; Projects</a></li>
         <li><a href="source-code">Source Code</a></li>
       </ul>
-      <ul>
-       <li><a href="https://twitter.com/jyujinX" class="twitter-follow-button">Follow @jyujinX</a><script type="text/javascript">!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></li>
-       <xsl:if test="//xhtml:meta[@name='unix:name']">
-        <li><a href="https://twitter.com/share?url=http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}&amp;via=jyujinX" class="twitter-share-button">Tweet</a></li>
-        <xsl:if test="//xhtml:meta[@name='author'][@content='Magnus Achim Deininger']">
-        <li><a class="FlattrButton" href="http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" title="{/xhtml:html/xhtml:head/xhtml:title}" lang="en"><xsl:value-of select="//xhtml:meta[@name='description']/@content"/></a></li>
-        </xsl:if>
-      </xsl:if></ul>
+      <xsl:if test="//xhtml:meta[@name='unix:name']">
+        <ul id="social">
+          <li><a href="https://twitter.com/share?url=http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}&amp;via=jyujinX" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">tweet</a></li>
+          <li><a href="http://www.facebook.com/sharer.php?u=http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">share: facebook</a></li>
+          <li><a href="https://www.xing.com/app/user?op=share&amp;url=http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" onclick="javascript:window.open(this.href,'','');return false;">share: xing</a></li>
+          <li><a href="https://plus.google.com/share?url=http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">share: google+</a></li>
+        </ul>
+      </xsl:if>
       <xsl:if test="(//xhtml:meta[@name='description']/@content) and not(xhtml:div[@class='figure']/xhtml:h1)">
         <div class="figure">
           <h2>Summary</h2>
