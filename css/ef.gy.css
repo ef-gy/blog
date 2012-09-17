@@ -638,28 +638,37 @@ ul#social li a:hover
 ul#social li + li
 {
   border-left: 0;
-  background: rgb(59,83,154);
+  background: rgb(0,128,182);
 }
 ul#social li + li:before
 {
-  content: "f";
+  content: "in";
 }
 ul#social li + li + li
+{
+  border-left: 0;
+  background: rgb(59,83,154);
+}
+ul#social li + li + li:before
+{
+  content: "f";
+}
+ul#social li + li + li + li
 {
   background: rgb(0,103,106);
   color: rgb(168,209,0);
 }
-ul#social li + li + li:before
+ul#social li + li + li + li:before
 {
   content: "x";
 }
-ul#social li + li + li + li
+ul#social li + li + li + li + li
 {
   background: rgb(210,22,0);
   color: #fff;
 }
-ul#social li + li + li + li:before
+ul#social li + li + li + li + li:before
 {
-  content: "g";
+  content: "g+";
 }
 

@@ -173,3 +173,32 @@ server {
 		xslt_stylesheet /srv/http/ef.gy/xslt/html-post-process.xslt;
 	}
 }
+
+proxy_cache_path /srv/http/ef.gy/cache/social levels=1:2 keys_zone=social:8m max_size=1000m inactive=600m;
+proxy_temp_path /srv/http/ef.gy/cache/social/tmp;
+
+# need a secondary vhost to serve tweets (or at least to serve them swiftly)
+server
+{
+    listen [::]:80;
+
+	server_name  social.ef.gy;
+
+	access_log  /var/log/nginx/tweets.ef.gy.access.log;
+
+	xslt_types application/xhtml+xml application/atom+xml image/svg+xml;
+
+    location /jyujinX {
+        resolver 8.8.8.8;
+        rewrite      /(jyujinX)  /1/statuses/user_timeline.rss?screen_name=$1  break;
+        proxy_pass   http://api.twitter.com;
+        proxy_cache social;
+        proxy_cache_valid  200 302  10m;
+        proxy_cache_valid  404      1m;
+        proxy_ignore_headers X-Accel-Expires Expires Cache-Control Set-Cookie;
+    }
+
+#    location ~ .* {
+#        proxy_pass http://api.twitter.com/1/statuses/user_timeline.rss?screen_name=jyujinX;
+#    }
+}

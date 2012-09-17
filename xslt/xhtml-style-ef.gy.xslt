@@ -56,7 +56,8 @@
       <xsl:if test="//xhtml:meta[@name='unix:name']">
         <ul id="social">
           <li><a href="https://twitter.com/share?url=http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}&amp;via=jyujinX" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">tweet</a></li>
-          <li><a href="http://www.facebook.com/sharer.php?u=http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">share: facebook</a></li>
+          <li><a href="http://www.linkedin.com/shareArticle?mini=true&amp;url=http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">share: linkedin</a></li>
+          <li><a href="http://www.facebook.com/sharer.php?u=http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=630');return false;">share: facebook</a></li>
           <li><a href="https://www.xing.com/app/user?op=share&amp;url=http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" onclick="javascript:window.open(this.href,'','');return false;">share: xing</a></li>
           <li><a href="https://plus.google.com/share?url=http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">share: google+</a></li>
         </ul>
