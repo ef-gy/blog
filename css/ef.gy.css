@@ -542,6 +542,122 @@ body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul li
     border-radius: 0.3em;
 }
 
+ul#social
+{
+  display: block;
+  padding: 0; margin: 0;
+}
+ul#social li
+{
+  display: inline-block;
+  padding: 0.5em;
+  margin: 0;
+  font-family: sans-serif;
+  width: 10em;
+  height: 1.2em;
+  border: 0.1em solid black;
+  background: rgb(0,170,242);
+  color: #fff;
+}
+ul#social li:before
+{
+  display: inline-block;
+  width: 1.5em;
+  content: "t";
+  color: #fff;
+}
+ul#social li a
+{
+  display: inline-block;
+  width: 8.5em;
+  margin: -0.5em -0.5em -0.5em -2em;
+  padding: 0.5em 0.5em 0.5em 2em;
+  color: rgba(255,255,255,0);
+  text-decoration: none;
+}
+ul#social li.tweet
+{
+  position: absolute;
+  display: block;
+  width: 17.5em;
+  color: #222;
+  left: 2em;
+  top: 1em;
+  height: auto;
+  border: 0.1em solid #aaa;
+  border-radius: 0.5em;
+  padding-bottom: 2em;
+  background: rgba(255,255,255,0.8);
+  padding-left: 2em;
+}
+ul#social li.tweet:before
+{
+  position: absolute;
+  display: block;
+  width: 1em;
+  top: 0.5em;
+  bottom: 0.5em;
+  padding: 0.5em 0 0.5em 0.5em;
+  margin: -0.5em 0.5em -0.5em -2em;
+  border-right: 0.1em solid #666;
+  border-top-left-radius: 0.5em;
+  border-bottom-left-radius: 0.5em;
+  background: rgb(0,170,242);
+}
+ul#social li.tweet a
+{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: auto;
+  color: #666;
+  padding: 1em;
+  font-weight: bold;
+}
+ul#social li.tweet a:hover
+{
+  color: #000;
+}
+ul#social li a:hover
+{
+  color: rgba(255,255,255,1);
+}
+ul#social li.share + li
+{
+  border-left: 0;
+  background: rgb(0,128,182);
+}
+ul#social li.share + li:before
+{
+  content: "in";
+}
+ul#social li.share + li + li
+{
+  border-left: 0;
+  background: rgb(59,83,154);
+}
+ul#social li.share + li + li:before
+{
+  content: "f";
+}
+ul#social li.share + li + li + li
+{
+  background: rgb(0,103,106);
+  color: rgb(168,209,0);
+}
+ul#social li.share + li + li + li:before
+{
+  content: "x";
+}
+ul#social li.share + li + li + li + li
+{
+  background: rgb(210,22,0);
+  color: #fff;
+}
+ul#social li.share + li + li + li + li:before
+{
+  content: "g+";
+}
 @media (max-width: 84em)
 {
     body#feed
@@ -585,6 +701,23 @@ body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul li
     {
         margin: 1em auto 1em auto;
     }
+
+    ul#social
+    {
+        padding: 0;
+        width: 34em;
+        margin: 1em auto;
+    }
+
+    ul#social li.tweet
+    {
+        display: none;
+        position: relative;
+        top: auto;
+        left: auto;
+        width: 32em;
+        margin: 1em auto;
+    }
 }
 
 @media (max-width: 60.5em)
@@ -598,77 +731,5 @@ body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul li
         padding: 0;
         text-align: left;
     }
-}
-
-ul#social
-{
-  display: block;
-  padding: 0; margin: 0;
-}
-ul#social li
-{
-  display: inline-block;
-  padding: 0.5em;
-  margin: 0;
-  font-family: sans-serif;
-  width: 10em;
-  border: 0.1em solid black;
-  background: rgb(0,170,242);
-  color: #fff;
-}
-ul#social li:before
-{
-  display: inline-block;
-  width: 1.5em;
-  content: "t";
-}
-ul#social li a
-{
-  display: inline-block;
-  width: 8.5em;
-  margin: -0.5em -0.5em -0.5em -2em;
-  padding: 0.5em 0.5em 0.5em 2em;
-  color: rgba(255,255,255,0);
-  text-decoration: none;
-}
-ul#social li a:hover
-{
-  color: rgba(255,255,255,1);
-}
-ul#social li + li
-{
-  border-left: 0;
-  background: rgb(0,128,182);
-}
-ul#social li + li:before
-{
-  content: "in";
-}
-ul#social li + li + li
-{
-  border-left: 0;
-  background: rgb(59,83,154);
-}
-ul#social li + li + li:before
-{
-  content: "f";
-}
-ul#social li + li + li + li
-{
-  background: rgb(0,103,106);
-  color: rgb(168,209,0);
-}
-ul#social li + li + li + li:before
-{
-  content: "x";
-}
-ul#social li + li + li + li + li
-{
-  background: rgb(210,22,0);
-  color: #fff;
-}
-ul#social li + li + li + li + li:before
-{
-  content: "g+";
 }
 

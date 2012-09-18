@@ -2,6 +2,7 @@
 <xsl:stylesheet
               xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
               xmlns:xhtml="http://www.w3.org/1999/xhtml"
+              xmlns:social="http://ef.gy/2012/social"
               xmlns="http://www.w3.org/1999/xhtml"
               exclude-result-prefixes="xhtml"
               version="1.0">
@@ -54,13 +55,7 @@
         <li><a href="source-code">Source Code</a></li>
       </ul>
       <xsl:if test="//xhtml:meta[@name='unix:name']">
-        <ul id="social">
-          <li><a href="https://twitter.com/share?url=http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}&amp;via=jyujinX" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">tweet</a></li>
-          <li><a href="http://www.linkedin.com/shareArticle?mini=true&amp;url=http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">share: linkedin</a></li>
-          <li><a href="http://www.facebook.com/sharer.php?u=http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=630');return false;">share: facebook</a></li>
-          <li><a href="https://www.xing.com/app/user?op=share&amp;url=http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" onclick="javascript:window.open(this.href,'','');return false;">share: xing</a></li>
-          <li><a href="https://plus.google.com/share?url=http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">share: google+</a></li>
-        </ul>
+        <social:social url="http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" twitter="jyujinX"/>
       </xsl:if>
       <xsl:if test="(//xhtml:meta[@name='description']/@content) and not(xhtml:div[@class='figure']/xhtml:h1)">
         <div class="figure">

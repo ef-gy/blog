@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Embedding Tweets on Websites with XSLT</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="A little something I've been working on: integrating tweets on your website without using any JavaScript or having your users load data off remote servers." />
+<meta name="date" content="2012-09-18T21:57:00Z" />
+<meta name="mtime" content="2012-09-18T21:57:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="embedding-tweets-on-websites-with-xslt" />
+</head>
+<body>
+<h1>Introduction</h1>
+<p>So, the other day I thought it'd be neat to have my latest tweets show up on this here website. Great for simple updates that don't warrant a full blog post. Thing is, this server is hosted in Germany, and certain backwards data protection agents around here are rather certain that it should be illegal to load data off remote servers as that gives away the IP address, which in turn is a bit of private information that can be traced back to the user easily *cough bollocks* *cough Thilo Weichert* *coughcough*.</p>
+<p>Now, as intensely backwards and utterly retarded as that is, in the case of tweets there actually is a pretty simple way around it. Twitter offers an RSS feed of users' (public) timelines. Since this whole website uses XSLT for the presentation, we can just use that feed and mangle it a bit. On the bright side, this is also significantly faster for any clients to load and doesn't require any client side scripting whatsoever. It's all done on the server.</p>
+<h1>The Twitter Timeline RSS Feed</h1>
+<p>It's somewhat hidden on the developer documentation website, but every users' public tweets are available via the RSS feed at: http://api.twitter.com/1/statuses/user_timeline.rss?screen_name=... -- replace the ellipsis with an actual user name, like <a href="http://api.twitter.com/1/statuses/user_timeline.rss?screen_name=jyujinX">http://api.twitter.com/1/statuses/user_timeline.rss?screen_name=jyujinX</a>.</p>
+<p>The feed itself is fairly normal. There's one channel element that describes the feed and the individual items seem to be sorted in descending chronological order. In XSLT 1.0, we can use the document() function to retrieve data from this feed, like so:</p>
+<pre><code><![CDATA[  <xsl:template match="...">
+    <xsl:variable name="tweets" select="document(concat('http://api.twitter.com/1/statuses/user_timeline.rss?screen_name=',@twitter))/rss/channel[1]"/>
+    <ul id="social">
+      <li class="tweet">
+        <xsl:value-of select="substring-after($tweets/item[1]/description, ': ')"/>
+        <a href="http://twitter.com/{@twitter}"><xsl:value-of select="substring-before($tweets/item[1]/description, ': ')"/> on Twitter</a>
+      </li>
+    </ul>
+  </xsl:template>
+]]></code></pre>
+<p>This would match some element - denoted with an ellipsis in the example - and use the element's "twitter" attribute as the user account name to load their feed off the twitter website and then display the first item on that feed with a link to the user's profile page. Yes, that really is all you need. Yes, XSLT is that awesome.</p>
+<p>If you apply some CSS to that to purrdify it a bit then you now have your twitter feed integrated perfectly into your site, and you won't get into trouble for revealing your users' IP addresses to the folks over at twitter.com. Well, at least not for this particular feature. But there's a catch: this is kinda slow.</p>
+<h1>BAM - Speeding it up a Notch</h1>
+<p>The problem is that the twitter website currently seems to take about 1-2 seconds to generate this feed. It's not that much, but these 1-2 seconds are added to each and every call to your site where your feed appears. This certainly isn't pretty. Also, depending on your XSLT processor, this may very well be blocking the processing of other requests. We certainly wouldn't want that.</p>
+<p>On my server right now it takes about 4-20 milliseconds to process a single request, depending on the complexity. We'd obviously want to keep processing times that low, so what can we do? Well, the easiest way is to simply cache the request. XSLT itself won't let you do that, but your webserver probably will.</p>
+<p>Decent webservers are designed so that they can be used as caching reverse proxies for slower servers. What we do is, we use that same setup to proxy to twitter.com and we force our server to cache the response for at least 10 minutes. That way the content only needs to be generated once every 10 minutes on the twitter website, meaning that only the first site access every 10 minutes will have these additional couple seconds of delay and all the other requests are down to their usual 4-20 millisecond range.</p>
+<p>Here on this server I'm using nginx, and the relevant section of the server's config file for our little proxy looks like this:</p>
+<pre><code>server
+{
+    listen [::]:80;
+
+    server_name  social.ef.gy;
+    access_log  /var/log/nginx/tweets.ef.gy.access.log;
+
+    location /jyujinX {
+        resolver 8.8.8.8;
+        rewrite      /(jyujinX)  /1/statuses/user_timeline.rss?screen_name=$1  break;
+        proxy_pass   http://api.twitter.com;
+        proxy_cache social;
+        proxy_cache_valid  200 302  10m;
+        proxy_cache_valid  404      1m;
+        proxy_ignore_headers X-Accel-Expires Expires Cache-Control Set-Cookie;
+    }
+}</code></pre>
+<p>Notice that this server will only proxy one user name at this time: mine. Also notice that this server is connected via IPv6, which is why the listen command looks so weird. If yours is not connected via IPv6, you should omit the [::] part. For your own server's configuration, you'll also want to change the server_name and the proxy_cache to use.</p>
+<p>To make use of our proxy, you'll naturally have to change your XSLT, too. In our case, the new XSLT would look like this:</p>
+<pre><code><![CDATA[  <xsl:template match="...">
+    <xsl:variable name="tweets" select="document(concat('http://social.ef.gy/',@twitter))/rss/channel[1]"/>
+    <ul id="social">
+      <li class="tweet">
+        <xsl:value-of select="substring-after($tweets/item[1]/description, ': ')"/>
+        <a href="http://twitter.com/{@twitter}"><xsl:value-of select="substring-before($tweets/item[1]/description, ': ')"/> on Twitter</a>
+      </li>
+    </ul>
+  </xsl:template>
+]]></code></pre>
+<p>And there you have it. Now your site will load blindingly fast again and include your latest tweet. If you want to include more than just one tweet, that can also be arranged with slightly more advanced XSLT. If you'd like to see a complete example instead of just an excerpt, feel free to download the <a href="/xslt/xhtml-social.xslt">xslt/xhtml-social.xslt</a> stylesheet off this server. You may also download all of this site's source code through the <a href="source-code">GIT repository</a>.</p>
+</body>
+</html>
