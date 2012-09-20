@@ -12,6 +12,14 @@ server {
 
 	root /srv/http/ef.gy;
 
+    location /robots.txt {
+        try_files invalid =404;
+    }
+
+    location /favicon.ico {
+        try_files invalid =404;
+    }
+
 	location / {
 		add_header Vary Accept;
 
