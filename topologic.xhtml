@@ -5,7 +5,7 @@
 <meta name="author" content="Magnus Achim Deininger" />
 <meta name="description" content="A simple OSX application that allows you to view different primitive polytopes in three to seven dimensions." />
 <meta name="date" content="2012-08-05T23:06:00Z" />
-<meta name="mtime" content="2012-08-24T17:35:00Z" />
+<meta name="mtime" content="2012-10-06T15:59:00Z" />
 <meta name="category" content="Software" />
 <meta name="unix:name" content="topologic" />
 </head>
@@ -14,6 +14,7 @@
 <h1>Summary</h1>
 <p>A simple OSX application that allows you to view different primitive polytopes in three to seven dimensions.</p>
 <ul>
+<li><a href="http://itunes.apple.com/us/app/topologic/id558300160">Version 3 (App Store)</a></li>
 <li><a href="/download/topologic-2.dmg">Download Version 2</a></li>
 <li><a href="/download/topologic-1.dmg">Download Version 1</a></li>
 </ul>
@@ -21,10 +22,10 @@
 <h1>Introduction</h1>
 <p>One of the things I always found lacking when learning about higher dimensional geometry was how there aren't any really simple programmes that just let you view something like an n-cube and play with the camera. Sure, there's a good deal of videos to be found on Youtube, and you could just whip out your old, trusty copy of Mathematica or MATLAB. But that <em>is</em> a bit over the top if all you want to do is just have a quick look.</p>
 <p>To alleviate this issue, I've written this rather simple Mac application. It allows you to view n-cubes, n-simplices, n-spheres from 3D to 7D, as well as plain ol' boring 3D moebius strips and klein bagels. I originally intended to put this programme on the Mac App Store and add for it to have quite a few more features. But alas, I really don't have the time to work on it right now. Version 1 is thus still somewhat unfinished.</p>
-<p>If I can get back to it later, you can expect a large batch of updates. Might even get back to my plan of putting it on the App Store, who knows. In the mean time, go nuts and do whatever you want to the programme. Note that part of this application's source code, specifically the part dealing with the mathematics used to project the polytopes to 3-space and 2-space, is available on this site's Git repository. <a href="source-code">Check the source code page for more on that</a>. If you're specifically interested in 4-cubes, a.k.a. tesseracts, <a href="http://ef.gy/project:tesseract">I've prepared an online version of that as well</a>, with the full source code available.</p>
+<p>Note that part of this application's source code, specifically the part dealing with the mathematics used to project the polytopes to 3-space and 2-space, is available on this site's Git repository. <a href="source-code">Check the source code page for more on that</a>. If you're specifically interested in 4-cubes, a.k.a. tesseracts, <a href="http://ef.gy/project:tesseract">I've prepared an online version of that as well</a>, with the full source code available.</p>
 <p>Update (2012-08-24): I've released version 2 of the application. It's functionally identical to version 1, but this version is signed with my developer certificate to make it less annoying to install on OSX 10.8.</p>
+<p>Update (2012-10-06): Topologic-3 is now available on the Mac App Store. I'm keeping milestone releases free, so you only really need to buy it on the App Store if you need or want the latest and greatest features.</p>
 <h1>Features</h1>
-<p>Keep in mind that this application is still quite unpolished, simply because I couldn't find the time to work on it properly.</p>
 <ul>
 <li>View cubes and simplices in 3D to 7D</li>
 <li>View spheres in 3D and 4D</li>
@@ -44,14 +45,13 @@
 <a href="/png/topologic-1-4"><img src="/png/topologic-1-4" alt="a klein bagel" style="width:47%;float:left"/></a>
 </p>
 <h1>Shortcomings</h1>
-<p>As I simply didn't have time to polish the application, there are some known shortcomings.</p>
 <ul>
 <li>There is no help file</li>
 <li>Angles are always in radians</li>
 <li>Switching from cartesian to polar coordinates resets your camera to the last position you had set in polar coordinates</li>
 <li>The camera controls are a bit dodgy</li>
 <li>Dropping a previously saved SVG file on the application does not work, you need to use file-&gt;open instead</li>
-<li>There is no lighting support at all</li>
+<li><del>There is no lighting support at all</del> (version 3 introduces 3D lighting)</li>
 <li><del>The application is not signed</del> (fixed with version 2)</li>
 </ul>
 </body>
