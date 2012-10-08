@@ -42,7 +42,15 @@ namespace efgy
         {
             public:
                 transformation ()
-                    {}
+                    {
+                        for (unsigned int i = 0; i <= d; i++)
+                        {
+                            for (unsigned int j = 0; j <= d; j++)
+                            {
+                                transformationMatrix.data[i][j] = (i == j) ? 1 : 0;
+                            }
+                        }
+                    }
 
                 typename euclidian::space<Q,d>::vector operator *
                     (const typename euclidian::space<Q,d>::vector &pV) const
@@ -95,9 +103,7 @@ namespace efgy
                         {
                             if ((i == d) && (j < d))
                             {
-//                                transformationMatrix.data[j][i] = from.data[j];
                                 transformationMatrix.data[i][j] = from.data[j];
-//                                transformationMatrix.data[i][j] = 0;
                             }
                             else if (i == j)
                             {
@@ -176,14 +182,7 @@ namespace efgy
                         {
                             if ((i < d) && (j < d))
                             {
-                                if (j == (d-1))
-                                {
-                                    transformationMatrix.data[i][j] = -columns.data[i].data[j];
-                                }
-                                else
-                                {
-                                    transformationMatrix.data[i][j] = columns.data[i].data[j];
-                                }
+                                transformationMatrix.data[i][j] = columns.data[j].data[i];
                             }
                             else if (i == j)
                             {
@@ -212,23 +211,23 @@ namespace efgy
             public:
                 using transformation<Q,d>::transformationMatrix;
             
-                perspective(const Q &pNear, const Q &pFar, const Q &pAspect, Q pEyeAngle = M_PI_4)
-                    : near(pNear), far(pFar), aspect(pAspect), eyeAngle(pEyeAngle)
+                perspective(Q pEyeAngle = M_PI_4)
+                    : eyeAngle(pEyeAngle)
                     {
                         updateMatrix();
                     }
             
                 void updateMatrix()
                 {
-                    Q f = 1/tan(eyeAngle/Q(2));
+                    Q f = 1 / tan(eyeAngle / Q(2));
 
                     for (unsigned int i = 0; i <= d; i++)
                     {
                         for (unsigned int j = 0; j <= d; j++)
                         {
-                            if ((i == j) && (i < d))
+                            if (i == j)
                             {
-                                transformationMatrix.data[i][j] = f;
+                                transformationMatrix.data[i][j] = ((i >= (d-1)) ? Q(1) : f);
                             }
                             else
                             {
@@ -236,11 +235,6 @@ namespace efgy
                             }
                         }
                     }
-
-                    transformationMatrix.data[0][0] = f / aspect;
-                    transformationMatrix.data[(d-1)][(d-1)] = (far + near) / (near - far);
-                    transformationMatrix.data[(d-1)][d] = -1;
-                    transformationMatrix.data[d][(d-1)] = (2 * far * near) / (near - far);
                 }
             
             protected:
@@ -255,26 +249,22 @@ namespace efgy
         {
             public:
                 perspectiveProjection(typename euclidian::space<Q,d>::vector pFrom, typename euclidian::space<Q,d>::vector pTo, Q pEyeAngle = M_PI_4)
-                    : from(pFrom), to(pTo), eyeAngle(pEyeAngle), lookAtTransformation(pFrom, pTo)
+                    : from(pFrom), to(pTo), eyeAngle(pEyeAngle)
                     {
                         updateMatrix();
                     }
 
                 void updateMatrix()
                 {
-                    lookAtTransformation = lookAt<Q,d>(from, to);
-
+                    lookAt<Q,d> lookAtTransformation(from, to);
                     translation<Q,d> translationTransformation(from * Q(-1));
-                    perspective<Q,d> perspectiveTransformation(0.25,500,1.2,eyeAngle);
+                    perspective<Q,d> perspectiveTransformation(eyeAngle);
 
                     worldTransformation.transformationMatrix
                         = translationTransformation.transformationMatrix
                         * lookAtTransformation.transformationMatrix
-                        //* translationTransformation.transformationMatrix
-                        //* perspectiveTransformation.transformationMatrix
+                        * perspectiveTransformation.transformationMatrix
                     ;
-
-                    T = 1 / tan(eyeAngle / Q(2));
                 }
 
                 typename euclidian::space<Q,(d-1)>::vector project
@@ -282,56 +272,15 @@ namespace efgy
                 {
                     typename euclidian::space<Q,(d-1)>::vector result;
 
-                    translation<Q,d> translationTransformation(from * Q(-1));
+                    typename euclidian::space<Q,d>::vector R = worldTransformation * pP;
 
-                    typename euclidian::space<Q,d>::vector V = translationTransformation * pP;
-
-#if 0
-                    math::matrix<Q,1,d+1> vectorMatrix;
-
-                    for (unsigned int i = 0; i < d; i++)
-                    {
-                        vectorMatrix.data[0][i] = pP.data[i];
-                    }
-
-                    vectorMatrix.data[0][d] = 1;
-
-                    /*
-                    math::matrix<Q,1,d+1> resultMatrix
-                        = vectorMatrix
-                        * worldTransformation.transformationMatrix;
-                     */
-
-                    math::matrix<Q,1,d+1> resultMatrix
-                        = vectorMatrix
-                        * lookAtTransformation.transformationMatrix;
-
-//                    typename euclidian::space<Q,d>::vector V = pP - from;
-
-                    Q S = (Q(1) / resultMatrix.data[0][d])
-                        * T
-                    //    / resultMatrix.data[0][(d-1)]
-                    //    / euclidian::dotProduct<Q,d>(V, lookAtTransformation.columns.data[(d-1)])
-                        / euclidian::dotProduct<Q,d>(pP, from)
-                    ;
+                    Q S = 1 / R.data[(d-1)];
 
                     for (unsigned int i = 0; i < (d-1); i++)
                     {
-                        result.data[i] 
-                            = S * resultMatrix.data[0][i];
+                        result.data[i] = S * R.data[i];
                     }
 
-#else
-//                    typename euclidian::space<Q,d>::vector V = pP - from;
-
-                    Q S = T / euclidian::dotProduct<Q,d>(V, lookAtTransformation.columns.data[(d-1)]);
-
-                    for (unsigned int i = 0; i < (d-1); i++)
-                    {
-                        result.data[i]
-                            = S * euclidian::dotProduct<Q,d>(V, lookAtTransformation.columns.data[i]);
-                    }
-#endif
                     return result;
                 }
 
@@ -339,11 +288,9 @@ namespace efgy
                 typename euclidian::space<Q,d>::vector to;
 
             protected:
-                lookAt<Q,d> lookAtTransformation;
                 transformation<Q,d> worldTransformation;
 
-                Q eyeAngle;
-                Q T;
+                const Q eyeAngle;
             };
     };
 };

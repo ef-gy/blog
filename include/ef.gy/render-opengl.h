@@ -46,9 +46,10 @@ namespace efgy
         {
             public:
                 opengl
-                    (const geometry::perspectiveProjection<Q,d> &pProjection,
+                    (const geometry::transformation<Q,d> &pTransformation,
+                     const geometry::perspectiveProjection<Q,d> &pProjection,
                      const opengl<Q,d-1> &pLoweRenderer)
-                    : projection(pProjection), lowerRenderer(pLoweRenderer)
+                    : transformation(pTransformation), projection(pProjection), lowerRenderer(pLoweRenderer)
                     {}
 
                 void drawLine
@@ -60,6 +61,7 @@ namespace efgy
                     (const math::tuple<q, typename geometry::euclidian::space<Q,d>::vector> &pV) const;
 
             protected:
+                const geometry::transformation<Q,d> &transformation;
                 const geometry::perspectiveProjection<Q,d> &projection;
                 const opengl<Q,d-1> &lowerRenderer;
         };
@@ -69,6 +71,11 @@ namespace efgy
         class opengl<Q,3>
         {
             public:
+                opengl
+                    (const geometry::transformation<Q,3> &pTransformation)
+                    : transformation(pTransformation)
+                    {}
+
                 void drawLine
                     (const typename geometry::euclidian::space<Q,3>::vector &pA,
                      const typename geometry::euclidian::space<Q,3>::vector &pB) const;
@@ -78,6 +85,7 @@ namespace efgy
                     (const math::tuple<q, typename geometry::euclidian::space<Q,3>::vector> &pV) const;
 
             protected:
+                const geometry::transformation<Q,3> &transformation;
         };
 #endif
 
@@ -85,6 +93,11 @@ namespace efgy
         class opengl<Q,2>
         {
             public:
+                opengl
+                    (const geometry::transformation<Q,2> &pTransformation)
+                    : transformation(pTransformation)
+                    {}
+
                 void drawLine
                     (const typename geometry::euclidian::space<Q,2>::vector &pA,
                      const typename geometry::euclidian::space<Q,2>::vector &pB) const;
@@ -94,6 +107,7 @@ namespace efgy
                     (const math::tuple<q, typename geometry::euclidian::space<Q,2>::vector> &pV) const;
 
             protected:
+                const geometry::transformation<Q,2> &transformation;
         };
 
         template<typename Q, unsigned int d>
@@ -104,8 +118,8 @@ namespace efgy
             typename geometry::euclidian::space<Q,d-1>::vector A;
             typename geometry::euclidian::space<Q,d-1>::vector B;
 
-            A = projection.project(pA);
-            B = projection.project(pB);
+            A = projection.project(transformation * pA);
+            B = projection.project(transformation * pB);
 
             lowerRenderer.drawLine(A, B);
         }
@@ -119,7 +133,7 @@ namespace efgy
 
             for (unsigned int i = 0; i < q; i++)
             {
-                V.data[i] = projection.project(pV.data[i]);
+                V.data[i] = projection.project(transformation * pV.data[i]);
             }
 
             lowerRenderer.drawFace(V);
@@ -131,15 +145,20 @@ namespace efgy
             (const typename geometry::euclidian::space<Q,3>::vector &pA,
              const typename geometry::euclidian::space<Q,3>::vector &pB) const
         {
-            const GLdouble a0 = Q(pA.data[0]);
-            const GLdouble a1 = Q(pA.data[1]);
-            const GLdouble a2 = Q(pA.data[2]);
-            const GLdouble b0 = Q(pB.data[0]);
-            const GLdouble b1 = Q(pB.data[1]);
-            const GLdouble b2 = Q(pB.data[2]);
+            const typename geometry::euclidian::space<Q,3>::vector A = transformation * pA;
+            const typename geometry::euclidian::space<Q,3>::vector B = transformation * pB;
+
+            const GLdouble a0 = Q(A.data[0]);
+            const GLdouble a1 = Q(A.data[1]);
+            const GLdouble a2 = Q(A.data[2]);
+            const GLdouble b0 = Q(B.data[0]);
+            const GLdouble b1 = Q(B.data[1]);
+            const GLdouble b2 = Q(B.data[2]);
 
             glBegin(GL_LINES);
+            glNormal3f(a0, a1, a2);
             glVertex3d(a0, a1, a2);
+            glNormal3f(b0, b1, b2);
             glVertex3d(b0, b1, b2);
             glEnd();
         }
@@ -152,9 +171,12 @@ namespace efgy
             glBegin(GL_POLYGON);
             for (unsigned int i = 0; i < q; i++)
             {
-                const GLdouble a0 = Q(pV.data[i].data[0]);
-                const GLdouble a1 = Q(pV.data[i].data[1]);
-                const GLdouble a2 = Q(pV.data[i].data[2]);
+                const typename geometry::euclidian::space<Q,3>::vector V = transformation * pV.data[i];
+
+                const GLdouble a0 = Q(V.data[0]);
+                const GLdouble a1 = Q(V.data[1]);
+                const GLdouble a2 = Q(V.data[2]);
+                glNormal3f(a0, a1, a2);
                 glVertex3d(a0, a1, a2);
             }
             glEnd();
@@ -166,11 +188,14 @@ namespace efgy
             (const typename geometry::euclidian::space<Q,2>::vector &pA,
              const typename geometry::euclidian::space<Q,2>::vector &pB) const
         {
-            const GLdouble a0 = Q(pA.data[0]);
-            const GLdouble a1 = Q(pA.data[1]);
-            const GLdouble b0 = Q(pB.data[0]);
-            const GLdouble b1 = Q(pB.data[1]);
-            
+            const typename geometry::euclidian::space<Q,2>::vector A = transformation * pA;
+            const typename geometry::euclidian::space<Q,2>::vector B = transformation * pB;
+
+            const GLdouble a0 = Q(A.data[0]);
+            const GLdouble a1 = Q(A.data[1]);
+            const GLdouble b0 = Q(B.data[0]);
+            const GLdouble b1 = Q(B.data[1]);
+
             glBegin(GL_LINES);
             glVertex2d(a0, a1);
             glVertex2d(b0, b1);
@@ -185,8 +210,10 @@ namespace efgy
             glBegin(GL_POLYGON);
             for (unsigned int i = 0; i < q; i++)
             {
-                const GLdouble a0 = Q(pV.data[i].data[0]);
-                const GLdouble a1 = Q(pV.data[i].data[1]);
+                const typename geometry::euclidian::space<Q,2>::vector V = transformation * pV.data[i];
+
+                const GLdouble a0 = Q(V.data[0]);
+                const GLdouble a1 = Q(V.data[1]);
                 glVertex2d(a0, a1);
             }
             glEnd();

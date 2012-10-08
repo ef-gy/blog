@@ -51,7 +51,7 @@ namespace efgy
                     : data(pQ.data)
                     {}
 
-                operator Q ()
+                operator Q () const
                 {
                     return data;
                 }

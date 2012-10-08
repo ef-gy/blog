@@ -43,9 +43,10 @@ namespace efgy
         {
             public:
                 svg
-                    (const geometry::perspectiveProjection<Q,d> &pProjection,
+                    (const geometry::transformation<Q,d> &pTransformation,
+                     const geometry::perspectiveProjection<Q,d> &pProjection,
                      svg<Q,d-1> &pLoweRenderer)
-                    : projection(pProjection), lowerRenderer(pLoweRenderer)
+                    : transformation(pTransformation), projection(pProjection), lowerRenderer(pLoweRenderer)
                     {}
 
                 void drawLine
@@ -57,6 +58,7 @@ namespace efgy
                     (const math::tuple<q, typename geometry::euclidian::space<Q,d>::vector> &pV) const;
 
             protected:
+                const geometry::transformation<Q,d> &transformation;
                 const geometry::perspectiveProjection<Q,d> &projection;
                 svg<Q,d-1> &lowerRenderer;
         };
@@ -65,6 +67,11 @@ namespace efgy
         class svg<Q,2>
         {
             public:
+                svg
+                    (const typename geometry::transformation<Q,2> &pTransformation)
+                    : transformation(pTransformation)
+                    {}
+
                 void drawLine
                     (const typename geometry::euclidian::space<Q,2>::vector &pA,
                      const typename geometry::euclidian::space<Q,2>::vector &pB);
@@ -75,6 +82,7 @@ namespace efgy
 
                 std::string output;
             protected:
+                const geometry::transformation<Q,2> &transformation;
                 Q previousX, previousY;
         };
 
@@ -86,8 +94,8 @@ namespace efgy
             typename geometry::euclidian::space<Q,d-1>::vector A;
             typename geometry::euclidian::space<Q,d-1>::vector B;
 
-            A = projection.project(pA);
-            B = projection.project(pB);
+            A = projection.project(transformation * pA);
+            B = projection.project(transformation * pB);
 
             lowerRenderer.drawLine(A, B);
         }
@@ -101,7 +109,7 @@ namespace efgy
 
             for (unsigned int i = 0; i < q; i++)
             {
-                V.data[i] = projection.project(pV.data[i]);
+                V.data[i] = projection.project(transformation * pV.data[i]);
             }
 
             lowerRenderer.drawFace(V);
@@ -112,10 +120,13 @@ namespace efgy
             (const typename geometry::euclidian::space<Q,2>::vector &pA,
              const typename geometry::euclidian::space<Q,2>::vector &pB)
         {
-            const double a0 = -Q(pA.data[0]);
-            const double a1 = -Q(pA.data[1]);
-            const double b0 = -Q(pB.data[0]);
-            const double b1 = -Q(pB.data[1]);
+            const typename geometry::euclidian::space<Q,2>::vector &A = transformation * pA;
+            const typename geometry::euclidian::space<Q,2>::vector &B = transformation * pB;
+
+            const double a0 = -Q(A.data[0]);
+            const double a1 = -Q(A.data[1]);
+            const double b0 = -Q(B.data[0]);
+            const double b1 = -Q(B.data[1]);
 
             const double a0r = a0 - previousX;
             const double a1r = a1 - previousY;
@@ -126,12 +137,12 @@ namespace efgy
             char sr[1024];
             if ((a0 == previousX) && (a1 == previousY))
             {
-                if (pB.data[1] == pA.data[1])
+                if (B.data[1] == A.data[1])
                 {
                     snprintf(s,1024,"H%g",b0);
                     snprintf(sr,1024,"h%g",b0r);
                 }
-                else if (pB.data[0] == pA.data[0])
+                else if (B.data[0] == A.data[0])
                 {
                     snprintf(s,1024,"V%g",b1);
                     snprintf(sr,1024,"v%g",b1r);
@@ -155,12 +166,12 @@ namespace efgy
                     output += sr;
                 }
 
-                if (pB.data[1] == pA.data[1])
+                if (B.data[1] == A.data[1])
                 {
                     snprintf(s,1024,"H%g",b0);
                     snprintf(sr,1024,"h%g",b0r);
                 }
-                else if (pB.data[0] == pA.data[0])
+                else if (B.data[0] == A.data[0])
                 {
                     snprintf(s,1024,"V%g",b1);
                     snprintf(sr,1024,"v%g",b1r);
@@ -191,8 +202,10 @@ namespace efgy
             output += "<path d='";
             for (unsigned int i = 0; i < q; i++)
             {
-                const double a0 = -Q(pV.data[i].data[0]);
-                const double a1 = -Q(pV.data[i].data[1]);
+                const typename geometry::euclidian::space<Q,2>::vector V = transformation * pV.data[i];
+
+                const double a0 = -Q(V.data[0]);
+                const double a1 = -Q(V.data[1]);
 
                 char s[1024];
                 char sr[1024];
@@ -203,15 +216,17 @@ namespace efgy
                 }
                 else
                 {
-                    const double a0r = a0 + Q(pV.data[(i-1)].data[0]);
-                    const double a1r = a1 + Q(pV.data[(i-1)].data[1]);
+                    const typename geometry::euclidian::space<Q,2>::vector V1 = transformation * pV.data[(i-1)];
 
-                    if (pV.data[i].data[1] == pV.data[(i-1)].data[1])
+                    const double a0r = a0 + Q(V1.data[0]);
+                    const double a1r = a1 + Q(V1.data[1]);
+
+                    if (pV.data[i].data[1] == V1.data[1])
                     {
                         snprintf(s,1024,"H%g",a0);
                         snprintf(sr,1024,"h%g",a0r);
                     }
-                    else if (pV.data[i].data[0] == pV.data[(i-1)].data[0])
+                    else if (pV.data[i].data[0] == V1.data[0])
                     {
                         snprintf(s,1024,"V%g",a1);
                         snprintf(sr,1024,"v%g",a1r);
