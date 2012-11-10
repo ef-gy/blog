@@ -14,13 +14,15 @@ html
 
 body
 {
-    margin: 0 0 2em 24em;
+    margin: 0 4em 2em 24em;
     background: #eee;
     background: rgba(255,255,255,0.7);
 	padding: 3.5em 2em;
     border-left: 0.1em solid #aaa;
     border-bottom: 0.1em solid #aaa;
+    border-right: 0.1em solid #aaa;
     border-bottom-left-radius: 2em;
+    border-bottom-right-radius: 2em;
 }
 
 h1, h2, h3, h4, h5, h6
@@ -72,7 +74,7 @@ h1 + ul
 {
     position: absolute;
     top: 0.25em;
-    right: 0;
+    right: 5em;
     display: block;
 	padding: 0.2em 15px;
     z-Index: 1;
@@ -369,6 +371,7 @@ body#feed:after
 body#feed
 {
     vertical-align: top;
+    margin-right: 0;
 }
 
 body#feed *
@@ -575,49 +578,6 @@ ul#social li a
   color: rgba(255,255,255,0);
   text-decoration: none;
 }
-ul#social li.tweet
-{
-  position: absolute;
-  display: block;
-  width: 17.5em;
-  color: #222;
-  left: 2em;
-  top: 1em;
-  height: auto;
-  border: 0.1em solid #aaa;
-  border-radius: 0.5em;
-  padding-bottom: 2em;
-  background: rgba(255,255,255,0.8);
-  padding-left: 2em;
-}
-ul#social li.tweet:before
-{
-  position: absolute;
-  display: block;
-  width: 1em;
-  top: 0.5em;
-  bottom: 0.5em;
-  padding: 0.5em 0 0.5em 0.5em;
-  margin: -0.5em 0.5em -0.5em -2em;
-  border-right: 0.1em solid #666;
-  border-top-left-radius: 0.5em;
-  border-bottom-left-radius: 0.5em;
-  background: rgb(0,170,242);
-}
-ul#social li.tweet a
-{
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: auto;
-  color: #666;
-  padding: 1em;
-  font-weight: bold;
-}
-ul#social li.tweet a:hover
-{
-  color: #000;
-}
 ul#social li a:hover
 {
   color: rgba(255,255,255,1);
@@ -706,16 +666,6 @@ ul#social li.share + li + li + li + li:before
     {
         padding: 0;
         width: 34em;
-        margin: 1em auto;
-    }
-
-    ul#social li.tweet
-    {
-        display: none;
-        position: relative;
-        top: auto;
-        left: auto;
-        width: 32em;
         margin: 1em auto;
     }
 }

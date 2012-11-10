@@ -27,10 +27,6 @@
   <xsl:template match="social:social">
     <xsl:variable name="tweets" select="document(concat('http://social.ef.gy/',@twitter))/rss/channel[1]"/>
     <ul id="social">
-      <li class="tweet">
-        <xsl:value-of select="substring-after($tweets/item[1]/description, ': ')"/>
-        <a href="http://twitter.com/{@twitter}"><xsl:value-of select="substring-before($tweets/item[1]/description, ': ')"/> on Twitter</a>
-      </li>
       <li class="share"><a href="https://twitter.com/share?url={@url}&amp;via={@twitter}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">tweet</a></li>
       <li><a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">share: linkedin</a></li>
       <li><a href="http://www.facebook.com/sharer.php?u={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=630');return false;">share: facebook</a></li>

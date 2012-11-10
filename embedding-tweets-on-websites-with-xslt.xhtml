@@ -5,7 +5,7 @@
 <meta name="author" content="Magnus Achim Deininger" />
 <meta name="description" content="A little something I've been working on: integrating tweets on your website without using any JavaScript or having your users load data off remote servers." />
 <meta name="date" content="2012-09-18T21:57:00Z" />
-<meta name="mtime" content="2012-09-18T21:57:00Z" />
+<meta name="mtime" content="2012-11-10T20:34:00Z" />
 <meta name="category" content="Articles" />
 <meta name="unix:name" content="embedding-tweets-on-websites-with-xslt" />
 </head>
@@ -13,6 +13,7 @@
 <h1>Introduction</h1>
 <p>So, the other day I thought it'd be neat to have my latest tweets show up on this here website. Great for simple updates that don't warrant a full blog post. Thing is, this server is hosted in Germany, and certain backwards data protection agents around here are rather certain that it should be illegal to load data off remote servers as that gives away the IP address, which in turn is a bit of private information that can be traced back to the user easily *cough bollocks* *cough Thilo Weichert* *coughcough*.</p>
 <p>Now, as intensely backwards and utterly retarded as that is, in the case of tweets there actually is a pretty simple way around it. Twitter offers an RSS feed of users' (public) timelines. Since this whole website uses XSLT for the presentation, we can just use that feed and mangle it a bit. On the bright side, this is also significantly faster for any clients to load and doesn't require any client side scripting whatsoever. It's all done on the server.</p>
+<p><em>Update:</em> I've had to remove this particular feature from the website because twitter.com is not available via IPv6 and I've disabled IPv4 on all my backend servers. While the gimmick was fun while it lasted, it's not nearly sweet enough to warrant keeping IPv4 support around.</p>
 <h1>The Twitter Timeline RSS Feed</h1>
 <p>It's somewhat hidden on the developer documentation website, but every users' public tweets are available via the RSS feed at: http://api.twitter.com/1/statuses/user_timeline.rss?screen_name=... -- replace the ellipsis with an actual user name, like <a href="http://api.twitter.com/1/statuses/user_timeline.rss?screen_name=jyujinX">http://api.twitter.com/1/statuses/user_timeline.rss?screen_name=jyujinX</a>.</p>
 <p>The feed itself is fairly normal. There's one channel element that describes the feed and the individual items seem to be sorted in descending chronological order. In XSLT 1.0, we can use the document() function to retrieve data from this feed, like so:</p>
@@ -62,6 +63,6 @@
     </ul>
   </xsl:template>
 ]]></code></pre>
-<p>And there you have it. Now your site will load blindingly fast again and include your latest tweet. If you want to include more than just one tweet, that can also be arranged with slightly more advanced XSLT. If you'd like to see a complete example instead of just an excerpt, feel free to download the <a href="/xslt/xhtml-social.xslt">xslt/xhtml-social.xslt</a> stylesheet off this server. You may also download all of this site's source code through the <a href="source-code">GIT repository</a>.</p>
+<p>And there you have it. Now your site will load blindingly fast again and include your latest tweet. If you want to include more than just one tweet, that can also be arranged with slightly more advanced XSLT. If you'd like to see a complete example instead of just an excerpt, feel free to download <del>the <a href="/xslt/xhtml-social.xslt">xslt/xhtml-social.xslt</a> stylesheet off this server. You may also download all of</del> this site's source code through the <a href="source-code">GIT repository</a> and dig through the older versions of the xslt/xhtml-social.xslt stylesheet.</p>
 </body>
 </html>
