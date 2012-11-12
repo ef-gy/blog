@@ -23,7 +23,7 @@
 
       <title><xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:title" /></title>
       <id>http://ef.gy/<xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content" /></id>
-      <link href="http://ef.gy/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}" />
+      <link href="/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}" />
       <summary><xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='description']/@content" /></summary>
       <updated><xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='mtime']/@content" /></updated>
       <category term="{$source/xhtml:html/xhtml:head/xhtml:meta[@name='category']/@content}" />
