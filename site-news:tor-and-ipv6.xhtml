@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Site Update: Now Available via Tor and IPv6</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="I've been bitching about how privacy nuts should just use Tor and stop screwing with the rest of us. In light of that, I figured it's time to set a good example and offer this site as a hidden service." />
+<meta name="date" content="2012-11-12T14:22:00Z" />
+<meta name="mtime" content="2012-11-12T14:22:00Z" />
+<meta name="category" content="Site News" />
+<meta name="unix:name" content="site-news:tor-and-ipv6" />
+</head>
+<body>
+<h1>Tor</h1>
+<div class="figure">
+<h1>Tor Hidden Service</h1>
+<p>If you're on Tor, feel free to browse directly to the hidden service version of this website.</p>
+<ul>
+<li><a href="http://vturtipc7vmz6xjy.onion/">Hidden service for this blog (requires Tor)</a></li>
+</ul>
+</div>
+<p>I've been bitching about privacy nuts a long time now. More so since last year's (still unresolved) debacle with Facebook's "Like" button in Germany. While the guys might have a point about revealing unsuspecting users' IP addresses, it's certainly a rather moot one considering anyone concious enough about the issue has a myriad of ways to prevent their IP address from being seen by the remote end.</p>
+<p>One of these methods is Tor - a kind of proxy that bounces your connection around through a network of nodes scattered all over the globe. It is designed to maximise anonymity by encrypting the data for each hop separately, so that none of the involved nodes other than your own knows the source and final destination of the traffic that flows through it. As such, no matter what node is your final destination, it won't know where the request came from.</p>
+<p>Tor's been getting some good but also quite a bit of bad press lately, with some ISPs in Germany even going so far as to claim the tool would be illegal. One problem seems to be that, naturally, it's easy to abuse for nefarious purposes. But then, the same goes for the internet connectivity those same ISPs are selling, doesn't it?</p>
+<p>Since I see absolutely no reason not to make this website available on Tor (which it already is, anyway), I've set up a <a href="http://vturtipc7vmz6xjy.onion/">Hidden Service for this blog</a>. The content is identical, it's just that now you get browse it as a hidden service, making absolutely certain that neither I nor my ISP can figure out who you are. I'm hoping this sets a good example for other bloggers to similarly embrace technologies like Tor.</p>
+<h2>Why not I2P or similar services?</h2>
+<p>I originally intended to do the same for I2P, but sadly that would require me to put Java on my router. I really don't feel comfortable putting anything remotely connected to Java on that box, so I2P won't happen anytime soon.</p>
+<h1>IPv6</h1>
+<p>While not directly related to Tor, IPv6 is yet another way to get to this website's content. This blog has been available via IPv6 for quite a while now, even before the world IPv6 launch event. I did, however, recently restructure my backend servers, so that now all backends servers are ONLY available via IPv6. As such it seems as good a time as any to announce that this website is in fact available via IPv6.</p>
+<p>Sadly, this bit of restructing did force me to abandon my XSLT/Twitter Feed gimmick: twitter.com is apparently still stuck in the Dark Ages of the internet and only available via IPv4. This means I had to remove that feature from the website completely, but <a href="embedding-tweets-on-websites-with-xslt">the guide on how I used to do it</a> is still available.</p>
+</body>
+</html>

@@ -22,7 +22,13 @@
     </xsl:copy>
   </xsl:template>
 
-  <xsl:template match="//atom:feed">
+  <xsl:template match="//xhtml:meta/atom:feed">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()" />
+    </xsl:copy>
+  </xsl:template>
+
+  <xsl:template match="/atom:feed">
     <html>
       <head>
         <xsl:choose>

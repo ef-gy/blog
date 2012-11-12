@@ -99,6 +99,7 @@ server {
 		alias /srv/http/ef.gy;
 		try_files $uri.xml $uri.xhtml $uri.atom $uri $uri.cache.xml =404;
 
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-context.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-transcode-atom.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
@@ -120,6 +121,7 @@ server {
 		alias /srv/http/ef.gy;
 		try_files $uri.xml $uri.xhtml $uri.atom $uri $uri.cache.xml =404;
 
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-context.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-transcode-atom.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;

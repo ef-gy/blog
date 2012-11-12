@@ -73,12 +73,17 @@ h6
 h1 + ul
 {
     position: absolute;
-    top: 0.25em;
-    right: 5em;
+    top: 0;
+    right: 0;
     display: block;
-	padding: 0.2em 15px;
+	padding: 0.2em 5em 0.2em 2em;
     z-Index: 1;
-    border-left: 0.4em solid #22c;
+    border-bottom: 0.1em solid #aaa;
+    border-left: 0.1em solid #aaa;
+    background: #fff;
+    background: rgba(255,255,255,0.8);
+    border-bottom-left-radius: 1em;
+    text-align: right;
 }
 
 h1 + ul + ul
@@ -350,24 +355,6 @@ table ul li
     margin: 0;
 }
 
-/*
-body#feed:after
-{
-    content: "ATOM Transcript";
-    display: block;
-    position: absolute;
-    width: 18em;
-    padding: 1em;
-    top: 6em;
-    left: 2em;
-    height: 8em;
-    border-radius: 0.5em;
-    background: rgba(255,255,255,0.9);
-    border: 0.1em solid #aaa;
-    font-weight: bold;
-}
-*/
-
 body#feed
 {
     vertical-align: top;
@@ -508,6 +495,18 @@ body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul li
 {
     background: #cac;
     background: rgba(255,230,255,0.7);
+}
+
+body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2
+{
+    background: #9fafef;
+    background: rgba(190,210,230,0.7);
+}
+
+body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul li
+{
+    background: #9ac;
+    background: rgba(190,230,255,0.7);
 }
 
 .calculations table,
@@ -660,13 +659,6 @@ ul#social li.share + li + li + li + li:before
     address + table
     {
         margin: 1em auto 1em auto;
-    }
-
-    ul#social
-    {
-        padding: 0;
-        width: 34em;
-        margin: 1em auto;
     }
 }
 
