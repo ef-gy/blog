@@ -664,7 +664,7 @@ ul#social li.share + li + li + li + li:before
 
 @media (max-width: 60.5em)
 {
-    body#feed h2, body#feed h2 + ul + h2, body#feed h2 + ul + h2 + ul + h2, body#feed h2 + ul + h2 + ul + h2 + ul + h2
+    body#feed h2, body#feed h2 + ul + h2, body#feed h2 + ul + h2 + ul + h2, body#feed h2 + ul + h2 + ul + h2 + ul + h2, body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2
     {
         background: none;
         border: none;
