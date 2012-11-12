@@ -72,18 +72,20 @@ h6
 
 h1 + ul
 {
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
+    left: 0;
     display: block;
-	padding: 0.2em 5em 0.2em 2em;
+	padding: 0.5em 5em 0.5em 2em;
     z-Index: 1;
-    border-bottom: 0.1em solid #aaa;
-    border-left: 0.1em solid #aaa;
-    background: #fff;
-    background: rgba(255,255,255,0.8);
-    border-bottom-left-radius: 1em;
+    border-bottom: 0.1em solid #000;
+    background: #333;
+    background: rgba(0,0,0,0.6);
+    color: #eee;
     text-align: right;
+    font-size: 1em;
+    font-weight: bold;
 }
 
 h1 + ul + ul
@@ -113,6 +115,7 @@ a
 h1 + ul a
 {
 	text-decoration: none;
+    color: #ccc;
 }
 
 a:hover
