@@ -29,7 +29,7 @@
 <li>name: you don't really need this one, I'm just using it to make the script slightly easier to read.</li>
 </ul>
 <h2>The Worst bash/sed/SQL/XSLT Combobulation You'll Ever See</h2>
-<code><pre><![CDATA[#!/bin/bash
+<pre><code><![CDATA[#!/bin/bash
 
 # configuration parameters for the scripts
 name=kyuba
@@ -255,7 +255,7 @@ cat ${tbase}db-to-xhtml.sql\
      s#.lt.\(/\?code\).gt.#<\1>#g' \
     | xsltproc ${tbase}post-sed.xslt -\
     > ${database}.atom
-]]></pre></code>
+]]></code></pre>
 <h2>How it Works</h2>
 <p>The script basically just generates two XSLT scripts and an SQL script to run. It saves those scripts under /tmp, then runs the SQL, the first XSLT, a custom sed and then the second XSLT in sequence. The SQL script gathers the data and produces a rudimentary .atom file. The first XSLT script is only used to do some cleanup - shorten descriptions, create unix:name nodes, turn the text nodes into rudimentary XHTML, rename some categories. The sed script then converts some of the typical Drupal text markup to 'real' XHTML markup. It also converts some wiki-esque markup as used by Drupal. The final XSLT then creates proper paragraphs from the post-processed text content, merges uls together and decorates things with slightly more metadata.</p>
 <p>The resulting .atom file should probably be post-procssed to clean up names and remove nodes you don't need or want to serve, or those that won't export too well. You know, spam and Image nodes in Drupal. Renaming user accounts to real names. Things like that. XSLT will work wonders for that, too.</p>
