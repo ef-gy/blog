@@ -95,7 +95,7 @@ h1 + ul:before
     content: "ef.gy | ephemeris magni";
     position: absolute;
     top: 0;
-    left: 2em;
+    left: 4em;
     padding: 0.5em;
     color: #ddd;
     font-size: 1.4em;
@@ -389,6 +389,7 @@ body#feed
 {
     vertical-align: top;
     margin-right: 0;
+    margin: 0 4em 2em 4em;
 }
 
 body#feed *
@@ -770,22 +771,6 @@ ul#navigation li.next a:hover
   background: #000;
   color: #fff;
 }
-@media (max-width: 84em)
-{
-    body#feed
-    {
-        margin-left: 16em;
-    }
-}
-
-@media (max-width: 80em)
-{
-    body#feed
-    {
-        margin-left: 10em;
-    }
-}
-
 @media (max-width: 70em)
 {
     body, body#feed
@@ -853,7 +838,7 @@ ul#navigation li.next a:hover
     }
 }
 
-@media (max-width: 50em)
+@media (max-width: 53em)
 {
     h1 + ul:before
     {
