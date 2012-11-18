@@ -8,7 +8,6 @@
 html
 {
     background: #666;
-    background: url(/svg/stripes) #666 no-repeat top left;
     font-size: 0.9em;
 }
 
@@ -88,6 +87,18 @@ h1 + ul
     color: #eee;
     text-align: right;
     font-size: 1em;
+    font-weight: bold;
+}
+
+h1 + ul:before
+{
+    content: "ef.gy | ephemeris magni";
+    position: absolute;
+    top: 0;
+    left: 2em;
+    padding: 0.5em;
+    color: #ddd;
+    font-size: 1.4em;
     font-weight: bold;
 }
 
@@ -841,3 +852,10 @@ ul#navigation li.next a:hover
     }
 }
 
+@media (max-width: 50em)
+{
+    h1 + ul:before
+    {
+        display: none;
+    }
+}
