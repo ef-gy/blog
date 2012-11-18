@@ -32,7 +32,7 @@
       <author>
         <name><xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='author']/@content" /></name>
         <xsl:if test="$source/xhtml:html/xhtml:head/xhtml:meta[@name='author'][@content='Magnus Achim Deininger']">
-          <email>mdeininger@becquerel.org</email>
+          <email>magnus@ef.gy</email>
         </xsl:if>
       </author>
 
