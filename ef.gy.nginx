@@ -109,7 +109,7 @@ server {
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-transcode-atom.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-social.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-navigation.xslt;
 	}
 
 	location /html {
@@ -120,7 +120,7 @@ server {
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-transcode-atom.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-social.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-navigation.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/html-post-process.xslt;
 	}
 

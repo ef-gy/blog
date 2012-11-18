@@ -630,7 +630,8 @@ body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + 
 ul#social
 {
   display: block;
-  padding: 0; margin: 0;
+  padding: 0;
+  margin: 0 0 3em 0;
 }
 ul#social li
 {
@@ -700,6 +701,45 @@ ul#social li.share + li + li + li + li:before
 {
   content: "g+";
 }
+ul#navigation li.previous,
+ul#navigation li.next
+{
+  display: block;
+  border: 0.1em solid #000;
+  background: #555;
+  background: rgba(0,0,0,0.6);
+  padding: 1em;
+  width: 2em;
+  position: fixed;
+  right: 1em;
+  text-align: right;
+  border-radius: 1em;
+}
+ul#navigation li.previous
+{
+  top: 3em;
+}
+ul#navigation li.next
+{
+  top: 7em;
+}
+ul#navigation li.previous a,
+ul#navigation li.next a
+{
+  display: block;
+  padding: 1em;
+  margin: -1em;
+  width: 2em;
+  color: #bbb;
+  text-decoration: none;
+  border-radius: 1em;
+}
+ul#navigation li.previous a:hover,
+ul#navigation li.next a:hover
+{
+  background: #000;
+  color: #fff;
+}
 @media (max-width: 84em)
 {
     body#feed
@@ -721,6 +761,10 @@ ul#social li.share + li + li + li + li:before
     body, body#feed
     {
         margin: 0;
+    }
+    body
+    {
+        margin: 0 4em 0 0;
     }
 
     div.figure, address, address + table
@@ -768,7 +812,8 @@ ul#social li.share + li + li + li + li:before
 
     h1 + ul
     {
-        padding: 10px 1.5em;
+        padding: 10px 5em 10px 1.5em;
+        overflow: hidden;
     }
 }
 

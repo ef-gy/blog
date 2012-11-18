@@ -31,9 +31,19 @@
     </xsl:copy>
   </xsl:template>
 
+  <xsl:template match="xhtml:meta/atom:feed">
+    <xsl:copy>
+      <xsl:copy-of select="@*"/>
+      <xsl:for-each select="atom:entry">
+        <xsl:sort select="atom:updated" order="descending"/>
+        <xsl:copy-of select="."/>
+      </xsl:for-each>
+    </xsl:copy>
+  </xsl:template>
+
   <xsl:template match="/atom:feed">
    <xsl:choose>
-    <xsl:when test="(string-length($target) > 0) and //xhtml:html[xhtml:head/xhtml:meta/@name='unix:name'][xhtml:head/xhtml:meta/@content=$target]"><xsl:copy-of select="//xhtml:html[xhtml:head/xhtml:meta/@name='unix:name'][xhtml:head/xhtml:meta/@content=$target]"/></xsl:when>
+    <xsl:when test="(string-length($target) > 0) and atom:entry/atom:content/xhtml:html[xhtml:head/xhtml:meta/@name='unix:name'][xhtml:head/xhtml:meta/@content=$target]"><xsl:copy-of select="atom:entry/atom:content/xhtml:html[xhtml:head/xhtml:meta/@name='unix:name'][xhtml:head/xhtml:meta/@content=$target]"/></xsl:when>
     <xsl:otherwise><html>
       <head>
         <xsl:choose>

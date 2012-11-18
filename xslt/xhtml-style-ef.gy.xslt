@@ -3,6 +3,7 @@
               xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
               xmlns:xhtml="http://www.w3.org/1999/xhtml"
               xmlns:social="http://ef.gy/2012/social"
+              xmlns:atom="http://www.w3.org/2005/Atom"
               xmlns="http://www.w3.org/1999/xhtml"
               exclude-result-prefixes="xhtml"
               version="1.0">
@@ -33,6 +34,10 @@
   </xsl:template>
 
   <xsl:template match="xhtml:head">
+    <xsl:variable name="myname" select="xhtml:meta[@name='unix:name']/@content"/>
+    <xsl:variable name="entries" select="xhtml:meta[@name='context']/atom:feed/atom:entry"/>
+    <xsl:variable name="pre" select="$entries[atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name'][@content=$myname]]/preceding-sibling::*[1]"/>
+    <xsl:variable name="post" select="$entries[atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name'][@content=$myname]]/following-sibling::*[1]"/>
     <xsl:copy>
       <link href="/css/ef.gy" rel="stylesheet" type="text/css" />
       <xsl:apply-templates select="@*|node()" />
@@ -42,6 +47,32 @@
           <link rel="alternate" type="application/atom+xml" href="/atom/site" />
         </xsl:otherwise>
       </xsl:choose>
+      <xsl:if test="$pre/atom:content">
+        <xsl:choose>
+          <xsl:when test="$pre/atom:link">
+            <link rel="prev" href="/{$pre/atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}" title="{$pre/atom:title}"/>
+          </xsl:when>
+          <xsl:when test="$pre/atom:category[@term='einit.org']">
+            <link rel="prev" href="/{$pre/atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}@drupal-einit" title="{$pre/atom:title}"/>
+          </xsl:when>
+          <xsl:when test="$pre/atom:category[@term='kyuba.org']">
+            <link rel="prev" href="/{$pre/atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}@drupal-kyuba" title="{$pre/atom:title}"/>
+          </xsl:when>
+        </xsl:choose>
+      </xsl:if>
+      <xsl:if test="$post/atom:content">
+        <xsl:choose>
+          <xsl:when test="$post/atom:link">
+            <link rel="next" href="/{$post/atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}" title="{$post/atom:title}"/>
+          </xsl:when>
+          <xsl:when test="$post/atom:category[@term='einit.org']">
+            <link rel="next" href="/{$post/atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}@drupal-einit" title="{$post/atom:title}"/>
+          </xsl:when>
+          <xsl:when test="$post/atom:category[@term='kyuba.org']">
+            <link rel="next" href="/{$post/atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}@drupal-kyuba" title="{$post/atom:title}"/>
+          </xsl:when>
+        </xsl:choose>
+      </xsl:if>
     </xsl:copy>
   </xsl:template>
 
