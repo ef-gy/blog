@@ -7,8 +7,8 @@
 
 html
 {
-    background: url(/svg/stripes) #ddd no-repeat top left;
-    background-attachment: fixed;
+    background: #666;
+    background: url(/svg/stripes) #666 no-repeat top left;
     font-size: 0.9em;
 }
 
@@ -17,7 +17,7 @@ body
     position: relative;
     margin: 0 4em 2em 24em;
     background: #eee;
-    background: rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.9);
 	padding: 3.5em 2em;
     border-left: 0.1em solid #aaa;
     border-bottom: 0.1em solid #aaa;
@@ -214,13 +214,10 @@ address
     left: 2em;
     display: block;
     width: 16em;
-    border: 1px solid #aaa;
-    background: #eee;
-    background: rgba(255,255,255,0.7);
+    border-top: 0.2em solid #aaa;
     padding: 2em;
     margin: -8em 0 0 -24em;
     font-style: normal;
-    border-radius: 0.5em;
 }
 
 address img
@@ -245,6 +242,7 @@ address a
     display: block;
     padding: 2em;
     margin: -2em;
+    color: #ddd;
     text-decoration: none;
 }
 
@@ -252,7 +250,6 @@ address a:hover
 {
     color: black;
     background: #eee;
-    border-radius: 0.5em;
 }
 
 address a span
@@ -286,9 +283,9 @@ div.figure
     width: 16em;
     padding: 2em;
     margin: -2em 0 0 -24em;
-    border-radius: 0.5em;
-    background: rgba(255,255,255,0.8);
-    border: 0.1em solid #aaa;
+    border-top: 0.2em solid #aaa;
+    border-bottom: 0.2em solid #aaa;
+    color: #ddd;
 }
 
 div.figure img
@@ -301,7 +298,8 @@ div.figure h2
 {
     margin: 0;
     font-size: 1.2em;
-    font-weight: normal;
+    font-weight: bold;
+    color: #999;
 }
 
 div.figure li
@@ -713,7 +711,7 @@ ul#navigation li.next
   position: fixed;
   right: 1em;
   text-align: right;
-  border-radius: 1em;
+  border-radius: 0.5em;
 }
 ul#navigation li.previous
 {
@@ -732,7 +730,7 @@ ul#navigation li.next a
   width: 2em;
   color: #bbb;
   text-decoration: none;
-  border-radius: 1em;
+  border-radius: 0.5em;
 }
 ul#navigation li.previous a:hover,
 ul#navigation li.next a:hover
@@ -776,6 +774,7 @@ ul#navigation li.next a:hover
         border-radius: 0;
         background: none;
         width: 30em;
+        color: #000;
     }
 
     address
@@ -786,6 +785,11 @@ ul#navigation li.next a:hover
     address + table
     {
         margin: 1em auto 1em auto;
+    }
+
+    address a
+    {
+        color: #000;
     }
 }
 

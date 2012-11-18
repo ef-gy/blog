@@ -1,25 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
 <style type="text/css"><![CDATA[line { stroke-width: 50; stroke: rgba(170,170,170,0.8); }
-text { font-family: Helvetica, Verdana, Arial, sans-serif; font-size: 50px; stroke: none; fill: #dddddd; font-weight: bold }
-rect, polygon { fill: rgba(255,255,255,0.8); stroke: #aaa; stroke-width: 1px }]]></style>
+text { font-family: Helvetica, Verdana, Arial, sans-serif; font-size: 45px; stroke: none; fill: #dddddd; font-weight: bold }
+]]></style>
 
-<svg x="0" y="0" width="400" height="400" viewBox="0 0 500 500">
-<line x1="-50" y1="300" x2="300" y2="-50" />
-<line x1="-50" y1="430" x2="430" y2="-50" />
-</svg>
-
-<svg x="100%" y="100%" width="-400" height="-400" viewBox="0 0 500 500">
-<line x1="-50" y1="300" x2="300" y2="-50" />
-<line x1="-50" y1="430" x2="430" y2="-50" />
-</svg>
-
-<!--
-<polygon points="0,40 0,1000 130,1000 130,0"/>
--->
-
-<rect x="0" y="40" width="100%" height="130"/>
-<text x="40" y="105">http://ef.gy/</text>
-<text x="40" y="150" style="font-size: 33.5px">ephemeris magni</text>
+<text x="45" y="105">http://ef.gy/</text>
+<text x="45" y="145" style="font-size: 30px">ephemeris magni</text>
 
 </svg>
