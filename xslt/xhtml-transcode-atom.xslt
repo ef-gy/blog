@@ -52,6 +52,7 @@
           <h1><xsl:value-of select="atom:category/@term" /></h1>
           <ul>
             <xsl:for-each select="key('entry-by-category', atom:category/@term)">
+              <xsl:sort select="atom:updated" order="descending"/>
               <li>
                 <a>
                   <xsl:attribute name="href">
