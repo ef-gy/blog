@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Site Update: einit.org and kyuba.org Archives Now Open</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="I've converted the contents of the Drupal databases on einit.org and kyuba.org to an .atom bundle, which is now being served on this website." />
+<meta name="date" content="2012-11-18T00:05:00Z" />
+<meta name="mtime" content="2012-11-18T00:05:00Z" />
+<meta name="category" content="Site News" />
+<meta name="unix:name" content="site-news:einit-kyuba-archives" />
+</head>
+<body>
+<div class="figure">
+<h1>The Archives</h1>
+<p>Not quite lost to time just yet: the old Drupal databases' contents of einit.org and kyuba.org are now available for browsing.</p>
+<ul>
+<li><a href="archives">Visit the Archives</a></li>
+</ul>
+</div>
+<h1>Not Lost to Time Just Yet</h1>
+<p>Back in the good ol' days, I used to hack on a little project called eINIT. That was supposed to turn into a nice little replacement for the olden sysvinit. We even got it to work rather swell before it was abandoned. But then there was a bit of a snafu with an ex-developer and the associated domain. Things went downhill from there.</p>
+<p>Earlier this week I stumbled upon a nice blast from the past, however: the database server that I had set up for einit.org was still running! Considering how much spam the sucker accumulated, I didn't exactly feel like setting up another Drupal frontend for it, but it turned out to be fairly straightforward to extract all the data from that database to an .atom bundle containing all the pages in XHTML. I figured it'd be nice to put up the content in that bundle on this here blog - for old times' sake.</p>
+<h1>kyuba.org/becquerel.org</h1>
+<p>The old kyuba.org domain ended up getting lost, too. The contents had been moved to becquerel.org, which is also using an old version of Drupal. But, honestly, I'm not really comfortable with Drupal anymore. Plain XHTML files with a set of XSLTs for the presentation just seems a whole lot cleaner.</p>
+<p>So, since I'd already written that extraction script for Drupal, I put it to use on that kyuba.org/becquerel.org database as well. The results have also been added to the archives.</p>
+<h1>Stay Tuned for More</h1>
+<p>As it turns out, the whole process was quite a bit more involved than it should've been. So I'll be uploading that conversion script I wrote with a bit of an explanation as to how it works sometime soon.</p>
+<p>For this particular task I also managed to find a nice, slick way of hosting pages directly from an .atom file - using it as an archive for XHTML source files, so to speak. I'll also be writing a short article on how to do that with nginx, as that seems to be a really useful technique.</p>
+<p>Also, I've been able to reacquire the old einit.org and kyuba.org domains! Ah yes, good times...</p>
+</body>
+</html>

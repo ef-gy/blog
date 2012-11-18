@@ -11,6 +11,9 @@
               indent="no"
               media-type="application/atom+xml"/>
 
+  <xsl:param name="target"/>
+  <xsl:param name="collection"/>
+
   <xsl:strip-space elements="*" />
 
   <xsl:template match="@*|node()">
@@ -52,6 +55,24 @@
 
   <xsl:template match="//atom:entry/atom:link/@href">
     <xsl:attribute name="href">http://ef.gy<xsl:value-of select="."/></xsl:attribute>
+  </xsl:template>
+
+  <xsl:template match="//atom:entry">
+    <xsl:copy>
+      <xsl:apply-templates/>
+      <xsl:choose>
+        <xsl:when test="atom:link/@href"/>
+        <xsl:when test="atom:category[@term='einit.org']">
+          <link href="{concat('http://ef.gy/',atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content,'@drupal-einit')}"/>
+        </xsl:when>
+        <xsl:when test="atom:category[@term='kyuba.org']">
+          <link href="{concat('http://ef.gy/',atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content,'@drupal-kyuba')}"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <link href="{concat('http://ef.gy/',atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content,'@',$collection)}"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:copy>
   </xsl:template>
 </xsl:stylesheet>
 

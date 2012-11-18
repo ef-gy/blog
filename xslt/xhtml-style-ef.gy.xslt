@@ -12,6 +12,11 @@
               indent="no"
               media-type="application/xhtml+xml" />
 
+  <xsl:param name="target"/>
+  <xsl:param name="collection"/>
+
+  <xsl:variable name="decorateWithCollection" select="(string-length($target) > 0) and (string-length($collection) > 0)"/>
+
   <xsl:strip-space elements="*" />
   <xsl:preserve-space elements="xhtml:pre" />
 
@@ -40,6 +45,13 @@
     </xsl:copy>
   </xsl:template>
 
+  <xsl:template match="xhtml:a/@href">
+    <xsl:choose>
+      <xsl:when test="$decorateWithCollection"><xsl:attribute name="href"><xsl:value-of select="concat('/',.,'@',$collection)"/></xsl:attribute></xsl:when>
+      <xsl:otherwise><xsl:attribute name="href"><xsl:value-of select="."/></xsl:attribute></xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
   <xsl:template match="xhtml:title">
     <title>ef.gy :: <xsl:apply-templates select="@*|node()" /></title>
   </xsl:template>
@@ -52,15 +64,16 @@
         <li><a href="about">About</a></li>
         <li><a href="fortune">Fortune</a></li>
         <li><a href="site">Articles &amp; Projects</a></li>
+        <li><a href="archives">Archives</a></li>
         <li><a href="source-code">Source Code</a></li>
       </ul>
       <xsl:if test="//xhtml:meta[@name='unix:name']">
         <social:social url="http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" twitter="jyujinX"/>
       </xsl:if>
-      <xsl:if test="(//xhtml:meta[@name='description']/@content) and not(xhtml:div[@class='figure']/xhtml:h1)">
+      <xsl:if test="(../xhtml:head/xhtml:meta[@name='description']/@content) and not(xhtml:div[@class='figure']/xhtml:h1)">
         <div class="figure">
           <h2>Summary</h2>
-          <p><xsl:value-of select="//xhtml:meta[@name='description']/@content"/></p>
+          <p><xsl:value-of select="../xhtml:head/xhtml:meta[@name='description']/@content"/></p>
         </div>
       </xsl:if>
       <xsl:apply-templates select="node()" />
@@ -76,12 +89,18 @@
       <xsl:if test="//xhtml:meta[@name='date']">
         <table>
           <tbody>
-            <tr><th>Published on</th><td><xsl:value-of select="//xhtml:meta[@name='date']/@content" /></td></tr>
-            <xsl:if test="//xhtml:meta[@name='mtime']">
-              <tr><th>Last Modified</th><td><xsl:value-of select="//xhtml:meta[@name='mtime']/@content" /></td></tr>
+            <tr><th>Published on</th><td><xsl:value-of select="../xhtml:head/xhtml:meta[@name='date']/@content" /></td></tr>
+            <xsl:if test="../xhtml:head/xhtml:meta[@name='mtime']">
+              <tr><th>Last Modified</th><td><xsl:value-of select="../xhtml:head/xhtml:meta[@name='mtime']/@content" /></td></tr>
             </xsl:if>
-            <xsl:if test="//xhtml:meta[@name='category']">
-              <tr><th>Category</th><td><xsl:value-of select="//xhtml:meta[@name='category']/@content" /></td></tr>
+            <xsl:if test="../xhtml:head/xhtml:meta[@name='category']">
+              <tr><th>Category</th><td><xsl:value-of select="../xhtml:head/xhtml:meta[@name='category']/@content" /></td></tr>
+            </xsl:if>
+            <xsl:if test="../xhtml:head/xhtml:meta[@name='author']">
+              <tr><th>Author</th><td><xsl:value-of select="../xhtml:head/xhtml:meta[@name='author']/@content" /></td></tr>
+            </xsl:if>
+            <xsl:if test="(string-length($collection)>0) and (string-length($target)>0)">
+              <tr><th>Collection</th><td><a href="{$collection}"><xsl:value-of select="$collection"/></a></td></tr>
             </xsl:if>
           </tbody>
         </table>

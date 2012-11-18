@@ -1,6 +1,15 @@
 # This is the configuration file for http://ef.gy/
 # Evidently, this server is running nginx with the native XSLT processor.
 
+map $request_uri $collection {
+  ~^/(.*)/([^@]+)@(?<co>[^@]+)$ $co;
+  ~^/(.*)/(?<co>[^@]+)$ $co;
+}
+
+map $request_uri $target {
+  ~^/(.*)/(?<ta>[^@]+)@([^@]+)$ $ta;
+}
+
 server {
     listen [::]:80;
 
@@ -11,6 +20,11 @@ server {
 	xslt_types application/xhtml+xml application/atom+xml image/svg+xml;
 
 	root /srv/http/ef.gy;
+ 
+    rewrite ^/(.*)/([^@]+)@([^@]+)$ /$1/$3?$2;
+
+    xslt_string_param target $target;
+    xslt_string_param collection $collection;
 
     location /robots.txt {
         try_files invalid =404;
@@ -87,30 +101,11 @@ server {
 		xslt_stylesheet /srv/http/ef.gy/xslt/svg-style-ef.gy.xslt;
 	}
 
-	location /svg+js {
-		alias /srv/http/ef.gy;
-		try_files $uri.xml $uri.svg $uri $uri.cache.xml =404;
-
-		xslt_stylesheet /srv/http/ef.gy/xslt/js-enabled.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/svg-style-ef.gy.xslt;
-	}
-
 	location /xhtml {
 		alias /srv/http/ef.gy;
 		try_files $uri.xml $uri.xhtml $uri.atom $uri $uri.cache.xml =404;
 
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-context.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-transcode-atom.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-social.xslt;
-	}
-
-	location /xhtml+js {
-		alias /srv/http/ef.gy;
-		try_files $uri.xml $uri.xhtml $uri.atom $uri $uri.cache.xml =404;
-
-		xslt_stylesheet /srv/http/ef.gy/xslt/js-enabled.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-transcode-atom.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
@@ -129,29 +124,10 @@ server {
 		xslt_stylesheet /srv/http/ef.gy/xslt/html-post-process.xslt;
 	}
 
-	location /html+js {
-		alias /srv/http/ef.gy;
-		try_files $uri.xml $uri.xhtml $uri.atom $uri $uri.cache.xml =404;
-
-		xslt_stylesheet /srv/http/ef.gy/xslt/js-enabled.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-transcode-atom.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-social.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/html-post-process.xslt;
-	}
-
 	location /svg/fortune {
 		proxy_pass http://unix:/var/tmp/fortune.socket:/fortune;
 
 		xslt_stylesheet /srv/http/ef.gy/xslt/js-disabled.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/svg-style-ef.gy.xslt;
-	}
-
-	location /svg+js/fortune {
-		proxy_pass http://unix:/var/tmp/fortune.socket:/fortune;
-
-		xslt_stylesheet /srv/http/ef.gy/xslt/js-enabled.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/svg-style-ef.gy.xslt;
 	}
 
@@ -162,26 +138,9 @@ server {
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
 	}
 
-	location /xhtml+js/fortune {
-		proxy_pass http://unix:/var/tmp/fortune.socket:/fortune;
-
-		xslt_stylesheet /srv/http/ef.gy/xslt/js-enabled.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-fortune.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
-	}
-
 	location /html/fortune {
 		proxy_pass http://unix:/var/tmp/fortune.socket:/fortune;
 
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-fortune.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/html-post-process.xslt;
-	}
-
-	location /html+js/fortune {
-		proxy_pass http://unix:/var/tmp/fortune.socket:/fortune;
-
-		xslt_stylesheet /srv/http/ef.gy/xslt/js-enabled.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-fortune.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/html-post-process.xslt;

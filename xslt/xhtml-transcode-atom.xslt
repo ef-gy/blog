@@ -13,7 +13,10 @@
               indent="no"
               media-type="application/xhtml+xml" />
 
-  <xsl:key name="entry-by-category" match="atom:entry" use="atom:category/@term" />
+  <xsl:param name="target"/>
+  <xsl:param name="collection"/>
+
+  <xsl:key name="entry-by-category" match="atom:entry" use="atom:category[1]/@term" />
   <xsl:key name="entry-by-updated" match="atom:entry" use="atom:updated" />
 
   <xsl:template match="@*|node()">
@@ -29,7 +32,9 @@
   </xsl:template>
 
   <xsl:template match="/atom:feed">
-    <html>
+   <xsl:choose>
+    <xsl:when test="(string-length($target) > 0) and //xhtml:html[xhtml:head/xhtml:meta/@name='unix:name'][xhtml:head/xhtml:meta/@content=$target]"><xsl:copy-of select="//xhtml:html[xhtml:head/xhtml:meta/@name='unix:name'][xhtml:head/xhtml:meta/@content=$target]"/></xsl:when>
+    <xsl:otherwise><html>
       <head>
         <xsl:choose>
           <xsl:when test="atom:title='http://ef.gy/ Articles'">
@@ -48,17 +53,36 @@
           <ul>
             <xsl:for-each select="key('entry-by-category', atom:category/@term)">
               <li>
-                <a href="{atom:link/@href}">
+                <a>
+                  <xsl:attribute name="href">
+                    <xsl:choose>
+                      <xsl:when test="atom:link/@href"><xsl:value-of select="atom:link/@href"/></xsl:when>
+                      <xsl:when test="atom:category[@term='einit.org']">
+                        <xsl:value-of select="concat('/',atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content,'@drupal-einit')"/>
+                      </xsl:when>
+                      <xsl:when test="atom:category[@term='kyuba.org']">
+                        <xsl:value-of select="concat('/',atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content,'@drupal-kyuba')"/>
+                      </xsl:when>
+                      <xsl:otherwise><xsl:value-of select="concat('/',atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content,'@',$collection)"/></xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:attribute>
                   <span><xsl:value-of select="atom:title" /></span>
                   <xsl:value-of select="concat(' ',atom:summary)" />
-                  <span class="author"><xsl:value-of select="concat(' ',substring-before(atom:author/atom:name,' '))" /></span>
+                  <xsl:if test="atom:category[2]"><span class="secondary-category"><xsl:value-of select="concat(' ',atom:category[2]/@term)" /></span></xsl:if>
+                  <xsl:choose>
+                    <xsl:when test="substring-before(atom:author/atom:name,' ')"><span class="author"><xsl:value-of select="concat(' ',substring-before(atom:author/atom:name,' '))" /></span></xsl:when>
+                    <xsl:when test="atom:author/atom:name/text()"><span class="author"><xsl:value-of select="concat(' ',atom:author/atom:name)" /></span></xsl:when>
+                    <xsl:otherwise/>
+                  </xsl:choose>
+                  <span class="updated"><xsl:value-of select="concat(' ',substring-before(atom:updated,'T'))" /></span>
                 </a>
               </li>
             </xsl:for-each>
           </ul>
         </xsl:for-each>
       </body>
-    </html>
+    </html></xsl:otherwise>
+   </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
 
