@@ -26,7 +26,7 @@
   <xsl:template match="xhtml:body[not(@id)]">
     <xsl:copy>
       <xsl:apply-templates/>
-      <xsl:if test="../xhtml:head/xhtml:link[@rel='next'] or ../xhtml:head/xhtml:link[@rel='next']"><ul id="navigation">
+      <xsl:if test="../xhtml:head/xhtml:link[@rel='next'] or ../xhtml:head/xhtml:link[@rel='prev']"><ul id="navigation">
         <xsl:if test="../xhtml:head/xhtml:link[@rel='next']"><li class="next"><a href="{../xhtml:head/xhtml:link[@rel='next']/@href}" title="{../xhtml:head/xhtml:link[@rel='next']/@title}">次条</a></li></xsl:if>
         <xsl:if test="../xhtml:head/xhtml:link[@rel='prev']"><li class="previous"><a href="{../xhtml:head/xhtml:link[@rel='prev']/@href}" title="{../xhtml:head/xhtml:link[@rel='prev']/@title}">前条</a></li></xsl:if>
       </ul></xsl:if>
