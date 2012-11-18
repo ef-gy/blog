@@ -311,13 +311,14 @@ div.figure li a
 {
     font-size: 1.2em;
     text-decoration: none;
+    color: #ddd;
 }
 
 div.figure li
 {
-    background: #bbd;
-    background: rgba(200,200,225,0.8);
-    border: 0.1em solid #ccc;
+    background: #444;
+    background: rgba(0,0,0,0.4);
+    border: 0.1em solid #777;
     text-align: center;
     padding: 0.5em 0;
     margin-top: 2em;
@@ -329,6 +330,11 @@ div.figure li + li
     border: none;
     text-align: left;
     margin-top: 0;
+}
+
+div.figure li a:hover
+{
+    color: #fff;
 }
 
 div.figure li + li a:before
