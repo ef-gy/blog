@@ -97,7 +97,7 @@ server {
 
 	location /svg {
 		alias /srv/http/ef.gy;
-		try_files $uri.xml $uri.svg $uri $uri.cache.xml =404;
+		try_files $uri.svg $uri =404;
 
 		xslt_stylesheet /srv/http/ef.gy/xslt/js-disabled.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/svg-style-ef.gy.xslt;
@@ -105,7 +105,7 @@ server {
 
 	location /xhtml {
 		alias /srv/http/ef.gy;
-		try_files $uri.xml $uri.xhtml $uri.atom $uri $uri.cache.xml =404;
+		try_files $uri.xhtml $uri.atom $uri =404;
 
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-context.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
@@ -116,7 +116,7 @@ server {
 
 	location /html {
 		alias /srv/http/ef.gy;
-		try_files $uri.xml $uri.xhtml $uri.atom $uri $uri.cache.xml =404;
+		try_files $uri.xhtml $uri.atom $uri =404;
 
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-context.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
