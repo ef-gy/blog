@@ -36,7 +36,7 @@
 </ul>
 <p>Obviously I don't like file name extensions - at least not as part of web URLs. They don't really serve any purpose, and in our case it's quite a lot easier if we don't have to deal with them.</p>
 <p>The important part in the schema above is choosing some symbol to separate the 'virtual' parts of the URL and the actual file name for the Atom you're serving. I chose '@' because I'm not using it in any file names, and because the meaning of 'article-foo@bundle' seems intuitive. It's really up to you what separator you choose - except you can't use '#' as that is processed on the client and not sent to the server. '/' would probably not be a good idea either, as it has special semantics for relative links.</p>
-<p>By the way, don't forget that this website is actually implementing the technique I'm describing here, so if you should get stuck you could always just <a href="source-code">check our this site's source code</a>.</p>
+<p>By the way, don't forget that this website is actually implementing the technique I'm describing here, so if you should get stuck you could always just <a href="source-code">check out this site's source code</a>.</p>
 <h2>Server Configuration</h2>
 <p>First we'll have to do two things in the configuration file for our server: we need to teach nginx how to find the proper Atom bundle as needed, and we'll have to tell it to apply the right stylesheet with the right parameters. Here's one way to do that:</p>
 <pre><code><![CDATA[map $request_uri $collection {
@@ -113,7 +113,7 @@ map $request_uri $target {
     xslt_string_param collection $collection;</code></pre>
 <p>Next, we bind these variables to XSLT parameters with the <em>xslt_string_param</em> directives. This is so that we know what - if anything - to extract from our Atom file in the stylesheet lateron. Still easy.</p>
 <pre><code>    rewrite ^/(.*)/([^@]+)@([^@]+)$ /$1/$3;</code></pre>
-<p>This rewrite directive makes certain that the server knows what file to serve lateron. Since there is no 'foo@bar.atom' file on our server but rather only a 'bar.atom', we need to perform an internal redirect, but we'll only do that for URLs formed according to our schema above. Again, regular expressions are our friend.</p>
+<p>This rewrite directive makes certain that the server knows what file to serve. Since there is no 'foo@bar.atom' file on our server but rather only a 'bar.atom', we need to perform an internal redirect, but we'll only do that for URLs formed according to our schema above. Again, regular expressions are our friend.</p>
 <pre><code>    location / {
         add_header Vary Accept;
 
@@ -126,7 +126,7 @@ map $request_uri $target {
         rewrite ^/$ /html/site redirect;
         rewrite ^(.*)$ /html$1 redirect;
     }</code></pre>
-<p>Our root location block only serves to redirect client requests based on its capabilities. That's why we're adding the 'Vary: Accept' header - because our redirect actually matches against the 'Accept:' header of incoming requests. We might also match against 'Accept-Language:', if we were had content in different languages - a practice Google would do well to adopt instead of that annoying IP-based language selection.</p>
+<p>Our root location block only serves to redirect client requests based on its capabilities. That's why we're adding the 'Vary: Accept' header - because our redirect actually matches against the 'Accept:' header of incoming requests. We might also match against 'Accept-Language:', if we had content in different languages - a practice Google would do well to adopt instead of that annoying IP-based language selection.</p>
 <p>Either way, /foo ends up as /xhtml/foo for clients that claim to support XHTML and /html/foo for clients that don't mention XHTML explicitly. We're using a client redirect in this case, because we actually want the client to see the canonical URL for their request. Yes, we do. Incidentally, this also helps caching proxies do the right thing - another reason to add an appropriate 'Vary' header.</p>
 <pre><code>    location /xhtml {
         alias /srv/http/ef.gy;
@@ -135,10 +135,10 @@ map $request_uri $target {
         xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-transcode-atom.xslt;
         xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
     }</code></pre>
-<p>This /xhtml location block is where we tell nginx how to serve requests after being redirected. The redirect instructions in the / block aren't being run when requesting things form /xhtml, because in nginx configurations, more specific locations override less specific locations completely. Notice how we're using the <em>alias</em> directive to point to the global document root - if we don't use <em>alias</em>, then nginx would search for an xhtml/foo.(extension) file instead of the foo.(extension) we want.</p>
+<p>This /xhtml location block is where we tell nginx how to serve requests after being redirected. The redirect instructions in the / block aren't being run when requesting things from /xhtml, because in nginx configurations, more specific locations override less specific locations completely. Notice how we're using the <em>alias</em> directive to point to the global document root - if we didn't use <em>alias</em>, then nginx would search for an xhtml/foo.(extension) file instead of the foo.(extension) we want.</p>
 <p>With the <em>try_files</em> directive we're telling nginx to first search for a (name).xhtml file. If that exists, nginx will serve that. If not, it will fall back to a (name).atom, and if that doesn't exist either it'll try serving just (name).</p>
 <p>Finally, with the <em>xslt_stylesheet</em> directives we tell nginx to apply XSLT stylesheets. With several of these directives in a single block, the named stylesheets will be applied in sequence, with the output of one getting fed to the next. nginx will only apply the stylesheets to files of the MIME types listed in the <em>xslt_types</em> directive - we set that in the global scope to apply stylesheets to Atoms and XHTMLs.</p>
-<p>The other two location blocks are only for demonstrational purposes. The /html block is identical to /xhtml, except that we apply another stylesheet at the end to convert from XHTML1 to plain HTML4 - we just need to copy everything there and remove any XML namespace nodes. The file's in the repository if you're interested. The /css section is only around because I like to keep things tidy and consistent - so it lets nginx serve CSS files from their own directory without their file name extension.</p>
+<p>The other two location blocks are only for demonstrational purposes. The /html block is identical to /xhtml, except that we apply another stylesheet after the first two to convert from XHTML1 to plain HTML4 - we just need to copy everything there and remove any XML namespace nodes. The file is in the repository if you're interested. The /css section is only around because I like to keep things tidy and consistent - so it lets nginx serve CSS files from their own directory without their file name extension.</p>
 <h2>Extracting the Atom Content in XSLT</h2>
 <p>You've probably guessed what the 'xhtml-style-ef.gy.xslt' stylesheet does, so let's look at 'xhtml-transcode-atom.xslt' - the stylesheet where we extract the atom:content nodes or transcode the Atom feed to XHTML, depending on what the client requested.</p>
 <pre><code><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -203,27 +203,27 @@ map $request_uri $target {
    </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>]]></code></pre>
-<p>This stylesheet really isn't all that hard. It does slightly more than what would be necessary, but should still be readable. You'll be writing a completely different one for your site, anyway, so I'll just point out the important bits.</p>
+<p>This stylesheet really isn't all that hard. It does slightly more than what would be necessary, but should still be readable. You'll be writing a completely different one for your own site, anyway, so I'll just point out the important bits.</p>
 <pre><code><![CDATA[  <xsl:output method="xml" version="1.0" encoding="UTF-8"
               doctype-public="-//W3C//DTD XHTML 1.1//EN"
               doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"
               indent="no"
               media-type="application/xhtml+xml" />]]></code></pre>
-<p>This directive tells the XSLT processor that we intend to produce a plain XHTML file as output. We always produce output in XHTML, even if we serve HTML to the client later, because of that post processing step for /html.</p>
+<p>This directive tells the XSLT processor that we intend to produce a plain XHTML file as output. We always produce output in XHTML, even if we serve HTML to the client later, because of that post processing step in the /html location block.</p>
 <pre><code><![CDATA[  <xsl:param name="target"/>
   <xsl:param name="collection"/>]]></code></pre>
 <p>These <em>xsl:param</em> directives tell the XSLT processor that our stylesheet uses the two parameters we defined earlier in the configuration file.</p>
-<p>The <em>/atom:feed</em> template is where the magic starts. The whole template is one big <em>xsl:choose</em>, the result of which is either the 'virtual' document to retrieve, or a listing with all the <em>atom:entry</em> nodes in the feed we're processing. This is the only part that's not quite straightforward: we need some way to determine which node is supposed to be which 'file'. In the case of this website, I'm using a custom <em>unix:name</em> meta attribute in the raw XHTML files, so I went with that. Other logical choices would be the value of the <em>atom:id</em> element - but typically those are populated with GUID-esque strings, not exactly pretty to put in a URL - or an <em>id</em> attribute on the XHTMLs' <em>html</em> elements. It's up to you, really</p>
-<p>That takes care of serving our 'virtual' files. The <em>xsl:otherwise</em> in that top level selection is where we present the contents of the our Atom feed when we don't have anything else to serve. This is fairly typical XSLT and the mapping between Atom and XHTML is pretty obvious. The only slightly advanced thing I did in that particular stylesheet is that I'm sorting the entries by category and the time of their last updated - seemed sensible for a blog. With that we only have to take care of one little thing while transcribing: producing the right links in the transcript.</p>
+<p>The <em>/atom:feed</em> template is where the magic starts. The whole template is one big <em>xsl:choose</em>, the result of which is either the 'virtual' document to retrieve, or a listing with all the <em>atom:entry</em> nodes in the feed we're processing. This is the only part that's not quite straightforward: we need some way to determine which node is supposed to be which 'file'. In the case of this website, I'm using a custom <em>unix:name</em> meta attribute in the raw XHTML files, so I went with that. Other logical choices would be the value of the <em>atom:id</em> element - but typically those are populated with GUID-esque strings, not exactly pretty to put in a URL - or an <em>id</em> attribute on the XHTMLs' <em>html</em> elements. It's up to you, really.</p>
+<p>That takes care of serving our 'virtual' files. The <em>xsl:otherwise</em> in that top level selection is where we present the contents of the our Atom feed when we don't have anything else to serve. This is fairly typical XSLT and the mapping between Atom and XHTML is pretty obvious. The only slightly advanced thing I did in that particular stylesheet is that I'm sorting the entries by category and the time of their last update - seemed sensible for a blog. With that we only have to take care of one little thing while transcribing: producing the right links in the transcript.</p>
 <pre><code><![CDATA[                  <xsl:attribute name="href">
                     <xsl:choose>
                       <xsl:when test="atom:link/@href"><xsl:value-of select="atom:link/@href"/></xsl:when>
                       <xsl:otherwise><xsl:value-of select="concat('/',atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content,'@',$collection)"/></xsl:otherwise>
                     </xsl:choose>
                   </xsl:attribute>]]></code></pre>
-<p>This little bit of magic generates the links we need so the client can request the contents of our Atoms. If you only intend to serve these specially prepared Atom bundles, you could forego the <em>xsl:choose</em> and just use the value in the <em>xsl:otherwise</em> branch - but as I mentioned earlier, I'm also serving proper Atom files. On this site in particular, the difference between the two is that 'normal' type of those have both the contents of the file they link to and a link to it, and the other only have the contents and no link to use. So the branching there makes sure both types of Atom files can be transcribed in a manner meaningful to the client - either we just serve the link already in place, or we use the <em>unix:name</em> meta attribute to generate a link according to our schema from above.</p>
+<p>This little bit of magic generates the links we need so the client can request the contents of our Atoms. If you only intend to serve these specially prepared Atom bundles, you could forego the <em>xsl:choose</em> and just use the value in the <em>xsl:otherwise</em> branch - but as I mentioned earlier, I'm also serving proper Atom files. On this site in particular, the difference between the two is that the 'normal' type of those have both the contents of the file they link to and a link to it, and the 'virtual' ones only have the contents and no link to use. So the branching there makes sure both types of Atom files can be transcribed in a manner meaningful to the client - either we just serve the link already in place, or we use the <em>unix:name</em> meta attribute to generate a link according to our schema from above.</p>
 <h1>Conclusion</h1>
-<p>And... that's pretty much it. Do note that you'll have to mangle the links in your 'virtual' files too if they might point to contents of your Atoms - unless you know they're already in the right format. Should be easy enough.</p>
-<p>As I mentioned earlier, do feel free to use this website's source repository if you're stuck somewhere. Or base your own site around it, I don't really care one way or another.</p>
+<p>And... that's pretty much it. Do note that you'll have to mangle the links in your 'virtual' files too if they might point to the contents of your Atoms - unless you know they're already in the right format. Should be easy enough.</p>
+<p>As I mentioned earlier, do feel free to use this website's source repository if you're stuck somewhere. Or base your own site around it.</p>
 </body>
 </html>
