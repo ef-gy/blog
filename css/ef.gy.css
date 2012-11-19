@@ -258,8 +258,7 @@ address a
 
 address a:hover
 {
-    color: black;
-    background: #eee;
+    background: #333;
 }
 
 address a span
