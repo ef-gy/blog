@@ -24,9 +24,14 @@ server {
     xslt_string_param target $target;
     xslt_string_param collection $collection;
 
+    if ($request_uri ~ ^/x?html/ )
+    {
+        rewrite ^/x?html/(.*)$ /$1 permanent;
+    }
+
     rewrite ^(.*)/(kyuba:[^@]+)@([^@]*archives)$ $1/$2@drupal-kyuba permanent;
     rewrite ^(.*)/(einit:[^@]+)@([^@]*archives)$ $1/$2@drupal-einit permanent;
-    rewrite ^/(.*)/([^@]+)@([^@]+)$ /$1/$3;
+    rewrite ^(.*)/([^@]+)@([^@]+)$ $1/$3;
 
     location /robots.txt {
         try_files invalid =404;
@@ -44,14 +49,14 @@ server {
             break;
         }
 
+        rewrite ^/$ /site permanent;
+
 		if ($http_accept ~* application/xhtml\+xml)
 		{
-			rewrite ^/$ /xhtml/site redirect;
-			rewrite ^(.*)$ /xhtml$1 redirect;
+			rewrite ^(.*)$ /xhtml$1 last;
 		}
 
-		rewrite ^/$ /html/site redirect;
-		rewrite ^(.*)$ /html$1 redirect;
+		rewrite ^(.*)$ /html$1 last;
 	}
 
 	location /.git {
