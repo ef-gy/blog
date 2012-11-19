@@ -99,7 +99,14 @@
         <li><a href="source-code">Source Code</a></li>
       </ul>
       <xsl:if test="//xhtml:meta[@name='unix:name']">
-        <social:social url="http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" twitter="jyujinX"/>
+        <xsl:choose>
+          <xsl:when test="(string-length($target) > 0) and (string-length($collection) > 0)">
+            <social:social url="http://ef.gy/{$target}@{$collection}" twitter="jyujinX"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <social:social url="http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" twitter="jyujinX"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:if>
       <xsl:if test="(../xhtml:head/xhtml:meta[@name='description']/@content) and not(xhtml:div[@class='figure']/xhtml:h1)">
         <div class="figure">
