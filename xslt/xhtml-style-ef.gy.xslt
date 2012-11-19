@@ -16,7 +16,7 @@
   <xsl:param name="target"/>
   <xsl:param name="collection"/>
 
-  <xsl:variable name="decorateWithCollection" select="(string-length($target) > 0) and (string-length($collection) > 0)"/>
+  <xsl:variable name="decorateWithCollection" select="(string-length($target) > 0) and (string-length($collection) > 0) and not (//xhtml:body[@id='feed'])"/>
 
   <xsl:strip-space elements="*" />
   <xsl:preserve-space elements="xhtml:pre" />
