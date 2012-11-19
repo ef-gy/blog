@@ -4,6 +4,7 @@
               xmlns:xhtml="http://www.w3.org/1999/xhtml"
               xmlns:atom="http://www.w3.org/2005/Atom"
               xmlns:source="http://ef.gy/2012/source"
+              xmlns:str="http://exslt.org/strings"
               xmlns="http://www.w3.org/1999/xhtml"
               exclude-result-prefixes="source"
               version="1.0">
@@ -43,7 +44,7 @@
 
   <xsl:template match="/atom:feed">
    <xsl:choose>
-    <xsl:when test="(string-length($target) > 0) and atom:entry/atom:content/xhtml:html[xhtml:head/xhtml:meta/@name='unix:name'][xhtml:head/xhtml:meta/@content=$target]"><xsl:copy-of select="atom:entry/atom:content/xhtml:html[xhtml:head/xhtml:meta/@name='unix:name'][xhtml:head/xhtml:meta/@content=$target]"/></xsl:when>
+    <xsl:when test="(string-length($target) > 0) and atom:entry/atom:content/xhtml:html[xhtml:head/xhtml:meta/@name='unix:name'][xhtml:head/xhtml:meta/@content=str:decode-uri($target)]"><xsl:copy-of select="atom:entry/atom:content/xhtml:html[xhtml:head/xhtml:meta/@name='unix:name'][xhtml:head/xhtml:meta/@content=str:decode-uri($target)]"/></xsl:when>
     <xsl:otherwise><html>
       <head>
         <xsl:choose>
