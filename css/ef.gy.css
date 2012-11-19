@@ -7,7 +7,7 @@
 
 html
 {
-    background: #666;
+    background: #444;
     font-size: 0.9em;
 }
 
@@ -15,8 +15,7 @@ body
 {
     position: relative;
     margin: 0 4em 2em 24em;
-    background: #eee;
-    background: rgba(255,255,255,0.9);
+    background: #fff;
 	padding: 3.5em 2em;
     border-left: 0.1em solid #222;
     border-bottom: 0.1em solid #222;
