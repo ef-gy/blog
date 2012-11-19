@@ -23,7 +23,7 @@
   <xsl:template match="xhtml:head">
     <head>
       <xsl:apply-templates select="@*|node()" />
-      <xsl:if test="xhtml:meta[@name='unix:name'] and ((string-length($target) = 0) or (xhtml:meta[@name='unix:name']/@content = $target))"><meta name="context">
+      <xsl:if test="xhtml:meta[@name='unix:name'] and (((string-length($target) = 0) and not (/atom:feed)) or (xhtml:meta[@name='unix:name']/@content = $target))"><meta name="context">
         <xsl:copy-of select="document('/srv/http/ef.gy/site+archives.atom')/atom:feed" />
       </meta></xsl:if>
     </head>
