@@ -293,7 +293,7 @@ div.figure
     position: absolute;
     width: 16em;
     padding: 2em;
-    margin: 6em 0 0 -24em;
+    margin: -2em 0 0 -24em;
     border-top: 0.2em solid #aaa;
     border-bottom: 0.2em solid #aaa;
     color: #ddd;
