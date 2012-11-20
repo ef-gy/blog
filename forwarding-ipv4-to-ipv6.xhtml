@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Forwarding IPv4 Ports to IPv6-only Hosts</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="NAT is evil. But while IPv6 is still being held back, you can't always avoid it entirely. Strange how this scenario isn't mentioned more frequently..." />
+<meta name="date" content="2012-11-20T21:51:00Z" />
+<meta name="mtime" content="2012-11-20T21:51:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="forwarding-ipv4-to-ipv6" />
+</head>
+<body>
+<h1>You'd Think Someone Would've Mentioned This</h1>
+<p>The other day I was restructuring my backend servers. While doing that, I've disabled IPv4 support on the lot of them. After all, I can just reverse-proxy the incoming HTTP traffic and I do have IPv6 at home to reach the backends via SSH. Problem is, I don't have IPv6 at work, so I'd need an IPv4-connected box to tunnel into that is also connected via IPv6 to reach the backend servers.</p>
+<p>This seemed fairly straightforward: just listen on the public IPv4 address's port 22 and forward that to a box behind the firewall that is connected via IPv6. Good ol' NAT. But there's no such thing as NAT in IPv6 - you don't need it in pure IPv6 environments, after all. While that IS a good thing in principle, it also means you can't forward IPv4 traffic to an IPv6-only host in Linux: iptables only accepts IPv4 targets when forwarding targets in the IPv4 rules.</p>
+<p>So it seemed I'd have to have at least one box behind the firewall that has both IPv4 and IPv6 connectivity. But that's messy. I still don't like messy things.</p>
+<h1>socat to the Rescue!</h1>
+<p>Fortunately, there are ways to get around this problem. After all, nothing's to stop you from writing a programme that listens on an IPv4 TCP port and forwards all incoming traffic via IPv6.</p>
+<p>But we don't have to write a programme to do that ourselves - good ol' <em>socat</em> will do that just fine. In my case, it was as simple as running this command:</p>
+<pre><code>socat TCP4-LISTEN:22,fork,su=nobody TCP6:[2a01:198:79d:1::8]:22</code></pre>
+<p>This launches a new instance of socat and tells it to forward everything that comes in on port 22 (ssh) to an IPv6 address on the same port. The IPv6 address here is my gateway machine on the IPv6-only network behind the firewall. With this in place, I can check in on the server from work, without having to rely on messy dual-stacked servers on the internal network.</p>
+<p>To launch socat automatically when the machine in question boots up, we could add the following line to our /etc/rc.local (or equivalent if you're not on Debian):</p>
+<pre><code>nohup socat TCP4-LISTEN:22,fork,su=nobody TCP6:[2a01:198:79d:1::8]:22 &amp;</code></pre>
+<p>Only drawback is that we have to run socat as <em>root</em> because port 22 is one of those 'special' ports only root can open... ah well, can't have everything. It's good to know we won't have to deal with any of this NAT crap in the future once IPv6 adoption gets more widespread.</p>
+</body>
+</html>
