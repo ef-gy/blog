@@ -1,4 +1,5 @@
-all: fortune js/tesseract.js
+#all: fortune js/tesseract.js
+all: fortune
 
 fortune: src/fortune.cpp include/ef.gy/http.h
 	clang++ -Iinclude/ -O2 src/fortune.cpp -lboost_system -lboost_regex -lboost_filesystem -lboost_iostreams -o fortune && strip -x fortune
