@@ -81,6 +81,7 @@
                   <span><xsl:value-of select="atom:title" /></span>
                   <xsl:value-of select="concat(' ',atom:summary)" />
                   <xsl:if test="atom:category[2]"><span class="secondary-category"><xsl:value-of select="concat(' ',atom:category[2]/@term)" /></span></xsl:if>
+                  <xsl:if test="substring-before(atom:category[1]/@term,'/')='download'"><span class="secondary-category"><xsl:value-of select="' download'"/></span></xsl:if>
                   <xsl:choose>
                     <xsl:when test="substring-before(atom:author/atom:name,' ')"><span class="author"><xsl:value-of select="concat(' ',substring-before(atom:author/atom:name,' '))" /></span></xsl:when>
                     <xsl:when test="atom:author/atom:name/text()"><span class="author"><xsl:value-of select="concat(' ',atom:author/atom:name)" /></span></xsl:when>

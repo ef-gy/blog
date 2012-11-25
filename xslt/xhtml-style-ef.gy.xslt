@@ -92,11 +92,11 @@
       <xsl:apply-templates select="@*" />
       <h1><xsl:value-of select="/xhtml:html/xhtml:head/xhtml:title"/></h1>
       <ul>
-        <li><a href="about">About</a></li>
-        <li><a href="fortune">Fortune</a></li>
-        <li><a href="site">Articles &amp; Projects</a></li>
-        <li><a href="archives">Archives</a></li>
-        <li><a href="source-code">Source Code</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/fortune">Fortune</a></li>
+        <li><a href="/site">Articles &amp; Projects</a></li>
+        <li><a href="/archives">Archives</a></li>
+        <li><a href="/source-code">Source Code</a></li>
       </ul>
       <xsl:if test="//xhtml:meta[@name='unix:name']">
         <xsl:choose>

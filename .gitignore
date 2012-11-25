@@ -2,3 +2,5 @@
 ._*
 *.swp
 *.cache.xml
+*.bz2
+*.out

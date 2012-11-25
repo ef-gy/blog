@@ -11,7 +11,7 @@
               indent="no"
               media-type="application/atom+xml"/>
 
-  <xsl:variable name="basepath">/srv/http/ef.gy/</xsl:variable>
+  <xsl:param name="documentRoot"/>
 
   <xsl:template match="@*|node()">
     <xsl:copy>
@@ -21,7 +21,7 @@
 
   <xsl:template match="atom:entry[@source:local]">
     <entry>
-      <xsl:variable name="source" select="document(concat($basepath,@source:local))" />
+      <xsl:variable name="source" select="document(concat($documentRoot,'/',@source:local))" />
 
       <title><xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:title" /></title>
       <id>http://ef.gy/<xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content" /></id>
@@ -48,7 +48,7 @@
   </xsl:template>
 
   <xsl:template match="source:merge">
-    <xsl:for-each select="document(concat($basepath,@local))/atom:feed">
+    <xsl:for-each select="document(concat($documentRoot,'/',@local))/atom:feed">
       <xsl:apply-templates select="atom:entry"/>
     </xsl:for-each>
   </xsl:template>

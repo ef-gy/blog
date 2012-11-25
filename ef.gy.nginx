@@ -15,14 +15,19 @@ server {
 
 	server_name  ef.gy;
 
+    add_header Vary Accept;
+
 	access_log  /var/log/nginx/ef.gy.access.log;
 
 	xslt_types application/xhtml+xml application/atom+xml image/svg+xml;
 
-	root /srv/http/ef.gy;
+    set $documentRoot /srv/http/ef.gy;
+
+	root $documentRoot;
  
     xslt_string_param target $target;
     xslt_string_param collection $collection;
+    xslt_string_param documentRoot $documentRoot;
 
     if ($request_uri ~ ^/x?html/ )
     {
@@ -42,8 +47,6 @@ server {
     }
 
 	location / {
-		add_header Vary Accept;
-
         if ($uri ~ ^/\.git)
         {
             break;
@@ -84,7 +87,7 @@ server {
 	}
 
 	location /atom {
-		alias /srv/http/ef.gy;
+        alias $documentRoot;
 		try_files $uri.atom $uri =404;
 
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
@@ -92,24 +95,19 @@ server {
 	}
 
 	location /raw {
-		alias /srv/http/ef.gy;
-		try_files $uri =404;
-	}
-
-	location /download {
+        alias $documentRoot;
 		try_files $uri =404;
 	}
 
 	location /svg {
-		alias /srv/http/ef.gy;
+        alias $documentRoot;
 		try_files $uri.svg $uri =404;
 
-		xslt_stylesheet /srv/http/ef.gy/xslt/js-disabled.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/svg-style-ef.gy.xslt;
 	}
 
 	location /xhtml {
-		alias /srv/http/ef.gy;
+        alias $documentRoot;
 		try_files $uri.xhtml $uri.atom $uri =404;
 
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-context.xslt;
@@ -120,7 +118,7 @@ server {
 	}
 
 	location /html {
-		alias /srv/http/ef.gy;
+        alias $documentRoot;
 		try_files $uri.xhtml $uri.atom $uri =404;
 
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-context.xslt;
@@ -134,7 +132,6 @@ server {
 	location /svg/fortune {
 		proxy_pass http://unix:/var/tmp/fortune.socket:/fortune;
 
-		xslt_stylesheet /srv/http/ef.gy/xslt/js-disabled.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/svg-style-ef.gy.xslt;
 	}
 
