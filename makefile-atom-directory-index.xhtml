@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Makefile Snippet to Generate an Atom Directory Index</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="XML directory indices may or may not be coming to nginx Soon(tm), so here's an alternative we can use right now." />
+<meta name="date" content="2012-11-26T22:28:00Z" />
+<meta name="mtime" content="2012-11-26T22:28:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="makefile-atom-directory-index" />
+</head>
+<body>
+<h1>Can't Beat Old Tech</h1>
+<p>While moving the becquerel.org data to this site, I noticed that I'd completely forgotten about the source code archives stored there.</p>
+<p>I was kind of hoping I could just style nginx's directory listing with an XSLT stylesheet, but it turns out those listings aren't well-formed XML (bleedin shame that, especially considering the only part that isn't well-formed is the &lt;hr&gt; tags in there - which aren't marked as empty elements).</p>
+<p>So I was left with only two choices: hacking nginx and adding those missing /-es to the &lt;hr&gt; elements, or writing a small script to get the job done. Obviously the script won - there's talk on the nginx mailing list of an XML directory index that may or may not be coming sometime soon, so there's no reason to hack the sucker.</p>
+<p>This task in particular was one of those that make a lot of sense as a Makefile - whenever I upload a new file, I only need to run 'make' in the web root to update the directory indices that do need to get updated. The output format is an Atom file, as usual, and since we're on Unix it seemed like a good idea to use some of the common shell utilities to get some additional information about the individual files - like the actual mime type and the MD5 checksums.</p>
+<pre><code><![CDATA[root=http://ef.gy/
+name=Magnus Achim Deininger
+indices=download/index.atom download/kyuba/index.atom
+
+index: $(indices)
+
+$(indices): Makefile $(filter-out %index.atom, $(wildcard download/*))
+	echo '<?xml version="1.0" encoding="utf-8"?>'\
+		'<feed xmlns="http://www.w3.org/2005/Atom">'\
+		'<id>$(root)$@</id><title>/$(subst /index.atom,,$@)</title><link rel="self" href="$(root)atom/$(subst .atom,,$@)"/>'\
+		"<updated>$$(stat -c %y "$(subst /index.atom,,$@)"|sed -e 's/\(.\+\) \(.\+\)\.0\+ \(...\)\(..\)/\1T\2\3:\4/')</updated>">$@
+	for i in $(subst /index.atom,,$@)/*; do\
+		if [ $${i} != "$@" -a -f $${i} ]; then echo "<entry><id>md5:$$(md5sum -b $${i}|cut -d ' ' -f 1)</id><title>$$(basename $${i})</title><link href='/$${i}' type='$$(file --mime-type $${i}|cut -d ' ' -f 2)'/><updated>$$(stat -c %y $${i}|sed -e 's/\(.\+\) \(.\+\)\.0\+ \(...\)\(..\)/\1T\2\3:\4/')</updated><author><name>$(name)</name></author><category term='$$(echo '$(subst /index.atom,,$@)')'/><summary>File Type: $$(file --mime-type $${i}|cut -d ' ' -f 2). File Checksum (MD5): $$(md5sum -b $${i}|cut -d ' ' -f 1)</summary></entry>"; fi;\
+	done>>$@
+	echo '</feed>'>>$@]]></code></pre>
+</body>
+</html>

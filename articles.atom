@@ -4,6 +4,7 @@
   <link href="http://ef.gy/atom/articles" rel="self" />
   <link href="http://ef.gy/" />
 
+  <entry source:local="makefile-atom-directory-index.xhtml" />
   <entry source:local="forwarding-ipv4-to-ipv6.xhtml" />
   <entry source:local="serving-an-atom-bundle.xhtml" />
   <entry source:local="exporting-a-drupal-database-to-atom.xhtml" />
