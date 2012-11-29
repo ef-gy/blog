@@ -116,11 +116,6 @@ h1 + ul + ul li
     width: auto;
 }
 
-iframe
-{
-    border: 0;
-}
-
 a
 {
 	color: #222;
@@ -418,7 +413,6 @@ body#feed h2 + ul li
     padding: 1em;
     margin: 0.5em;
     border: 0.1em solid #ccc;
-    background: rgba(255,255,255,0.7);
 }
 
 body#feed h2
