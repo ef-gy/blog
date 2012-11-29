@@ -388,6 +388,7 @@ body#feed
     vertical-align: top;
     margin-right: 0;
     margin: 0 4em 2em 4em;
+    line-height: 1.25em;
 }
 
 body#feed *
@@ -417,7 +418,7 @@ body#feed h2
     border: 1px solid white;
     display: inline-block;
     width: 12.0em;
-    padding: 4.3em 1em;
+    padding: 4.4em 1em;
     margin: 0.5em;
     text-align: center;
     font-weight: bold;
