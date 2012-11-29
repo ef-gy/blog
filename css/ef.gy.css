@@ -924,3 +924,12 @@ ul#navigation li.next a:hover
         display: none;
     }
 }
+
+@media (max-width: 65em)
+{
+    body#feed #latest
+    {
+        float: none;
+        max-width: none;
+    }
+}
