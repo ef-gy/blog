@@ -383,7 +383,7 @@ body#feed
     vertical-align: top;
     margin-right: 0;
     margin: 0 4em 2em 4em;
-    line-height: 1.125em;
+    line-height: 1.25em;
     text-align: right;
 }
 
@@ -413,6 +413,7 @@ body#feed h2 + ul li
     padding: 1em;
     margin: 0.5em;
     border: 0.1em solid #ccc;
+    line-height: 1.125em;
 }
 
 body#feed h2
@@ -449,6 +450,7 @@ body#feed h2 + ul li a span
     font-weight: bold;
     font-size: 1.2em;
     margin: 0 0 1em 0;
+    line-height: 1.25em;
 }
 
 body#feed h2 + ul li a span.author
