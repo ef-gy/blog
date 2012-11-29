@@ -389,17 +389,25 @@ body#feed
     margin-right: 0;
     margin: 0 4em 2em 4em;
     line-height: 1.25em;
+    text-align: right;
 }
 
 body#feed *
 {
     vertical-align: top;
+    text-align: left;
+}
+
+body#feed h1 + ul
+{
+    text-align: right;
 }
 
 body#feed h2 + ul
 {
     display: inline;
     margin: 0;
+    padding: 0;
 }
 
 body#feed h2 + ul li
@@ -415,16 +423,15 @@ body#feed h2 + ul li
 
 body#feed h2
 {
-    border: 1px solid white;
     display: inline-block;
-    width: 12.0em;
-    padding: 4.4em 1em;
+    width: 18.0em;
+    padding: 6.38em 1em;
     margin: 0.5em;
     text-align: center;
     font-weight: bold;
-    font-size: 1.4em;
+    font-size: 1em;
     color: #555;
-    border: 1px solid #aaa;
+    border: 0.1em solid #aaa;
 }
 
 body#feed h2 + ul li a
@@ -441,7 +448,7 @@ body#feed h2 + ul li a
 body#feed h2 + ul li a span
 {
     display: block;
-    max-height: 2.5em;
+    max-height: 2.2em;
     text-overflow: ellipsis;
     overflow: hidden;
     color: #444;
@@ -500,6 +507,75 @@ body#feed h2 + ul li a:hover
     background: #fff;
     background: rgba(255,255,2550,0.5);
     color: #555;
+}
+
+body#feed #latest h2
+{
+    font-size: 1.4em;
+    background: none;
+    padding: 0;
+    width: auto;
+    border: 0;
+    margin: 0 0 2em 0;
+    text-align: left;
+    line-height: 1.25em;
+}
+
+body#feed #latest
+{
+    padding: 3em 5em 3em 3em;
+    max-width: 33.15em;
+    float: left;
+    margin: 1em 0.5em 1em 4%;
+}
+
+body#feed #latest:before
+{
+    content: "// this just in ... //";
+    display: block;
+    margin: 1em 0.5em;
+    text-align: right;
+    font-weight: bold;
+    color: #ccc;
+    font-style: italic;
+}
+
+body#feed #latest li
+{
+    display: block;
+    float: right;
+}
+
+body#feed #latest li a
+{
+    display: block;
+    float: right;
+    padding: 1em 2em;
+    margin: 0.2em;
+    background: #224;
+    color: #ccc;
+    text-decoration: none;
+}
+
+body#feed #latest li a:hover
+{
+    background: #557;
+    color: #fff;
+}
+
+body#feed #latest ul
+{
+    margin-top: 3em;
+}
+
+body#feed #latest th, body#feed #latest td, body#feed #latest tr
+{
+    display: inline-block;
+}
+
+body#feed #latest table
+{
+    padding: 1em 0;
 }
 
 pre
@@ -809,7 +885,7 @@ ul#navigation li.next a:hover
     }
 }
 
-@media (max-width: 60.5em)
+@media (max-width: 42.9em)
 {
     body#feed h2,
     body#feed h2 + ul + h2,
@@ -828,6 +904,7 @@ ul#navigation li.next a:hover
         display: block;
         padding: 0;
         text-align: left;
+        clear: both;
     }
 
     h1 + ul
