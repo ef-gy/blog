@@ -897,7 +897,6 @@ ul#navigation li.next a:hover
         width: auto;
         display: block;
         padding: 0;
-        text-align: left;
         clear: both;
     }
 
@@ -905,6 +904,16 @@ ul#navigation li.next a:hover
     {
         padding: 10px 5em 10px 1.5em;
         overflow: hidden;
+    }
+
+    body#feed, body#feed h2
+    {
+        text-align: center;
+    }
+
+    body#feed h2 + ul li
+    {
+        width: 70%;
     }
 }
 
