@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Moving That Ancient Oracle Installation To A Debian Server</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="The dread. The horror. Still worked out fine though, no idea how or why..." />
+<meta name="date" content="2012-11-30T13:29:00Z" />
+<meta name="mtime" content="2012-11-30T13:29:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="moving-oracle-install-to-debian" />
+</head>
+<body>
+<h1>Dread. Horror.</h1>
+<p>So we have this CentOS 5.3 server running an Oracle 10.2 database server, among other things. We recently decided it was time to update the base operating system to something less... antique... Setting up a clean new Debian 6.0.6 was easy enough, but moving that Oracle database turned out to be a bit more involved than I thought it'd be.</p>
+<p>First of all, we didn't have the original installer package lying about anymore. The oracle website won't let you download 10.2.x releases nowadays, however, and I didn't feel like breaking the whole fragile mess by going for an 11.x installer. Second, Oracle doesn't seem to support anything Debian-ish in any way - at least not back then they didn't.</p>
+<p>Left without any installer, support or any way to obtain either, I had to get a wee bit creative. What ended up working - surprisingly - was copying the whole server installation to the new server and then fixing whatever broke until it worked.</p>
+<h1>Dirty Deeds, ...</h1>
+<p>The server package was installed at /opt/oracle/ora102. The first step in transferring that installation is to copy everything to the new server. Since any decent UNIXy operating system offers SSH, this part is rather easy. On the new server, we run this command:</p>
+<pre><code># scp -rp root@old-server:/opt/oracle /opt</code></pre>
+<p>You may have to enter the other machine's root password if you're still using password based SSH. This command is going to take a while, these oracle installs seem to come with everything and a kitchen sink. Once it's done you'll also have to copy the original init script and the oratab:</p>
+<pre><code># scp -p root@old-server:/etc/init.d/dbora /etc/init.d
+# scp -p root@old-server:/etc/oratab /etc</code></pre>
+<p>You'll also want to scp your databases over to the new machine. I'll let you figure that part out. Next I had to adjust the user and group of the oracle installation - except the original user and groups weren't on the debian box just yet. I ended up doing this:</p>
+<pre><code># adduser oracle
+# addgroup oinstall
+# addgroup dba
+# adduser oracle oinstall
+# adduser oracle dba
+# chown -R oracle:oinstall /opt/oracle</code></pre>
+<p>Oracle will also expect some environment variables. Since we want to make sure those variables are always set whenever we log in, we add the lot of them to /etc/profile.d/oracle.sh:</p>
+<pre><code>#!/bin/sh
+# save this as /etc/profile.d/oracle.sh
+
+export CLASSPATH=/opt/oracle/ora102/JRE:/opt/oracle/ora102/jlib:/opt/oracle/ora102/jdbc/lib:${CLASSPATH}
+export ORACLE_BASE=/opt/oracle
+export ORACLE_HOME=/opt/oracle/ora102
+export ORACLE_HOME_LISTENER=/opt/oracle/ora102</code></pre>
+<p>After saving that file, you'll want to relog or source /etc/profile. You'll probably also have to install some additional libraries. To find out which, we can use ldd and a bit of shell magic:</p>
+<pre><code># for i in /opt/oracle/ora102/*; do ldd $i; done|grep 'not found'|sort|uniq|less</code></pre>
+<p>You might have to adjust the 'not found' grep part if your Debian installation isn't set to an English locale. This will list all the unavailable libraries that oracle's binaries are linked against. Install those with apt-get. I didn't have to install all of them, just make sure whatever came from the oracle, sqlplus, imp and exp binaries is installed.</p>
+<p>Now, as a piece of enterprise software, oracle won't just run on ANY linux. We'll have to massage some kernel parameters first. We do this by adding the following to /etc/sysctl.conf:</p>
+<pre><code>kernel.shmmni = 4096
+kernel.sem = 250 32000 100 128
+net.ipv4.ip_local_port_range = 1024 65000
+net.core.rmem_default = 262144
+net.core.rmem_max = 262144
+net.core.wmem_default = 262144
+net.core.wmem_max = 262144</code></pre>
+<p>To apply these changes, run this command:</p>
+<pre><code># sysctl -p /etc/sysctl.conf</code></pre>
+<p>Oracle uses the HugeTLB feature present in modern linux kernels. Debian 6 comes with that feature compiled into the kernel, but we'll also have to allow oracle to use it. To do that, you'll first have to find the group ID of oracle's 'oinstall' group, for example by looking at the /etc/group file. The line you're insterested in will look like this: 'oinstall:x:NNN:oracle'. You need that NNN part - I'm going to assume it's 1002, so substitute whatever your group's ID is for 1002 in this command:</p>
+<pre><code># echo 1002 &gt; /proc/sys/vm/hugetlb_shm_group</code></pre>
+<p>That should take care of that. I only had one additional problem with the listener, which would only try to bind to the original host name (Odin knows where that was configured), so I added the following line to my /etc/hosts file as the old host was decomissioned anyway:</p>
+<pre><code>127.0.0.1    old-host.example.com</code></pre>
+<p>With all that in place, I could finally start the Oracle database server, like so:</p>
+<pre><code># /etc/init.d/dbora start</code></pre>
+<p>The output of that somehow wasn't very helpful. It does give you a log file to verify if it worked, so you should look at that file and verify oracle did in fact start. You might also want to have a look at 'netstat -na|grep 1521' to verify oracle's listener is also running.</p>
+<p>Once I finally had all that working, I found out that update-rc.d doesn't seem to like oracle's init script - which doesn't matter much as we need to run that command to put the oinstall group in that hugetlb_shm_group file before trying to run that init script anyway. So, what we do instead is, we add the following lines before the 'exit 0' in /etc/rc.local:</p>
+<pre><code>echo 1002 &gt; /proc/sys/vm/hugetlb_shm_group
+/etc/init.d/dbora start</code></pre>
+<p>... aaaand that worked. Easy right? HA... ha.... haaa..... -- anyway, it worked, so I guess it could've been worse. Hope that saves someone else a world of pain.</p>
+</body>
+</html>
