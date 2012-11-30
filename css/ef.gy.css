@@ -927,11 +927,16 @@ ul#navigation li.next a:hover
     }
 }
 
-@media (max-width: 65em)
+@media (max-width: 71em)
 {
+    body#feed
+    {
+        text-align: center;
+    }
     body#feed #latest
     {
         float: none;
         max-width: none;
+        margin: 1em 0.5em;
     }
 }
