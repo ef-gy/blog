@@ -443,7 +443,7 @@ body#feed h2 + ul li a
 body#feed h2 + ul li a span
 {
     display: block;
-    max-height: 2.2em;
+    max-height: 2.4em;
     text-overflow: ellipsis;
     overflow: hidden;
     color: #444;
