@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Notes on the Ubuntu 12.04 Cedarview Drivers</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="Graphics drivers on Linux for Intel GMA 3600 and 3650 are a bit of a pain to install. But at least we finally get to have 'em." />
+<meta name="date" content="2012-12-16T12:36:00Z" />
+<meta name="mtime" content="2012-12-16T12:36:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="ubuntu-cedarview-drivers" />
+</head>
+<body>
+<h1>Slightly More Involved Than Normal</h1>
+<p>For a long time Intel's GMA 3600s seemed to be that one huge exception to Intel's otherwise awesome track record regarding Linux graphics drivers. Somewhat recently Intel did, however, release closed-source drivers. Even more recently these drivers were even adopted as binary blobs into Ubuntu's multiverse repository.</p>
+<p>So why am I even writing this? Because the whole mess is still hideously underdocumented! Unlike other Ubuntu packages, the ones for this driver come with no documentation in the usual places (i.e. neither READMEs in /usr/share/doc nor manpages) and they certainly don't 'just work' either.</p>
+<h2>Prerequisites</h2>
+<p>First of all, you MUST be running a 32-bit version of Ubuntu. That's because these binary drivers are only available as 32-bit binaries. That's right, the Atom CPUs this IGP is built into are nice pieces of 64-bit hardware, but if you want to use the IGP you HAVE to use a 32-bit operating system. Pretty idiotic if you ask me, but at least it's the same for Windows users where the only available drivers are 32-bit Windows 7 drivers.</p>
+<p>In case you're running a 64-bit installation, you'll have to reinstall the OS itself.</p>
+<h2>Installing the Drivers</h2>
+<p>If you're searching for this part on Google, right now you'll end up in the middle of a select few forum discussions that point to an old PPA that is no longer required. Since most of the installation steps listed there are no longer required as the drivers have been added to the upstream multiverse repositories, this part has become significantly easier. To get the ball rolling, you now only have to update your repositories and install the drivers. The relevant commands on a root shell would be:</p>
+<pre><code># apt-get update
+# apt-get install cedarview-drm libva-cedarview-vaapi-driver cedarview-graphics-drivers</code></pre>
+<p>What the documentation DOESN'T mention - presumably because it doesn't exist - is that you MUST make sure that you're not using Ubuntu's generic PAE kernel. An easy way to make certain of that would be to install the regular, generic kernel and to then remove the PAE kernel like so:</p>
+<pre><code># apt-get install linux-headers-generic linux-image-generic
+# apt-get remove linux-headers-.*generic-pae linux-image-.*generic-pae</code></pre>
+<p>Note the '.*'-s - yes, APT can actually use regular expressions to select packages. aptitude doesn't seem to be able to do that. I do wonder what's up with that. Either way, the one or two google hits that mention the PAE kernel thing tell you to use dpkg -l to look for relevant packages and to remove those manually. Way too complicated that.</p>
+<p>Anyway, those last two lines made the whole thing work on my box. With the default PAE kernel I'd just get some weird log entries in my Xorg.0.log, but with the 'generic' one everything worked like a charm.</p>
+<h2>Other Notes</h2>
+<p>One of those things that really irritated me was that the X module didn't have a sensible name to it. For the record, it's called <em>pvr</em>, which kind of makes sense since it's for a <em>PowerVR</em> chip, but if you're trying to find it by names like <em>cedarview</em>, <em>intel</em> or the like, you'll be out of luck. But then, knowing the driver's name is surprisingly useless, as the bloody thing doesn't come with a man page like all other decent drivers do.</p>
+<p>It should also be pointed out that these drivers don#t seem to work too well with Ubuntu's splash screen. So, you might want to remove the 'splash' part from the GRUB_CMDLINE_LINUX_DEFAULT variable in /etc/default/grub. While you're there, it might be a good idea to set GRUB_CMDLINE_LINUX="video=LVDS-1:d" as these drivers seem to detect a connection on the LVDS port every now and then without that being connected at all. Also I found that uncommenting the GRUB_TERMINAL=console fixed some graphics glitches on my consoles. Once you're done, run this to update the bootloader:</p>
+<pre><code># update-grub</code></pre>
+</body>
+</html>
