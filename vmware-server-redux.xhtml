@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>VMware Server 2.0.2 - Redux</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="Despite being discontinued, VMware Server 2.x is still quite a nice piece of software - if you massage it just right." />
+<meta name="date" content="2013-01-11T19:28:00Z" />
+<meta name="mtime" content="2013-01-11T19:28:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="vmware-server-redux" />
+</head>
+<body>
+<h1>This Is Why Your Sysop Gets Paid So Well</h1>
+<p>I've recently spent quite a bit of time installing VMware Server 2.0.2 on a few Debian and Ubuntu machines. While it is old, it's still the best solution I've come across for a number of applications. In particular, it beats ESXi, Player and Workstation if you're trying to set up VMs on a headless machine without remote hands or access to a KVM. And, unlike ESXi, you get to use software RAIDs. And it's free.</p>
+<p>On the downside, it doesn't work with Windows 8/Windows Server 2012 guests. And since it's a wee bit old, it's not quite that straightforward to set up. But that's what this article is about.</p>
+<p>You'll probably want to make sure you know a thing or two about Unix administration, though, as this article won't really be holding your hands there.</p>
+<h1>Downloading and Installing VMware Server</h1>
+<p>First you need to obtain VMware Server and a valid licence for it. To do that head over to <a href="http://vmware.com/server">http://vmware.com/server</a> and sign up with VMware. Then download the appropriate .tar.gz for your architecture.</p>
+<p>If you're on Debian Squeeze, you'll need to patch some parts of the configuration scripts and the kernel module sources. <a href="http://wiki.debian.org/VMware">The Debian Wiki has a page on how to do just that.</a></p>
+<p>If you're on Ubuntu 12.x, or you updated to a newer Debian with a 3.x kernel, the procedure is quite similar but you'll need different kernel module patches. <a href="http://forums.fedoraforum.org/showthread.php?t=275000">The Fedora orums have a thread with appropriate patches.</a></p>
+<p>These other guides should get you to the point where VMware is installed and the kernel modules should load. Note that you shouldn't follow any advice that tells you to disable IPv6 on the VMware host. That's bollocks. VMware works fine on IPv6 enabled hosts, it's just the webAccess part that can't handle it too well - and we'll need to fix that anyway. Do apply the IPv6 patch to the init script on the Debian Wiki, though, as that disables said broken IPv6 access to the web interface.</p>
+<h1>Fixing the Web Interface</h1>
+<p>This is a major pain in the ass. It's also intensely frustrating. Seriously.</p>
+<p>The VMware Server web interface is enabled by default and available on ports 8222 (HTTP) and 8333 (HTTPS) of the machine you installed VMware Server onto. Trying to access the HTTP version will forward you to the HTTPS version by default - which is a good idea in principle, but unfortunately the SSL served by the application is kind of broken. If you have an old browser lying about - like, before Firefox 4.x - you'll have to enable SSLv2 support in your browser and the web interface <em>might</em> work with it. It'll still be rather flakey though. If your browser is newer than that, you're pretty much screwed and won't be able to use the web interface at all. That's because newer browsers don't support SSLv2 anymore.</p>
+<p>But - of course - there <em>is</em> a way to fix this. The quick and dirty way is to allow the web frontend to be served over plain HTTP. To do that, open the file <em>/etc/vmware/hostd/proxy.xml</em> with a text editor and look for elements like these: <em><![CDATA[<accessMode>httpsWithRedirect</accessMode>]]></em>. You'll need to change those to: <em><![CDATA[<accessMode>httpAndHttps</accessMode>]]></em></p>
+<p>Save the file and restart the vmware service (or reboot). The web interface on port 8222 should now work as expected. Of course, you <em>really</em> don't want to serve that kind of application over unencrypted HTTP. Especially not since the default admin login for it is with the <em>root</em> user and its actual Unix password on the host. We'll fix that with a bit of nginx magic. First, install nginx if it's not installed already:</p>
+<pre><code># apt-get install nginx</code></pre>
+<p>Next, open <em>/etc/vmware/hostd/proxy.xml</em> again and change the httpPort and httpsPort settings to some other ports. I'll be using 8221 and 8332 here, which makes the file look something like this:</p>
+<pre><code><![CDATA[<ConfigRoot>
+  <httpPort>8221</httpPort>
+  <httpsPort>8332</httpsPort>
+  <EndpointList>
+    <_length>5</_length>
+    <_type>vim.ProxyService.EndpointSpec[]</_type>
+    <e id="0">
+      <_type>vim.ProxyService.NamedPipeServiceSpec</_type>
+      <accessMode>httpAndHttps</accessMode>
+      <pipeName>/var/run/vmware/proxy-webserver</pipeName>
+      <serverNamespace>/</serverNamespace>
+    </e>
+    <e id="1">
+      <_type>vim.ProxyService.LocalServiceSpec</_type>
+<!--      <accessMode>httpsWithRedirect</accessMode> -->
+      <accessMode>httpAndHttps</accessMode>
+      <port>8307</port>
+      <serverNamespace>/sdk</serverNamespace>
+    </e>
+    <e id="2">
+      <_type>vim.ProxyService.LocalServiceSpec</_type>
+<!--      <accessMode>httpsWithRedirect</accessMode> -->
+      <accessMode>httpAndHttps</accessMode>
+      <port>8308</port>
+      <serverNamespace>/ui</serverNamespace>
+    </e>
+    <e id="3">
+      <_type>vim.ProxyService.NamedPipeServiceSpec</_type>
+<!--      <accessMode>httpsOnly</accessMode> -->
+      <accessMode>httpAndHttps</accessMode>
+      <pipeName>/var/run/vmware/proxy-vpxa</pipeName>
+      <serverNamespace>/vpxa</serverNamespace>
+    </e>
+    <e id="4">
+      <_type>vim.ProxyService.NamedPipeServiceSpec</_type>
+<!--      <accessMode>httpsWithRedirect</accessMode> -->
+      <accessMode>httpAndHttps</accessMode>
+      <pipeName>/var/run/vmware/proxy-mob</pipeName>
+      <serverNamespace>/mob</serverNamespace>
+    </e>
+  </EndpointList>
+</ConfigRoot>]]></code></pre>
+<p>Save that file again and restart the vmware services (or reboot, whichever works for you). Next up is configuring nginx to serve as a proxy for VMware. Since Debian is using <em>sites-available</em> and <em>sites-enabled</em> directories to keep your nginx configuration files tidy-ish, save the following as <em>/etc/nginx/sites-available/vmware</em>:</p>
+<pre><code>upstream vmware
+{
+    server 127.0.0.1:8221;
+}
+
+server
+{
+    listen 8222;
+    location /
+    {
+        proxy_pass http://vmware;
+    }
+}
+
+server
+{
+    listen 8333 ssl;
+    ssl_certificate     /etc/vmware/ssl/rui.crt;
+    ssl_certificate_key /etc/vmware/ssl/rui.key;
+
+    location /
+    {
+        proxy_pass http://vmware;
+    }
+}</code></pre>
+<p>This is a very basic nginx proxy to get you started. This configuration will even use the SSL certificates that came with VMware. Save that file and enable it by symlinking it as <em>/etc/nginx/sites-enabled/</em>. You might want to disable the default nginx vhost while you're at it, by removing the /etc/nginx/sites-enabled/defaul symlink - depending on whether or not you also intend to use the host a sa web server or reverse proxy for other backends. Once you're done, restart nginx:</p>
+<pre><code># /etc/init.d/nginx restart</code></pre>
+<p>You should now be able to log in via SSL on port 8333. Congratulations!</p>
+<h2>Refining the nginx Configuration</h2>
+<p>If you look at the configuration file above a bit closer, you'll notice that VMware's proxy daemon is really just a common HTTP proxy for backends on various ports on the server. There's really no point in involving VMware's daemon for that, seeing as we've already configured a proxy for the frontend. Also, forcing users to switch to HTTPS when connecting isn't all that bad an idea either and at least on my machine I kept getting quite a lot of timeouts for the /sdk location. And you might also want to change those SSL certificates to proper ones that are signed for your hostname while you're at it. After playing with the configuration for a while, I ended up with an nginx configuration file much like this one:</p>
+<pre><code>upstream vmware-sdk
+{
+    server 127.0.0.1:8307;
+}
+
+upstream vmware-ui
+{
+    server 127.0.0.1:8308;
+}
+
+upstream vmware
+{
+    server 127.0.0.1:8221;
+}
+
+server
+{
+    listen 8222;
+
+    location /
+    {
+        rewrite ^(.*)$ https://$host:8333$1 permanent;
+    }
+    location /sdk
+    {
+        proxy_read_timeout 60m;
+
+        proxy_pass http://vmware-sdk;
+    }
+}
+
+server
+{
+    listen 8333 ssl;
+    ssl_certificate     /etc/vmware/ssl/rui.crt;
+    ssl_certificate_key /etc/vmware/ssl/rui.key;
+
+    location /
+    {
+        proxy_pass http://vmware;
+    }
+    location /sdk
+    {
+        proxy_read_timeout 60m;
+
+        proxy_pass http://vmware-sdk;
+    }
+    location /ui
+    {
+        proxy_pass http://vmware-ui;
+    }
+}</code></pre>
+<p>Remember to restart nginx after you're done.</p>
+<h2>Firewall Configuration</h2>
+<p>This should be obvious, but you really should be running a firewall on your VMware host. You'll want to lock down the renamed "original" ports, since everything is proxied through nginx anyway. And there's not much point in leaving the plain HTTP port 8222 accessible from remote hosts, either. The only ports that should remain open are TCP port 8333 for the HTTPS version of the web interface, and TCP port 902 which is needed for the remote console feature - which you'll want to use install virtual machines.</p>
+</body>
+</html>
