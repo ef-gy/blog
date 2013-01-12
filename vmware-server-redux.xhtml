@@ -17,7 +17,7 @@
 <h1>Downloading and Installing VMware Server</h1>
 <p>First you need to obtain VMware Server and a valid licence for it. To do that head over to <a href="http://vmware.com/server">http://vmware.com/server</a> and sign up with VMware. Then download the appropriate .tar.gz for your architecture.</p>
 <p>If you're on Debian Squeeze, you'll need to patch some parts of the configuration scripts and the kernel module sources. <a href="http://wiki.debian.org/VMware">The Debian Wiki has a page on how to do just that.</a></p>
-<p>If you're on Ubuntu 12.x, or you updated to a newer Debian with a 3.x kernel, the procedure is quite similar but you'll need different kernel module patches. <a href="http://forums.fedoraforum.org/showthread.php?t=275000">The Fedora orums have a thread with appropriate patches.</a></p>
+<p>If you're on Ubuntu 12.x, or you updated to a newer Debian with a 3.x kernel, the procedure is quite similar but you'll need different kernel module patches. <a href="http://forums.fedoraforum.org/showthread.php?t=275000">The Fedora Forums have a thread with appropriate patches.</a></p>
 <p>These other guides should get you to the point where VMware is installed and the kernel modules should load. Note that you shouldn't follow any advice that tells you to disable IPv6 on the VMware host. That's bollocks. VMware works fine on IPv6 enabled hosts, it's just the webAccess part that can't handle it too well - and we'll need to fix that anyway. Do apply the IPv6 patch to the init script on the Debian Wiki, though, as that disables said broken IPv6 access to the web interface.</p>
 <h1>Fixing the Web Interface</h1>
 <p>This is a major pain in the ass. It's also intensely frustrating. Seriously.</p>
