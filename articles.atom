@@ -4,6 +4,8 @@
   <link href="http://ef.gy/atom/articles" rel="self" />
   <link href="http://ef.gy/" />
 
+  <entry source:local="vmware-server-ipv6.xhtml" />
+  <entry source:local="vmware-server-redux.xhtml" />
   <entry source:local="ubuntu-cedarview-drivers.xhtml" />
   <entry source:local="moving-oracle-install-to-debian.xhtml" />
   <entry source:local="makefile-atom-directory-index.xhtml" />
