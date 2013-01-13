@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>VMware Server 2.0.2 - IPv6</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="Turns out that you might need to get a bit creative to get VMware Server to play nice with IPv6 networks." />
+<meta name="date" content="2013-01-13T10:19:00Z" />
+<meta name="mtime" content="2013-01-13T10:19:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="vmware-server-ipv6" />
+</head>
+<body>
+<h1>There and Back Again?</h1>
+<p>Earlier this week I pointed out that VMware Server mostly works fine with IPv6 in my article on <a href="vmware-server-redux">how to get VMware Server 2.0.2 working on a modern linux machine</a>. Unfortunately I was oversimplifying a bit there.</p>
+<p>The truth is, some components of VMware Server will actually filter out IPv6 traffic to VMs. This means that IPv6 traffic from the VMs will be seen on the host, but traffic sent to the VMs will not be seen on the VMs. As far as I could tell, this applies to host-only and NAT interfaces. This is quite a pain to debug or even notice in a lot of setups, since the IPv6 traffic of both the host and guests will show up on the hosts vmnetX interfaces in tools like tcpdump. But somewhere along the road, things get dropped.</p>
+<p>Fortunately this does not apply to bridged networks. So, if you're trying to bridge VMs to your local network, you'll be fine. But what if you wanted a host-only IPv6 enabled network? Why we'll just have to get a bit creative then.</p>
+<h1>IPv6 Host-Only Networks</h1>
+<p>On Linux we have a neat little feature called TAP devices. For all intents and purposes these devices are pseudo ethernet devices that you can create at will and which - unless bonded to a physical network - have all their traffic limited to the local host they're on. There's also TUN devices, which are pretty much the same as TAP devices but limited to IP traffic.</p>
+<p>I think you get where we're going with this. Since bridged networks are working fine with VMware Server, we can create our own "enhanced" host-only networks by creating a tap device and then creating a bridged VM network to that tap device.</p>
+<p>It turns out that on Debian it's really easy to create these TAP devices, too. All you need to do is add the following to your <em>/etc/network/interfaces</em> file:</p>
+<pre><code>auto vm0
+iface vm0 inet6 static
+  pre-up ip tuntap add mode tap vm0
+  post-down ip tuntap del mode tap vm0
+  address aaaa::1
+  netmask 64</code></pre>
+<p>Obviously you'll have to replace <em>aaaa::1</em> with a proper IPv6 address for your new network. You'll probably want to use a new /64 subnet for that, but that's really up to whatever you'll be doing with that network.</p>
+<p>Once you've added that definition, you can bring up the new interface like this:</p>
+<pre><code># ifup vm0</code></pre>
+<p>With this new virtual network in place, you can now create a new bridge network in VMware Server and point it to <em>vm0</em>. Or if, like me, you don't actually want to bridge to a physical ethernet at all but you already had a bridge to eth0 (or similar) set up, you could also just edit <em>/etc/vmware/locations</em> and change the <em>VNET_0_INTERFACE</em> variables to point to <em>vm0</em>. There, that was easy.</p>
+<h2>Caveat: No DHCP</h2>
+<p>If you intend to have a mixed IPv6/IPv4 host-only network, you'll notice that your VMs will no longer be getting IPv4 addresses. That's because VMware Server will run a DHCP server on host-only networks, but our method doesn't.</p>
+<p>The solution here's pretty simple: edit <em>/etc/network/interfaces</em> again and add a private IPv4 address to <em>vm0</em>, then run a DHCP server on <em>vm0</em>. Since this article is about IPv6, I'm going to leave that as an excercise to the reader. Also, there's about a half a million guides on how to do that floating around the net, so there's no point in explaining that again.</p>
+<h1>IPv6 NAT Networks</h1>
+<p>Fortunately NAT has died out with IPv6, so there's no way to do that. Huzzah!</p>
+<h1>IPv6 Web Interface</h1>
+<p>I left this out <a href="vmware-server-redux">last time</a> because the article got pretty long as it were. But since we're on the topic of VMware and IPv6 now, it's worth mentioning that if you followed said earlier post to set up VMware Server, you'll find it's pretty easy to add IPv6 support to the web interface. What you do is, you edit the <em>/etc/nginx/sites-available/vmware</em> file we created and change all occurences of:</p>
+<pre><code>        listen XXXX;</code></pre>
+<p>... (with XXXX being the TCP port you used) to this:</p>
+<pre><code>        listen [::]:XXXX;</code></pre>
+<p>... and that's pretty much it. Keep the <em>ssl</em> qualifier where appropriate. Restart nginx and you'll be done:</p>
+<pre><code># /etc/init.d/nginx restart</code></pre>
+<p>Note that, depending on how your system is set up, this may either listen to both IPv4 and IPv6 or it may listen on IPv6 only. <a href="http://wiki.nginx.org/HttpCoreModule#listen">The nginx wiki has more details on that</a>.</p>
+</body>
+</html>
