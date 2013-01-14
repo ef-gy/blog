@@ -391,6 +391,11 @@ body#feed
     text-align: right;
 }
 
+body#feed h1
+{
+    line-height: normal;
+}
+
 body#feed *
 {
     vertical-align: top;
