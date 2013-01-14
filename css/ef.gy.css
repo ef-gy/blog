@@ -36,6 +36,10 @@ h1
 {
     font-size: 2em;
     font-weight: bold;
+    border-bottom: 1px solid #ccc;
+    margin: -3.5em -1em 0 -1em;
+    background: #eee;
+    padding: 4em 1em 0.5em 1em;
 }
 
 h2
