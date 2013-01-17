@@ -4,6 +4,7 @@
               xmlns:xhtml="http://www.w3.org/1999/xhtml"
               xmlns:social="http://ef.gy/2012/social"
               xmlns:atom="http://www.w3.org/2005/Atom"
+              xmlns:data="http://ef.gy/2013/data"
               xmlns="http://www.w3.org/1999/xhtml"
               exclude-result-prefixes="xhtml"
               version="1.0">
@@ -15,6 +16,19 @@
 
   <xsl:param name="target"/>
   <xsl:param name="collection"/>
+
+  <data:month-name number="01">January</data:month-name>
+  <data:month-name number="02">February</data:month-name>
+  <data:month-name number="03">March</data:month-name>
+  <data:month-name number="04">April</data:month-name>
+  <data:month-name number="05">May</data:month-name>
+  <data:month-name number="06">June</data:month-name>
+  <data:month-name number="07">July</data:month-name>
+  <data:month-name number="08">August</data:month-name>
+  <data:month-name number="09">September</data:month-name>
+  <data:month-name number="10">October</data:month-name>
+  <data:month-name number="11">November</data:month-name>
+  <data:month-name number="12">December</data:month-name>
 
   <xsl:variable name="decorateWithCollection" select="(string-length($target) > 0) and (string-length($collection) > 0) and not (//xhtml:body[@id='feed'])"/>
 
@@ -108,6 +122,18 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:if>
+      <ul id="meta">
+        <xsl:if test="../xhtml:head/xhtml:meta[@name='date']/@content">
+          <xsl:variable name="published" select="../xhtml:head/xhtml:meta[@name='date']/@content"/>
+          <li id="published">
+            <span class="year"><xsl:value-of select="substring-before($published, '-')"/></span>
+            <xsl:text>-</xsl:text>
+            <span class="month"><xsl:value-of select="document('')//data:month-name[@number=substring-before(substring-after($published, '-'),'-')]"/></span>
+            <xsl:text>-</xsl:text>
+            <span class="day"><xsl:value-of select="substring-before(substring-after(substring-after($published, '-'),'-'),'T')"/></span>
+          </li>
+        </xsl:if>
+      </ul>
       <xsl:if test="(../xhtml:head/xhtml:meta[@name='description']/@content) and not(xhtml:div[@class='figure']/xhtml:h1)">
         <div class="figure">
           <h2>Summary</h2>
@@ -126,8 +152,7 @@
       <xsl:if test="//xhtml:meta[@name='date']">
         <table>
           <tbody>
-            <tr><th>Published on</th><td><xsl:value-of select="../xhtml:head/xhtml:meta[@name='date']/@content" /></td></tr>
-            <xsl:if test="../xhtml:head/xhtml:meta[@name='mtime']">
+            <xsl:if test="../xhtml:head/xhtml:meta[@name='mtime'] and (../xhtml:head/xhtml:meta[@name='mtime']/@content != ../xhtml:head/xhtml:meta[@name='date']/@content)">
               <tr><th>Last Modified</th><td><xsl:value-of select="../xhtml:head/xhtml:meta[@name='mtime']/@content" /></td></tr>
             </xsl:if>
             <xsl:if test="../xhtml:head/xhtml:meta[@name='category']">

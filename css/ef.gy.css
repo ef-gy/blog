@@ -13,15 +13,11 @@ html
 
 body
 {
-    position: relative;
-    margin: 0 4em 2em 24em;
+    margin: 0 4em 0 24em;
     background: #fff;
 	padding: 3.5em 2em;
     border-left: 0.1em solid #222;
-    border-bottom: 0.1em solid #222;
     border-right: 0.1em solid #222;
-    border-bottom-left-radius: 2em;
-    border-bottom-right-radius: 2em;
     min-height: 40em;
 }
 
@@ -39,7 +35,7 @@ h1
     border-bottom: 1px solid #ccc;
     margin: -3.5em -1em 1em -1em;
     background: #eee;
-    padding: 4em 1em 1em 1em;
+    padding: 4em 1em 1.2em 1em;
 }
 
 h2
@@ -76,7 +72,7 @@ h6
 
 h1 + ul
 {
-    position: fixed;
+    position: absolute;
     top: 0;
     right: 0;
     left: 0;
@@ -294,10 +290,8 @@ div.figure
     display: block;
     position: absolute;
     width: 16em;
-    padding: 2em;
+    padding: 4em 2em 2em 2em;
     margin: -2em 0 0 -24em;
-    border-top: 0.2em solid #aaa;
-    border-bottom: 0.2em solid #aaa;
     color: #ddd;
 }
 
@@ -305,6 +299,7 @@ div.figure img
 {
     display: block;
     margin: 0 auto;
+    border: 1em solid #fff;
 }
 
 div.figure h2
@@ -821,12 +816,11 @@ ul#social li.share + li + li + li + li a:before
 {
   content: "g+";
 }
-ul#navigation
+ul#meta
 {
   margin: 0 0 2em 0;
 }
-ul#navigation li.previous,
-ul#navigation li.next
+ul#meta li
 {
   display: block;
   padding: 0.5em 1em;
@@ -834,14 +828,9 @@ ul#navigation li.next
   margin: 0 -2em;
   color: #444;
 }
-ul#navigation li.previous
-{
-}
-ul#navigation li.next
-{
-}
-ul#navigation li.previous a:after,
-ul#navigation li.next a:after,
+ul#meta li.previous a:after,
+ul#meta li.next a:after,
+ul#meta li#published:after,
 ul#social:after
 {
   display: inline-block;
@@ -852,36 +841,99 @@ ul#social:after
   padding: 0 1em;
   vertical-align: top;
 }
-ul#navigation li.next a:after
+ul#meta li.next a:after
 {
   content: "next";
+}
+ul#meta li#published:after
+{
+  content: "published";
+  color: #fff;
 }
 ul#social:after
 {
   content: "social";
   display: none;
 }
-ul#navigation li.previous a,
-ul#navigation li.next a
+ul#meta li.previous a,
+ul#meta li.next a
 {
   display: block;
   padding: 0.5em 1em;
   margin: -0.5em -1em;
   text-decoration: none;
 }
-ul#navigation li.previous a:hover,
-ul#navigation li.next a:hover
+ul#meta li.previous a:hover,
+ul#meta li.next a:hover
 {
   background: #444;
   color: #fff;
 }
+ul#meta li#published
+{
+  background: #238;
+  margin-left: -10em;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+  color: #238;
+}
+ul#meta li#published .year,
+ul#meta li#published .month,
+ul#meta li#published .day
+{
+  position: absolute;
+  width: 12em;
+  left: 7em;
+  top: 8em;
+  margin: 0;
+  padding: 0;
+  color: #fff;
+  text-align: center;
+  vertical-align: bottom;
+  font-weight: bold;
+  font-size: 1em;
+}
+ul#meta li#published .year
+{
+  background: #349;
+  border: 1px solid black;
+  padding: 3.5em 0 2.5em 0;
+}
+ul#meta li#published .month
+{
+  font-size: 2em;
+  width: 6em;
+  top: 6.2em;
+  left: 3.6em;
+}
+ul#meta li#published .day
+{
+  font-size: 8em;
+  top: 0.4em;
+  left: 1.05em;
+  width: auto;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; 
+}
 @media (max-width: 70em)
 {
+    html
+    {
+        background: #fff;
+    }
     body, body#feed
     {
         margin: 0;
         border: 0;
-        border-radius: 0;
+    }
+
+    h1
+    {
+        padding-left: 5em;
+    }
+    body#feed h1
+    {
+        background: #eee;
+        padding-left: 1em;
     }
 
     h1 + ul
@@ -892,6 +944,7 @@ ul#navigation li.next a:hover
     h1 + ul:before
     {
         left: 1em;
+        display: none;
     }
 
     div.figure, address, address + table
@@ -918,6 +971,27 @@ ul#navigation li.next a:hover
     address + table
     {
         margin: 1em auto;
+    }
+
+    ul#meta li#published .year
+    {
+        width: 8em;
+        left: 0.2em;
+        top: 0em;
+        padding: 6.5em 0 5em 0;
+    }
+
+    ul#meta li#published .month
+    {
+        font-size: 1.3em;
+        left: 0.2em;
+    }
+
+    ul#meta li#published .day
+    {
+        font-size: 3.5em;
+        left: 0.6em;
+        top: 0.8em;
     }
 }
 
@@ -950,14 +1024,6 @@ ul#navigation li.next a:hover
     body#feed h2 + ul li
     {
         width: 70%;
-    }
-}
-
-@media (max-width: 53em)
-{
-    h1 + ul:before
-    {
-        display: none;
     }
 }
 

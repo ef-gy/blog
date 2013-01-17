@@ -19,7 +19,16 @@
 
   <xsl:template match="@*|node()">
     <xsl:copy>
-      <xsl:apply-templates select="@*|node()" />
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <xsl:template match="xhtml:ul[@id='meta']">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+
+      <xsl:if test="../../xhtml:head/xhtml:link[@rel='next']"><li class="next"><a href="{../../xhtml:head/xhtml:link[@rel='next']/@href}"><xsl:value-of select="../../xhtml:head/xhtml:link[@rel='next']/@title"/></a></li></xsl:if>
+      <xsl:if test="../../xhtml:head/xhtml:link[@rel='prev']"><li class="previous"><a href="{../../xhtml:head/xhtml:link[@rel='prev']/@href}"><xsl:value-of select="../../xhtml:head/xhtml:link[@rel='prev']/@title"/></a></li></xsl:if>
     </xsl:copy>
   </xsl:template>
 
@@ -31,10 +40,6 @@
       <li><a href="https://www.xing.com/app/user?op=share&amp;url={@url}" onclick="javascript:window.open(this.href,'','');return false;">share: xing</a></li>
       <li><a href="https://plus.google.com/share?url={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">share: google+</a></li>
     </ul>
-    <xsl:if test="../../xhtml:head/xhtml:link[@rel='next'] or ../../xhtml:head/xhtml:link[@rel='prev']"><ul id="navigation">
-      <xsl:if test="../../xhtml:head/xhtml:link[@rel='next']"><li class="next"><a href="{../../xhtml:head/xhtml:link[@rel='next']/@href}"><xsl:value-of select="../../xhtml:head/xhtml:link[@rel='next']/@title"/></a></li></xsl:if>
-      <xsl:if test="../../xhtml:head/xhtml:link[@rel='prev']"><li class="previous"><a href="{../../xhtml:head/xhtml:link[@rel='prev']/@href}"><xsl:value-of select="../../xhtml:head/xhtml:link[@rel='prev']/@title"/></a></li></xsl:if>
-    </ul></xsl:if>
   </xsl:template>
 </xsl:stylesheet>
 
