@@ -94,7 +94,7 @@ server
         proxy_pass http://vmware;
     }
 }</code></pre>
-<p>This is a very basic nginx proxy to get you started; it's a rather seamless replacement for VMware's own services using the SSL certificates that came with VMware. Save that file and enable it by symlinking it as <em>/etc/nginx/sites-enabled/</em>. You might want to disable the default nginx vhost while you're at it, by removing the /etc/nginx/sites-enabled/default symlink - depending on whether or not you also intend to use the host as a web server or reverse proxy for other backends. Once you're done, restart nginx:</p>
+<p>This is a very basic nginx proxy to get you started; it's a rather seamless replacement for VMware's own services using the SSL certificates that came with VMware. Save that file and enable it by symlinking it as <em>/etc/nginx/sites-enabled/vmware</em>. You might want to disable the default nginx vhost while you're at it, by removing the /etc/nginx/sites-enabled/default symlink - depending on whether or not you also intend to use the host as a web server or reverse proxy for other backends. Once you're done, restart nginx:</p>
 <pre><code># /etc/init.d/nginx restart</code></pre>
 <p>You should now be able to log in via HTTPS on port 8333 with modern browsers. Congratulations!</p>
 <h2>Refining the nginx Configuration</h2>
