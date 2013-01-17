@@ -117,7 +117,6 @@
       <xsl:apply-templates select="node()" />
       <xsl:if test="/xhtml:html/xhtml:head/xhtml:meta[@name='author'][@content='Magnus Achim Deininger']"><address>
         <a rel="author" href="about">
-          <img src="/jpeg/mdeininger" alt="Magnus Achim Deininger" />
           <span>Written by <span>Magnus Achim Deininger</span>.</span> Magnus Achim Deininger is a <del>sellsword</del> freelance computer scientist specialising in peculiar problems, such as embedded development, formal language theory and experiments in minimalistic design. This website serves as his personal journal and testing ground for unusual and/or crazy ideas.</a>
       </address></xsl:if>
       <xsl:if test="/xhtml:html/xhtml:head/xhtml:meta[@name='author'][@content='Nadja Klein']"><address>

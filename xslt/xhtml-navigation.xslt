@@ -23,18 +23,7 @@
     </xsl:copy>
   </xsl:template>
 
-  <xsl:template match="xhtml:body[not(@id)]">
-    <xsl:copy>
-      <xsl:apply-templates/>
-      <xsl:if test="../xhtml:head/xhtml:link[@rel='next'] or ../xhtml:head/xhtml:link[@rel='prev']"><ul id="navigation">
-        <xsl:if test="../xhtml:head/xhtml:link[@rel='next']"><li class="next"><a href="{../xhtml:head/xhtml:link[@rel='next']/@href}" title="{../xhtml:head/xhtml:link[@rel='next']/@title}">次条</a></li></xsl:if>
-        <xsl:if test="../xhtml:head/xhtml:link[@rel='prev']"><li class="previous"><a href="{../xhtml:head/xhtml:link[@rel='prev']/@href}" title="{../xhtml:head/xhtml:link[@rel='prev']/@title}">前条</a></li></xsl:if>
-      </ul></xsl:if>
-    </xsl:copy>
-  </xsl:template>
-
   <xsl:template match="social:social">
-    <xsl:variable name="tweets" select="document(concat('http://social.ef.gy/',@twitter))/rss/channel[1]"/>
     <ul id="social">
       <li class="share"><a href="https://twitter.com/share?url={@url}&amp;via={@twitter}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">tweet</a></li>
       <li><a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">share: linkedin</a></li>
@@ -42,6 +31,10 @@
       <li><a href="https://www.xing.com/app/user?op=share&amp;url={@url}" onclick="javascript:window.open(this.href,'','');return false;">share: xing</a></li>
       <li><a href="https://plus.google.com/share?url={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">share: google+</a></li>
     </ul>
+    <xsl:if test="../../xhtml:head/xhtml:link[@rel='next'] or ../../xhtml:head/xhtml:link[@rel='prev']"><ul id="navigation">
+      <xsl:if test="../../xhtml:head/xhtml:link[@rel='next']"><li class="next"><a href="{../../xhtml:head/xhtml:link[@rel='next']/@href}"><xsl:value-of select="../../xhtml:head/xhtml:link[@rel='next']/@title"/></a></li></xsl:if>
+      <xsl:if test="../../xhtml:head/xhtml:link[@rel='prev']"><li class="previous"><a href="{../../xhtml:head/xhtml:link[@rel='prev']/@href}"><xsl:value-of select="../../xhtml:head/xhtml:link[@rel='prev']/@title"/></a></li></xsl:if>
+    </ul></xsl:if>
   </xsl:template>
 </xsl:stylesheet>
 
