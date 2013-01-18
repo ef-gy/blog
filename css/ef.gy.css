@@ -489,7 +489,7 @@ body#feed h2 + ul li a span.secondary-category
 body#feed h2 + ul li a:hover
 {
     background: #fff;
-    background: rgba(255,255,2550,0.5);
+    background: rgba(255,255,255,0.5);
     color: #555;
 }
 
@@ -850,7 +850,6 @@ ul#meta li#published
   margin-left: -10em;
   border-top: 1px solid #000;
   border-bottom: 1px solid #000;
-  color: #568;
   visibility: hidden;
   margin: 0 0 -2.3em 0;
 }
