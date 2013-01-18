@@ -851,6 +851,8 @@ ul#meta li#published
   border-top: 1px solid #000;
   border-bottom: 1px solid #000;
   color: #568;
+  visibility: hidden;
+  margin: 0 0 -2.3em 0;
 }
 ul#meta li#published .year,
 ul#meta li#published .month,
@@ -859,7 +861,7 @@ ul#meta li#published .day
   position: absolute;
   width: 12em;
   left: 5.5em;
-  top: 8em;
+  top: 7em;
   margin: 0;
   padding: 0;
   color: #fff;
@@ -867,6 +869,7 @@ ul#meta li#published .day
   vertical-align: bottom;
   font-weight: bold;
   font-size: 1em;
+  visibility: visible;
 }
 ul#meta li#published .year
 {
@@ -879,13 +882,13 @@ ul#meta li#published .month
 {
   font-size: 2em;
   width: 7.5em;
-  top: 6.2em;
+  top: 5.7em;
   left: 2.75em;
 }
 ul#meta li#published .day
 {
   font-size: 8em;
-  top: 0.4em;
+  top: 0.3em;
   left: 0.7em;
   width: 1.86em;
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; 
