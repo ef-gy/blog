@@ -906,11 +906,6 @@ ul#meta li#published .day
     {
         padding-left: 5em;
     }
-    body#feed h1
-    {
-        background: #eee;
-        padding-left: 1em;
-    }
 
     h1 + ul
     {
