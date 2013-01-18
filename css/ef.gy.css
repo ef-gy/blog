@@ -15,10 +15,9 @@ body
 {
     margin: 0 4em 0 24em;
     background: #fff;
-	padding: 3.5em 2em;
+	padding: 3.5em 2em 2em 2em;
     border-left: 0.1em solid #222;
     border-right: 0.1em solid #222;
-    min-height: 40em;
 }
 
 h1, h2, h3, h4, h5, h6
@@ -214,27 +213,13 @@ pre code
 
 address
 {
-    position: absolute;
-    bottom: 0;
-    left: 2em;
-    display: block;
-    width: 16em;
-    border-top: 0.2em solid #aaa;
     padding: 2em;
-    margin: -8em 0 0 -24em;
     font-style: normal;
-}
-
-address img
-{
-    float: right;
-    border: 0.5em solid white;
-    padding: 0.5em;
-    margin: -5em -3em 0.5em 0.5em;
-    height: 9em;
-    border: 0.1em solid #aaa;
-    background: #eee;
-    background: rgba(255,255,255,0.7);
+    position: relative;
+    margin: 2.5em -2em 0 -2em;
+    width: auto;
+    color: #000;
+    padding: 2em;
 }
 
 address ul li
@@ -247,16 +232,17 @@ address a
     display: block;
     padding: 2em;
     margin: -2em;
-    color: #ddd;
+    color: #000;
     text-decoration: none;
 }
 
 address a:hover
 {
     background: #333;
+    color: white;
 }
 
-address a span
+address span
 {
     display: block;
     font-weight: bold;
@@ -265,24 +251,18 @@ address a span
     margin: 0 0 0.5em 0;
 }
 
-address a span span
+address span span
 {
     display: inline;
     font-size: 1em;
-    color: black;
+    color: #444;
     margin: 0;
-}
-
-address + table
-{
-    border-top: 0.1em solid #ccc;
-    padding: 0.5em 3em;
-    margin: 2em auto 2em auto;
-}
-
-address + table th
-{
     white-space: nowrap;
+}
+
+address a:hover span span
+{
+    color: #eee;
 }
 
 div.figure
@@ -306,17 +286,14 @@ div.figure h2
 {
     margin: 0;
     font-size: 1.2em;
-    font-weight: bold;
     color: #999;
-}
-
-div.figure li
-{
-    margin: 0;
 }
 
 div.figure li a
 {
+    display: block;
+    margin: -0.5em 0;
+    padding: 1em;
     font-size: 1.2em;
     text-decoration: none;
     color: #ddd;
@@ -324,6 +301,7 @@ div.figure li a
 
 div.figure li
 {
+    margin: 0;
     background: #444;
     background: rgba(0,0,0,0.4);
     border: 0.1em solid #777;
@@ -353,6 +331,7 @@ div.figure li + li a:before
 div.figure li + li a
 {
     font-size: 1em;
+    padding: 0;
 }
 
 th
@@ -532,17 +511,6 @@ body#feed #latest
     max-width: 33.15em;
     float: left;
     margin: 1em 0.5em 1em 4%;
-}
-
-body#feed #latest:before
-{
-    content: "// this just in ... //";
-    display: block;
-    margin: 1em 0.5em;
-    text-align: right;
-    font-weight: bold;
-    color: #ccc;
-    font-style: italic;
 }
 
 body#feed #latest li
@@ -831,6 +799,7 @@ ul#meta li
 ul#meta li.previous a:after,
 ul#meta li.next a:after,
 ul#meta li#published:after,
+ul#meta li#collection a:after,
 ul#social:after
 {
   display: inline-block;
@@ -850,13 +819,18 @@ ul#meta li#published:after
   content: "published";
   color: #fff;
 }
+ul#meta li#collection a:after
+{
+  content: "collection";
+}
 ul#social:after
 {
   content: "social";
   display: none;
 }
 ul#meta li.previous a,
-ul#meta li.next a
+ul#meta li.next a,
+ul#meta li#collection a
 {
   display: block;
   padding: 0.5em 1em;
@@ -864,18 +838,19 @@ ul#meta li.next a
   text-decoration: none;
 }
 ul#meta li.previous a:hover,
-ul#meta li.next a:hover
+ul#meta li.next a:hover,
+ul#meta li#collection a:hover
 {
   background: #444;
   color: #fff;
 }
 ul#meta li#published
 {
-  background: #238;
+  background: #568;
   margin-left: -10em;
   border-top: 1px solid #000;
   border-bottom: 1px solid #000;
-  color: #238;
+  color: #568;
 }
 ul#meta li#published .year,
 ul#meta li#published .month,
@@ -883,7 +858,7 @@ ul#meta li#published .day
 {
   position: absolute;
   width: 12em;
-  left: 7em;
+  left: 5.5em;
   top: 8em;
   margin: 0;
   padding: 0;
@@ -895,23 +870,24 @@ ul#meta li#published .day
 }
 ul#meta li#published .year
 {
-  background: #349;
+  background: #459;
   border: 1px solid black;
-  padding: 3.5em 0 2.5em 0;
+  padding: 3.5em 1.5em 2.5em 1.5em;
+  color: #aaa;
 }
 ul#meta li#published .month
 {
   font-size: 2em;
-  width: 6em;
+  width: 7.5em;
   top: 6.2em;
-  left: 3.6em;
+  left: 2.75em;
 }
 ul#meta li#published .day
 {
   font-size: 8em;
   top: 0.4em;
-  left: 1.05em;
-  width: auto;
+  left: 0.7em;
+  width: 1.86em;
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; 
 }
 @media (max-width: 70em)
@@ -947,13 +923,10 @@ ul#meta li#published .day
         display: none;
     }
 
-    div.figure, address, address + table
+    div.figure
     {
         position: relative;
-        margin: 2em -2em;
-        border: 1px solid #aaa;
-        border-left: 0;
-        border-right: 0;
+        margin: 2.5em -2em;
         background: none;
         width: auto;
         color: #000;
@@ -961,22 +934,40 @@ ul#meta li#published .day
         padding: 1em 2em;
     }
 
-    address a
+    div.figure h2
     {
-        margin: -1em -2em;
-        padding: 1em 2em;
+        color: black;
+    }
+
+    div.figure li
+    {
+        background: #eee;
+    }
+
+    div.figure li a
+    {
+        color: #333;
+    }
+
+    div.figure li a:hover
+    {
         color: #000;
     }
 
-    address + table
+    div.auto-abstract
     {
-        margin: 1em auto;
+        display: none;
+    }
+
+    ul#meta li#published
+    {
+        margin-left: -2em;
     }
 
     ul#meta li#published .year
     {
         width: 8em;
-        left: 0.2em;
+        left: 1em;
         top: 0em;
         padding: 6.5em 0 5em 0;
     }
@@ -990,8 +981,9 @@ ul#meta li#published .day
     ul#meta li#published .day
     {
         font-size: 3.5em;
-        left: 0.6em;
+        left: 0.3em;
         top: 0.8em;
+        width: 2.3em;
     }
 }
 

@@ -133,39 +133,35 @@
             <span class="day"><xsl:value-of select="substring-before(substring-after(substring-after($published, '-'),'-'),'T')"/></span>
           </li>
         </xsl:if>
+        <xsl:if test="(string-length($collection)>0) and (string-length($target)>0)">
+          <li id="collection"><a href="{$collection}"><xsl:value-of select="$collection"/></a></li>
+        </xsl:if>
       </ul>
       <xsl:if test="(../xhtml:head/xhtml:meta[@name='description']/@content) and not(xhtml:div[@class='figure']/xhtml:h1)">
-        <div class="figure">
+        <div class="figure auto-abstract">
           <h2>Summary</h2>
           <p><xsl:value-of select="../xhtml:head/xhtml:meta[@name='description']/@content"/></p>
         </div>
       </xsl:if>
       <xsl:apply-templates select="node()" />
-      <xsl:if test="/xhtml:html/xhtml:head/xhtml:meta[@name='author'][@content='Magnus Achim Deininger']"><address>
-        <a rel="author" href="about">
-          <span>Written by <span>Magnus Achim Deininger</span>.</span> Magnus Achim Deininger is a <del>sellsword</del> freelance computer scientist specialising in peculiar problems, such as embedded development, formal language theory and experiments in minimalistic design. This website serves as his personal journal and testing ground for unusual and/or crazy ideas.</a>
-      </address></xsl:if>
-      <xsl:if test="/xhtml:html/xhtml:head/xhtml:meta[@name='author'][@content='Nadja Klein']"><address>
-        <a rel="author" href="http://www.facebook.com/nadja.klein.967">
-          <span>Written by <span>Nadja Klein</span>.</span> Guest blogging on this site, resident coffee junkie Nadja is one of that rare blend of computer scientists with an affinity for maths. She used to work as a developer for a software company until just recently and is currently concentrating on getting her degree in computer science.</a>
-      </address></xsl:if>
-      <xsl:if test="//xhtml:meta[@name='date']">
-        <table>
-          <tbody>
-            <xsl:if test="../xhtml:head/xhtml:meta[@name='mtime'] and (../xhtml:head/xhtml:meta[@name='mtime']/@content != ../xhtml:head/xhtml:meta[@name='date']/@content)">
-              <tr><th>Last Modified</th><td><xsl:value-of select="../xhtml:head/xhtml:meta[@name='mtime']/@content" /></td></tr>
-            </xsl:if>
-            <xsl:if test="../xhtml:head/xhtml:meta[@name='category']">
-              <tr><th>Category</th><td><xsl:value-of select="../xhtml:head/xhtml:meta[@name='category']/@content" /></td></tr>
-            </xsl:if>
-            <xsl:if test="../xhtml:head/xhtml:meta[@name='author']">
-              <tr><th>Author</th><td><xsl:value-of select="../xhtml:head/xhtml:meta[@name='author']/@content" /></td></tr>
-            </xsl:if>
-            <xsl:if test="(string-length($collection)>0) and (string-length($target)>0)">
-              <tr><th>Collection</th><td><a href="{$collection}"><xsl:value-of select="$collection"/></a></td></tr>
-            </xsl:if>
-          </tbody>
-        </table>
+      <xsl:if test="../xhtml:head/xhtml:meta[@name='mtime'] and (../xhtml:head/xhtml:meta[@name='mtime']/@content != ../xhtml:head/xhtml:meta[@name='date']/@content)">
+        <p><em>Last Modified: <xsl:value-of select="../xhtml:head/xhtml:meta[@name='mtime']/@content" /></em></p>
+      </xsl:if>
+      <xsl:if test="/xhtml:html/xhtml:head/xhtml:meta[@name='author']">
+        <xsl:variable name="author" select="/xhtml:html/xhtml:head/xhtml:meta[@name='author']/@content"/>
+        <xsl:choose>
+          <xsl:when test="$author='Magnus Achim Deininger'"><address>
+            <a rel="author" href="about">
+              <span>Written by <span>Magnus Achim Deininger</span>.</span> Magnus Achim Deininger is a <del>sellsword</del> freelance computer scientist specialising in peculiar problems, such as embedded development, formal language theory and experiments in minimalistic design. This website serves as his personal journal and testing ground for unusual and/or crazy ideas.</a>
+          </address></xsl:when>
+          <xsl:when test="$author='Nadja Klein'"><address>
+            <a rel="author" href="http://www.facebook.com/nadja.klein.967">
+              <span>Written by <span>Nadja Klein</span>.</span> Guest blogging on this site, resident coffee junkie Nadja is one of that rare blend of computer scientists with an affinity for maths. She used to work as a developer for a software company until just recently and is currently concentrating on getting her degree in computer science.</a>
+          </address></xsl:when>
+          <xsl:otherwise><address>
+            <span>Written by <span><xsl:value-of select="$author"/></span></span>
+          </address></xsl:otherwise>
+        </xsl:choose>
       </xsl:if>
     </xsl:copy>
   </xsl:template>
