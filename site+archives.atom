@@ -4,8 +4,7 @@
   <link href="http://ef.gy/atom/site+archives" rel="self" />
   <link href="http://ef.gy/" />
 
-  <source:merge local="articles.atom"/>
-  <source:merge local="projects.atom"/>
-  <source:merge local="drupal-einit.atom"/>
-  <source:merge local="drupal-kyuba.atom"/>
+  <source:merge local="site.atom"/>
+  <source:merge local="einit.atom"/>
+  <source:merge local="kyuba.atom"/>
 </feed>

@@ -49,7 +49,7 @@
 
   <xsl:template match="source:merge">
     <xsl:for-each select="document(concat($documentRoot,'/',@local))/atom:feed">
-      <xsl:apply-templates select="atom:entry"/>
+      <xsl:apply-templates select="atom:entry | source:merge"/>
     </xsl:for-each>
   </xsl:template>
 </xsl:stylesheet>

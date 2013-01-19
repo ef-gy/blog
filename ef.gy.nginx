@@ -94,6 +94,15 @@ server {
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-style-ef.gy.xslt;
 	}
 
+	location /rss {
+        alias $documentRoot;
+		try_files $uri.atom $uri =404;
+
+		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/atom-style-ef.gy.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/rss-transcode-atom.xslt;
+	}
+
 	location /raw {
         alias $documentRoot;
 		try_files $uri =404;
