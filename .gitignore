@@ -4,3 +4,5 @@
 *.cache.xml
 *.bz2
 *.out
+*.sqlite3
+fortune
