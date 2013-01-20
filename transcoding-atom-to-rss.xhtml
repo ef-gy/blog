@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>XSLT: Transcoding Atom feeds to RSS</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="Sometimes you need to serve RSS feeds even though you'd much rather use Atom. Fortunately it turns out to be trivial to convert Atom to RSS with XSLT." />
+<meta name="date" content="2013-01-20T11:40:00Z" />
+<meta name="mtime" content="2013-01-20T11:40:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="transcoding-atom-to-rss" />
+</head>
+<body>
+<h1>There Can Be Only One</h1>
+<p>Given that this website is pretty much an Atom feed reader in disguise, it shouldn't come as much of a surprise that I clearly favour Atom feeds over RSS feeds. Atom has a lot of good, technical improvements over RSS, such as being able to contain proper XML documents - tagged with a MIME type and language codes - instead of just snippets, as well as a clear distinction between actual content and summaries. Atom is also properly encapsulated in a namespace, which means that Atom elements are easily reused in other XML - even in RSS.</p>
+<p>So why would I bother with RSS? Well, I'm still trying to restore some of the functionality of the old kyuba.org/becquerel.org and einit.org websites. And in doing so, I found a large number of periodic accesses to their respective /rss.xml files - which I'd interpret as references to good ol' Drupal's RSS feed which used to be located there on each of those domains.</p>
+<p>Since we don't want to upset old feed readers, I figured it'd be nice to whip up a little XSLT to convert from my preferred Atom content to good ol' RSS 2.0 - with a bit of additional data from those Atom feeds. This is surprisingly easy to do, and I came up with the following stylesheet:</p>
+<pre><code><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet
+              xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+              xmlns:atom="http://www.w3.org/2005/Atom"
+              version="1.0">
+  <xsl:output method="xml" version="1.0" encoding="UTF-8"
+              indent="no"
+              media-type="application/rss+xml" />
+
+  <xsl:template match="@*|node()">
+    <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
+  </xsl:template>
+
+  <xsl:template match="/atom:feed">
+    <rss version="2.0">
+      <channel>
+        <xsl:apply-templates select="node()"/>
+        <xsl:if test="not(atom:summary)">
+          <description><xsl:value-of select="atom:title"/></description>
+        </xsl:if>
+      </channel>
+    </rss>
+  </xsl:template>
+
+  <xsl:template match="atom:feed">
+    <channel><xsl:apply-templates select="node()"/></channel>
+  </xsl:template>
+
+  <xsl:template match="atom:title">
+    <title><xsl:apply-templates select="node()"/></title>
+  </xsl:template>
+
+  <xsl:template match="atom:link[@rel='self']">
+    <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
+  </xsl:template>
+
+  <xsl:template match="atom:link[1]">
+    <link><xsl:value-of select="@href"/></link>
+  </xsl:template>
+
+  <xsl:template match="atom:category">
+    <category><xsl:value-of select="@term"/></category>
+  </xsl:template>
+
+  <xsl:template match="atom:summary">
+    <description><xsl:apply-templates select="node()"/></description>
+  </xsl:template>
+
+  <xsl:template match="atom:entry">
+    <item><xsl:apply-templates select="node()"/></item>
+  </xsl:template>
+
+  <xsl:template match="atom:published">
+    <pubDate><xsl:apply-templates select="node()"/></pubDate>
+  </xsl:template>
+
+  <xsl:template match="atom:entry/atom:id">
+    <guid><xsl:apply-templates select="node()"/></guid>
+  </xsl:template>
+
+  <xsl:template match="atom:source"/>
+</xsl:stylesheet>]]></code></pre>
+<p>As usual, this stylesheet is also <a href="/xslt/rss-transcode-atom.xslt">available directly</a>, as well as <a href="source-code">in the source code GIT repository</a>. As an added bonus I've configured nginx on this host to make all the Atom feeds available as RSS with the help of this stylesheet. That means you now get to choose which feed format to use. Oh, and, of course the old /rss.xml files on the old domains now point to the appropriate new locations for those feeds.</p>
+</body>
+</html>
