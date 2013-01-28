@@ -3,7 +3,14 @@ name=Magnus Achim Deininger
 indices=download/index.atom download/kyuba/index.atom
 
 #all: fortune js/tesseract.js
-all: fortune index
+all: fortune index databases
+
+databases: rogue.sqlite3
+
+rogue.sqlite3: src/rogue.sql src/rogue-data.sql
+	rm -f rogue.sqlite3
+	sqlite3 rogue.sqlite3 < src/rogue.sql
+	sqlite3 rogue.sqlite3 < src/rogue-data.sql
 
 index: $(indices)
 

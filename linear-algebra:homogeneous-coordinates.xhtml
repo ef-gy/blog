@@ -5,7 +5,7 @@
 <meta name="author" content="Magnus Achim Deininger" />
 <meta name="description" content="All you need to know about homogeneous coordinates - for affine transformations, anyway. From a computer scientist's point of view." />
 <meta name="date" content="2012-09-13T17:33:00Z" />
-<meta name="mtime" content="2012-09-13T17:33:00Z" />
+<meta name="mtime" content="2013-01-28T14:02:00Z" />
 <meta name="category" content="Articles" />
 <meta name="unix:name" content="linear-algebra:homogeneous-coordinates" />
 </head>
@@ -13,202 +13,344 @@
 <h1>Introduction</h1>
 <p>Since I already went to the trouble of <a href="/linear-algebra:normal-vectors-in-higher-dimensional-spaces">explaining all about normal vectors in higher dimensions</a>, it seems like a good idea to follow up with some of the maths that actually uses those normals. One of the more prominent examples of this is rendering pretty pictures of 4-cubes and similar constructs. But before we have a closer look at how to do these projections, there is one other prerequisite that is typically not explained all that well.</p>
 <p>Remember that in geometry we have many different coordinate systems to represent points in a given space. For example, in 2D we commonly deal with cartesian coordinates, that is two numbers that represent the horizontal and vertical offsets from a point of origin. These two coordinates are typically called X and Y - or x<sub>0</sub> and x<sub>1</sub> when working with vectors. In 3D, we extend these coordinates with a third coordinate - Z or x<sub>2</sub> - representing depth. Beyond that we can keep adding x<sub>n</sub>s for each new dimension we introduce.</p>
-<p>This works great when dealing with rectangular things - squares, cubes, tesseracts, etc. It doesn't work quite that well with round things, however. When we're primarily interested in circles, then in 2D we can use polar coordinates instead. Polar coordinates represent points on a plane as the distance from a pole and a polar angle. Again we have two coordinates, typically called r and θ. We can easily extend these coordinates to 3D and up as spherical coordinates, that is adding another angle for each new dimension. Geographic coordinates in latitude and longitude would be an actual example of spherical coordinates in 3D (the radial component is implicit in this case).</p>
+<p>This works great when dealing with rectangular things - squares, cubes, tesseracts, etc. It doesn't work quite that well with round things, however. When we're primarily interested in circles, then in 2D we can use polar coordinates instead. Polar coordinates represent points on a plane as the distance from a pole and a polar angle. Again we have two coordinates, typically called r and theta. We can easily extend these coordinates to 3D and up as spherical coordinates, that is adding another angle for each new dimension. Geographic coordinates in latitude and longitude would be an actual example of spherical coordinates in 3D (the radial component is implicit in this case).</p>
 <p>There are many other coordinate systems that may or may not work well for a given task. But just as we may choose our coordinate system based on the shapes we want to describe, we might also want to choose our coordinate system based on the calculations we want to perform. This is where homogeneous coordinates come in.</p>
 <p>Please note that in the following we're implicitly assuming that we're dealing with an n-dimensional vector space over &#x211d;. The principles should also hold true for any other manifold. Also note that this is strictly from a computer scientist's point of view. It probably won't hold up against a mathematician's scrutiny.</p>
 <h1>The Nitty Gritty - in 2D</h1>
 <p>Homogeneous coordinates are very similar to typical, cartesian coordinates. The basic idea is that instead of specifying the exact offset from a point of origin, you specify ratios between the individual coordinates. Since the coordinate ratio of all points on a line through the origin is the same, we need to add an extra coordinate that serves as a scale. This extra coordinate allows us to uniquely identify which point on the line we are interested in.</p>
 <p>As an example, let's assume we had a point P defined like this in typical cartesian coordinates:</p>
-<div class="calculations">P<sub>cartesian</sub> :=
-<table class="matrix">
-<tr><td>1</td></tr> 
-<tr><td>2</td></tr> 
-</table></div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>P</mi><mtext>cartesian</mtext></msub>
+<mo>=</mo>
+<mfenced><mtable equalrows="true" columnalign="left">
+<mtr><mtd><mn>1</mn></mtd></mtr>
+<mtr><mtd><mn>2</mn></mtd></mtr>
+</mtable></mfenced>
+</mrow></math>
 <p>To convert this point to homogeneous coordinates, we simply add a '1' as the scale.</p>
-<div class="calculations">P<sub>homogeneous</sub> :=
-<table class="matrix">
-<tr><td>1</td></tr>
-<tr><td>2</td></tr>
-<tr><td>1</td></tr>
-</table></div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>P</mi><mtext>homogeneous</mtext></msub>
+<mo>=</mo>
+<mfenced><mtable equalrows="true" columnalign="left">
+<mtr><mtd><mn>1</mn></mtd></mtr>
+<mtr><mtd><mn>2</mn></mtd></mtr>
+<mtr><mtd><mn>1</mn></mtd></mtr>
+</mtable></mfenced>
+</mrow></math>
 <p>Notice that from their definition it follows that multiplying all of the coordinates with a constant other than 0 does not actually change the point that the coordinates refer to when using homogeneous coordinates.</p>
-<div class="calculations">P<sub>homogeneous</sub> :=
-<table class="matrix">
-<tr><td>c * P<sub>cartesian<sub>0</sub></sub></td></tr>
-<tr><td>c * P<sub>cartesian<sub>1</sub></sub></td></tr>
-<tr><td>c</td></tr>
-</table></div>
-<div class="calculations">c &#x2260; 0</div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>P</mi><mtext>homogeneous</mtext></msub>
+<mo>=</mo>
+<mfenced><mtable equalrows="true" columnalign="left">
+<mtr><mtd><mi>c</mi><mo>&#x00d7;</mo><msub><mi>P</mi><msub><mtext>cartesian</mtext><mn>0</mn></msub></msub></mtd></mtr>
+<mtr><mtd><mi>c</mi><mo>&#x00d7;</mo><msub><mi>P</mi><msub><mtext>cartesian</mtext><mn>1</mn></msub></msub></mtd></mtr>
+<mtr><mtd><mi>c</mi></mtd></mtr>
+</mtable></mfenced>
+<mo>|</mo>
+<mi>c</mi>
+<mo>&#x2260;</mo>
+<mn>0</mn>
+</mrow></math>
 <p>This also implicitly tells us how to convert homogeneous coordinates back to cartesian coordinates: just divide all components by the last one, then discard that. If we wanted to scale a homogeneous vector like we do when multiplying a vector with cartesian coordinates with a constant, then what we may do instead is to divide the last coordinate by our constant.</p>
-<div class="calculations">P &#x2297; c :=
-<table class="matrix">
-<tr><td>c * P<sub>cartesian<sub>0</sub></sub></td></tr>
-<tr><td>c * P<sub>cartesian<sub>1</sub></sub></td></tr>
-</table>
-<sub>(cartesian)</sub>
-=
-<table class="matrix">
-<tr><td>c * P<sub>cartesian<sub>0</sub></sub></td></tr>
-<tr><td>c * P<sub>cartesian<sub>1</sub></sub></td></tr>
-<tr><td>1</td></tr>
-</table>
-<sub>(homogeneous)</sub>
-=
-<table class="matrix">
-<tr><td>d * P<sub>cartesian<sub>0</sub></sub></td></tr>
-<tr><td>d * P<sub>cartesian<sub>1</sub></sub></td></tr>
-<tr><td>d / c</td></tr>
-</table>
-<sub>(homogeneous)</sub>
-=
-<table class="matrix">
-<tr><td>P<sub>homogeneous<sub>0</sub></sub></td></tr>
-<tr><td>P<sub>homogeneous<sub>1</sub></sub></td></tr>
-<tr><td>P<sub>homogeneous<sub>2</sub></sub> / c</td></tr>
-</table>
-<sub>(homogeneous)</sub>
-</div>
-<div class="calculations">d, c &#x2260; 0</div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi>P</mi><mo>&#x2297;</mo><mi>c</mi>
+<mo>=</mo>
+<munder>
+<mfenced><mtable equalrows="true" columnalign="left">
+<mtr><mtd><mi>c</mi><mo>&#x00d7;</mo><msub><mi>P</mi><msub><mtext>cartesian</mtext><mn>0</mn></msub></msub></mtd></mtr>
+<mtr><mtd><mi>c</mi><mo>&#x00d7;</mo><msub><mi>P</mi><msub><mtext>cartesian</mtext><mn>1</mn></msub></msub></mtd></mtr>
+</mtable></mfenced>
+<mtext>cartesian</mtext>
+</munder>
+<mo>=</mo>
+<munder>
+<mfenced><mtable equalrows="true" columnalign="left">
+<mtr><mtd><mi>c</mi><mo>&#x00d7;</mo><msub><mi>P</mi><msub><mtext>cartesian</mtext><mn>0</mn></msub></msub></mtd></mtr>
+<mtr><mtd><mi>c</mi><mo>&#x00d7;</mo><msub><mi>P</mi><msub><mtext>cartesian</mtext><mn>1</mn></msub></msub></mtd></mtr>
+<mtr><mtd><mn>1</mn></mtd></mtr>
+</mtable></mfenced>
+<mtext>homogeneous</mtext>
+</munder>
+<mo>=</mo>
+<munder>
+<mfenced><mtable equalrows="true" columnalign="left">
+<mtr><mtd><mi>d</mi><mo>&#x00d7;</mo><msub><mi>P</mi><msub><mtext>cartesian</mtext><mn>0</mn></msub></msub></mtd></mtr>
+<mtr><mtd><mi>d</mi><mo>&#x00d7;</mo><msub><mi>P</mi><msub><mtext>cartesian</mtext><mn>1</mn></msub></msub></mtd></mtr>
+<mtr><mtd><mfrac><mi>d</mi><mi>c</mi></mfrac></mtd></mtr>
+</mtable></mfenced>
+<mtext>homogeneous</mtext>
+</munder>
+<mo>=</mo>
+<munder>
+<mfenced><mtable equalrows="true" columnalign="left">
+<mtr><mtd><msub><mi>P</mi><msub><mtext>homogeneous</mtext><mn>0</mn></msub></msub></mtd></mtr>
+<mtr><mtd><msub><mi>P</mi><msub><mtext>homogeneous</mtext><mn>1</mn></msub></msub></mtd></mtr>
+<mtr><mtd><mfrac><msub><mi>P</mi><msub><mtext>homogeneous</mtext><mn>2</mn></msub></msub><mi>c</mi></mfrac></mtd></mtr>
+</mtable></mfenced>
+<mtext>homogeneous</mtext>
+</munder>
+<mo>|</mo>
+<mi>c</mi>
+<mo>,</mo>
+<mi>d</mi>
+<mo>&#x2260;</mo>
+<mn>0</mn>
+</mrow></math>
 <p>It seems counterintuitive at first that we need to divide the last coordinate instead of multiplying it, but that follows straight from the scaling behaviour we noticed earlier. To perform the analogous operation of adding two cartesian vectors, we first normalise the second vector to the same scale as the first one, then we add the other coordinates as usual.</p>
-<div class="calculations">P &#x2295; R :=
-<table class="matrix">
-<tr><td>P<sub>cartesian<sub>0</sub></sub> + R<sub>cartesian<sub>0</sub></sub></td></tr>
-<tr><td>P<sub>cartesian<sub>1</sub></sub> + R<sub>cartesian<sub>1</sub></sub></td></tr>
-</table>
-<sub>(cartesian)</sub>
-=
-<table class="matrix">
-<tr><td>P<sub>cartesian<sub>0</sub></sub> + R<sub>cartesian<sub>0</sub></sub></td></tr>
-<tr><td>P<sub>cartesian<sub>1</sub></sub> + R<sub>cartesian<sub>1</sub></sub></td></tr>
-<tr><td>1</td></tr>
-</table>
-<sub>(homogeneous)</sub>
-=
-<table class="matrix">
-<tr><td>P<sub>homogeneous<sub>0</sub></sub> + R<sub>homogeneous<sub>0</sub></sub> * P<sub>homogeneous<sub>2</sub></sub> / R<sub>homogeneous<sub>2</sub></sub></td></tr>
-<tr><td>P<sub>homogeneous<sub>1</sub></sub> + R<sub>homogeneous<sub>1</sub></sub> * P<sub>homogeneous<sub>2</sub></sub> / R<sub>homogeneous<sub>2</sub></sub></td></tr>
-<tr><td>P<sub>homogeneous<sub>2</sub></sub></td></tr>
-</table>
-<sub>(homogeneous)</sub>
-</div>
-<div class="calculations">R<sub>homogeneous<sub>2</sub></sub> &#x2260; 0</div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi>P</mi><mo>&#x2295;</mo><mi>R</mi>
+<mo>=</mo>
+<munder>
+<mfenced><mtable equalrows="true" columnalign="left">
+<mtr><mtd><msub><mi>P</mi><msub><mtext>cartesian</mtext><mn>0</mn></msub></msub><mo>+</mo><msub><mi>R</mi><msub><mtext>cartesian</mtext><mn>0</mn></msub></msub></mtd></mtr>
+<mtr><mtd><msub><mi>P</mi><msub><mtext>cartesian</mtext><mn>1</mn></msub></msub><mo>+</mo><msub><mi>R</mi><msub><mtext>cartesian</mtext><mn>1</mn></msub></msub></mtd></mtr>
+</mtable></mfenced>
+<mtext>cartesian</mtext>
+</munder>
+<mo>=</mo>
+<munder>
+<mfenced><mtable equalrows="true" columnalign="left">
+<mtr><mtd><msub><mi>P</mi><msub><mtext>cartesian</mtext><mn>0</mn></msub></msub><mo>+</mo><msub><mi>R</mi><msub><mtext>cartesian</mtext><mn>0</mn></msub></msub></mtd></mtr>
+<mtr><mtd><msub><mi>P</mi><msub><mtext>cartesian</mtext><mn>1</mn></msub></msub><mo>+</mo><msub><mi>R</mi><msub><mtext>cartesian</mtext><mn>1</mn></msub></msub></mtd></mtr>
+<mtr><mtd><mi>1</mi></mtd></mtr>
+</mtable></mfenced>
+<mtext>homogeneous</mtext>
+</munder>
+<mo>=</mo>
+<munder>
+<mfenced><mtable equalrows="true" columnalign="left">
+<mtr><mtd>
+<msub><mi>P</mi><msub><mtext>homogeneous</mtext><mn>0</mn></msub></msub><mo>+</mo><msub><mi>R</mi><msub><mtext>homogeneous</mtext><mn>0</mn></msub></msub>
+<mo>&#x00d7;</mo>
+<mfrac>
+<msub><mi>P</mi><msub><mtext>homogeneous</mtext><mn>2</mn></msub></msub>
+<msub><mi>R</mi><msub><mtext>homogeneous</mtext><mn>2</mn></msub></msub>
+</mfrac>
+</mtd></mtr>
+<mtr><mtd>
+<msub><mi>P</mi><msub><mtext>homogeneous</mtext><mn>1</mn></msub></msub><mo>+</mo><msub><mi>R</mi><msub><mtext>homogeneous</mtext><mn>1</mn></msub></msub>
+<mo>&#x00d7;</mo>
+<mfrac>
+<msub><mi>P</mi><msub><mtext>homogeneous</mtext><mn>2</mn></msub></msub>
+<msub><mi>R</mi><msub><mtext>homogeneous</mtext><mn>2</mn></msub></msub>
+</mfrac>
+</mtd></mtr>
+<mtr><mtd><msub><mi>P</mi><msub><mtext>homogeneous</mtext><mn>2</mn></msub></msub></mtd></mtr>
+</mtable></mfenced>
+<mtext>homogeneous</mtext>
+</munder>
+<mo>|</mo>
+<msub><mi>R</mi><msub><mtext>homogeneous</mtext><mn>2</mn></msub></msub>
+<mo>&#x2260;</mo>
+<mn>0</mn>
+</mrow></math>
 <p>Seems complicated, right? It's a good thing that's not something you'll typically be doing with homogeneous coordinates as it were, but more on that later. The one thing we should take away from all this is that a larger scale variable means our vector with homogeneous coordinates will be closer to the origin, and smaller scale values mean that the point will be farther from the origin, thus closer to infinity. And this is one thing we can do with homogeneous coordinates that we can't do with most other coordinate systems: we can actually define points that are at an infinite distance from the origin by using a scale coordinate of 0.</p>
-<div class="calculations">Points at infinity :=
-<table class="matrix">
-<tr><td>p<sub>0</sub></td></tr>
-<tr><td>p<sub>1</sub></td></tr>
-<tr><td>0</td></tr>
-</table>
-<sub>(homogeneous)</sub>
-</div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>P</mi><mtext>homogeneous, at infinity</mtext></msub>
+<mo>=</mo>
+<mfenced><mtable equalrows="true" columnalign="left">
+<mtr><mtd><msub><mi>p</mi><mn>0</mn></msub></mtd></mtr>
+<mtr><mtd><msub><mi>p</mi><mn>1</mn></msub></mtd></mtr>
+<mtr><mtd><mn>0</mn></mtd></mtr>
+</mtable></mfenced>
+</mrow></math>
 <p>This makes a lot of sense if you remember that the limit of a division approaches infinity as the divisor approaches zero.</p>
-<p>So, as we can see, the common theme in all this is that homogeneous coordinates give us a way of adding an implicit division to our coordinates while still being fairly close to cartesian coordinates in principle. Well, at least that's the gist of it if you're looking at it from a computer scientist's point of view.</p>
+<p>So, as we can see, the common theme in all this is that homogeneous coordinates give us a way of adding an implicit division to our coordinates while still being fairly close to cartesian coordinates in principle.</p>
 <h1>3D, 4D and up</h1>
 <p>The homogeneous coordinates in 2D are easily extended to, say, 3D by following the same construction: take the cartesian coordinates and add a scale. Like this:</p>
-<div class="calculations">P<sub>3D, homogeneous, not at infinity</sub> :=
-<table class="matrix">
-<tr><td>c * P<sub>cartesian<sub>0</sub></sub></td></tr>
-<tr><td>c * P<sub>cartesian<sub>1</sub></sub></td></tr>
-<tr><td>c * P<sub>cartesian<sub>2</sub></sub></td></tr>
-<tr><td>c</td></tr>
-</table></div>
-<div class="calculations">c &#x2260; 0</div>
-<div class="calculations">P<sub>3D, homogeneous, at infinity</sub> :=
-<table class="matrix">
-<tr><td>p<sub>0</sub></td></tr>
-<tr><td>p<sub>1</sub></td></tr>
-<tr><td>p<sub>2</sub></td></tr>
-<tr><td>0</td></tr>
-</table>
-</div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>P</mi><mtext>3D, homogeneous, not at infinity</mtext></msub>
+<mo>=</mo>
+<mfenced><mtable equalrows="true" columnalign="left">
+<mtr><mtd><mi>c</mi><mo>&#x00d7;</mo><msub><mi>P</mi><msub><mtext>cartesian</mtext><mn>0</mn></msub></msub></mtd></mtr>
+<mtr><mtd><mi>c</mi><mo>&#x00d7;</mo><msub><mi>P</mi><msub><mtext>cartesian</mtext><mn>1</mn></msub></msub></mtd></mtr>
+<mtr><mtd><mi>c</mi><mo>&#x00d7;</mo><msub><mi>P</mi><msub><mtext>cartesian</mtext><mn>2</mn></msub></msub></mtd></mtr>
+<mtr><mtd><mi>c</mi></mtd></mtr>
+</mtable></mfenced>
+<mo>|</mo>
+<mi>c</mi>
+<mo>&#x2260;</mo>
+<mn>0</mn>
+</mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>P</mi><mtext>3D, homogeneous, at infinity</mtext></msub>
+<mo>=</mo>
+<mfenced><mtable displaystyle="true" equalrows="true" columnalign="left">
+<mtr><mtd><msub><mi>p</mi><mn>0</mn></msub></mtd></mtr>
+<mtr><mtd><msub><mi>p</mi><mn>1</mn></msub></mtd></mtr>
+<mtr><mtd><msub><mi>p</mi><mn>2</mn></msub></mtd></mtr>
+<mtr><mtd><mn>0</mn></mtd></mtr>
+</mtable></mfenced>
+</mrow></math>
 <p>4D homogeneous coordinates and beyond are constructed the same way. A general form would be:</p>
-<div class="calculations">P<sub>n-D, homogeneous, not at infinity</sub> :=
-<table class="matrix">
-<tr><td>c * P<sub>cartesian<sub>0</sub></sub></td></tr>
-<tr><td>c * P<sub>cartesian<sub>1</sub></sub></td></tr>
-<tr><td>...</td></tr>
-<tr><td>c * P<sub>cartesian<sub>n-1</sub></sub></td></tr>
-<tr><td>c</td></tr>
-</table></div>
-<div class="calculations">c &#x2260; 0</div>
-<div class="calculations">P<sub>n-D, homogeneous, at infinity</sub> :=
-<table class="matrix">
-<tr><td>p<sub>0</sub></td></tr>
-<tr><td>p<sub>1</sub></td></tr>
-<tr><td>...</td></tr>
-<tr><td>p<sub>n-1</sub></td></tr>
-<tr><td>0</td></tr>
-</table>
-</div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>P</mi><mtext>n-D, homogeneous, not at infinity</mtext></msub>
+<mo>=</mo>
+<mfenced><mtable equalrows="true" columnalign="left">
+<mtr><mtd><mi>c</mi><mo>&#x00d7;</mo><msub><mi>P</mi><msub><mtext>cartesian</mtext><mn>0</mn></msub></msub></mtd></mtr>
+<mtr><mtd><mi>c</mi><mo>&#x00d7;</mo><msub><mi>P</mi><msub><mtext>cartesian</mtext><mn>1</mn></msub></msub></mtd></mtr>
+<mtr><mtd><mtext>...</mtext></mtd></mtr>
+<mtr><mtd><mi>c</mi><mo>&#x00d7;</mo><msub><mi>P</mi><msub><mtext>cartesian</mtext><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></msub></mtd></mtr>
+<mtr><mtd><mi>c</mi></mtd></mtr>
+</mtable></mfenced>
+<mo>|</mo>
+<mi>c</mi>
+<mo>&#x2260;</mo>
+<mn>0</mn>
+</mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>P</mi><mtext>n-D, homogeneous, at infinity</mtext></msub>
+<mo>=</mo>
+<mfenced><mtable displaystyle="true" equalrows="true" columnalign="left">
+<mtr><mtd><msub><mi>p</mi><mn>0</mn></msub></mtd></mtr>
+<mtr><mtd><msub><mi>p</mi><mn>1</mn></msub></mtd></mtr>
+<mtr><mtd><mtext>...</mtext></mtd></mtr>
+<mtr><mtd><msub><mi>p</mi><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></mtd></mtr>
+<mtr><mtd><mn>0</mn></mtd></mtr>
+</mtable></mfenced>
+</mrow></math>
 <p>The basic operations work like they do in the 2D case, I trust you'll figure those out. n-D homogeneous coordinates are rather useful when dealing with affine transformations. More on that in just a sec.</p>
 <h1>Alternate Notation</h1>
 <p>It is fairly common for (cartesian) vectors to be written as a tuple. The longer, matrix-y notation is quite bulky, so we often see a notation much like the following:</p>
-<div class="calculations">(p<sub>0</sub>, p<sub>1</sub>, p<sub>2</sub>) :=
-<table class="matrix">
-<tr><td>p<sub>0</sub></td></tr>
-<tr><td>p<sub>1</sub></td></tr>
-<tr><td>p<sub>2</sub></td></tr>
-</table>
-</div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mfenced>
+<msub><mi>p</mi><mn>0</mn></msub>
+<msub><mi>p</mi><mn>1</mn></msub>
+<msub><mi>p</mi><mn>2</mn></msub>
+</mfenced>
+<mo>=</mo>
+<mfenced><mtable equalrows="true" columnalign="left">
+<mtr><mtd><msub><mi>p</mi><mn>0</mn></msub></mtd></mtr>
+<mtr><mtd><msub><mi>p</mi><mn>1</mn></msub></mtd></mtr>
+<mtr><mtd><msub><mi>p</mi><mn>2</mn></msub></mtd></mtr>
+</mtable></mfenced>
+</mrow></math>
 <p>For homogeneous coordinates, there is a similar shorthand notation based on the notion that homogeneous coordinates primarily represent ratios between the coordinates:</p>
-<div class="calculations">p<sub>0</sub>:p<sub>1</sub>:p<sub>2</sub> :=
-<table class="matrix">
-<tr><td>p<sub>0</sub></td></tr>
-<tr><td>p<sub>1</sub></td></tr>
-<tr><td>p<sub>2</sub></td></tr>
-<tr><td>1</td></tr>
-</table>
-</div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>p</mi><mn>0</mn></msub>
+<mo>:</mo>
+<msub><mi>p</mi><mn>1</mn></msub>
+<mo>:</mo>
+<msub><mi>p</mi><mn>2</mn></msub>
+<mo>=</mo>
+<mfenced><mtable equalrows="true" columnalign="left">
+<mtr><mtd><msub><mi>p</mi><mn>0</mn></msub></mtd></mtr>
+<mtr><mtd><msub><mi>p</mi><mn>1</mn></msub></mtd></mtr>
+<mtr><mtd><msub><mi>p</mi><mn>2</mn></msub></mtd></mtr>
+<mtr><mtd><mn>1</mn></mtd></mtr>
+</mtable></mfenced>
+</mrow></math>
 <p>I won't be using this shortcut notation here, but you'll probably find it in a lot of books on linear algebra.</p>
 <h1>Typical Usage</h1>
 <p>As promised earlier, let's have a quick look at why we're dealing with homogeneous coordinates. Remember how the first thing - or at least very close to the first thing - you learn in linear algebra is how to work with matrices. A few lectures into your typical course on that subject and you'll find that you can use matrix multiplications as an elegant way to tranform vectors. This gets slightly better once you realise that when working with anything that transforms vectors you're exceedingly likely to perform the same transformation to many distinct vectors. As matrix multiplications are commutative, you can precompute a transformation matrix to use on a set of vectors in one step, then apply that transformation to all of them with a single matrix multiplication per vector. Depending on the kind of linear transformation you're doing this may save quite a bit of computing power, as expensive computations involving trigonometric functions, roots or similar may only need to be computed once when preparing the transformation matrix.</p>
 <p>Of course, as a computer scientist you would further realise that while these matrix multiplications may perform a lot of seemingly unnecessary elementary multiplications and additions, which may or may not be expensive, they do have the advantage of being very easy to parallelise as each of the cells of a resulting matrix - or vector - can be computed without having to wait for the result of any other cell. If the size of the matrix is known at compile time, for example if the matrix is a template class in C++ with the size as template arguments, the compiler may be able to emit code that performs most of the calculations in parallel without the need for even more costly branching instructions.</p>
 <p>So, back to the maths side of things, matrix multiplications are awesome and they let you perform many a typical transformation on vectors. And this is where homogeneous coordinates start to shine. Ordinarily if you were using cartesian coordinates, a matrix multiplication would only allow you to perform a linear transformation, such as rotating or stretching a vector. A very typical example is the identity matrix.</p>
-<div class="calculations">I<sub>3D</sub> :=
-<table class="matrix">
-<tr><td>1</td><td>0</td><td>0</td></tr>
-<tr><td>0</td><td>1</td><td>0</td></tr>
-<tr><td>0</td><td>0</td><td>1</td></tr>
-</table></div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>I</mi><mtext>3D</mtext></msub>
+<mo>=</mo>
+<mfenced><mtable>
+<mtr><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd></mtr>
+<mtr><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd></mtr>
+<mtr><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd></mtr>
+</mtable></mfenced>
+</mrow></math>
 <p>When applied to a vector, the result is the same as the input. A somewhat more useful example is a so-called rotation matrix. Such a matrix that rotates a 3D point around the x-axis by an angle of &#x03b1; would look like this:</p>
-<div class="calculations">R<sub>3D, x, &#x03b1;</sub> :=
-<table class="matrix">
-<tr><td>1</td><td>0</td><td>0</td></tr>
-<tr><td>0</td><td>cos &#x03b1;</td><td>-sin &#x03b1;</td></tr>
-<tr><td>0</td><td>sin &#x03b1;</td><td>cos &#x03b1;</td></tr>
-</table></div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>R</mi><mtext>3D, x</mtext></msub>
+<mo>=</mo>
+<mfenced><mtable>
+<mtr><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd></mtr>
+<mtr><mtd><mn>0</mn></mtd><mtd><mo>cos</mo><mi>&#x03b1;</mi></mtd><mtd><mo>-sin</mo><mi>&#x03b1;</mi></mtd></mtr>
+<mtr><mtd><mn>0</mn></mtd><mtd><mo>sin</mo><mi>&#x03b1;</mi></mtd><mtd><mo>cos</mo><mi>&#x03b1;</mi></mtd></mtr>
+</mtable></mfenced>
+</mrow></math>
 <p>We can also scale vectors with a separate scale in each dimension.</p>
-<div class="calculations">S<sub>3D</sub> :=
-<table class="matrix">
-<tr><td>s<sub>0</sub></td><td>0</td><td>0</td></tr>
-<tr><td>0</td><td>s<sub>1</sub></td><td>0</td></tr>
-<tr><td>0</td><td>0</td><td>s<sub>2</sub></td></tr>
-</table></div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>S</mi><mtext>3D</mtext></msub>
+<mo>=</mo>
+<mfenced><mtable>
+<mtr><mtd><msub><mi>s</mi><mn>0</mn></msub></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd></mtr>
+<mtr><mtd><mn>0</mn></mtd><mtd><msub><mi>s</mi><mn>1</mn></msub></mtd><mtd><mn>0</mn></mtd></mtr>
+<mtr><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><msub><mi>s</mi><mn>2</mn></msub></mtd></mtr>
+</mtable></mfenced>
+</mrow></math>
 <p>There are many other useful transformations that can be expressed as matrices. More important is that we can chain these transformations by multiplying several transformation matrices into one and then applying the resulting matrix to a vector.</p>
 <p>However, one of the operations that cannot be expressed when working with cartesian coordinates is a translation. If, however, we extend the cartesian coordinates to homogeneous coordinates, we are then also able to express affine transformations including translations on our cartesian coordinates. To do that, we first need to extend whatever matrix we may have with a new row and column that is all zeroes except for a one in the bottom right cell.</p>
-<div class="calculations">
-<table class="matrix">
-<tr><td>m<sub>0,0</sub></td><td>...</td><td>m<sub>0,n-1</sub></td></tr>
-<tr><td>...</td><td>...</td><td>...</td></tr>
-<tr><td>m<sub>n-1,n-1</sub></td><td>...</td><td>m<sub>n-1,n-1</sub></td></tr>
-</table>
--&gt;
-<table class="matrix">
-<tr><td>m<sub>0,0</sub></td><td>...</td><td>m<sub>0,n-1</sub></td><td>0</td></tr>
-<tr><td>...</td><td>...</td><td>...</td><td>...</td></tr>
-<tr><td>m<sub>n-1,n-1</sub></td><td>...</td><td>m<sub>n-1,n-1</sub></td><td>0</td></tr>
-<tr><td>0</td><td>...</td><td>0</td><td>1</td></tr>
-</table>
-</div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mfenced><mtable>
+<mtr>
+<mtd><msub><mi>m</mi><mrow><mn>0</mn><mo>,</mo><mn>0</mn></mrow></msub></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><msub><mi>m</mi><mrow><mn>0</mn><mo>,</mo><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></mtd>
+</mtr>
+<mtr>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mtext>...</mtext></mtd>
+</mtr>
+<mtr>
+<mtd><msub><mi>m</mi><mrow><mi>n</mi><mo>-</mo><mn>1</mn><mo>,</mo><mn>0</mn></mrow></msub></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><msub><mi>m</mi><mrow><mi>n</mi><mo>-</mo><mn>1</mn><mo>,</mo><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></mtd>
+</mtr>
+</mtable></mfenced>
+<mo>&#x2192;</mo>
+<mfenced><mtable>
+<mtr>
+<mtd><msub><mi>m</mi><mrow><mn>0</mn><mo>,</mo><mn>0</mn></mrow></msub></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><msub><mi>m</mi><mrow><mn>0</mn><mo>,</mo><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></mtd>
+<mtd><mn>0</mn></mtd>
+</mtr>
+<mtr>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mtext>...</mtext></mtd>
+</mtr>
+<mtr>
+<mtd><msub><mi>m</mi><mrow><mi>n</mi><mo>-</mo><mn>1</mn><mo>,</mo><mn>0</mn></mrow></msub></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><msub><mi>m</mi><mrow><mi>n</mi><mo>-</mo><mn>1</mn><mo>,</mo><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></mtd>
+<mtd><mn>0</mn></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>1</mn></mtd>
+</mtr>
+</mtable></mfenced>
+</mrow></math>
 <p>This transforms our n x n matrix for use with n-dimensional cartesian coordinates into an equivalent (n+1) x (n+1) matrix for use with n-dimensional homogeneous coordinates. If we now wanted to translate an input vector by a vector in homogeneous coordinates, we would use the following matrix:</p>
-<div class="calculations">
-<table class="matrix">
-<tr><td>1</td><td>...</td><td>0</td><td>v<sub>0</sub></td></tr>
-<tr><td>...</td><td>...</td><td>...</td><td>...</td></tr>
-<tr><td>0</td><td>...</td><td>1</td><td>v<sub>n-1</sub></td></tr>
-<tr><td>0</td><td>...</td><td>0</td><td>v<sub>n</sub></td></tr>
-</table>
-</div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mfenced><mtable>
+<mtr>
+<mtd><mn>1</mn></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><msub><mi>v</mi><mn>0</mn></msub></mtd>
+</mtr>
+<mtr>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mtext>...</mtext></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mn>1</mn></mtd>
+<mtd><msub><mi>v</mi><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><msub><mi>v</mi><mi>n</mi></msub></mtd>
+</mtr>
+</mtable></mfenced>
+</mrow></math>
 <p>Note that the upper left part is the standard identity matrix for our n-dimensional space. If you look closely, you'll notice that this is using the same construction as the general matrix expansion, except that in the general case we expanded by the origin vector and this time we're expanding the identity matrix in particular with the vector v.</p>
 <p>As we can still compose more complex transformations by multiplying matrices together, this means that this little trick now allows us to express affine transformations as a simple matrix multiplication. All we need to do is to expand our matrices, convert the input vector to homogeneous coordinates, apply the matrix and then convert the result vector back to cartesian coordinates.</p>
 <p>Stay tuned for the next article on linear algebra, where I'll try to explain how n-dimensional perspective projections work.</p>

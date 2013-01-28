@@ -671,11 +671,17 @@ body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + 
     margin: 0;
 }
 
-.calculations
+.calculations,
+math
 {
     border-left: 0.2em solid #f0f;
     padding-left: 0.5em;
     margin-left: 1em;
+}
+
+math
+{
+    display: block;
 }
 
 .matrix-determinant,

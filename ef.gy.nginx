@@ -103,6 +103,15 @@ server {
 		xslt_stylesheet /srv/http/ef.gy/xslt/rss-transcode-atom.xslt;
 	}
 
+	location /docbook {
+        alias $documentRoot;
+		try_files $uri.atom $uri.xhtml $uri =404;
+
+		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/docbook-transcode-xhtml.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/docbook-transcode-atom.xslt;
+	}
+
 	location /raw {
         alias $documentRoot;
 		try_files $uri =404;
