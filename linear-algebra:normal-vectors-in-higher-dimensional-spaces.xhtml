@@ -5,22 +5,9 @@
 <meta name="author" content="Magnus Achim Deininger" />
 <meta name="description" content="How to calculate a vector that is perpendicular to (n-1) other vectors in an n-dimensional space. This is often referred to as the 'generalised cross product'." />
 <meta name="date" content="2012-07-09T22:16:00Z" />
-<meta name="mtime" content="2012-09-11T19:33:00Z" />
+<meta name="mtime" content="2013-01-29T10:14:00Z" />
 <meta name="category" content="Articles" />
 <meta name="unix:name" content="linear-algebra:normal-vectors-in-higher-dimensional-spaces" />
-<style type="text/css">
-.matrix-determinant, .matrix-determinant-4, .matrix-determinant-5
-{
-    border-left: 0.1em solid black;
-    border-right: 0.1em solid black;
-}
-.matrix-determinant td + td + td,
-.matrix-determinant-4 td + td + td + td,
-.matrix-determinant-5 td + td + td + td + td
-{
-    font-weight: bold;
-}
-</style>
 </head>
 <body>
 <h1>Introduction</h1>
@@ -30,168 +17,316 @@
 <h1>The 3D Cross Product</h1>
 <p>This is basic geometry, but we'll use a somewhat atypical construction.</p>
 <p>Consider the vectors a=(0,1,0) and b=(1,0,0). These are the "up" and "right" base vectors for a typical 3D vector space. The third base vector is the "back" vector (0,0,1). The cross product in three dimensions has many equivalent definitions, among them the fairly elegant method of simply calculating the determinant of a specially crafted matrix:</p>
-<div class="calculations">
-<span><span>a</span> x <span>b</span> :=</span>
-<table class="matrix-determinant">
-<tr>
-<td>a<sub>0</sub></td>
-<td>b<sub>0</sub></td>
-<td>right</td>
-</tr>
-<tr>
-<td>a<sub>1</sub></td>
-<td>b<sub>1</sub></td>
-<td>up</td>
-</tr>
-<tr>
-<td>a<sub>2</sub></td>
-<td>b<sub>2</sub></td>
-<td>back</td>
-</tr>
-</table>
-</div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi mathvariant="bold">a</mi>
+<mo>&#x00d7;</mo>
+<mi mathvariant="bold">b</mi>
+<mo>=</mo>
+<mfenced open="|" close="|"><mtable>
+<mtr>
+<mtd><msub><mi>a</mi><mn>0</mn></msub></mtd>
+<mtd><msub><mi>b</mi><mn>0</mn></msub></mtd>
+<mtd><mi mathvariant="bold">right</mi></mtd>
+</mtr>
+<mtr>
+<mtd><msub><mi>a</mi><mn>1</mn></msub></mtd>
+<mtd><msub><mi>b</mi><mn>1</mn></msub></mtd>
+<mtd><mi mathvariant="bold">up</mi></mtd>
+</mtr>
+<mtr>
+<mtd><msub><mi>a</mi><mn>2</mn></msub></mtd>
+<mtd><msub><mi>b</mi><mn>2</mn></msub></mtd>
+<mtd><mi mathvariant="bold">back</mi></mtd>
+</mtr>
+</mtable></mfenced>
+</mrow></math>
 <p>The first column is the vector a in column form, the second is the vector b in column form, and the third column is the set of base vectors we're using. Since this is a mixed scalar/vector matrix, we'll have to be somewhat careful when calculating the determinant so as not to multiply two of our base vectors. We do this by first applying the Laplace expansion over the last column. Remember to multiply the components with (-1)<sup>i+j</sup> -- I know I always forget to. This yields:</p>
-<div class="calculations">
-<span><span>a</span> x <span>b</span> := ... =</span>
-<table class="matrix-determinant">
-<tr>
-<td>a<sub>1</sub></td>
-<td>b<sub>1</sub></td>
-</tr>
-<tr>
-<td>a<sub>2</sub></td>
-<td>b<sub>2</sub></td>
-</tr>
-</table>
-<span>* <span>right</span> +</span>
-<table class="matrix-determinant">
-<tr>
-<td>a<sub>0</sub></td>
-<td>b<sub>0</sub></td>
-</tr>
-<tr>
-<td>a<sub>2</sub></td>
-<td>b<sub>2</sub></td>
-</tr>
-</table>
-<span>* (-1) * <span>up</span> +</span>
-<table class="matrix-determinant">
-<tr>
-<td>a<sub>0</sub></td>
-<td>b<sub>0</sub></td>
-</tr>
-<tr>
-<td>a<sub>1</sub></td>
-<td>b<sub>1</sub></td>
-</tr>
-</table>
-<span>* <span>back</span></span>
-</div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi mathvariant="bold">a</mi>
+<mo>&#x00d7;</mo>
+<mi mathvariant="bold">b</mi>
+<mo>=</mo>
+<mtext>...</mtext>
+<mo>=</mo>
+<mfenced open="|" close="|"><mtable>
+<mtr>
+<mtd><msub><mi>a</mi><mn>1</mn></msub></mtd>
+<mtd><msub><mi>b</mi><mn>1</mn></msub></mtd>
+</mtr>
+<mtr>
+<mtd><msub><mi>a</mi><mn>2</mn></msub></mtd>
+<mtd><msub><mi>b</mi><mn>2</mn></msub></mtd>
+</mtr>
+</mtable></mfenced>
+<mo>&#x00d7;</mo>
+<mi mathvariant="bold">right</mi>
+<mo>+</mo>
+<mfenced open="|" close="|"><mtable>
+<mtr>
+<mtd><msub><mi>a</mi><mn>0</mn></msub></mtd>
+<mtd><msub><mi>b</mi><mn>0</mn></msub></mtd>
+</mtr>
+<mtr>
+<mtd><msub><mi>a</mi><mn>2</mn></msub></mtd>
+<mtd><msub><mi>b</mi><mn>2</mn></msub></mtd>
+</mtr>
+</mtable></mfenced>
+<mo>&#x00d7;</mo>
+<mo>-</mo>
+<mn>1</mn>
+<mo>&#x00d7;</mo>
+<mi mathvariant="bold">up</mi>
+<mo>+</mo>
+<mfenced open="|" close="|"><mtable>
+<mtr>
+<mtd><msub><mi>a</mi><mn>0</mn></msub></mtd>
+<mtd><msub><mi>b</mi><mn>0</mn></msub></mtd>
+</mtr>
+<mtr>
+<mtd><msub><mi>a</mi><mn>1</mn></msub></mtd>
+<mtd><msub><mi>b</mi><mn>1</mn></msub></mtd>
+</mtr>
+</mtable></mfenced>
+<mo>&#x00d7;</mo>
+<mi mathvariant="bold">back</mi>
+</mrow></math>
 <p>As we can see, the resulting matrices only contain scalars, meaning we can now solve directly without having to worry about multiplying vectors with vectors:</p>
-<div class="calculations">
-<span><span>a</span> x <span>b</span> := ... =
-(a<sub>1</sub>*b<sub>2</sub> - b<sub>1</sub>*a<sub>2</sub>) * <span>right</span> +
-(a<sub>0</sub>*b<sub>2</sub> - b<sub>0</sub>*a<sub>2</sub>) * (-1) * <span>up</span> +
-(a<sub>0</sub>*b<sub>1</sub> - b<sub>0</sub>*a<sub>1</sub>) * <span>back</span></span>
-</div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi mathvariant="bold">a</mi>
+<mo>&#x00d7;</mo>
+<mi mathvariant="bold">b</mi>
+<mo>=</mo>
+<mtext>...</mtext>
+<mo>=</mo>
+<mo>(</mo>
+<msub><mi>a</mi><mn>1</mn></msub>
+<mo>&#x00d7;</mo>
+<msub><mi>b</mi><mn>2</mn></msub>
+<mo>-</mo>
+<msub><mi>b</mi><mn>1</mn></msub>
+<mo>&#x00d7;</mo>
+<msub><mi>a</mi><mn>2</mn></msub>
+<mo>)</mo>
+<mo>&#x00d7;</mo>
+<mi mathvariant="bold">right</mi>
+<mo>+</mo>
+<mo>(</mo>
+<msub><mi>a</mi><mn>0</mn></msub>
+<mo>&#x00d7;</mo>
+<msub><mi>b</mi><mn>2</mn></msub>
+<mo>-</mo>
+<msub><mi>b</mi><mn>0</mn></msub>
+<mo>&#x00d7;</mo>
+<msub><mi>a</mi><mn>2</mn></msub>
+<mo>)</mo>
+<mo>&#x00d7;</mo>
+<mo>-</mo>
+<mn>1</mn>
+<mo>&#x00d7;</mo>
+<mi mathvariant="bold">up</mi>
+<mo>+</mo>
+<mo>(</mo>
+<msub><mi>a</mi><mn>0</mn></msub>
+<mo>&#x00d7;</mo>
+<msub><mi>b</mi><mn>1</mn></msub>
+<mo>-</mo>
+<msub><mi>b</mi><mn>0</mn></msub>
+<mo>&#x00d7;</mo>
+<msub><mi>a</mi><mn>1</mn></msub>
+<mo>)</mo>
+<mo>&#x00d7;</mo>
+<mi mathvariant="bold">back</mi>
+</mrow></math>
 <p>With a and b set to the up and right vectors, we immediately see that the only component of this term that remains is the "back" vector, which is one of the two vectors perpendicular to a and b, which is just what we were looking for. You might want to experiment with some other values.</p>
 <h1>Normals in Two Dimensions</h1>
 <p>Before we move on to higher dimensions, let's step down to the familiar 2D case. Given what we just revised, this problem is easily tackled. Two dimensional space is typically visualised as a plane with only X and Y coordinates. We can calculate as though we had a three-dimensional space by only considering vectors of the form (x,y,0), i.e. by forcing the "depth" component of the vector to remain at the origin.</p>
 <p>It immediately follows that the two-dimensional analogue of a plane is a line: a plane perpendicular to the XY-plane where we only care for points with z=0. Given this, it also immediately follows that the analogue of the above cross product in two dimensions degrades to a unary operation: we only need to draw the line and we can immediately draw a perpendicular line with a set square. Since we don't want to draw the result but rather calculate it, we can simply do so by expanding our (x,y) coordinates to (x,y,0) coordinates and multiplying with our familiar "back" vector (0,0,1), i.e. we consider a plane along the "back" vector that is angled like our (x,y,0) vector. The result will obviously also lie on the XY-plane, as it must be perpendicular to the "back" vector, and we can then discard the z-value to get back to a 2D vector. The calculations look like this:</p>
-<div class="calculations">
-<span><span>(x,y,0)</span> x <span>(0,0,1)</span> = ... =
-(y*1 - 0*0) * <span>right</span> +
-(x*1 - 0*0) * (-1) * <span>up</span> +
-(x*0 - 0*y) * <span>back</span> =
-y * <span>right</span> -
-x * <span>up</span></span>
-</div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mfenced><mtable>
+<mtr><mtd><mi>x</mi></mtd></mtr>
+<mtr><mtd><mi>y</mi></mtd></mtr>
+<mtr><mtd><mn>0</mn></mtd></mtr>
+</mtable></mfenced>
+<mo>&#x00d7;</mo>
+<mfenced><mtable>
+<mtr><mtd><mi>0</mi></mtd></mtr>
+<mtr><mtd><mi>0</mi></mtd></mtr>
+<mtr><mtd><mn>1</mn></mtd></mtr>
+</mtable></mfenced>
+<mo>=</mo>
+<mo>(</mo>
+<mi>y</mi>
+<mo>&#x00d7;</mo>
+<mn>1</mn>
+<mo>-</mo>
+<mn>0</mn>
+<mo>&#x00d7;</mo>
+<mn>0</mn>
+<mo>)</mo>
+<mo>&#x00d7;</mo>
+<mi mathvariant="bold">right</mi>
+<mo>+</mo>
+<mo>(</mo>
+<mi>x</mi>
+<mo>&#x00d7;</mo>
+<mn>1</mn>
+<mo>-</mo>
+<mn>0</mn>
+<mo>&#x00d7;</mo>
+<mn>0</mn>
+<mo>)</mo>
+<mo>&#x00d7;</mo>
+<mo>-</mo>
+<mn>1</mn>
+<mo>&#x00d7;</mo>
+<mi mathvariant="bold">up</mi>
+<mo>+</mo>
+<mo>(</mo>
+<mi>x</mi>
+<mo>&#x00d7;</mo>
+<mn>0</mn>
+<mo>-</mo>
+<mn>0</mn>
+<mo>&#x00d7;</mo>
+<mi>y</mi>
+<mo>)</mo>
+<mo>&#x00d7;</mo>
+<mi mathvariant="bold">back</mi>
+<mo>=</mo>
+<mi>y</mi>
+<mo>&#x00d7;</mo>
+<mi mathvariant="bold">right</mi>
+<mo>-</mo>
+<mi>x</mi>
+<mo>&#x00d7;</mo>
+<mi mathvariant="bold">up</mi>
+</mrow></math>
 <p>As a simple test, we can confirm this by calculating a normal of the (1,0) vector:</p>
-<div class="calculations">
-<span><span>(1,0,0)</span> x <span>(0,0,1)</span> = ... =
-0 * <span>right</span> -
-1 * <span>up</span> =
-- <span>(0,1,0)</span> =
-<span>(0,-1,0)</span></span>
-</div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mfenced><mtable>
+<mtr><mtd><mi>1</mi></mtd></mtr>
+<mtr><mtd><mi>0</mi></mtd></mtr>
+<mtr><mtd><mn>0</mn></mtd></mtr>
+</mtable></mfenced>
+<mo>&#x00d7;</mo>
+<mfenced><mtable>
+<mtr><mtd><mi>0</mi></mtd></mtr>
+<mtr><mtd><mi>0</mi></mtd></mtr>
+<mtr><mtd><mn>1</mn></mtd></mtr>
+</mtable></mfenced>
+<mo>=</mo>
+<mi>0</mi>
+<mo>&#x00d7;</mo>
+<mi mathvariant="bold">right</mi>
+<mo>-</mo>
+<mi>1</mi>
+<mo>&#x00d7;</mo>
+<mi mathvariant="bold">up</mi>
+<mo>=</mo>
+<mo>-</mo>
+<mfenced><mtable>
+<mtr><mtd><mi>0</mi></mtd></mtr>
+<mtr><mtd><mi>1</mi></mtd></mtr>
+<mtr><mtd><mn>0</mn></mtd></mtr>
+</mtable></mfenced>
+<mo>=</mo>
+<mfenced><mtable>
+<mtr><mtd><mi>0</mi></mtd></mtr>
+<mtr><mtd><mrow><mo>-</mo><mi>1</mi></mrow></mtd></mtr>
+<mtr><mtd><mn>0</mn></mtd></mtr>
+</mtable></mfenced>
+</mrow></math>
 <p>By converting this back to 2D coordinates, we get the vector (0,-1), which is obviously a normal of (1,0).</p>
 <h1>Normals in Four Dimensions</h1>
 <p>You may have noticed that I've used a rather curious definition of the cross product in the original 3D case. Your average school teacher probably never even mentioned matrices or determinants when talking about the cross product. When talking about cross products, teachers usually introduce the method of "criss-crossing" the values of the two vectors. In the 3D case the result is the same, but this method fails miserably when trying to apply the technique in 4D. By now you should have an idea why that is: in the 4D analogue to a plane through the origin, we actually need to combine three vectors to get one single perpendicular vector. Think about it: if you tried to get normals with two vectors in 4D, you still only fix that plane with two vectors like in the 3D case. Since 4D space has an additional degree of freedom, the two points you got with the 3D method will then span a whole new plane of perpendicular vectors. To get down to our two candidates, we now have to do what we did in the 2D case: take our plane and introduce another vector.</p>
 <p>Unlike the "criss-cross" method you learned in school, the matrix method above scales rather well. Let's start with the last column, which contains our base vectors. In 4D space, we obviously have four bae vectors: the familiar "right" (1,0,0,0), "up" (0,1,0,0) and "back" (0,0,1,0), and the new one: (0,0,0,1), which I like to call "charm" (think quarks...). Since our last column contains four vectors, we will need to construct a 4x4 matrix in order to be able to calculate a determinant. If we didn't know already, this would be yet another clue that our 4D "cross product" is in fact a trinary operation. We'll call the first three column vectors a, b and c, and the resulting 4D "cross product" formula is simply:</p>
-<div class="calculations">
-<span><span>a</span> x <span>b</span> x <span>c</span> :=</span>
-<table class="matrix-determinant-4">
-<tr>
-<td>a<sub>0</sub></td>
-<td>b<sub>0</sub></td>
-<td>c<sub>0</sub></td>
-<td>right</td>
-</tr>
-<tr>
-<td>a<sub>1</sub></td>
-<td>b<sub>1</sub></td>
-<td>c<sub>1</sub></td>
-<td>up</td>
-</tr>
-<tr>
-<td>a<sub>2</sub></td>
-<td>b<sub>2</sub></td>
-<td>c<sub>2</sub></td>
-<td>back</td>
-</tr>
-<tr>
-<td>a<sub>3</sub></td>
-<td>b<sub>3</sub></td>
-<td>c<sub>3</sub></td>
-<td>charm</td>
-</tr>
-</table>
-</div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi mathvariant="bold">a</mi>
+<mo>&#x00d7;</mo>
+<mi mathvariant="bold">b</mi>
+<mo>&#x00d7;</mo>
+<mi mathvariant="bold">c</mi>
+<mo>=</mo>
+<mfenced open="|" close="|"><mtable>
+<mtr>
+<mtd><msub><mi>a</mi><mn>0</mn></msub></mtd>
+<mtd><msub><mi>b</mi><mn>0</mn></msub></mtd>
+<mtd><msub><mi>c</mi><mn>0</mn></msub></mtd>
+<mtd><mi mathvariant="bold">right</mi></mtd>
+</mtr>
+<mtr>
+<mtd><msub><mi>a</mi><mn>1</mn></msub></mtd>
+<mtd><msub><mi>b</mi><mn>1</mn></msub></mtd>
+<mtd><msub><mi>c</mi><mn>1</mn></msub></mtd>
+<mtd><mi mathvariant="bold">up</mi></mtd>
+</mtr>
+<mtr>
+<mtd><msub><mi>a</mi><mn>2</mn></msub></mtd>
+<mtd><msub><mi>b</mi><mn>2</mn></msub></mtd>
+<mtd><msub><mi>c</mi><mn>2</mn></msub></mtd>
+<mtd><mi mathvariant="bold">back</mi></mtd>
+</mtr>
+<mtr>
+<mtd><msub><mi>a</mi><mn>3</mn></msub></mtd>
+<mtd><msub><mi>b</mi><mn>3</mn></msub></mtd>
+<mtd><msub><mi>c</mi><mn>3</mn></msub></mtd>
+<mtd><mi mathvariant="bold">charm</mi></mtd>
+</mtr>
+</mtable></mfenced>
+</mrow></math>
 <p>You'll want to use the Laplace expansion like we did above to solve the vector-vector multiplication problem. The transformations work exactly like they did above. One thing to note, however, is that the resulting vector may seem to be the one "on the other side". For example, if you calculated (1,0,0,0) x (0,1,0,0) x (0,0,1,0), you'd actually get (0,0,0,-1), as the Laplace expansion is alternating. This quite likely won't matter for your typical use case. If it does matter, you could "correct" this by using this latter "strange" vector rather than the "charm" vector as the fourth base. Remember that base vectors do not necessarily have to be all zeroes and ones.</p>
 <h1>The "Generalised Cross Product" in N Dimensions</h1>
 <p>With the 4D version above, the generalised version is now very easy to deduce.</p>
 <p>In an n-dimensional vector space V, with n larger than 2 and with the base vectors b<sup>1</sup> ... b<sup>n</sup>, let there be (n-1) linearly independent vectors v<sup>1</sup> ... v<sup>n-1</sup>. A normal vector n of these vectors is then:</p>
-<div class="calculations">
-<span><span>n</span> =</span>
-<span><span>v<sup>1</sup></span> x <span>v<sup>2</sup></span> x ... x <span>v<sup>(n-1)</sup></span> :=</span>
-<table class="matrix-determinant-5">
-<tr>
-<td>v<sup>1</sup><sub>0</sub></td>
-<td>v<sup>2</sup><sub>0</sub></td>
-<td>...</td>
-<td>v<sup>(n-1)</sup><sub>0</sub></td>
-<td>b<sup>1</sup></td>
-</tr>
-<tr>
-<td>v<sup>1</sup><sub>1</sub></td>
-<td>v<sup>2</sup><sub>1</sub></td>
-<td>...</td>
-<td>v<sup>(n-1)</sup><sub>1</sub></td>
-<td>b<sup>2</sup></td>
-</tr>
-<tr>
-<td>v<sup>1</sup><sub>2</sub></td>
-<td>v<sup>2</sup><sub>2</sub></td>
-<td>...</td>
-<td>v<sup>(n-1)</sup><sub>2</sub></td>
-<td>b<sup>3</sup></td>
-</tr>
-<tr>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-</tr>
-<tr>
-<td>v<sup>1</sup><sub>(n-1)</sub></td>
-<td>v<sup>2</sup><sub>(n-1)</sub></td>
-<td>...</td>
-<td>v<sup>(n-1)</sup><sub>(n-1)</sub></td>
-<td>b<sup>n</sup></td>
-</tr>
-</table>
-</div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi mathvariant="bold">n</mi>
+<mo>=</mo>
+<msup><mi mathvariant="bold">v</mi><mn mathvariant="bold">1</mn></msup>
+<mo>&#x00d7;</mo>
+<msup><mi mathvariant="bold">v</mi><mn mathvariant="bold">2</mn></msup>
+<mo>&#x00d7;</mo>
+<mo>...</mo>
+<mo>&#x00d7;</mo>
+<msup><mi mathvariant="bold">v</mi><mrow><mi mathvariant="bold">n</mi><mo mathvariant="bold">-</mo><mn mathvariant="bold">1</mn></mrow></msup>
+<mo>=</mo>
+<mfenced open="|" close="|"><mtable>
+<mtr>
+<mtd><msubsup><mi>v</mi><mn>0</mn><mn>1</mn></msubsup></mtd>
+<mtd><msubsup><mi>v</mi><mn>0</mn><mn>2</mn></msubsup></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><msubsup><mi>v</mi><mn>0</mn><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msubsup></mtd>
+<mtd><msup><mi mathvariant="bold">b</mi><mn mathvariant="bold">1</mn></msup></mtd>
+</mtr>
+<mtr>
+<mtd><msubsup><mi>v</mi><mn>1</mn><mn>1</mn></msubsup></mtd>
+<mtd><msubsup><mi>v</mi><mn>1</mn><mn>2</mn></msubsup></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><msubsup><mi>v</mi><mn>1</mn><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msubsup></mtd>
+<mtd><msup><mi mathvariant="bold">b</mi><mn mathvariant="bold">2</mn></msup></mtd>
+</mtr>
+<mtr>
+<mtd><msubsup><mi>v</mi><mn>2</mn><mn>1</mn></msubsup></mtd>
+<mtd><msubsup><mi>v</mi><mn>2</mn><mn>2</mn></msubsup></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><msubsup><mi>v</mi><mn>2</mn><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msubsup></mtd>
+<mtd><msup><mi mathvariant="bold">b</mi><mn mathvariant="bold">3</mn></msup></mtd>
+</mtr>
+<mtr>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mtext mathvariant="bold">...</mtext></mtd>
+</mtr>
+<mtr>
+<mtd><msubsup><mi>v</mi><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow><mn>1</mn></msubsup></mtd>
+<mtd><msubsup><mi>v</mi><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow><mn>2</mn></msubsup></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><msubsup><mi>v</mi><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msubsup></mtd>
+<mtd><msup><mi mathvariant="bold">b</mi><mi mathvariant="bold">n</mi></msup></mtd>
+</mtr>
+</mtable></mfenced>
+</mrow></math>
 <p>Yes, I know, it's scary at first. But it's really quite straightforward as soon as you've grokked the general idea and the 4D case.</p>
 <h1>Doing it in C++</h1>
 <p>Since I'm a computer scientist, to me the maths part is not necessarily the most interesting part about this. What I really like to have instead is code I can use and play with. I ended up implementing this exact method as a C++ template. You can find the code for this template, along with the other pieces of code it requires in this site's git repository. <a href="source-code">See here for details on how to retrieve this repository</a>. The corresponding excerpt from ef.gy/euclidian.h looks like this:</p>

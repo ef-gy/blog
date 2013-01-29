@@ -1,7 +1,11 @@
-*
+html, body, h1, h2, h3, h4, h5, h6, p, table, tr, td, ul, li, div, span, pre, code, a, em, blockquote
 {
 	padding: 0;
 	margin: 0;
+}
+
+*
+{
 	font-family: sans-serif;
 }
 
@@ -655,45 +659,12 @@ body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + 
     background: #dfdfff;
 }
 
-.calculations table,
-.calculations span,
-.calculations
-{
-    display: inline-block;
-    vertical-align: middle;
-    margin: 0.5em;
-}
-
-.calculations span span
-{
-    vertical-align: baseline;
-    font-weight: bold;
-    margin: 0;
-}
-
-.calculations,
 math
 {
     border-left: 0.2em solid #f0f;
     padding-left: 0.5em;
     margin-left: 1em;
-}
-
-math
-{
     display: block;
-}
-
-.matrix-determinant,
-.matrix
-{
-    border-left: 0.1em solid black;
-    border-right: 0.1em solid black;
-}
-
-.matrix
-{
-    border-radius: 0.3em;
 }
 
 ul#social
@@ -922,7 +893,6 @@ ul#meta li#published .day
     h1 + ul:before
     {
         left: 1em;
-        display: none;
     }
 
     div.figure
@@ -1018,6 +988,14 @@ ul#meta li#published .day
     body#feed h2 + ul li
     {
         width: 70%;
+    }
+}
+
+@media (max-width: 45em)
+{
+    h1 + ul:before
+    {
+        display: none;
     }
 }
 
