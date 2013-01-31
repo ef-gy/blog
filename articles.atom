@@ -16,12 +16,11 @@
   <entry source:local="embedding-tweets-on-websites-with-xslt.xhtml" />
   <entry source:local="using-nginx-as-a-proxy-server.xhtml" />
   <entry source:local="stylesheet-magic:keeping-tabs-with-:checked.xhtml" />
-  <entry source:local="linear-algebra:normal-vectors-in-higher-dimensional-spaces.xhtml" />
-  <entry source:local="linear-algebra:homogeneous-coordinates.xhtml" />
   <entry source:local="eye-cancer.xhtml" />
   <entry source:local="form-over-function.xhtml" />
   <entry source:local="false-advertising.xhtml" />
   <entry source:local="eye-cancer-ii.xhtml" />
   <entry source:local="site-news:tor-and-ipv6.xhtml" />
   <entry source:local="site-news:einit-kyuba-archives.xhtml" />
+  <source:merge local="mathematics.atom"/>
 </feed>
