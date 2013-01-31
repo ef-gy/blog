@@ -18,22 +18,16 @@
 <p>I'm going to assume that you've already set up nginx to serve both plain XHTML and Atom files with your nginx in some way. You're probably post-processing plain XHTML by applying your website's style.</p>
 <p>If you're using a web server other than nginx, you'll have to figure out how to pass parameters from your server to its XSLT processor and how to handle internal redirects for yourself.</p>
 <p>Before we jump into the gory details, we'll have to decide on a kind of schema that your URLs will follow. I'm using the following throughout this article - you'll have to adjust your regular expressions in the configuration if your desired scheme will be different:</p>
-<ul>
-<li>/<em>(name)</em></li>
-<ul>
-<li>will get redirected by the server to /<em>(format)</em>/<em>(name)</em> based on what the client claims to accept</li>
-</ul>
-<li>/<em>(format)</em>/<em>(name)</em></li>
-<ul>
-<li>will serve files in <em>(format)</em> - either XHTML or plain HTML</li>
-<li>will serve <em>(name)</em>.xhtml if it exists and fall back to <em>(name)</em>.atom or a 404.</li>
-</ul>
-<li>/<em>(format)</em>/<em>(name)</em>@<em>(catalog)</em></li>
-<ul>
-<li>will serve files in <em>(format)</em> - either XHTML or plain HTML</li>
-<li>will serve a node <em>(name)</em> from <em>(catalog)</em>.atom, if that .atom file exists.</li>
-</ul>
-</ul>
+<dl>
+<dt>/<em>(name)</em></dt>
+<dd>will get redirected by the server to /<em>(format)</em>/<em>(name)</em> based on what the client claims to accept</dd>
+<dt>/<em>(format)</em>/<em>(name)</em></dt>
+<dd>will serve files in <em>(format)</em> - either XHTML or plain HTML</dd>
+<dd>will serve <em>(name)</em>.xhtml if it exists and fall back to <em>(name)</em>.atom or a 404.</dd>
+<dt>/<em>(format)</em>/<em>(name)</em>@<em>(catalog)</em></dt>
+<dd>will serve files in <em>(format)</em> - either XHTML or plain HTML</dd>
+<dd>will serve a node <em>(name)</em> from <em>(catalog)</em>.atom, if that .atom file exists.</dd>
+</dl>
 <p>Obviously I don't like file name extensions - at least not as part of web URLs. They don't really serve any purpose, and in our case it's quite a lot easier if we don't have to deal with them.</p>
 <p>The important part in the schema above is choosing some symbol to separate the 'virtual' parts of the URL and the actual file name for the Atom you're serving. I chose '@' because I'm not using it in any file names, and because the meaning of 'article-foo@bundle' seems intuitive. It's really up to you what separator you choose - except you can't use '#' as that is processed on the client and not sent to the server. '/' would probably not be a good idea either, as it has special semantics for relative links.</p>
 <p>By the way, don't forget that this website is actually implementing the technique I'm describing here, so if you should get stuck you could always just <a href="source-code">check out this site's source code</a>.</p>
