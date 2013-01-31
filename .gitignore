@@ -6,3 +6,4 @@
 *.out
 *.sqlite3
 fortune
+.build
