@@ -7,3 +7,4 @@
 *.sqlite3
 fortune
 .build
+pdf

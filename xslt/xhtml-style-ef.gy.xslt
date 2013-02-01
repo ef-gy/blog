@@ -54,6 +54,9 @@
     <xsl:variable name="post" select="$entries[atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name'][@content=$myname]]/following-sibling::*[1]"/>
     <xsl:copy>
       <link href="/css/ef.gy" rel="stylesheet" type="text/css" />
+      <xsl:if test="not(($collection = 'fortune') or ($collection = 'about') or ($collection = 'source-code'))">
+        <link rel="alternate" type="application/pdf" href="/pdf/{$collection}"/>
+      </xsl:if>
       <xsl:apply-templates select="@*|node()" />
       <xsl:choose>
         <xsl:when test="//xhtml:link[@href='http://ef.gy/atom/site']" />
