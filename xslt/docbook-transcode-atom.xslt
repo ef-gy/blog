@@ -50,6 +50,12 @@
     </title>
   </xsl:template>
 
+  <xsl:template match="atom:subtitle">
+    <subtitle>
+      <xsl:apply-templates select="@*|node()"/>
+    </subtitle>
+  </xsl:template>
+
   <xsl:template match="atom:link">
     <bibliosource class="uri">
       <xsl:value-of select="@href"/>
@@ -113,6 +119,7 @@
     <info>
       <xsl:apply-templates
         select="$self/atom:title
+              | $self/atom:subtitle
               | $self/atom:link
               | $self/atom:published
               | $self/atom:updated
@@ -128,6 +135,7 @@
     <info>
       <xsl:apply-templates
         select="$self/atom:title
+              | $self/atom:subtitle
               | $self/atom:link
               | $self/atom:published
               | $self/atom:updated
@@ -154,6 +162,7 @@
     <xsl:apply-templates
         select="($self/node() | node())
             [   not (self::atom:title)
+            and not (self::atom:subtitle)
             and not (self::atom:link)
             and not (self::atom:published)
             and not (self::atom:updated)
