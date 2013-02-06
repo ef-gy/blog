@@ -35,7 +35,7 @@
     <xsl:copy>
       <xsl:copy-of select="@*"/>
       <xsl:for-each select="atom:entry">
-        <xsl:sort select="atom:published" order="descending"/>
+        <xsl:sort select="atom:published | atom:updated[not(parent::node()/atom:published)]" order="descending"/>
         <xsl:copy-of select="."/>
       </xsl:for-each>
     </xsl:copy>
@@ -59,7 +59,7 @@
       <body id="feed">
         <xsl:if test="$target='home' or $target=''">
           <xsl:for-each select="atom:entry">
-            <xsl:sort select="atom:published" order="descending"/>
+            <xsl:sort select="atom:published | atom:updated[not(parent::node()/atom:published)]" order="descending"/>
             <xsl:if test="position() = 1">
               <div id="latest"><h1><xsl:value-of select="atom:content/xhtml:html/xhtml:head/xhtml:title"/></h1>
               <xsl:for-each select="atom:content/xhtml:html/xhtml:body/xhtml:*">
@@ -88,7 +88,7 @@
               </xsl:attribute>read more...</a></li></ul>
               <table>
                 <tr><th>in</th><td><xsl:value-of select="atom:category[1]/@term"/></td></tr>
-                <tr><th>on</th><td><xsl:value-of select="atom:published"/></td></tr>
+                <tr><th>on</th><td><xsl:value-of select="(atom:published | atom:updated)[1]"/></td></tr>
                 <tr><th>by</th><td><xsl:value-of select="atom:author/atom:name"/></td></tr>
               </table></div>
             </xsl:if>
@@ -99,7 +99,7 @@
           <h1><xsl:value-of select="atom:category/@term" /></h1>
           <ul>
             <xsl:for-each select="key('entry-by-category', atom:category/@term)">
-              <xsl:sort select="atom:published" order="descending"/>
+              <xsl:sort select="atom:published | atom:updated[not(parent::node()/atom:published)]" order="descending"/>
               <li>
                 <a>
                   <xsl:attribute name="href">

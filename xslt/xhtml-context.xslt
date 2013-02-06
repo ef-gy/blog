@@ -25,7 +25,7 @@
     <head>
       <xsl:apply-templates select="@*|node()" />
       <xsl:if test="xhtml:meta[@name='unix:name'] and (((string-length($target) = 0) and not (/atom:feed)) or (xhtml:meta[@name='unix:name']/@content = $target))"><meta name="context">
-        <xsl:copy-of select="document(concat($documentRoot,'/site+archives.atom'))/atom:feed" />
+        <xsl:copy-of select="document(concat($documentRoot,'/everything.atom'))/atom:feed" />
       </meta></xsl:if>
     </head>
   </xsl:template>
