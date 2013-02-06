@@ -38,12 +38,14 @@ server {
     rewrite ^(.*)/(einit:[^@]+)@([^@]*archives)$ $1/$2@drupal-einit permanent;
     rewrite ^(.*)/([^@]+)@([^@]+)$ $1/$3;
 
-    location /robots.txt {
-        try_files invalid =404;
+    location = /robots.txt {
     }
-
-    location /favicon.ico {
-        try_files invalid =404;
+    location = /favicon.ico {
+    }
+    location = /sitemap.xml {
+		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/atom-style-ef.gy.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/sitemap-transcode-atom.xslt;
     }
 
 	location / {

@@ -1,0 +1,4 @@
+Sitemap: http://ef.gy/sitemap.xml
+
+User-agent: *
+Disallow:
