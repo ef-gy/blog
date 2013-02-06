@@ -1,20 +1,97 @@
 root=http://ef.gy/
 name=Magnus Achim Deininger
-indices=download/index.atom download/kyuba/index.atom
+INDICES=download/index.atom download/kyuba/index.atom
+BUILD:=.build
+BUILDD:=$(BUILD)/.volatile
+DOWNLOAD:=$(BUILD)/download
+DATABASES:=rogue.sqlite3
+XHTMLS:=$(wildcard *.xhtml)
+XHTMLESC:=$(subst :,\:,$(XHTMLS))
+DOCUMENTS:=$(filter-out source-code.xhtml about.xhtml,$(wildcard *.xhtml) $(wildcard *.atom))
+BUILDRAW:=$(addprefix $(BUILD)/,$(basename $(DOCUMENTS)))
+DOCBOOKS:=$(addsuffix .docbook,$(BUILDRAW))
+DOCBOOKESC:=$(subst :,\:,$(DOCBOOKS))
+PDFS:=$(addsuffix .pdf,$(BUILDRAW))
+PDFESC:=$(subst :,\:,$(PDFS))
+PDFDEST:=pdf
+XSLTPROC:=xsltproc
+XSLTPROCARGS:=--stringparam baseURI "http://ef.gy" --stringparam documentRoot "$$(pwd)" --param licence "document('$$(pwd)/$(BUILD)/licence.xml')"
+
+XHTMLSTRICT:=/usr/share/xml/xhtml-relaxng/xhtml-strict.rng
 
 #all: fortune js/tesseract.js
 all: fortune index databases
 
-databases: rogue.sqlite3
+install: install-pdf
+uninstall: uninstall-pdf
+validate: validate-docbook validate-xhtml
+
+docbooks: $(DOCBOOKESC)
+pdfs: $(PDFESC)
+
+clean:
+	rm -f $(DATABASES) $(INDICES) $(PDFS) $(DOCBOOKS)
+
+scrub: clean
+	rm -rf $(BUILD)
+
+$(PDFDEST)/.volatile:
+	mkdir -p $(PDFDEST); true
+
+$(BUILDD):
+	mkdir -p $(BUILD); true
+	touch $(BUILDD)
+
+$(DOWNLOAD)/.volatile:
+	mkdir $(DOWNLOAD); true
+	touch $(DOWNLOAD)/.volatile
+
+$(DOWNLOAD)/docbook-5.0.zip: $(DOWNLOAD)/.volatile
+	wget 'http://www.docbook.org/xml/5.0/docbook-5.0.zip' -cO $@
+	touch $@
+
+$(BUILD)/docbook-5.0/VERSION: $(DOWNLOAD)/docbook-5.0.zip
+	unzip $< -d $(BUILD)
+	touch $@
+
+install-pdf: $(PDFDEST)/.volatile pdfs
+	cp $(PDFS) $(PDFDEST)/
+
+uninstall-pdf:
+	rm -f $(addprefix $(PDFDEST)/,$(notdir $(PDFS)))
+
+validate-docbook: $(DOCBOOKESC) $(BUILD)/docbook-5.0/VERSION
+	for i in $^; do ([ "$$(basename $$i)" != "VERSION" ] && (jing -C $(BUILD)/docbook-5.0/catalog.xml $(BUILD)/docbook-5.0/rng/docbook.rng "$$i" || echo "validation failed for '$$i'")) || true; done; true
+
+validate-xhtml: $(XHTMLESC)
+	for i in $^; do cp "$$i" "$(BUILD)/xhtml-tmp.xml"; jing $(XHTMLSTRICT) "$(BUILD)/xhtml-tmp.xml" || echo "validation failed for '$$i'"; done; true
+
+$(BUILD)/licence.xml: COPYING
+	echo "<?xml version='1.0' encoding='utf-8'?><legalnotice xmlns='http://docbook.org/ns/docbook' version='5.0'><para><![CDATA[" > $@
+	sed -e "s:^$$:]]></para><para><!\[CDATA\[:" < $< >> $@
+	echo "]]></para></legalnotice>" >> $@
+
+$(BUILD)/%.docbook: %.xhtml $(BUILDD) $(BUILD)/licence.xml
+	$(XSLTPROC) $(XSLTPROCARGS) xslt/docbook-transcode-xhtml.xslt $< > $@
+
+$(BUILD)/%.docbook: %.atom $(BUILDD) $(BUILD)/licence.xml
+	$(XSLTPROC) $(XSLTPROCARGS) xslt/atom-merge.xslt $< |\
+		$(XSLTPROC) $(XSLTPROCARGS) xslt/docbook-transcode-xhtml.xslt - |\
+		$(XSLTPROC) $(XSLTPROCARGS) xslt/docbook-transcode-atom.xslt - > $@
+
+$(BUILD)/%.pdf: $(BUILD)/%.docbook $(BUILDD)
+	dblatex --pdf $< -o $@
+
+databases: $(DATABASES)
 
 rogue.sqlite3: src/rogue.sql src/rogue-data.sql
 	rm -f rogue.sqlite3
 	sqlite3 rogue.sqlite3 < src/rogue.sql
 	sqlite3 rogue.sqlite3 < src/rogue-data.sql
 
-index: $(indices)
+index: $(INDICES)
 
-$(indices): Makefile $(filter-out %index.atom, $(wildcard download/*))
+$(INDICES): Makefile $(filter-out %index.atom, $(wildcard download/*))
 	echo '<?xml version="1.0" encoding="utf-8"?>'\
 		'<feed xmlns="http://www.w3.org/2005/Atom">'\
 		'<id>$(root)$@</id><title>/$(subst /index.atom,,$@)</title><link rel="self" href="$(root)atom/$(subst .atom,,$@)"/>'\

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom" xmlns:source="http://ef.gy/2012/source">
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:source="http://ef.gy/2012/source" xml:id="archives">
   <title>einit.org and kyuba.org Archives</title>
-  <link href="http://ef.gy/atom/archives" rel="self" />
-  <link href="http://ef.gy/" />
 
   <source:merge local="drupal-einit.atom"/>
   <source:merge local="drupal-kyuba.atom"/>

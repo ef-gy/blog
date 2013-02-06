@@ -23,14 +23,22 @@
   </xsl:template>
 
   <xsl:template match="/atom:feed">
-    <xsl:copy>
+    <feed>
+      <xsl:apply-templates select="@*"/>
       <xsl:choose>
-        <xsl:when test="atom:id" />
+        <xsl:when test="atom:id"/>
 
-        <xsl:otherwise>
-          <id><xsl:value-of select="atom:link[@rel='self']/@href" /></id>
-        </xsl:otherwise>
+        <xsl:when test="@xml:id">
+          <id>http://ef.gy/atom/<xsl:value-of select="@xml:id"/></id>
+        </xsl:when>
       </xsl:choose>
+
+      <xsl:if test="@xml:id">
+        <link href="http://ef.gy/atom/{@xml:id}" rel="self" />
+        <link href="http://ef.gy/pdf/{@xml:id}" rel="alternate" type="application/pdf" />
+        <link href="http://ef.gy/rss/{@xml:id}" rel="alternate" type="application/rss+xml" />
+        <link href="http://ef.gy/{@xml:id}" rel="alternate" type="application/xhtml+xml" />
+      </xsl:if>
 
       <xsl:choose>
         <xsl:when test="atom:updated" />
@@ -46,7 +54,7 @@
       </xsl:choose>
 
       <xsl:apply-templates select="node()"/>
-    </xsl:copy>
+    </feed>
   </xsl:template>
 
   <xsl:template match="/atom:feed/atom:title">

@@ -46,15 +46,15 @@
     <xsl:when test="(string-length($target) > 0) and atom:entry/atom:content/xhtml:html[xhtml:head/xhtml:meta/@name='unix:name'][xhtml:head/xhtml:meta/@content=str:decode-uri($target)]"><xsl:copy-of select="atom:entry/atom:content/xhtml:html[xhtml:head/xhtml:meta/@name='unix:name'][xhtml:head/xhtml:meta/@content=str:decode-uri($target)]"/></xsl:when>
     <xsl:otherwise><html>
       <head>
+        <title><xsl:value-of select="atom:title" /></title>
         <xsl:choose>
-          <xsl:when test="atom:title='http://ef.gy/ Articles'">
-            <title>Articles</title>
+          <xsl:when test="@xml:id">
+            <link rel="alternate" type="application/atom+xml" href="http://ef.gy/atom/{@xml:id}" />
           </xsl:when>
-          <xsl:otherwise>
-            <title><xsl:value-of select="atom:title" /></title>
-          </xsl:otherwise>
+          <xsl:when test="atom:link[@rel='self']/@href">
+            <link rel="alternate" type="application/atom+xml" href="{atom:link[@rel='self']/@href}" />
+          </xsl:when>
         </xsl:choose>
-        <link rel="alternate" type="application/atom+xml" href="{atom:link[@rel='self']/@href}" />
       </head>
       <body id="feed">
         <xsl:if test="$target='home' or $target=''">
