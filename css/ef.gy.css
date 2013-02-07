@@ -90,6 +90,7 @@ h1 + ul
     text-align: right;
     font-size: 1em;
     font-weight: bold;
+    box-shadow: 0 0 0.5em 0.35em #111;
 }
 
 h1 + ul:before
@@ -682,6 +683,12 @@ ul#social:hover
   color: #fff;
   overflow: visible;
 }
+ul#social:hover:before
+{
+  display: inline-block;
+  padding: 0 0.5em;
+  content: "share on ...";
+}
 ul#social:hover li
 {
   position: relative;
@@ -702,7 +709,7 @@ ul#social li
 ul#social li a:before
 {
   display: inline-block;
-  width: 1.5em;
+  width: 2em;
   content: "t";
   color: #fff;
 }
@@ -714,7 +721,6 @@ ul#social li a
   padding: 0.9em 0.5em 0.9em 1.5em;
   overflow: hidden;
   color: transparent;
-  text-transform: lowercase;
   text-decoration: none;
 }
 ul#social li:hover
@@ -759,6 +765,15 @@ ul#social li.share + li + li + li + li
 ul#social li.share + li + li + li + li a:before
 {
   content: "g+";
+}
+ul#social li.share + li + li + li + li + li
+{
+  background: rgb(235,72,35);
+  color: #fff;
+}
+ul#social li.share + li + li + li + li + li a:before
+{
+  content: "su";
 }
 ul#meta
 {
