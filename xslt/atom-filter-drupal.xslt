@@ -53,6 +53,14 @@
     </xsl:copy>
   </xsl:template>
 
+  <xsl:template match="atom:name/text()[.='nklein']">Nadja Klein</xsl:template>
+  <xsl:template match="xhtml:meta[@name='author'][@content='nklein']">
+    <xsl:copy>
+      <xsl:attribute name="name">author</xsl:attribute>
+      <xsl:attribute name="content">Nadja Klein</xsl:attribute>
+    </xsl:copy>
+  </xsl:template>
+
   <xsl:template match="atom:name/text()[.='creidiki']">Leonardo Valeri Manera</xsl:template>
   <xsl:template match="xhtml:meta[@name='author'][@content='creidiki']">
     <xsl:copy>

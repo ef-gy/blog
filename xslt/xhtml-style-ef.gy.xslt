@@ -5,6 +5,7 @@
               xmlns:social="http://ef.gy/2012/social"
               xmlns:atom="http://www.w3.org/2005/Atom"
               xmlns:data="http://ef.gy/2013/data"
+              xmlns:math="http://www.w3.org/1998/Math/MathML"
               xmlns="http://www.w3.org/1999/xhtml"
               exclude-result-prefixes="xhtml"
               version="1.0">
@@ -111,7 +112,7 @@
   </xsl:template>
 
   <xsl:template match="xhtml:body">
-    <xsl:copy>
+    <body>
       <xsl:apply-templates select="@*" />
       <h1><xsl:value-of select="/xhtml:html/xhtml:head/xhtml:title"/></h1>
       <ul>
@@ -146,6 +147,9 @@
           <li id="collection"><a href="{$collection}"><xsl:value-of select="$collection"/></a></li>
         </xsl:if>
       </ul>
+      <xsl:if test="descendant::math:math">
+        <p id="maths-note">Some of the content on this page is in MathML. If your browser has trouble displaying any mathematical notation below you might find the <a href="/pdf/{$collection}">PDF transcript of this page</a> more helpful. There is also a <a href="/pdf/mathematics">collection of mathematical articles on this site</a>, which should include this one.</p>
+      </xsl:if>
       <xsl:if test="(../xhtml:head/xhtml:meta[@name='description']/@content) and not(xhtml:div[@class='figure']/xhtml:h1)">
         <div class="figure auto-abstract">
           <h2>Summary</h2>
@@ -172,7 +176,7 @@
           </address></xsl:otherwise>
         </xsl:choose>
       </xsl:if>
-    </xsl:copy>
+    </body>
   </xsl:template>
 
   <xsl:template match="xhtml:meta[@name='unix:name']" />

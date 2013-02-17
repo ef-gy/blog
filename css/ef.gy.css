@@ -22,6 +22,7 @@ body
 	padding: 3.5em 2em 2em 2em;
     border-left: 0.1em solid #222;
     border-right: 0.1em solid #222;
+    box-shadow: 0 0 0.5em 0.35em #111;
 }
 
 h1, h2, h3, h4, h5, h6
@@ -90,7 +91,7 @@ h1 + ul
     text-align: right;
     font-size: 1em;
     font-weight: bold;
-    box-shadow: 0 0 0.5em 0.35em #111;
+    box-shadow: 0 0 0.5em 0.15em #111;
 }
 
 h1 + ul:before
@@ -371,7 +372,6 @@ body#feed
     vertical-align: top;
     margin: 0 4em 0 4em;
     line-height: 1.25em;
-    text-align: right;
 }
 
 body#feed h1
@@ -385,54 +385,65 @@ body#feed *
     text-align: left;
 }
 
+body#feed:after
+{
+    visibility: hidden;
+    height: 0;
+    display: block;
+    content: " ";
+    clear: both;
+}
+
 body#feed h1 + ul
 {
     text-align: right;
 }
 
-body#feed h2 + ul
+body#feed ul + ul
 {
     display: inline;
     margin: 0;
     padding: 0;
 }
 
-body#feed h2 + ul li
+body#feed ul + ul li
 {
     display: inline-block;
-    width: 18em;
-    height: 12em;
-    padding: 1em;
-    margin: 0.5em;
-    border: 0.1em solid #ccc;
+    width: 46%;
+    height: auto;
+    margin: 1%;
+    padding: 1%;
     line-height: 1.125em;
+}
+
+body#feed ul + ul li + li + li
+{
+    width: 21%;
 }
 
 body#feed h2
 {
-    display: inline-block;
-    width: 18.0em;
-    padding: 6.38em 1em;
-    margin: 0.5em;
-    text-align: center;
+    padding: 0.2em 3em;
+    margin: 0.5em -2em;
     font-weight: bold;
     font-size: 1em;
     color: #555;
-    border: 0.1em solid #aaa;
+    border-bottom: 1px solid #ccc;
+    clear: both;
 }
 
-body#feed h2 + ul li a
+body#feed ul + ul li a
 {
     display: block;
     position: relative;
     text-decoration: none;
-    padding: 1em;
-    height: 12em;
+    padding: 1em 1em 4em 1em;
+    height: 100%;
     margin: -1em;
     overflow: hidden;
 }
 
-body#feed h2 + ul li a span
+body#feed ul + ul li a span
 {
     display: block;
     max-height: 2.4em;
@@ -445,9 +456,9 @@ body#feed h2 + ul li a span
     line-height: 1.25em;
 }
 
-body#feed h2 + ul li a span.author
+body#feed ul + ul li a span.author
 {
-    display: block;
+    display: none;
     position: absolute;
     bottom: 1em;
     right: 1em;
@@ -458,15 +469,20 @@ body#feed h2 + ul li a span.author
     text-align: right;
 }
 
-body#feed h2 + ul li a span.author:before
+body#feed ul + ul li a:hover span.author
+{
+    display: block;
+}
+
+body#feed ul + ul li a span.author:before
 {
     content: "by ";
     color: #aaa;
 }
 
-body#feed h2 + ul li a span.updated
+body#feed ul + ul li a span.updated
 {
-    display: block;
+    display: none;
     position: absolute;
     bottom: 1em;
     left: 1em;
@@ -477,7 +493,12 @@ body#feed h2 + ul li a span.updated
     text-align: right;
 }
 
-body#feed h2 + ul li a span.secondary-category
+body#feed ul + ul li a:hover span.updated
+{
+    display: block;
+}
+
+body#feed ul + ul li a span.secondary-category
 {
     display: block;
     position: absolute;
@@ -490,174 +511,127 @@ body#feed h2 + ul li a span.secondary-category
     text-align: right;
 }
 
-body#feed h2 + ul li a:hover
+body#feed ul + ul li a:hover
 {
-    background: #fff;
-    background: rgba(255,255,255,0.5);
+    background: #ddd;
+    background: rgba(0,0,0,0.1);
     color: #555;
 }
 
-body#feed #latest h2
+body#feed .large h2,
+body#feed .medium h2
 {
+    display: block;
     font-size: 1.4em;
     background: none;
     padding: 0;
     width: auto;
-    border: 0;
     margin: 0 0 2em 0;
     text-align: left;
     line-height: 1.25em;
+    border: 0;
 }
 
-body#feed #latest
+body#feed .large,
+body#feed .medium
 {
-    padding: 3em 5em 3em 3em;
-    max-width: 33.15em;
+    display: inline-block;
+    width: 46%;
+    margin: 1%;
+    padding: 1%;
     float: left;
-    margin: 1em 0.5em 1em 4%;
+    color: #000;
 }
 
-body#feed #latest li
+body#feed .large li,
+body#feed .medium li
 {
-    display: block;
-    float: right;
+    display: inline-block;
+    height: auto;
+    width: 10em;
+    padding: 0.5em;
+    margin: 0;
 }
 
-body#feed #latest li a
+body#feed .large a,
+body#feed .medium a
 {
-    display: block;
-    float: right;
+    display: inline;
+    padding: 0;
+    margin: 0;
+}
+
+body#feed .large li a,
+body#feed .medium li a
+{
+    display: inline-block;
     padding: 1em 2em;
-    margin: 0.2em;
+    margin: -0.5em;
     background: #224;
     color: #ccc;
+    height: auto;
+    width: auto;
     text-decoration: none;
 }
 
-body#feed #latest li a:hover
+body#feed .large li a:hover,
+body#feed .medium li a:hover
 {
     background: #557;
     color: #fff;
 }
 
-body#feed #latest ul
+body#feed .large ul,
+body#feed .medium ul
 {
-    margin-top: 3em;
+    margin: 0;
+    padding: 0;
+    text-align: right;
+    height: auto;
 }
 
-body#feed #latest th, body#feed #latest td, body#feed #latest tr
+body#feed .large th, body#feed .large td, body#feed .large tr,
+body#feed .medium th, body#feed .medium td, body#feed .medium tr
 {
     display: inline-block;
 }
 
-body#feed #latest table
+body#feed .large h2 + ul,
+body#feed .medium h2 + ul
 {
-    padding: 1em 0;
+    display: block;
+    margin: -2em 0 1em 0;
+    padding: 0;
+    font-weight: bold;
+    color: #555;
+}
+
+body#feed .large h2 + ul li,
+body#feed .medium h2 + ul li
+{
+    margin: 0;
+    padding: 0;
+}
+
+body#feed .large h2 + ul li.published,
+body#feed .medium h2 + ul li.published,
+body#feed .large h2 + ul li.author,
+body#feed .medium h2 + ul li.author
+{
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    width: 50%;
+}
+
+p#maths-note:before
+{
+    content: "Note: "
 }
 
 pre
 {
     white-space: pre-wrap;
-}
-
-body#feed h2
-{
-    background: #dfefdf;
-}
-
-body#feed h2 + ul li
-{
-    background: #dfffdf;
-}
-
-body#feed h2 + ul + h2
-{
-    background: #dfdfef;
-}
-
-body#feed h2 + ul + h2 + ul li
-{
-    background: #dfdfff;
-}
-
-body#feed h2 + ul + h2 + ul + h2
-{
-    background: #efdfdf;
-}
-
-body#feed h2 + ul + h2 + ul + h2 + ul li
-{
-    background: #ffdfdf;
-}
-
-body#feed h2 + ul + h2 + ul + h2 + ul + h2
-{
-    background: #efdfef;
-}
-
-body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul li
-{
-    background: #ffdfff;
-}
-
-body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2
-{
-    background: #cfcfef;
-}
-
-body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul li
-{
-    background: #bfbfff;
-}
-
-body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2
-{
-    background: #efcfaf;
-}
-
-body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul li
-{
-    background: #ffbfaf;
-}
-
-body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2
-{
-    background: #afefcf;
-}
-
-body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul li
-{
-    background: #afffcf;
-}
-
-body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2
-{
-    background: #afefaf;
-}
-
-body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul li
-{
-    background: #afffaf;
-}
-
-body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2
-{
-    background: #efefaf;
-}
-
-body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul li
-{
-    background: #ffffaf;
-}
-
-body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2
-{
-    background: #cfcfef;
-}
-
-body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul li
-{
-    background: #dfdfff;
 }
 
 math
@@ -972,37 +946,28 @@ ul#meta li#published .day
         top: 0.8em;
         width: 2.3em;
     }
+
+    body#feed ul + ul li,
+    body#feed .large,
+    body#feed .medium,
+    body#feed ul + ul li + li + li
+    {
+        width: 46%;
+    }
 }
 
 @media (max-width: 42.9em)
 {
-    body#feed h2,
-    body#feed h2 + ul + h2,
-    body#feed h2 + ul + h2 + ul + h2,
-    body#feed h2 + ul + h2 + ul + h2 + ul + h2,
-    body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2,
-    body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2,
-    body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2,
-    body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2,
-    body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2,
-    body#feed h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2 + ul + h2
+    body#feed ul + ul li,
+    body#feed .large,
+    body#feed .medium,
+    body#feed ul + ul li + li + li
     {
-        background: none;
-        border: none;
-        width: auto;
+        float: none;
         display: block;
-        padding: 0;
-        clear: both;
-    }
-
-    body#feed, body#feed h2
-    {
-        text-align: center;
-    }
-
-    body#feed h2 + ul li
-    {
-        width: 70%;
+        width: auto;
+        margin: 1em;
+        padding: 1em;
     }
 }
 
@@ -1011,19 +976,5 @@ ul#meta li#published .day
     h1 + ul:before
     {
         display: none;
-    }
-}
-
-@media (max-width: 71em)
-{
-    body#feed
-    {
-        text-align: center;
-    }
-    body#feed #latest
-    {
-        float: none;
-        max-width: none;
-        margin: 1em 0.5em;
     }
 }
