@@ -15,6 +15,7 @@ PDFS:=$(addsuffix .pdf,$(BUILDRAW))
 PDFESC:=$(subst :,\:,$(PDFS))
 PDFDEST:=pdf
 XSLTPROC:=xsltproc
+GNUPLOT:=gnuplot
 XSLTPROCARGS:=--stringparam baseURI "http://ef.gy" --stringparam documentRoot "$$(pwd)" --param licence "document('$$(pwd)/$(BUILD)/licence.xml')"
 
 XHTMLSTRICT:=/usr/share/xml/xhtml-relaxng/xhtml-strict.rng
@@ -37,6 +38,7 @@ scrub: clean
 
 $(PDFDEST)/.volatile:
 	mkdir -p $(PDFDEST); true
+	touch $@
 
 $(BUILDD):
 	mkdir -p $(BUILD); true
@@ -106,6 +108,36 @@ fortune: src/fortune.cpp include/ef.gy/http.h
 
 js/tesseract.js: src/tesseract.cpp
 	em++ -v --llvm-opts 2 --closure 1 -s EXPORTED_FUNCTIONS="['_main','_updateProjection','_getProjection','_getAxisGraph3','_getAxisGraph4','_addOrigin3','_setOrigin3','_addOrigin4','_setOrigin4','cwrap']" -Iinclude src/tesseract.cpp -o js/tesseract.js
+
+svgs: flash-integrity-100000.svg flash-integrity-1000000.svg
+
+flash-integrity-100000.svg: src/flash-integrity.plot
+	$(GNUPLOT)\
+		-e 'set terminal svg size 1200,600 dynamic fname "sans-serif"'\
+		-e 'writecount=100000'\
+		-e 'set title "Drive Integrity After Continuous Writing to Flash Memory at 6Gb/s with Average Lifespan of Flash Cell Approximated at 100k Writes"'\
+		-e 'set xtics ("1 month" 2628000, "3 months" 7884000, "6 months" 15770000, "1 year" 31540000, "3 years" 94610000, "6 years" 189200000)'\
+		-e 'set label "43 days" at 3719870,0.1 point lt 1 pt 2 ps 2 offset 1,-1'\
+		-e 'set label "86 days" at 7439740,0.1 point lt 1 pt 2 ps 2 offset 1,-1'\
+		-e 'set label "172 days" at 14879500,0.1 point lt 1 pt 2 ps 2 offset 1,-1'\
+		-e 'set label "344 days" at 29759000,0.1 point lt 1 pt 2 ps 2 offset 1,-1'\
+		-e 'set xrange [800000:50000000]'\
+		$<\
+		> $@
+
+flash-integrity-1000000.svg: src/flash-integrity.plot
+	$(GNUPLOT)\
+		-e 'set terminal svg size 1200,600 dynamic fname "sans-serif"'\
+		-e 'writecount=1000000'\
+		-e 'set title "Drive Integrity After Continuous Writing to Flash Memory at 6Gb/s with Average Lifespan of Flash Cell Approximated at 1M Writes"'\
+		-e 'set label "1.1 years" at 37198700,0.1 point lt 1 pt 2 ps 2 offset 1,-1'\
+		-e 'set label "2.4 years" at 74397400,0.1 point lt 1 pt 2 ps 2 offset 1,-1'\
+		-e 'set label "4.7 years" at 148795000,0.1 point lt 1 pt 2 ps 2 offset 1,-1'\
+		-e 'set label "9.4 years" at 297590000,0.1 point lt 1 pt 2 ps 2 offset 1,-1'\
+		-e 'set xtics ("1 year" 31540000, "3 years" 94610000, "6 years" 189200000, "12 years" 378400000, "24 years" 756900000)'\
+		-e 'set xrange [8000000:500000000]'\
+		$<\
+		> $@
 
 run: run-fortune
 

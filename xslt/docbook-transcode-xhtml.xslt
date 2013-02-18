@@ -297,8 +297,25 @@
     <figure>
       <title><xsl:value-of select="@title"/></title>
       <mediaobject>
+        <xsl:variable name="bsvg" select="substring-after(@src,'/svg/')"/>
+        <xsl:variable name="bjpeg" select="substring-after(@src,'/jpeg/')"/>
+        <imageobject>
+          <imagedata fileref="{concat($documentRoot,'/',$bsvg)}.svg"/>
+        </imageobject>
+        <imageobject>
+          <imagedata fileref="{concat($documentRoot,'/',$bsvg)}.svg.ps"/>
+        </imageobject>
         <imageobject>
           <imagedata fileref="{concat($documentRoot,'/',@src)}"/>
+        </imageobject>
+        <imageobject>
+          <imagedata fileref="{concat($documentRoot,'/',@src)}.png"/>
+        </imageobject>
+        <imageobject>
+          <imagedata fileref="{concat($documentRoot,'/',@src)}.jpeg"/>
+        </imageobject>
+        <imageobject>
+          <imagedata fileref="{concat($documentRoot,'/jpeg/',$bjpeg)}.jpeg"/>
         </imageobject>
       </mediaobject>
     </figure>
@@ -306,8 +323,25 @@
 
   <xsl:template match="xhtml:p//xhtml:img">
     <inlinemediaobject>
+      <xsl:variable name="bsvg" select="substring-after(@src,'/svg/')"/>
+      <xsl:variable name="bjpeg" select="substring-after(@src,'/jpeg/')"/>
+      <imageobject>
+        <imagedata fileref="{concat($documentRoot,'/',$bsvg)}.svg"/>
+      </imageobject>
+      <imageobject>
+        <imagedata fileref="{concat($documentRoot,'/',$bsvg)}.svg.ps"/>
+      </imageobject>
       <imageobject>
         <imagedata fileref="{concat($documentRoot,'/',@src)}"/>
+      </imageobject>
+      <imageobject>
+        <imagedata fileref="{concat($documentRoot,'/',@src)}.png"/>
+      </imageobject>
+      <imageobject>
+        <imagedata fileref="{concat($documentRoot,'/',@src)}.jpeg"/>
+      </imageobject>
+      <imageobject>
+        <imagedata fileref="{concat($documentRoot,'/jpeg/',$bjpeg)}.jpeg"/>
       </imageobject>
       <textobject>
         <para><xsl:value-of select="@title"/></para>
