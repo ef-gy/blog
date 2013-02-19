@@ -2,6 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xmlns:source="http://ef.gy/2012/source" xml:id="articles">
   <title>Articles</title>
 
+  <entry source:local="irs:logimat-2013.xhtml" />
   <entry source:local="transcoding-atom-to-rss.xhtml" />
   <entry source:local="vmware-server-ipv6.xhtml" />
   <entry source:local="vmware-server-redux.xhtml" />
