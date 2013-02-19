@@ -22,9 +22,8 @@
 <p>Net result: next time someone says "I wouldn't put my swap/log files on that flash drive," you'll know better. Might be a good idea to link this article for them while you're at it. Although I do have to admit that I had to make a few assumptions to plot those graphs here, but see below...</p>
 <h1>The Crunching</h1>
 <p>As with all things in life, there's always several ways to calulate estimates. Personally, I think every graph that doesn't describe how it was calculated is worthless - so let's see how I came up with those two above.</p>
-<h2>Number of Blocks Written</h2>
 <p>Flash drives and SSDs only degrade when actually written to. More specifically we can assume they degrade during a block erase operation, as flash chips need to be erased in order to be written to. So in order to estimate the life span of an SSD we have to estimate the number of erased blocks for a given time span.</p>
-<h3>Write Speed</h3>
+<h2>Write Speed</h2>
 <p>Since we're trying to make a point here, we'll use the theoretical maximum write speed we could possibly run across at this point: the maximum link speed for SATA 3.0, which happens to be larger than any other relevant interface or drive speed so it's a solid upper bound.</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mtext>maximum write speed</mtext>
@@ -44,7 +43,7 @@
 </mfrac>
 </mrow></math>
 <p>You'll find that this is roughly 2-3 times the rated maximum write speed for consumer grade SSDs.</p>
-<h3>Block Sizes</h3>
+<h2>Block Sizes</h2>
 <p>For the calculations we'll assume the following:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mtext>flash block size</mtext>
@@ -68,7 +67,7 @@
 <mi mathvariant='normal' class='MathML-Unit'>MB</mi>
 </mrow></math>
 <p>This seems a reasonable estimate given typical contemporary flash chips.</p>
-<h3>Number of Erased Blocks by Time</h3>
+<h2>Number of Erased Blocks by Time</h2>
 <p>The drive firmware should be able to compensate for suboptimal writes well enough to bundle small writes together to fill up whole erase blocks. At peak throughputs this results in the drive needing to erase a block at a rate of:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mtext>block erase rate</mtext>
@@ -109,9 +108,7 @@
 </mfrac>
 </mrow></math>
 <p>Notice that this rate decreases with the write throughput, meaning that at more realistic throughput levels the drive will have to erase fewer blocks than that per second. I'd assume that the higher throughput we're using for our calculations would thus compensate for a suboptimal write bundling algorithm in the drive's firmware.</p>
-<h2>Number of Broken Blocks</h2>
-<p>The specifications on most SSDs are, unfortunately, not exactly exhaustive about the parameters we need to give an estimate for how many blocks are broken after how many times of being written to. So, we'll just have to use a few educated guesses here.</p>
-<h3>Number of Writes Per Erase Block</h3>
+<h2>Number of Writes Per Erase Block</h2>
 <p>I seem to have trouble finding accurate statistics for this rather important metric. Contemporary flash chip descriptions seem to indicate an average of either <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mn>10</mn><mn>5</mn></msup></math> or <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mn>10</mn><mn>6</mn></msup></math> writes before a given block is likely to be dead. Unfortunately, most specification sheets on SSDs seem to omit the definition of "average" here. Thus I'll simply assume that number to be based on a Gaussian distribution and further assume a somewhat generous standard deviation of 10%.</p>
 <p>This means that we should be able to use the following formula - a variant of the cumulative distribution function - to estimate the probability of a given block to be broken after a given number of writes to it:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
@@ -143,7 +140,7 @@
 <mn>2</mn></mfrac>
 </mrow></math>
 <p>Note that <em>erf</em> is the Gauss error function, <em>writes</em> is the number of writes performed to a block and <em>write count</em> is either <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mn>10</mn><mn>5</mn></msup></math> or <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mn>10</mn><mn>6</mn></msup></math> - we'll crunch the numbers for both.</p>
-<h3>Number of Erase Blocks</h3>
+<h2>Number of Erase Blocks</h2>
 <p>The formula above gives us the probability of blocks in a given erase block to be broken after a given number of writes. Obviously any given SSD will have more than one erase block, and that number is easily calculated as:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mtext>erase blocks</mtext>
@@ -156,7 +153,7 @@
 </mrow>
 </mfrac>
 </mrow></math>
-<h3>Number of Broken Blocks by Number of Writes</h3>
+<h2>Number of Broken Blocks by Number of Writes</h2>
 <p>To find out how many blocks are broken after a given number of writes, we'll further assume that we have a perfect write leveling algorithm on the drive's firmware. That means that no matter which (logical) block we write to in software, the drive will distribute the erase and write operation to a truly random physical block. This greatly simplifies calculations by allowing us to apply the law of large numbers to our model, and it shouldn't be far off either - that is, after all, the purpose of write leveling.</p>
 <p>With this additional assumption we use the following formula:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
@@ -167,7 +164,7 @@
 <mtext>probability of block being broken</mtext>
 </mrow></math>
 <p>If we plot this with <em>writes</em> on the x axis, then the y axis will be average number of broken blocks - that is we're essentially having (number of erase blocks) separate probability experiments running in parallel, which multiplied by the probability of an individual block breaking is the number of those blocks that have broken so far.</p>
-<h2>The Result</h2>
+<h1>The Result</h1>
 <p>If we bring the previous resulting formulas together, we find that we simply need to scale our probability calculation by the number of erased blocks/time to get an estimate of how long we need to write to a drive before it starts breaking.</p>
 <p>The resulting formula for our plot is thus:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
