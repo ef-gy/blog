@@ -5,7 +5,7 @@
 <meta name="author" content="Magnus Achim Deininger" />
 <meta name="description" content="No, you won't kill your SSD anytime soon. Seems hard to find actual, crunched numbers though." />
 <meta name="date" content="2013-02-18T21:42:00Z" />
-<meta name="mtime" content="2013-02-18T21:42:00Z" />
+<meta name="mtime" content="2013-02-19T14:42:00Z" />
 <meta name="category" content="Statistics" />
 <meta name="unix:name" content="statistics:ssd-write-endurance" />
 </head>
@@ -20,8 +20,11 @@
 <p>Note how I crunched numbers with the full 6Gbit/s throughput of SATA 3.0. We don't actually have drives that can deliver that kind of throughput, much less sustained for several years. You also typically won't find any natural scenario where you'll keep writing gigabytes of random data to an SSD like that. And by "that" I mean "sustained for days, months or years." And OS write caching hasn't been taken into consideration either.</p>
 <p>As for the "10% Threshold" line, that's because SSDs typically contain about 10% of spare blocks hidden from the OS and used to replace dead blocks on the drive transparently. You typically won't find dead blocks in your fsck before that threshold is reached. Individual drives may contain fewer or more spares, but 10% seems a solid average at this time.</p>
 <p>Net result: next time someone says "I wouldn't put my swap/log files on that flash drive," you'll know better. Might be a good idea to link this article for them while you're at it. Although I do have to admit that I had to make a few assumptions to plot those graphs here, but see below...</p>
+<h1>A Note on the Data</h1>
+<p>As a few helpful comments on slashdot pointed out, I have in fact only considered SSDs using SLC NAND chips. That's because, personally, I've only ever bought high-end SSDs, so it kind of came natural to me. I took the 100k P/E cycle estimate from <a href="http://www.datasheetcatalog.org/datasheets2/16/1697648_1.pdf">this here datasheet, section 1.5 'Product Features'</a>. As for the 1M stat, I assumed those for 'newer' SLCs following <a href="http://investors.micron.com/releasedetail.cfm?ReleaseID=440650">this press release</a>.</p>
+<p>A lot of consumer grade SSDs use MLC NANDs or worse, which will fry out a lot sooner. But then you probably still won't be writing to those constantly at speeds the drive doesn't even support, now would you? In any event, the calculations below should work for those as well, just plug in fewer erase cycles and a lower maximum throughput into the equations.</p>
 <h1>The Crunching</h1>
-<p>As with all things in life, there's always several ways to calulate estimates. Personally, I think every graph that doesn't describe how it was calculated is worthless - so let's see how I came up with those two above.</p>
+<p>As with all things in life, there's always several ways to calculate estimates. Personally, I think every graph that doesn't describe how it was calculated is worthless - so let's see how I came up with those two above.</p>
 <p>Flash drives and SSDs only degrade when actually written to. More specifically we can assume they degrade during a block erase operation, as flash chips need to be erased in order to be written to. So in order to estimate the life span of an SSD we have to estimate the number of erased blocks for a given time span.</p>
 <h2>Write Speed</h2>
 <p>Since we're trying to make a point here, we'll use the theoretical maximum write speed we could possibly run across at this point: the maximum link speed for SATA 3.0, which happens to be larger than any other relevant interface or drive speed so it's a solid upper bound.</p>
