@@ -21,7 +21,7 @@ XSLTPROCARGS:=--stringparam baseURI "http://ef.gy" --stringparam documentRoot "$
 XHTMLSTRICT:=/usr/share/xml/xhtml-relaxng/xhtml-strict.rng
 
 #all: fortune js/tesseract.js
-all: fortune index databases
+all: fortune index
 
 install: install-pdf
 uninstall: uninstall-pdf
