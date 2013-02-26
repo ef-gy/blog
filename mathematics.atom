@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xmlns:source="http://ef.gy/2012/source" xml:id="mathematics">
-  <title>Mathematics</title>
+  <title>ef.gy</title>
+  <subtitle>Mathematics</subtitle>
 
   <entry source:local="statistics:ssd-write-endurance.xhtml" />
   <entry source:local="linear-algebra:normal-vectors-in-higher-dimensional-spaces.xhtml" />

@@ -123,7 +123,7 @@
                                             or self::xhtml:h4
                                             or self::xhtml:h5
                                             or self::xhtml:h6]"/>
-      <xsl:apply-templates select="$nodes[(not(preceding-sibling::* = $nexta) and not (. = $next)) or ((preceding-sibling::* = $nexta) and not (preceding-sibling::* = $next) and (self::xhtml:h1 or self::xhtml:h2 or self::xhtml:h3 or self::xhtml:h4 or self::xhtml:h5 or self::xhtml:h6))]"/>
+      <xsl:apply-templates select="$nodes[(not(preceding-sibling::* = $nexta) or ((preceding-sibling::* = $nexta) and not (preceding-sibling::* = $next) and (self::xhtml:h1 or self::xhtml:h2 or self::xhtml:h3 or self::xhtml:h4 or self::xhtml:h5 or self::xhtml:h6))) and not (. = $next)]"/>
     </section>
   </xsl:template>
 
@@ -139,7 +139,7 @@
                                             or self::xhtml:h4
                                             or self::xhtml:h5
                                             or self::xhtml:h6]"/>
-      <xsl:apply-templates select="$nodes[(not(preceding-sibling::* = $nexta) and not (. = $next)) or ((preceding-sibling::* = $nexta) and not (preceding-sibling::* = $next) and (self::xhtml:h1 or self::xhtml:h2 or self::xhtml:h3 or self::xhtml:h4 or self::xhtml:h5 or self::xhtml:h6))]"/>
+      <xsl:apply-templates select="$nodes[(not(preceding-sibling::* = $nexta) or ((preceding-sibling::* = $nexta) and not (preceding-sibling::* = $next) and (self::xhtml:h1 or self::xhtml:h2 or self::xhtml:h3 or self::xhtml:h4 or self::xhtml:h5 or self::xhtml:h6))) and not (. = $next)]"/>
     </section>
   </xsl:template>
 
@@ -156,7 +156,7 @@
                                             or self::xhtml:h4
                                             or self::xhtml:h5
                                             or self::xhtml:h6]"/>
-      <xsl:apply-templates select="$nodes[(not(preceding-sibling::* = $nexta) and not (. = $next)) or ((preceding-sibling::* = $nexta) and not (preceding-sibling::* = $next) and (self::xhtml:h1 or self::xhtml:h2 or self::xhtml:h3 or self::xhtml:h4 or self::xhtml:h5 or self::xhtml:h6))]"/>
+      <xsl:apply-templates select="$nodes[(not(preceding-sibling::* = $nexta) or ((preceding-sibling::* = $nexta) and not (preceding-sibling::* = $next) and (self::xhtml:h1 or self::xhtml:h2 or self::xhtml:h3 or self::xhtml:h4 or self::xhtml:h5 or self::xhtml:h6))) and not (. = $next)]"/>
     </section>
   </xsl:template>
 
@@ -174,7 +174,7 @@
                                             or self::xhtml:h4
                                             or self::xhtml:h5
                                             or self::xhtml:h6]"/>
-      <xsl:apply-templates select="$nodes[(not(preceding-sibling::* = $nexta) and not (. = $next)) or ((preceding-sibling::* = $nexta) and not (preceding-sibling::* = $next) and (self::xhtml:h1 or self::xhtml:h2 or self::xhtml:h3 or self::xhtml:h4 or self::xhtml:h5 or self::xhtml:h6))]"/>
+      <xsl:apply-templates select="$nodes[(not(preceding-sibling::* = $nexta) or ((preceding-sibling::* = $nexta) and not (preceding-sibling::* = $next) and (self::xhtml:h1 or self::xhtml:h2 or self::xhtml:h3 or self::xhtml:h4 or self::xhtml:h5 or self::xhtml:h6))) and not (. = $next)]"/>
     </section>
   </xsl:template>
 
@@ -193,7 +193,7 @@
                                             or self::xhtml:h4
                                             or self::xhtml:h5
                                             or self::xhtml:h6]"/>
-      <xsl:apply-templates select="$nodes[(not(preceding-sibling::* = $nexta) and not (. = $next)) or ((preceding-sibling::* = $nexta) and not (preceding-sibling::* = $next) and (self::xhtml:h1 or self::xhtml:h2 or self::xhtml:h3 or self::xhtml:h4 or self::xhtml:h5 or self::xhtml:h6))]"/>
+      <xsl:apply-templates select="$nodes[(not(preceding-sibling::* = $nexta) or ((preceding-sibling::* = $nexta) and not (preceding-sibling::* = $next) and (self::xhtml:h1 or self::xhtml:h2 or self::xhtml:h3 or self::xhtml:h4 or self::xhtml:h5 or self::xhtml:h6))) and not (. = $next)]"/>
       <!--
       <xsl:apply-templates select="$nodes[not(preceding-sibling::* = $next) and not (. = $next)]"/>
       -->
@@ -216,7 +216,7 @@
                                             or self::xhtml:h4
                                             or self::xhtml:h5
                                             or self::xhtml:h6]"/>
-      <xsl:apply-templates select="$nodes[(not(preceding-sibling::* = $nexta) and not (. = $next)) or ((preceding-sibling::* = $nexta) and not (preceding-sibling::* = $next) and (self::xhtml:h1 or self::xhtml:h2 or self::xhtml:h3 or self::xhtml:h4 or self::xhtml:h5 or self::xhtml:h6))]"/>
+      <xsl:apply-templates select="$nodes[(not(preceding-sibling::* = $nexta) or ((preceding-sibling::* = $nexta) and not (preceding-sibling::* = $next) and (self::xhtml:h1 or self::xhtml:h2 or self::xhtml:h3 or self::xhtml:h4 or self::xhtml:h5 or self::xhtml:h6))) and not (. = $next)]"/>
     </section>
   </xsl:template>
 
@@ -296,7 +296,14 @@
 
   <xsl:template match="xhtml:img">
     <figure>
-      <title><xsl:value-of select="@title"/></title>
+      <xsl:choose>
+        <xsl:when test="@title">
+          <title><xsl:value-of select="@title"/></title>
+        </xsl:when>
+        <xsl:otherwise>
+          <title><xsl:value-of select="@alt"/></title>
+        </xsl:otherwise>
+      </xsl:choose>
       <mediaobject>
         <xsl:variable name="bsvg" select="substring-after(@src,'/svg/')"/>
         <xsl:variable name="bjpeg" select="substring-after(@src,'/jpeg/')"/>
@@ -325,39 +332,6 @@
         </xsl:choose>
       </mediaobject>
     </figure>
-  </xsl:template>
-
-  <xsl:template match="xhtml:p//xhtml:img">
-    <inlinemediaobject>
-      <xsl:variable name="bsvg" select="substring-after(@src,'/svg/')"/>
-      <xsl:variable name="bjpeg" select="substring-after(@src,'/jpeg/')"/>
-      <xsl:variable name="bpng" select="substring-after(@src,'/png/')"/>
-      <xsl:choose>
-        <xsl:when test="$bsvg != ''">
-          <imageobject>
-            <imagedata fileref="{concat($documentRoot,'/',$bsvg)}.svg"/>
-          </imageobject>
-        </xsl:when>
-        <xsl:when test="$bjpeg != ''">
-          <imageobject>
-            <imagedata fileref="{concat($documentRoot,'/jpeg/',$bjpeg)}.jpeg"/>
-          </imageobject>
-        </xsl:when>
-        <xsl:when test="$bpng != ''">
-          <imageobject>
-            <imagedata fileref="{concat($documentRoot,'/png/',$bpng)}.png"/>
-          </imageobject>
-        </xsl:when>
-        <xsl:otherwise>
-          <imageobject>
-            <imagedata fileref="{concat($documentRoot,'/',@src)}"/>
-          </imageobject>
-        </xsl:otherwise>
-      </xsl:choose>
-      <textobject>
-        <para><xsl:value-of select="@title"/></para>
-      </textobject>
-    </inlinemediaobject>
   </xsl:template>
 
   <xsl:template match="svg:svg">

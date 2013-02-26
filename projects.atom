@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xmlns:source="http://ef.gy/2012/source" xml:id="projects">
-  <title>Projects</title>
+  <title>ef.gy</title>
+  <subtitle>Projects</subtitle>
 
   <entry source:local="project:fortune.xhtml" />
   <entry source:local="project:tesseract.xhtml" />
