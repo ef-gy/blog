@@ -7,9 +7,10 @@
               version="1.0">
   <xsl:output method="xml" version="1.0" encoding="UTF-8"
               indent="no"
-              media-type="application/docbook+xml" />
+              media-type="application/xml" />
 
   <xsl:param name="licence"/>
+  <xsl:param name="dblatexWorkaround"/>
 
   <xsl:strip-space elements="*" />
   <xsl:preserve-space elements="docbook:literallayout" />
@@ -177,14 +178,28 @@
   <xsl:template match="atom:entry[atom:content/docbook:*]">
     <xsl:variable name="self" select="."/>
     <xsl:for-each select="atom:content/docbook:*">
-      <chapter>
-        <xsl:call-template name="info">
-          <xsl:with-param name="self" select="$self"/>
-        </xsl:call-template>
-        <xsl:call-template name="non-info">
-          <xsl:with-param name="self" select="$self"/>
-        </xsl:call-template>
-      </chapter>
+      <xsl:choose>
+        <xsl:when test="$dblatexWorkaround = 1">
+          <chapter>
+            <xsl:call-template name="info">
+              <xsl:with-param name="self" select="$self"/>
+            </xsl:call-template>
+            <xsl:call-template name="non-info">
+              <xsl:with-param name="self" select="$self"/>
+            </xsl:call-template>
+          </chapter>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:copy>
+            <xsl:call-template name="info">
+              <xsl:with-param name="self" select="$self"/>
+            </xsl:call-template>
+            <xsl:call-template name="non-info">
+              <xsl:with-param name="self" select="$self"/>
+            </xsl:call-template>
+          </xsl:copy>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:for-each>
   </xsl:template>
 

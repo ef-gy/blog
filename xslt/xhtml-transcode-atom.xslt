@@ -6,6 +6,7 @@
               xmlns:source="http://ef.gy/2012/source"
               xmlns:data="http://ef.gy/2013/data"
               xmlns:str="http://exslt.org/strings"
+              xmlns:svg="http://www.w3.org/2000/svg"
               xmlns="http://www.w3.org/1999/xhtml"
               exclude-result-prefixes="source"
               version="1.0">
@@ -72,7 +73,7 @@
                     <li class="published"><xsl:value-of select="(atom:published | atom:updated)[1]"/></li>
                     <li class="author"><xsl:value-of select="atom:author/atom:name"/></li>
                   </ul>
-                  <xsl:for-each select="atom:content/xhtml:html/xhtml:body/xhtml:*">
+                  <xsl:for-each select="atom:content/xhtml:html/xhtml:body/xhtml:* | atom:content/xhtml:html/xhtml:body/svg:*">
                     <xsl:if test="position() &lt; 5">
                       <xsl:choose>
                         <xsl:when test="name(.) = 'p'">
@@ -80,6 +81,9 @@
                         </xsl:when>
                         <xsl:when test="name(.) = 'h1'">
                           <h2><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h2>
+                        </xsl:when>
+                        <xsl:when test="self::svg:svg">
+                          <xsl:copy-of select="."/>
                         </xsl:when>
                       </xsl:choose>
                     </xsl:if>
@@ -104,7 +108,7 @@
                     <li class="published"><xsl:value-of select="(atom:published | atom:updated)[1]"/></li>
                     <li class="author"><xsl:value-of select="atom:author/atom:name"/></li>
                   </ul>
-                  <xsl:for-each select="atom:content/xhtml:html/xhtml:body/xhtml:p">
+                  <xsl:for-each select="atom:content/xhtml:html/xhtml:body/xhtml:p | atom:content/xhtml:html/xhtml:body/svg:svg">
                     <xsl:if test="position() &lt; 3">
                       <xsl:choose>
                         <xsl:when test="name(.) = 'p'">
@@ -112,6 +116,9 @@
                         </xsl:when>
                         <xsl:when test="name(.) = 'h1'">
                           <h2><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h2>
+                        </xsl:when>
+                        <xsl:when test="self::svg:svg">
+                          <xsl:copy-of select="."/>
                         </xsl:when>
                       </xsl:choose>
                     </xsl:if>

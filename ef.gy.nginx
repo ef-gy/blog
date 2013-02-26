@@ -93,6 +93,7 @@ server {
 		try_files $uri.atom $uri =404;
 
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-pre-process.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-style-ef.gy.xslt;
 	}
 
@@ -101,6 +102,7 @@ server {
 		try_files $uri.atom $uri =404;
 
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-pre-process.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-style-ef.gy.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/rss-transcode-atom.xslt;
 	}
@@ -110,6 +112,7 @@ server {
 		try_files $uri.atom $uri.xhtml $uri =404;
 
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-pre-process.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/docbook-transcode-xhtml.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/docbook-transcode-atom.xslt;
 	}
@@ -132,6 +135,7 @@ server {
 
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-context.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-pre-process.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-transcode-atom.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-navigation.xslt;
@@ -143,6 +147,7 @@ server {
 
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-context.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-pre-process.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-transcode-atom.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-navigation.xslt;

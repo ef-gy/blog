@@ -5,6 +5,7 @@
 *.bz2
 *.out
 *.sqlite3
+index.atom
 fortune
 .build
 pdf

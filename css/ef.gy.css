@@ -4,6 +4,12 @@ html, body, h1, h2, h3, h4, h5, h6, p, table, tr, td, ul, li, div, span, pre, co
 	margin: 0;
 }
 
+svg
+{
+    width: 100%;
+    height: 50%;
+}
+
 *
 {
 	font-family: sans-serif;

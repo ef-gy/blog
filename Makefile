@@ -16,7 +16,7 @@ PDFESC:=$(subst :,\:,$(PDFS))
 PDFDEST:=pdf
 XSLTPROC:=xsltproc
 GNUPLOT:=gnuplot
-XSLTPROCARGS:=--stringparam baseURI "http://ef.gy" --stringparam documentRoot "$$(pwd)" --param licence "document('$$(pwd)/$(BUILD)/licence.xml')"
+XSLTPROCARGS:=--stringparam baseURI "http://ef.gy" --stringparam documentRoot "$$(pwd)" --param licence "document('$$(pwd)/$(BUILD)/licence.xml')" --param dblatexWorkaround 1
 
 XHTMLSTRICT:=/usr/share/xml/xhtml-relaxng/xhtml-strict.rng
 
@@ -77,12 +77,16 @@ $(BUILD)/%.docbook: %.xhtml $(BUILDD) $(BUILD)/licence.xml
 	$(XSLTPROC) $(XSLTPROCARGS) xslt/docbook-transcode-xhtml.xslt $< > $@
 
 $(BUILD)/%.docbook: %.atom $(BUILDD) $(BUILD)/licence.xml
+#		$(XSLTPROC) $(XSLTPROCARGS) xslt/xhtml-pre-process.xslt - |
 	$(XSLTPROC) $(XSLTPROCARGS) xslt/atom-merge.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCARGS) xslt/docbook-transcode-xhtml.xslt - |\
 		$(XSLTPROC) $(XSLTPROCARGS) xslt/docbook-transcode-atom.xslt - > $@
 
 $(BUILD)/%.pdf: $(BUILD)/%.docbook $(BUILDD)
 	dblatex --pdf $< -o $@
+#	xmlto -o $(BUILD) --skip-validation --with-dblatex pdf $<
+#	xsltproc -xinclude -o $<.fo /usr/share/xml/docbook/stylesheet/docbook-xsl-ns/fo/docbook.xsl $<
+#	fop $<.fo -pdf $@
 
 databases: $(DATABASES)
 

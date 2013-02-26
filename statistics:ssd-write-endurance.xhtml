@@ -12,11 +12,8 @@
 <body>
 <h1>The Numbers</h1>
 <p>Ever wonder how long your SSD (or thumb drive, for that matter - at least if it does wear leveling) will last? It's funny how bad people are at estimating just how long "100,000 writes" are going to take when spread over a device that spans several thousand of those blocks over several gigabytes of memory. It obviously gets far worse with newer flash memory that is able to withstand a whopping million writes per cell. So yeah, let's crunch some numbers and fix that misconception.</p>
-<p>
-<img src="/svg/flash-integrity-100000" alt="Drive Integrity After Continuous Writing to Flash Memory at 6Gb/s with Average Lifespan of Flash Cell Approximated at 100k Writes"/>
-</p><p>
-<img src="/svg/flash-integrity-1000000" alt="Drive Integrity After Continuous Writing to Flash Memory at 6Gb/s with Average Lifespan of Flash Cell Approximated at 1M Writes"/>
-</p>
+<img src="/svg/flash-integrity-100000" alt="Drive Integrity After Continuous Writing to Flash Memory at 6Gb/s with Average Lifespan of Flash Cell Approximated at 100k Writes" preserveAspectRatio="xMidYMin meet"/>
+<img src="/svg/flash-integrity-1000000" alt="Drive Integrity After Continuous Writing to Flash Memory at 6Gb/s with Average Lifespan of Flash Cell Approximated at 1M Writes" preserveAspectRatio="xMidYMin meet"/>
 <p>Note how I crunched numbers with the full 6Gbit/s throughput of SATA 3.0. We don't actually have drives that can deliver that kind of throughput, much less sustained for several years. You also typically won't find any natural scenario where you'll keep writing gigabytes of random data to an SSD like that. And by "that" I mean "sustained for days, months or years." And OS write caching hasn't been taken into consideration either.</p>
 <p>As for the "10% Threshold" line, that's because SSDs typically contain about 10% of spare blocks hidden from the OS and used to replace dead blocks on the drive transparently. You typically won't find dead blocks in your fsck before that threshold is reached. Individual drives may contain fewer or more spares, but 10% seems a solid average at this time.</p>
 <p>Net result: next time someone says "I wouldn't put my swap/log files on that flash drive," you'll know better. Might be a good idea to link this article for them while you're at it. Although I do have to admit that I had to make a few assumptions to plot those graphs here, but see below...</p>

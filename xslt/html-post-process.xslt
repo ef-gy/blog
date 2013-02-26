@@ -3,6 +3,7 @@
               xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
               xmlns:xhtml="http://www.w3.org/1999/xhtml"
               xmlns:math="http://www.w3.org/1998/Math/MathML"
+              xmlns:svg="http://www.w3.org/2000/svg"
               version="1.0">
   <xsl:output method="html" encoding="UTF-8"
               indent="no"
@@ -26,6 +27,12 @@
   </xsl:template>
 
   <xsl:template match="xhtml:*">
+    <xsl:element name="{name()}">
+      <xsl:apply-templates select="@*|node()" />
+    </xsl:element>
+  </xsl:template>
+
+  <xsl:template match="svg:*">
     <xsl:element name="{name()}">
       <xsl:apply-templates select="@*|node()" />
     </xsl:element>

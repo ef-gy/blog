@@ -6,11 +6,12 @@
               xmlns:docbook="http://docbook.org/ns/docbook"
               xmlns:xlink="http://www.w3.org/1999/xlink"
               xmlns:mathml="http://www.w3.org/1998/Math/MathML"
+              xmlns:svg="http://www.w3.org/2000/svg"
               xmlns="http://docbook.org/ns/docbook"
               version="1.0">
   <xsl:output method="xml" version="1.0" encoding="UTF-8"
               indent="no"
-              media-type="application/docbook+xml" />
+              media-type="application/xml" />
 
   <xsl:param name="documentRoot"/>
   <xsl:param name="baseURI"/>
@@ -299,24 +300,29 @@
       <mediaobject>
         <xsl:variable name="bsvg" select="substring-after(@src,'/svg/')"/>
         <xsl:variable name="bjpeg" select="substring-after(@src,'/jpeg/')"/>
-        <imageobject>
-          <imagedata fileref="{concat($documentRoot,'/',$bsvg)}.svg"/>
-        </imageobject>
-        <imageobject>
-          <imagedata fileref="{concat($documentRoot,'/',$bsvg)}.svg.ps"/>
-        </imageobject>
-        <imageobject>
-          <imagedata fileref="{concat($documentRoot,'/',@src)}"/>
-        </imageobject>
-        <imageobject>
-          <imagedata fileref="{concat($documentRoot,'/',@src)}.png"/>
-        </imageobject>
-        <imageobject>
-          <imagedata fileref="{concat($documentRoot,'/',@src)}.jpeg"/>
-        </imageobject>
-        <imageobject>
-          <imagedata fileref="{concat($documentRoot,'/jpeg/',$bjpeg)}.jpeg"/>
-        </imageobject>
+        <xsl:variable name="bpng" select="substring-after(@src,'/png/')"/>
+        <xsl:choose>
+          <xsl:when test="$bsvg != ''">
+            <imageobject>
+              <imagedata fileref="{concat($documentRoot,'/',$bsvg)}.svg"/>
+            </imageobject>
+          </xsl:when>
+          <xsl:when test="$bjpeg != ''">
+            <imageobject>
+              <imagedata fileref="{concat($documentRoot,'/jpeg/',$bjpeg)}.jpeg"/>
+            </imageobject>
+          </xsl:when>
+          <xsl:when test="$bpng != ''">
+            <imageobject>
+              <imagedata fileref="{concat($documentRoot,'/png/',$bpng)}.png"/>
+            </imageobject>
+          </xsl:when>
+          <xsl:otherwise>
+            <imageobject>
+              <imagedata fileref="{concat($documentRoot,'/',@src)}"/>
+            </imageobject>
+          </xsl:otherwise>
+        </xsl:choose>
       </mediaobject>
     </figure>
   </xsl:template>
@@ -325,27 +331,44 @@
     <inlinemediaobject>
       <xsl:variable name="bsvg" select="substring-after(@src,'/svg/')"/>
       <xsl:variable name="bjpeg" select="substring-after(@src,'/jpeg/')"/>
-      <imageobject>
-        <imagedata fileref="{concat($documentRoot,'/',$bsvg)}.svg"/>
-      </imageobject>
-      <imageobject>
-        <imagedata fileref="{concat($documentRoot,'/',$bsvg)}.svg.ps"/>
-      </imageobject>
-      <imageobject>
-        <imagedata fileref="{concat($documentRoot,'/',@src)}"/>
-      </imageobject>
-      <imageobject>
-        <imagedata fileref="{concat($documentRoot,'/',@src)}.png"/>
-      </imageobject>
-      <imageobject>
-        <imagedata fileref="{concat($documentRoot,'/',@src)}.jpeg"/>
-      </imageobject>
-      <imageobject>
-        <imagedata fileref="{concat($documentRoot,'/jpeg/',$bjpeg)}.jpeg"/>
-      </imageobject>
+      <xsl:variable name="bpng" select="substring-after(@src,'/png/')"/>
+      <xsl:choose>
+        <xsl:when test="$bsvg != ''">
+          <imageobject>
+            <imagedata fileref="{concat($documentRoot,'/',$bsvg)}.svg"/>
+          </imageobject>
+        </xsl:when>
+        <xsl:when test="$bjpeg != ''">
+          <imageobject>
+            <imagedata fileref="{concat($documentRoot,'/jpeg/',$bjpeg)}.jpeg"/>
+          </imageobject>
+        </xsl:when>
+        <xsl:when test="$bpng != ''">
+          <imageobject>
+            <imagedata fileref="{concat($documentRoot,'/png/',$bpng)}.png"/>
+          </imageobject>
+        </xsl:when>
+        <xsl:otherwise>
+          <imageobject>
+            <imagedata fileref="{concat($documentRoot,'/',@src)}"/>
+          </imageobject>
+        </xsl:otherwise>
+      </xsl:choose>
       <textobject>
         <para><xsl:value-of select="@title"/></para>
       </textobject>
+    </inlinemediaobject>
+  </xsl:template>
+
+  <xsl:template match="svg:svg">
+    <inlinemediaobject>
+      <imageobject>
+        <imagedata>
+          <svg:svg>
+            <xsl:apply-templates select="@*|node()"/>
+          </svg:svg>
+        </imagedata>
+      </imageobject>
     </inlinemediaobject>
   </xsl:template>
 
