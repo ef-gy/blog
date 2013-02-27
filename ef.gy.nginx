@@ -41,6 +41,7 @@ server {
     location = /robots.txt {
     }
     location = /favicon.ico {
+        types { image/svg+xml ico; }
     }
     location = /sitemap.xml {
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
