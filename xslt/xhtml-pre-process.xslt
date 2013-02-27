@@ -25,4 +25,6 @@
       <xsl:apply-templates select="$svg/@* | @height | @width | @preserveAspectRatio | $svg/*"/>
     </svg>
   </xsl:template>
+
+  <xsl:template match="svg:*[@id='gnuplot_canvas']//@id"/>
 </xsl:stylesheet>
