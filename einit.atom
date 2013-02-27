@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom" xmlns:source="http://ef.gy/2012/source" xml:id="einit">
+<feed xmlns="http://www.w3.org/2005/Atom" xml:id="einit" xmlns:xlink="http://www.w3.org/1999/xlink">
   <title>einit.org</title>
 
-  <source:merge local="drupal-einit.atom"/>
+  <feed xlink:href="drupal-einit.atom"/>
 </feed>

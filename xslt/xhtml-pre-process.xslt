@@ -22,7 +22,7 @@
   <xsl:template match="xhtml:img[substring-after(@src, '/svg/') != '']">
     <xsl:variable name="svg" select="document(concat($documentRoot,'/',substring-after(@src, '/svg/'),'.svg'))/svg:svg"/>
     <svg xmlns="http://www.w3.org/2000/svg">
-      <xsl:apply-templates select="$svg/@* | @height | @width | @preserveAspectRatio | $svg/*"/>
+      <xsl:apply-templates select="$svg/@* | @id | @preserveAspectRatio | $svg/*"/>
     </svg>
   </xsl:template>
 

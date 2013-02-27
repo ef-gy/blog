@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom" xmlns:source="http://ef.gy/2012/source" xml:id="articles">
+<feed xmlns="http://www.w3.org/2005/Atom" xml:id="articles" xmlns:xlink="http://www.w3.org/1999/xlink">
   <title>ef.gy</title>
   <subtitle>Articles</subtitle>
 
-  <entry source:local="transcoding-atom-to-rss.xhtml" />
-  <entry source:local="vmware-server-ipv6.xhtml" />
-  <entry source:local="vmware-server-redux.xhtml" />
-  <entry source:local="ubuntu-cedarview-drivers.xhtml" />
-  <entry source:local="moving-oracle-install-to-debian.xhtml" />
-  <entry source:local="makefile-atom-directory-index.xhtml" />
-  <entry source:local="forwarding-ipv4-to-ipv6.xhtml" />
-  <entry source:local="serving-an-atom-bundle.xhtml" />
-  <entry source:local="exporting-a-drupal-database-to-atom.xhtml" />
-  <entry source:local="embedding-tweets-on-websites-with-xslt.xhtml" />
-  <entry source:local="using-nginx-as-a-proxy-server.xhtml" />
-  <entry source:local="stylesheet-magic:keeping-tabs-with-:checked.xhtml" />
-  <entry source:local="eye-cancer.xhtml" />
-  <entry source:local="form-over-function.xhtml" />
-  <entry source:local="false-advertising.xhtml" />
-  <entry source:local="eye-cancer-ii.xhtml" />
-  <entry source:local="site-news:tor-and-ipv6.xhtml" />
-  <entry source:local="site-news:einit-kyuba-archives.xhtml" />
-  <source:merge local="mathematics.atom"/>
+  <entry xlink:href="transcoding-atom-to-rss.xhtml" />
+  <entry xlink:href="vmware-server-ipv6.xhtml" />
+  <entry xlink:href="vmware-server-redux.xhtml" />
+  <entry xlink:href="ubuntu-cedarview-drivers.xhtml" />
+  <entry xlink:href="moving-oracle-install-to-debian.xhtml" />
+  <entry xlink:href="makefile-atom-directory-index.xhtml" />
+  <entry xlink:href="forwarding-ipv4-to-ipv6.xhtml" />
+  <entry xlink:href="serving-an-atom-bundle.xhtml" />
+  <entry xlink:href="exporting-a-drupal-database-to-atom.xhtml" />
+  <entry xlink:href="embedding-tweets-on-websites-with-xslt.xhtml" />
+  <entry xlink:href="using-nginx-as-a-proxy-server.xhtml" />
+  <entry xlink:href="stylesheet-magic:keeping-tabs-with-:checked.xhtml" />
+  <entry xlink:href="eye-cancer.xhtml" />
+  <entry xlink:href="form-over-function.xhtml" />
+  <entry xlink:href="false-advertising.xhtml" />
+  <entry xlink:href="eye-cancer-ii.xhtml" />
+  <entry xlink:href="site-news:tor-and-ipv6.xhtml" />
+  <entry xlink:href="site-news:einit-kyuba-archives.xhtml" />
+
+  <feed xlink:href="mathematics.atom"/>
 </feed>

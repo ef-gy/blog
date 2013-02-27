@@ -3,12 +3,10 @@
               xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
               xmlns:xhtml="http://www.w3.org/1999/xhtml"
               xmlns:atom="http://www.w3.org/2005/Atom"
-              xmlns:source="http://ef.gy/2012/source"
               xmlns:data="http://ef.gy/2013/data"
               xmlns:str="http://exslt.org/strings"
               xmlns:svg="http://www.w3.org/2000/svg"
               xmlns="http://www.w3.org/1999/xhtml"
-              exclude-result-prefixes="source"
               version="1.0">
   <xsl:output method="xml" version="1.0" encoding="UTF-8"
               doctype-public="-//W3C//DTD XHTML 1.1//EN"
@@ -101,7 +99,7 @@
                       </xsl:choose>
                     </xsl:if>
                   </xsl:for-each>
-                  <ul><li><a href="{$link}">read more...</a></li></ul>
+                  <p><a href="{$link}">(read on...)</a></p>
                   </li>
                 </xsl:when>
                 <xsl:when test="($target='home' or $target='') and ((position() &lt; 3) or ($weights[@name=$tname] &gt;= 3))">
@@ -122,10 +120,20 @@
                       </xsl:choose>
                     </xsl:if>
                   </xsl:for-each>
-                  <ul><li><a href="{$link}">read more...</a></li></ul>
+                  <p><a href="{$link}">(read on...)</a></p>
                   </li>
                 </xsl:when>
                 <xsl:otherwise>
+                  <li class="small"><h1><a href="{$link}"><xsl:value-of select="atom:content/xhtml:html/xhtml:head/xhtml:title"/></a></h1>
+                  <ul>
+                    <li class="published"><xsl:value-of select="(atom:published | atom:updated)[1]"/></li>
+                    <li class="author"><xsl:value-of select="atom:author/atom:name"/></li>
+                  </ul>
+                  <p>
+                    <xsl:value-of select="atom:summary"/>
+                  </p>
+                  <p><a href="{$link}">(read on...)</a></p>
+                  <!--
                   <li>
                     <a href="{$link}">
                       <span><xsl:value-of select="atom:title" /></span>
@@ -139,6 +147,7 @@
                       </xsl:choose>
                       <span class="updated"><xsl:value-of select="concat(' ',substring-before(atom:updated,'T'))" /></span>
                     </a>
+                    -->
                   </li>
                 </xsl:otherwise>
               </xsl:choose>

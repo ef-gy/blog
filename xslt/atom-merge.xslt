@@ -2,10 +2,10 @@
 <xsl:stylesheet
               xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
               xmlns:xhtml="http://www.w3.org/1999/xhtml"
-              xmlns:source="http://ef.gy/2012/source"
               xmlns:atom="http://www.w3.org/2005/Atom"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
               xmlns="http://www.w3.org/2005/Atom"
-              exclude-result-prefixes="source xhtml atom"
+              exclude-result-prefixes="xlink xhtml atom"
               version="1.0">
   <xsl:output method="xml" version="1.0" encoding="UTF-8"
               indent="no"
@@ -19,9 +19,9 @@
     </xsl:copy>
   </xsl:template>
 
-  <xsl:template match="atom:entry[@source:local]">
+  <xsl:template match="atom:entry[@xlink:href]">
     <entry>
-      <xsl:variable name="source" select="document(concat($documentRoot,'/',@source:local))" />
+      <xsl:variable name="source" select="document(concat($documentRoot,'/',@xlink:href))" />
 
       <title><xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:title" /></title>
       <id>http://ef.gy/<xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content" /></id>
@@ -49,9 +49,9 @@
     </entry>
   </xsl:template>
 
-  <xsl:template match="source:merge">
-    <xsl:for-each select="document(concat($documentRoot,'/',@local))/atom:feed">
-      <xsl:apply-templates select="atom:entry | source:merge"/>
+  <xsl:template match="atom:feed[@xlink:href]">
+    <xsl:for-each select="document(concat($documentRoot,'/',@xlink:href))/atom:feed">
+      <xsl:apply-templates select="atom:entry | atom:feed"/>
     </xsl:for-each>
   </xsl:template>
 </xsl:stylesheet>

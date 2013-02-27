@@ -2,10 +2,9 @@
 <xsl:stylesheet
               xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
               xmlns:xhtml="http://www.w3.org/1999/xhtml"
-              xmlns:source="http://ef.gy/2012/source"
               xmlns:atom="http://www.w3.org/2005/Atom"
               xmlns="http://www.w3.org/1999/xhtml"
-              exclude-result-prefixes="source xhtml atom"
+              exclude-result-prefixes="xhtml atom"
               version="1.0">
   <xsl:output method="xml" version="1.0" encoding="UTF-8"
               indent="no"

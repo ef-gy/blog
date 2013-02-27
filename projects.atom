@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom" xmlns:source="http://ef.gy/2012/source" xml:id="projects">
+<feed xmlns="http://www.w3.org/2005/Atom" xml:id="projects" xmlns:xlink="http://www.w3.org/1999/xlink">
   <title>ef.gy</title>
   <subtitle>Projects</subtitle>
 
-  <entry source:local="project:fortune.xhtml" />
-  <entry source:local="project:tesseract.xhtml" />
-  <entry source:local="project:xslt-mandelbrot.xhtml" />
-  <entry source:local="project:xslt-formatting-dates-in-maya.xhtml" />
-  <entry source:local="topologic.xhtml" />
+  <entry xlink:href="project:fortune.xhtml" />
+  <entry xlink:href="project:tesseract.xhtml" />
+  <entry xlink:href="project:xslt-mandelbrot.xhtml" />
+  <entry xlink:href="project:xslt-formatting-dates-in-maya.xhtml" />
+  <entry xlink:href="topologic.xhtml" />
 </feed>

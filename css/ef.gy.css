@@ -525,7 +525,8 @@ body#feed ul + ul li a:hover
 }
 
 body#feed .large h2,
-body#feed .medium h2
+body#feed .medium h2,
+body#feed .small h2
 {
     display: block;
     font-size: 1.4em;
@@ -538,8 +539,32 @@ body#feed .medium h2
     border: 0;
 }
 
+body#feed .large h2 a:before,
+body#feed .medium h2 a:before,
+body#feed .small h2 a:before
+{
+    display: inline-block;
+    content: " ";
+    border: 1px solid #fff;
+    height: 1em;
+    width: 0.5em;
+    margin: 0 0.25em 0 0;
+    background: #a44;
+}
+
+body#feed .medium h2 a:before
+{
+    background: #4a4;
+}
+
+body#feed .small h2 a:before
+{
+    background: #44a;
+}
+
 body#feed .large,
-body#feed .medium
+body#feed .medium,
+body#feed .small
 {
     display: inline-block;
     width: 46%;
@@ -549,8 +574,15 @@ body#feed .medium
     color: #000;
 }
 
+body#feed .small
+{
+    width: 21%;
+    float: none;
+}
+
 body#feed .large li,
-body#feed .medium li
+body#feed .medium li,
+body#feed .small li
 {
     display: inline-block;
     height: auto;
@@ -560,7 +592,8 @@ body#feed .medium li
 }
 
 body#feed .large a,
-body#feed .medium a
+body#feed .medium a,
+body#feed .small a
 {
     display: inline;
     padding: 0;
@@ -568,7 +601,8 @@ body#feed .medium a
 }
 
 body#feed .large li a,
-body#feed .medium li a
+body#feed .medium li a,
+body#feed .small li a
 {
     display: inline-block;
     padding: 1em 2em;
@@ -581,14 +615,16 @@ body#feed .medium li a
 }
 
 body#feed .large li a:hover,
-body#feed .medium li a:hover
+body#feed .medium li a:hover,
+body#feed .small li a:hover
 {
     background: #557;
     color: #fff;
 }
 
 body#feed .large ul,
-body#feed .medium ul
+body#feed .medium ul,
+body#feed .small ul
 {
     margin: 0;
     padding: 0;
@@ -597,13 +633,15 @@ body#feed .medium ul
 }
 
 body#feed .large th, body#feed .large td, body#feed .large tr,
-body#feed .medium th, body#feed .medium td, body#feed .medium tr
+body#feed .medium th, body#feed .medium td, body#feed .medium tr,
+body#feed .small th, body#feed .small td, body#feed .small tr
 {
     display: inline-block;
 }
 
 body#feed .large h2 + ul,
-body#feed .medium h2 + ul
+body#feed .medium h2 + ul,
+body#feed .small h2 + ul
 {
     display: block;
     margin: -2em 0 1em 0;
@@ -612,8 +650,14 @@ body#feed .medium h2 + ul
     color: #555;
 }
 
+body#feed .small h2 + ul
+{
+    display: none;
+}
+
 body#feed .large h2 + ul li,
-body#feed .medium h2 + ul li
+body#feed .medium h2 + ul li,
+body#feed .small h2 + ul li
 {
     margin: 0;
     padding: 0;
@@ -621,8 +665,10 @@ body#feed .medium h2 + ul li
 
 body#feed .large h2 + ul li.published,
 body#feed .medium h2 + ul li.published,
+body#feed .small h2 + ul li.published,
 body#feed .large h2 + ul li.author,
-body#feed .medium h2 + ul li.author
+body#feed .medium h2 + ul li.author,
+body#feed .small h2 + ul li.author
 {
     display: inline-block;
     margin: 0;
@@ -953,9 +999,18 @@ ul#meta li#published .day
         width: 2.3em;
     }
 
-    body#feed ul + ul li,
+    body#feed .large,
+    body#feed .medium
+    {
+        width: 46%;
+    }
+}
+
+@media (max-width: 50em)
+{
     body#feed .large,
     body#feed .medium,
+    body#feed .small,
     body#feed ul + ul li + li + li
     {
         width: 46%;
@@ -964,9 +1019,9 @@ ul#meta li#published .day
 
 @media (max-width: 42.9em)
 {
-    body#feed ul + ul li,
     body#feed .large,
     body#feed .medium,
+    body#feed .small,
     body#feed ul + ul li + li + li
     {
         float: none;
