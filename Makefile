@@ -4,7 +4,7 @@ INDICES=download/index.atom download/kyuba/index.atom
 BUILD:=.build
 BUILDD:=$(BUILD)/.volatile
 DOWNLOAD:=$(BUILD)/download
-DATABASES:=rogue.sqlite3
+DATABASES:=
 XHTMLS:=$(wildcard *.xhtml)
 XHTMLESC:=$(subst :,\:,$(XHTMLS))
 DOCUMENTS:=$(filter-out source-code.xhtml about.xhtml,$(wildcard *.xhtml) $(wildcard *.atom))
@@ -89,11 +89,6 @@ $(BUILD)/%.pdf: $(BUILD)/%.docbook $(BUILDD)
 #	fop $<.fo -pdf $@
 
 databases: $(DATABASES)
-
-rogue.sqlite3: src/rogue.sql src/rogue-data.sql
-	rm -f rogue.sqlite3
-	sqlite3 rogue.sqlite3 < src/rogue.sql
-	sqlite3 rogue.sqlite3 < src/rogue-data.sql
 
 index: $(INDICES)
 
