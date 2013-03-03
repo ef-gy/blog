@@ -85,6 +85,11 @@ server {
 		try_files $uri.pdf $uri =404;
 	}
 
+	location /mobi {
+		try_files $uri.mobi $uri =404;
+        types { application/x-mobipocket-ebook mobi; }
+    }
+
 	location /js {
 		try_files $uri.js $uri =404;
 	}

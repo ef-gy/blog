@@ -7,7 +7,6 @@ BUILD:=.build
 PDFDEST:=pdf
 MOBIDEST:=mobi
 DOWNLOAD:=$(BUILD)/download
-FONTS:=$(BUILD)/fonts
 BUILDTMP:=$(shell pwd)/$(BUILD)/tmp
 
 # programmes
@@ -27,7 +26,6 @@ PMML2SVGZIPBASE:=$(basename $(notdir $(PMML2SVGZIP)))
 # data files
 SAXONJAR:=/usr/share/java/saxonb.jar
 XHTMLSTRICT:=/usr/share/xml/xhtml-relaxng/xhtml-strict.rng
-STIXFONTS:=/usr/share/fonts/opentype/stix
 PMML2SVG:=$(BUILD)/$(PMML2SVGZIPBASE)/XSLT2/pmml2svg.xsl
 
 # source files
@@ -46,6 +44,7 @@ PDFS:=$(addsuffix .pdf,$(BUILDRAW))
 OPFS:=$(addsuffix .opf,$(BUILDRAW))
 MOBIS:=$(addsuffix .mobi,$(BUILDRAW))
 SVGS:=$(addsuffix .svg,$(basename $(notdir $(PLOTS))))
+OPFXHTMLS:=$(addprefix $(BUILD)/,$(addsuffix .opf.xhtml,$(basename $(notdir $(wildcard *.xhtml)))))
 
 # escaped target file names
 PPXHTMLESC:=$(subst :,\:,$(PPXHTMLS))
@@ -53,6 +52,7 @@ DOCBOOKESC:=$(subst :,\:,$(DOCBOOKS))
 PDFESC:=$(subst :,\:,$(PDFS))
 OPFESC:=$(subst :,\:,$(OPFS))
 MOBIESC:=$(subst :,\:,$(MOBIS))
+OPFXHTMLDESC:=$(subst :,\:,$(OPFXHTMLS))
 
 BUILDD:=$(BUILD)/.volatile
 DATABASES:=
@@ -66,6 +66,7 @@ all: fortune index
 run: run-fortune
 clean:
 	rm -f $(DATABASES) $(INDICES) $(BUILD)/*; true
+	rm -rf $(BUILDTMP); true
 scrub: clean
 	rm -rf $(BUILD)
 
@@ -78,8 +79,9 @@ pdfs: $(PDFESC)
 opfs: $(OPFESC)
 mobis: $(MOBIESC)
 
-install: install-pdf
+install: install-pdf install-mobi
 install-pdf: $(PDFDEST)/.volatile $(addprefix $(PDFDEST)/,$(notdir $(PDFESC)))
+install-mobi: $(MOBIDEST)/.volatile $(addprefix $(MOBIDEST)/,$(notdir $(MOBIESC)))
 
 uninstall: uninstall-pdf
 
@@ -102,10 +104,9 @@ $(MOBIDEST)/.volatile:
 	mkdir -p $(MOBIDEST); true
 	touch $@
 
-# font files (for kindle)
-$(FONTS)/STIXGeneral-Regular.otf: $(BUILDD)
-	mkdir -p $(FONTS); true
-	cp $(STIXFONTS)/* $(FONTS)
+# css files (for epub/kindle)
+$(BUILD)/ef.gy.book.css: css/ef.gy.book.css $(BUILDD)
+	cp $< $@
 
 # build data file downloads
 $(DOWNLOAD)/docbook-5.0.zip: $(DOWNLOAD)/.volatile
@@ -131,6 +132,12 @@ $(PMML2SVG): $(BUILD)/$(PMML2SVGZIPBASE)/RELEASE
 # install pattern rules
 $(PDFDEST)/%.pdf: $(BUILD)/%.pdf
 	install $< $@
+
+$(MOBIDEST)/%.mobi: $(BUILD)/%.mobi
+	install $< $@
+
+uninstall-mobi:
+	rm -f $(addprefix $(MOBIDEST)/,$(notdir $(MOBIS)))
 
 uninstall-pdf:
 	rm -f $(addprefix $(PDFDEST)/,$(notdir $(PDFS)))
@@ -173,7 +180,7 @@ $(BUILD)/%.pdf: $(BUILD)/%.docbook $(BUILDD)
 
 # pattern rules to generate OPF files
 $(BUILD)/%.nomathml-xhtml: $(BUILD)/%.xhtml $(PMML2SVG)
-	CLASSPATH=$(SAXONJAR) java net.sf.saxon.Transform -ext:off -s:$< -xsl:$(PMML2SVG) -o:$@
+	CLASSPATH=$(SAXONJAR) java net.sf.saxon.Transform -ext:off -s:$< -xsl:$(PMML2SVG) -o:$@ initSize=14 minSize=4 svgMasterUnit='pt'
 
 $(BUILD)/%.opf.xhtml: $(BUILD)/%.nomathml-xhtml $(BUILD)/licence.xml xslt/xhtml-post-process-opf.xslt
 	rm -rf "$(BUILDTMP)/$(notdir $*)"; mkdir -p "$(BUILDTMP)/$(notdir $*)"
@@ -190,8 +197,8 @@ $(BUILD)/%.opf: $(BUILD)/%.atom $(BUILDD) $(BUILD)/licence.xml xslt/opf-transcod
 	$(XSLTPROC) $(XSLTPROCARGS) xslt/opf-transcode-atom.xslt $< > $@
 
 # pattern rule to generate MOBIs
-$(BUILD)/%.mobi: $(BUILD)/%.opf $(FONTS)/STIXGeneral-Regular.otf
-	cd $(BUILD) && $(KINDLEGEN) $(notdir $<) -o $(notdir $@)
+$(BUILD)/%.mobi: $(BUILD)/%.opf $(BUILD)/ef.gy.book.css $(OPFXHTMLDESC)
+	cd $(BUILD) && $(KINDLEGEN) $(notdir $<) -o $(notdir $@) || true
 
 # pattern rule to generate directory indices
 $(INDICES): Makefile $(filter-out %index.atom, $(wildcard download/*))

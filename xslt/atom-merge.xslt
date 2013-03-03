@@ -27,6 +27,7 @@
       <id>http://ef.gy/<xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content" /></id>
       <link href="/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}" rel="alternate" type="application/xhtml+xml" />
       <link href="/pdf/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}" rel="alternate" type="application/pdf" />
+      <link href="/mobi/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}.mobi" rel="alternate" type="application/x-mobipocket-ebook" />
       <summary><xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='description']/@content" /></summary>
       <published><xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='date']/@content" /></published>
       <updated><xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='mtime']/@content" /></updated>

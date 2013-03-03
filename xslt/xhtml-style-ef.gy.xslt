@@ -57,6 +57,7 @@
       <link href="/css/ef.gy" rel="stylesheet" type="text/css" />
       <xsl:if test="not(($collection = 'fortune') or ($collection = 'about') or ($collection = 'source-code'))">
         <link rel="alternate" type="application/pdf" href="/pdf/{$collection}"/>
+        <link rel="alternate" type="application/x-mobipocket-ebook" href="/mobi/{$collection}.mobi"/>
         <link rel="alternate" type="application/docbook+xml" href="/docbook/{$collection}"/>
       </xsl:if>
       <xsl:apply-templates select="@*|node()" />
