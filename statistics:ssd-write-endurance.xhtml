@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-<title>SSD Write Endurance Considered... Sufficient</title>
+<title>(SLC) SSD Write Endurance Considered... Sufficient</title>
 <meta name="author" content="Magnus Achim Deininger" />
 <meta name="description" content="No, you won't kill your SSD anytime soon. Seems hard to find actual, crunched numbers though." />
 <meta name="date" content="2013-02-18T21:42:00Z" />
-<meta name="mtime" content="2013-02-19T14:42:00Z" />
+<meta name="mtime" content="2013-03-03T18:45:00Z" />
 <meta name="category" content="Statistics" />
 <meta name="unix:name" content="statistics:ssd-write-endurance" />
 </head>
 <body>
 <h1>The Numbers</h1>
-<p>Ever wonder how long your SSD (or thumb drive, for that matter - at least if it does wear leveling) will last? It's funny how bad people are at estimating just how long "100,000 writes" are going to take when spread over a device that spans several thousand of those blocks over several gigabytes of memory. It obviously gets far worse with newer flash memory that is able to withstand a whopping million writes per cell. So yeah, let's crunch some numbers and fix that misconception.</p>
+<p>Ever wonder how long your shiny new SLC SSD will last? It's funny how bad people are at estimating just how long "100,000 writes" are going to take when spread over a device that spans several thousand of those blocks over several gigabytes of memory. Not to mention even newer drives that can take even more of a beating before going down. So yeah, let's crunch some numbers for that:</p>
 <img src="/svg/flash-integrity-100000" alt="Drive Integrity After Continuous Writing to Flash Memory at 6Gb/s with Average Lifespan of Flash Cell Approximated at 100k Writes" preserveAspectRatio="xMidYMin meet"/>
 <img src="/svg/flash-integrity-1000000" alt="Drive Integrity After Continuous Writing to Flash Memory at 6Gb/s with Average Lifespan of Flash Cell Approximated at 1M Writes" preserveAspectRatio="xMidYMin meet"/>
 <p>Note how I crunched numbers with the full 6Gbit/s throughput of SATA 3.0. We don't actually have drives that can deliver that kind of throughput, much less sustained for several years. You also typically won't find any natural scenario where you'll keep writing gigabytes of random data to an SSD like that. And by "that" I mean "sustained for days, months or years." And OS write caching hasn't been taken into consideration either.</p>
@@ -35,14 +35,15 @@
 <mi mathvariant='normal' class='MathML-Unit'>Gb</mi>
 <mi mathvariant='normal' class='MathML-Unit'>s</mi>
 </mfrac>
+<mtext>(with 8b/10b coding)</mtext>
 <mo>=</mo>
-<mn>750</mn>
+<mn>600</mn>
 <mfrac>
 <mi mathvariant='normal' class='MathML-Unit'>MB</mi>
 <mi mathvariant='normal' class='MathML-Unit'>s</mi>
 </mfrac>
 </mrow></math>
-<p>You'll find that this is roughly 2-3 times the rated maximum write speed for consumer grade SSDs.</p>
+<p><em>Note: the original article did not take 8b/10b coding as used by SATA 3.0 into account, which decreases the throughput by 20%. The current graphs have been updated to reflect this new maximum throughput.</em></p>
 <h2>Block Sizes</h2>
 <p>For the calculations we'll assume the following:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
@@ -78,19 +79,7 @@
 </mfrac>
 <mo>=</mo>
 <mfrac>
-<mrow><mn>6</mn>
-<mfrac>
-<mi mathvariant='normal' class='MathML-Unit'>Gb</mi>
-<mi mathvariant='normal' class='MathML-Unit'>s</mi>
-</mfrac>
-</mrow>
-<mrow><mn>2</mn>
-<mi mathvariant='normal' class='MathML-Unit'>MB</mi>
-</mrow>
-</mfrac>
-<mo>=</mo>
-<mfrac>
-<mrow><mn>750</mn>
+<mrow><mn>600</mn>
 <mfrac>
 <mi mathvariant='normal' class='MathML-Unit'>MB</mi>
 <mi mathvariant='normal' class='MathML-Unit'>s</mi>
@@ -101,7 +90,7 @@
 </mrow>
 </mfrac>
 <mo>=</mo>
-<mn>375</mn>
+<mn>300</mn>
 <mfrac>
 <mi mathvariant='normal' class='MathML-Unit'>blocks</mi>
 <mi mathvariant='normal' class='MathML-Unit'>s</mi>
@@ -109,7 +98,7 @@
 </mrow></math>
 <p>Notice that this rate decreases with the write throughput, meaning that at more realistic throughput levels the drive will have to erase fewer blocks than that per second. I'd assume that the higher throughput we're using for our calculations would thus compensate for a suboptimal write bundling algorithm in the drive's firmware.</p>
 <h2>Number of Writes Per Erase Block</h2>
-<p>I seem to have trouble finding accurate statistics for this rather important metric. Contemporary flash chip descriptions seem to indicate an average of either <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mn>10</mn><mn>5</mn></msup></math> or <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mn>10</mn><mn>6</mn></msup></math> writes before a given block is likely to be dead. Unfortunately, most specification sheets on SSDs seem to omit the definition of "average" here. Thus I'll simply assume that number to be based on a Gaussian distribution and further assume a somewhat generous standard deviation of 10%.</p>
+<p>I seem to have trouble finding accurate statistics for this rather important metric. Contemporary flash chip descriptions seem to indicate an average of either 100,000 or 1,000,000 writes before a given block is likely to be dead. Unfortunately, most specification sheets on SSDs seem to omit the definition of "average" here. Thus I'll simply assume that number to be based on a Gaussian distribution and further assume a somewhat generous standard deviation of 10%.</p>
 <p>This means that we should be able to use the following formula - a variant of the cumulative distribution function - to estimate the probability of a given block to be broken after a given number of writes to it:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mtext>probability of block being broken</mtext>
@@ -139,7 +128,7 @@
 </mrow>
 <mn>2</mn></mfrac>
 </mrow></math>
-<p>Note that <em>erf</em> is the Gauss error function, <em>writes</em> is the number of writes performed to a block and <em>write count</em> is either <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mn>10</mn><mn>5</mn></msup></math> or <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mn>10</mn><mn>6</mn></msup></math> - we'll crunch the numbers for both.</p>
+<p>Note that <em>erf</em> is the Gauss error function, <em>writes</em> is the number of writes performed to a block and <em>write count</em> is either 100,000 or 1,000,000 - we'll crunch the numbers for both.</p>
 <h2>Number of Erase Blocks</h2>
 <p>The formula above gives us the probability of blocks in a given erase block to be broken after a given number of writes. Obviously any given SSD will have more than one erase block, and that number is easily calculated as:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
