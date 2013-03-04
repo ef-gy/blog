@@ -52,7 +52,7 @@ DOCBOOKESC:=$(subst :,\:,$(DOCBOOKS))
 PDFESC:=$(subst :,\:,$(PDFS))
 OPFESC:=$(subst :,\:,$(OPFS))
 MOBIESC:=$(subst :,\:,$(MOBIS))
-OPFXHTMLDESC:=$(subst :,\:,$(OPFXHTMLS))
+OPFXHTMLESC:=$(subst :,\:,$(OPFXHTMLS))
 
 BUILDD:=$(BUILD)/.volatile
 DATABASES:=
@@ -183,21 +183,21 @@ $(BUILD)/%.nomathml-xhtml: $(BUILD)/%.xhtml $(PMML2SVG)
 	CLASSPATH=$(SAXONJAR) java net.sf.saxon.Transform -ext:off -s:$< -xsl:$(PMML2SVG) -o:$@ initSize=14 minSize=4 svgMasterUnit='pt'
 
 $(BUILD)/%.opf.xhtml: $(BUILD)/%.nomathml-xhtml $(BUILD)/licence.xml xslt/xhtml-post-process-opf.xslt
-	rm -rf "$(BUILDTMP)/$(notdir $*)"; mkdir -p "$(BUILDTMP)/$(notdir $*)"
-	$(XSLTPROC) $(XSLTPROCARGS) --stringparam tmpdir "$(BUILDTMP)/$(notdir $*)" -o $@ xslt/xhtml-split-svg-opf.xslt $<
+	rm -rf $(BUILDTMP); mkdir -p $(BUILDTMP)
+	$(XSLTPROC) $(XSLTPROCARGS) --stringparam tmpdir $(BUILDTMP) -o $@ xslt/xhtml-split-svg-opf.xslt $<
 #	for i in $(BUILDTMP)/$(notdir $*)/*.svg; do echo "cleaning: $$i"; [ ! -e "$$i" ] || $(INKSCAPE) -f "$$i" --export-text-to-path --export-plain-svg="$$i.clean"; done
-	for i in $(BUILDTMP)/$(notdir $*)/*.svg; do echo "cleaning: $$i"; [ ! -e "$$i" ] || ($(XVFB) $(INKSCAPE) --with-gui --verb EditSelectAll --verb ObjectToPath --verb FileSave --verb FileQuit "$$i"); done
+	for i in $(BUILDTMP)/*.svg; do echo "cleaning: $$i"; [ ! -e $$i ] || ($(XVFB) $(INKSCAPE) --with-gui --verb EditSelectAll --verb ObjectToPath --verb FileSave --verb FileQuit $$i); done
 	$(XSLTPROC) $(XSLTPROCARGS) -o $@ xslt/xhtml-post-process-opf.xslt $@
-	#rm -rf "$(BUILDTMP)/$(notdir $*)"
+	rm -rf $(BUILDTMP)
 
 $(BUILD)/%.opf: $(BUILD)/%.opf.xhtml $(BUILDD) $(BUILD)/licence.xml xslt/opf-transcode-xhtml.xslt
 	$(XSLTPROC) $(XSLTPROCARGS) xslt/opf-transcode-xhtml.xslt $< > $@
 
-$(BUILD)/%.opf: $(BUILD)/%.atom $(BUILDD) $(BUILD)/licence.xml xslt/opf-transcode-atom.xslt
+$(BUILD)/%.opf: $(BUILD)/%.atom $(BUILDD) $(BUILD)/licence.xml xslt/opf-transcode-atom.xslt $(OPFXHTMLESC)
 	$(XSLTPROC) $(XSLTPROCARGS) xslt/opf-transcode-atom.xslt $< > $@
 
 # pattern rule to generate MOBIs
-$(BUILD)/%.mobi: $(BUILD)/%.opf $(BUILD)/ef.gy.book.css $(OPFXHTMLDESC)
+$(BUILD)/%.mobi: $(BUILD)/%.opf $(BUILD)/ef.gy.book.css
 	cd $(BUILD) && $(KINDLEGEN) $(notdir $<) -o $(notdir $@) || true
 
 # pattern rule to generate directory indices

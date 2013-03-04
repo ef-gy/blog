@@ -12,14 +12,7 @@
               indent="no"
               media-type="application/xml" />
 
-  <xsl:param name="documentRoot"/>
-  <xsl:param name="baseURI"/>
-
   <xsl:strip-space elements="*" />
-
-  <xsl:template match="@*|node()">
-    <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
-  </xsl:template>
 
   <xsl:template match="/atom:feed">
     <xsl:variable name="name" select="@xml:id"/>
@@ -27,23 +20,27 @@
     <package version="3.0" unique-identifier="{@xml:id}">
       <metadata>
         <dc:identifier id="pub-id"><xsl:value-of select="@xml:id"/></dc:identifier>
-        <dc:title><xsl:value-of select="atom:title"/></dc:title>
+        <dc:title id="title"><xsl:value-of select="atom:title"/></dc:title>
+        <meta refines="#title" property="title-type">main</meta>
+        <xsl:if test="atom:subtitle">
+          <dc:title id="subtitle"><xsl:value-of select="atom:subtitle"/></dc:title>
+          <meta refines="#subtitle" property="title-type">subtitle</meta>
+        </xsl:if>
         <dc:language>en</dc:language>
       </metadata>
 
       <manifest>
         <item id="css" href="ef.gy.book.css" media-type="text/css"/>
-        <xsl:for-each select="atom:entry[@xlink:href]">
-          <item id="i-{position()}" href="{concat(substring-before(@xlink:href,'.xhtml'),'.opf.xhtml')}" media-type="application/xhtml+xml"/>
+        <xsl:for-each select="atom:entry[.//xhtml:meta[@name='unix:name']]">
+          <item id="item-{position()}" href="{atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}.opf.xhtml" media-type="application/xhtml+xml"/>
         </xsl:for-each>
       </manifest>
 
       <spine>
-        <xsl:for-each select="atom:entry[@xlink:href]">
-          <itemref idref="i-{position()}"/>
+        <xsl:for-each select="atom:entry[.//xhtml:meta[@name='unix:name']]">
+          <itemref idref="item-{position()}"/>
         </xsl:for-each>
       </spine>
     </package>
   </xsl:template>
-
 </xsl:stylesheet>

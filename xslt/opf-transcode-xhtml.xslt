@@ -30,6 +30,8 @@
         <dc:identifier id="pub-id"><xsl:value-of select="$name"/></dc:identifier>
         <dc:title><xsl:value-of select="xhtml:head/xhtml:title"/></dc:title>
         <dc:language>en</dc:language>
+        <dc:creator><xsl:value-of select="xhtml:head/xhtml:meta[@name='author']/@content"/></dc:creator>
+        <meta property="dcterms:modified"><xsl:value-of select="xhtml:head/xhtml:meta[@name='mtime']/@content"/></meta>
       </metadata>
 
       <manifest>
