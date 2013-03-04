@@ -34,6 +34,18 @@
         <xsl:for-each select="atom:entry[.//xhtml:meta[@name='unix:name']]">
           <item id="item-{position()}" href="{atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}.opf.xhtml" media-type="application/xhtml+xml"/>
         </xsl:for-each>
+        <xsl:for-each select=".//xhtml:img">
+          <xsl:variable name="bjpeg" select="substring-after(@src,'/jpeg/')"/>
+          <xsl:variable name="bpng" select="substring-after(@src,'/png/')"/>
+          <xsl:choose>
+            <xsl:when test="$bjpeg != ''">
+              <item id="{$bjpeg}" href="jpeg/{$bjpeg}.jpeg" media-type="image/jpeg"/>
+            </xsl:when>
+            <xsl:when test="$bpng != ''">
+              <item id="{$bpng}" href="png/{$bpng}.png" media-type="image/png"/>
+            </xsl:when>
+          </xsl:choose>
+        </xsl:for-each>
       </manifest>
 
       <spine>

@@ -50,6 +50,18 @@
         <!--<item id="cover" href="{$name}.cover.opf.svg" media-type="image/svg+xml" properties="cover-image"/>-->
         <item id="css" href="ef.gy.book.css" media-type="text/css"/>
         <item id="main" href="{$name}.opf.xhtml" media-type="application/xhtml+xml"/>
+        <xsl:for-each select=".//xhtml:img">
+          <xsl:variable name="bjpeg" select="substring-after(@src,'/jpeg/')"/>
+          <xsl:variable name="bpng" select="substring-after(@src,'/png/')"/>
+          <xsl:choose>
+            <xsl:when test="$bjpeg != ''">
+              <item id="{$bjpeg}" href="jpeg/{$bjpeg}.jpeg" media-type="image/jpeg"/>
+            </xsl:when>
+            <xsl:when test="$bpng != ''">
+              <item id="{$bpng}" href="png/{$bpng}.png" media-type="image/png"/>
+            </xsl:when>
+          </xsl:choose>
+        </xsl:for-each>
       </manifest>
 
       <spine>
@@ -58,5 +70,4 @@
       </spine>
     </package>
   </xsl:template>
-
 </xsl:stylesheet>

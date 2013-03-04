@@ -90,6 +90,8 @@ validate: validate-docbook validate-xhtml
 # .volatile files
 $(BUILDD):
 	mkdir -p $(BUILD); true
+	ln -s ../png $(BUILD)/png
+	ln -s ../jpeg $(BUILD)/jpeg
 	touch $(BUILDD)
 
 $(DOWNLOAD)/.volatile:

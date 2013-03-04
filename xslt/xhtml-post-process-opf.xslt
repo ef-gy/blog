@@ -54,6 +54,23 @@
     <xsl:apply-templates select="document(@xlink:href)/svg:*"/>
   </xsl:template>
 
+  <xsl:template match="xhtml:img[@src]">
+    <xsl:variable name="bjpeg" select="substring-after(@src,'/jpeg/')"/>
+    <xsl:variable name="bpng" select="substring-after(@src,'/png/')"/>
+    <xsl:choose>
+      <xsl:when test="$bjpeg != ''">
+        <img src="jpeg/{$bjpeg}.jpeg">
+          <xsl:apply-templates select="@alt | @style | @title | @class"/>
+        </img>
+      </xsl:when>
+      <xsl:when test="$bpng != ''">
+        <img src="png/{$bpng}.png">
+          <xsl:apply-templates select="@alt | @style | @title | @class"/>
+        </img>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
   <!--
   <xsl:template match="svg:svg[svg:metadata/pmml2svg:*]//@style">
     <xsl:attribute name="style">fill:#000</xsl:attribute>
