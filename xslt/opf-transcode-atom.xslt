@@ -52,7 +52,7 @@
               </xsl:if>
               <p>Written by...</p>
               <ul>
-                <xsl:for-each select="atom:entry/atom:author">
+                <xsl:for-each select="atom:entry/atom:author[not(.=preceding::atom:author)]">
                   <li><xsl:value-of select="atom:name"/></li>
                 </xsl:for-each>
               </ul>
