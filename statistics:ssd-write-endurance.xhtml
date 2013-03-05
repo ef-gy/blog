@@ -273,7 +273,7 @@ size=64
 writecount=100000
 set yrange [0:1]
 set xrange [800000:20000000]
-plot (0.5*(1+erf(((x*(speed*1024*1024*1024/8)/(size*1024*1024*1024))-writecount)/sqrt(2*((writecount*0.1)**2)))))
+plot (0.5*(1+erf(((x*(speed*1000*1000*1000/10)/(size*1000*1000*1000))-writecount)/sqrt(2*((writecount*0.1)**2)))))
 </code></pre>
 <p>Alternatively, we could also have plotted the number of broken blocks directly:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
