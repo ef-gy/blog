@@ -150,7 +150,7 @@
         </xsl:if>
       </ul>
       <xsl:if test="descendant::math:math">
-        <p id="maths-note">Some of the content on this page is in MathML. If your browser has trouble displaying any mathematical notation below you might find the <a href="/pdf/{$collection}">PDF transcript of this page</a> more helpful. There is also a <a href="/pdf/mathematics">collection of mathematical articles on this site</a>, which should include this one.</p>
+        <p id="maths-note">Some of the content on this page is in MathML. If your browser has trouble displaying any mathematical notation below you might find the <a href="/pdf/{$collection}">PDF transcript of this page</a> more helpful. There is also a <a href="/pdf/mathematics">collection of mathematical articles on this site</a>, which should include this one. Additionally there is <a href="/mobi/{$collection}.mobi">an ebook version of this page</a> as well as <a href="/mobi/mathematics.mobi">an ebook version of the aforementioned collection of mathematical articles</a>.</p>
       </xsl:if>
       <xsl:if test="(../xhtml:head/xhtml:meta[@name='description']/@content) and not(xhtml:div[@class='figure']/xhtml:h1)">
         <div class="figure auto-abstract">
