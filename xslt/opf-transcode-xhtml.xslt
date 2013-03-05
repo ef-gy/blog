@@ -36,20 +36,28 @@
 
       <manifest>
         <xsl:document href=".build/{$name}.cover.opf.xhtml">
-          <html>
+          <html xml:lang="en">
             <head>
+              <link rel="stylesheet" href="ef.gy.cover.css" type="text/css"/>
               <title>Cover</title>
             </head>
             <body id="cover">
-              <h1><xsl:value-of select="xhtml:head/xhtml:title"/></h1>
-              <h2><xsl:value-of select="xhtml:head/xhtml:meta[@name='author']/@content"/></h2>
+              <h1>ef.gy</h1>
+              <h2><xsl:value-of select="xhtml:head/xhtml:title"/></h2>
+              <p>Written by <xsl:value-of select="xhtml:head/xhtml:meta[@name='author']/@content"/>.</p>
+              <p>This ebook was automatically transcribed from an XHTML file available at <a href="http://ef.gy/{@name}">ef.gy</a>. Certain elements of the source document may not be present in this ebook transcript due to technical limitations.</p>
             </body>
           </html>
         </xsl:document>
         <item id="cover" href="{$name}.cover.opf.xhtml" media-type="application/xhtml+xml"/>
         <!--<item id="cover" href="{$name}.cover.opf.svg" media-type="image/svg+xml" properties="cover-image"/>-->
         <item id="css" href="ef.gy.book.css" media-type="text/css"/>
-        <item id="main" href="{$name}.opf.xhtml" media-type="application/xhtml+xml"/>
+        <item id="cover-css" href="ef.gy.cover.css" media-type="text/css"/>
+        <item id="main" href="{$name}.opf.xhtml" media-type="application/xhtml+xml">
+          <xsl:if test=".//svg:svg">
+            <xsl:attribute name="properties">svg</xsl:attribute>
+          </xsl:if>
+        </item>
         <xsl:for-each select=".//xhtml:img">
           <xsl:variable name="bjpeg" select="substring-after(@src,'/jpeg/')"/>
           <xsl:variable name="bpng" select="substring-after(@src,'/png/')"/>

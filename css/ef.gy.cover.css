@@ -1,0 +1,18 @@
+h1
+{
+    text-align: left;
+    margin: 5em 0 0 0;
+    page-break-before: auto;
+}
+
+h2
+{
+    text-align: right;
+    border-top: 1px solid #000;
+    page-break-before: auto;
+}
+
+p
+{
+    page-break-before: always;
+}

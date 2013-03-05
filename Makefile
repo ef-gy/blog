@@ -110,6 +110,9 @@ $(MOBIDEST)/.volatile:
 $(BUILD)/ef.gy.book.css: css/ef.gy.book.css $(BUILDD)
 	cp $< $@
 
+$(BUILD)/ef.gy.cover.css: css/ef.gy.cover.css $(BUILDD)
+	cp $< $@
+
 # build data file downloads
 $(DOWNLOAD)/docbook-5.0.zip: $(DOWNLOAD)/.volatile
 	wget '$(DOCBOOK5ZIP)' -cO $@
@@ -199,7 +202,7 @@ $(BUILD)/%.opf: $(BUILD)/%.atom $(BUILDD) $(BUILD)/licence.xml xslt/opf-transcod
 	$(XSLTPROC) $(XSLTPROCARGS) xslt/opf-transcode-atom.xslt $< > $@
 
 # pattern rule to generate MOBIs
-$(BUILD)/%.mobi: $(BUILD)/%.opf $(BUILD)/ef.gy.book.css
+$(BUILD)/%.mobi: $(BUILD)/%.opf $(BUILD)/ef.gy.book.css $(BUILD)/ef.gy.cover.css
 	cd $(BUILD) && $(KINDLEGEN) $(notdir $<) -o $(notdir $@) || true
 
 # pattern rule to generate directory indices
