@@ -90,6 +90,11 @@ server {
         types { application/x-mobipocket-ebook mobi; }
     }
 
+	location /epub {
+		try_files $uri.mobi $uri =404;
+        types { application/epub+zip epub; }
+    }
+
 	location /js {
 		try_files $uri.js $uri =404;
 	}

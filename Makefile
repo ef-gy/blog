@@ -6,6 +6,7 @@ INDICES:=download/index.atom download/kyuba/index.atom
 BUILD:=.build
 PDFDEST:=pdf
 MOBIDEST:=mobi
+EPUBDEST:=epub
 DOWNLOAD:=$(BUILD)/download
 BUILDTMP:=$(shell pwd)/$(BUILD)/tmp
 
@@ -14,6 +15,7 @@ XSLTPROC:=xsltproc
 GNUPLOT:=gnuplot
 KINDLEGEN:=kindlegen
 INKSCAPE:=inkscape
+ZIP:=zip
 XVFB:=xvfb-run -a
 
 # download locations
@@ -43,6 +45,7 @@ DOCBOOKS:=$(addsuffix .docbook,$(BUILDRAW))
 PDFS:=$(addsuffix .pdf,$(BUILDRAW))
 OPFS:=$(addsuffix .opf,$(BUILDRAW))
 MOBIS:=$(addsuffix .mobi,$(BUILDRAW))
+EPUBS:=$(addsuffix .epub,$(BUILDRAW))
 SVGS:=$(addsuffix .svg,$(basename $(notdir $(PLOTS))))
 OPFXHTMLS:=$(addprefix $(BUILD)/,$(addsuffix .opf.xhtml,$(basename $(notdir $(wildcard *.xhtml)))))
 
@@ -52,6 +55,7 @@ DOCBOOKESC:=$(subst :,\:,$(DOCBOOKS))
 PDFESC:=$(subst :,\:,$(PDFS))
 OPFESC:=$(subst :,\:,$(OPFS))
 MOBIESC:=$(subst :,\:,$(MOBIS))
+EPUBESC:=$(subst :,\:,$(EPUBS))
 OPFXHTMLESC:=$(subst :,\:,$(OPFXHTMLS))
 
 BUILDD:=$(BUILD)/.volatile
@@ -78,10 +82,12 @@ docbooks: $(DOCBOOKESC)
 pdfs: $(PDFESC)
 opfs: $(OPFESC)
 mobis: $(MOBIESC)
+epubs: $(EPUBESC)
 
-install: install-pdf install-mobi
+install: install-pdf install-mobi install-epub
 install-pdf: $(PDFDEST)/.volatile $(addprefix $(PDFDEST)/,$(notdir $(PDFESC)))
 install-mobi: $(MOBIDEST)/.volatile $(addprefix $(MOBIDEST)/,$(notdir $(MOBIESC)))
+install-epub: $(EPUBDEST)/.volatile $(addprefix $(EPUBDEST)/,$(notdir $(EPUBESC)))
 
 uninstall: uninstall-pdf
 
@@ -104,6 +110,10 @@ $(PDFDEST)/.volatile:
 
 $(MOBIDEST)/.volatile:
 	mkdir -p $(MOBIDEST); true
+	touch $@
+
+$(EPUBDEST)/.volatile:
+	mkdir -p $(EPUBDEST); true
 	touch $@
 
 # css files (for epub/kindle)
@@ -141,11 +151,17 @@ $(PDFDEST)/%.pdf: $(BUILD)/%.pdf
 $(MOBIDEST)/%.mobi: $(BUILD)/%.mobi
 	install $< $@
 
-uninstall-mobi:
-	rm -f $(addprefix $(MOBIDEST)/,$(notdir $(MOBIS)))
+$(EPUBDEST)/%.epub: $(BUILD)/%.epub
+	install $< $@
 
 uninstall-pdf:
 	rm -f $(addprefix $(PDFDEST)/,$(notdir $(PDFS)))
+
+uninstall-mobi:
+	rm -f $(addprefix $(MOBIDEST)/,$(notdir $(MOBIS)))
+
+uninstall-epub:
+	rm -f $(addprefix $(EPUBDEST)/,$(notdir $(EPUBS)))
 
 # XML validation rules
 validate-docbook: $(DOCBOOKESC) $(BUILD)/docbook-5.0/VERSION
@@ -205,6 +221,24 @@ $(BUILD)/%.opf: $(BUILD)/%.atom $(BUILDD) $(BUILD)/licence.xml xslt/opf-transcod
 $(BUILD)/%.mobi: $(BUILD)/%.opf $(BUILD)/ef.gy.book.css $(BUILD)/ef.gy.cover.css
 	cd $(BUILD) && $(KINDLEGEN) $(notdir $<) -o $(notdir $@) || true
 
+$(BUILD)/%.epub: $(BUILD)/%.opf $(BUILD)/ef.gy.book.css $(BUILD)/ef.gy.cover.css
+	rm -rf $(BUILD)/mimetype $(BUILD)/META-INF $@
+	mkdir $(BUILD)/META-INF
+	echo 'application/epub+zip'>$(BUILD)/mimetype
+	echo\
+		'<?xml version="1.0"?>'\
+		'<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container"><rootfiles>'\
+		'<rootfile full-path="$*.opf" media-type="application/oebps-package+xml"/>'\
+		'</rootfiles></container>'>$(BUILD)/META-INF/container.xml
+	cd $(BUILD) && $(ZIP) -0 $(notdir $@) mimetype && $(ZIP) $(notdir $@) META-INF/container.xml $*.opf $(shell $(XSLTPROC) xslt/opf-print-manifest.xslt $<)
+	rm -rf $(BUILD)/mimetype $(BUILD)/META-INF
+
+# pattern rules for gnuplot graphs
+%.svg: src/%.plot src/flash-integrity.plot
+	$(GNUPLOT)\
+		-e 'set terminal svg size 1200,600 dynamic fname "sans-serif"'\
+		$< > $@
+
 # pattern rule to generate directory indices
 $(INDICES): Makefile $(filter-out %index.atom, $(wildcard download/*))
 	echo '<?xml version="1.0" encoding="utf-8"?>'\
@@ -223,12 +257,6 @@ fortune: src/fortune.cpp include/ef.gy/http.h
 # specific rule to build the tesseract javascript renderer
 js/tesseract.js: src/tesseract.cpp
 	em++ -v --llvm-opts 2 --closure 1 -s EXPORTED_FUNCTIONS="['_main','_updateProjection','_getProjection','_getAxisGraph3','_getAxisGraph4','_addOrigin3','_setOrigin3','_addOrigin4','_setOrigin4','cwrap']" -Iinclude src/tesseract.cpp -o js/tesseract.js
-
-# pattern rules for gnuplot graphs
-%.svg: src/%.plot src/flash-integrity.plot
-	$(GNUPLOT)\
-		-e 'set terminal svg size 1200,600 dynamic fname "sans-serif"'\
-		$< > $@
 
 # specific rule to run the fortune daemon
 run-fortune: fortune

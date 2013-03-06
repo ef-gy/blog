@@ -40,7 +40,7 @@
 
       <manifest>
         <xsl:document href=".build/{$name}.cover.opf.xhtml">
-          <html xml:lang="en">
+          <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
             <head>
               <title>Cover</title>
               <link rel="stylesheet" href="ef.gy.cover.css" type="text/css"/>
