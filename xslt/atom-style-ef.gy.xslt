@@ -36,6 +36,7 @@
         <link href="http://ef.gy/atom/{@xml:id}" rel="self" />
         <link href="http://ef.gy/pdf/{@xml:id}" rel="alternate" type="application/pdf" />
         <link href="http://ef.gy/mobi/{@xml:id}.mobi" rel="alternate" type="application/x-mobipocket-ebook" />
+        <link href="http://ef.gy/epub/{@xml:id}.epub" rel="alternate" type="application/epub+zip" />
         <link href="http://ef.gy/rss/{@xml:id}" rel="alternate" type="application/rss+xml" />
         <link href="http://ef.gy/{@xml:id}" rel="alternate" type="application/xhtml+xml" />
       </xsl:if>
