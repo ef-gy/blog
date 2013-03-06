@@ -49,7 +49,14 @@
       <xsl:when test="(string-length($target) > 0) and atom:entry/atom:content/xhtml:html[xhtml:head/xhtml:meta/@name='unix:name'][xhtml:head/xhtml:meta/@content=str:decode-uri($target)]"><xsl:copy-of select="atom:entry/atom:content/xhtml:html[xhtml:head/xhtml:meta/@name='unix:name'][xhtml:head/xhtml:meta/@content=str:decode-uri($target)]"/></xsl:when>
         <xsl:otherwise><html>
         <head>
-          <title><xsl:value-of select="atom:title" /></title>
+          <xsl:choose>
+            <xsl:when test="atom:subtitle">
+              <title><xsl:value-of select="atom:title"/> :: <xsl:value-of select="atom:subtitle"/></title>
+            </xsl:when>
+            <xsl:otherwise>
+              <title><xsl:value-of select="atom:title"/></title>
+            </xsl:otherwise>
+          </xsl:choose>
           <xsl:choose>
             <xsl:when test="@xml:id">
               <link rel="alternate" type="application/atom+xml" href="http://ef.gy/atom/{@xml:id}" />

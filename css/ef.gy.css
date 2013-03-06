@@ -100,18 +100,6 @@ h1 + ul
     box-shadow: 0 0 0.5em 0.15em #111;
 }
 
-h1 + ul:before
-{
-    content: "ef.gy | ephemeris magni";
-    position: absolute;
-    top: 0;
-    left: 4em;
-    padding: 0.5em;
-    color: #ddd;
-    font-size: 1.4em;
-    font-weight: bold;
-}
-
 h1 + ul + ul
 {
     display: block;
@@ -931,10 +919,6 @@ ul#meta li#published .day
         padding: 10px 1.5em;
         overflow: hidden;
     }
-    h1 + ul:before
-    {
-        left: 1em;
-    }
 
     div.figure
     {
@@ -1029,13 +1013,5 @@ ul#meta li#published .day
         width: auto;
         margin: 1em;
         padding: 1em;
-    }
-}
-
-@media (max-width: 45em)
-{
-    h1 + ul:before
-    {
-        display: none;
     }
 }

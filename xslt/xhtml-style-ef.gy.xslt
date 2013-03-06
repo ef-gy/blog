@@ -110,7 +110,14 @@
   </xsl:template>
 
   <xsl:template match="xhtml:title">
-    <title>ef.gy :: <xsl:apply-templates select="@*|node()" /></title>
+    <xsl:choose>
+      <xsl:when test="substring-after(.,'ef.gy') != ''">
+        <title><xsl:apply-templates select="@*|node()" /></title>
+      </xsl:when>
+      <xsl:otherwise>
+        <title>ef.gy :: <xsl:apply-templates select="@*|node()" /></title>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="xhtml:body">
@@ -120,7 +127,7 @@
       <ul>
         <li><a href="/about">About</a></li>
         <li><a href="/fortune">Fortune</a></li>
-        <li><a href="/site">Articles &amp; Projects</a></li>
+        <li><a href="/site">Blog</a></li>
         <li><a href="/archives">Archives</a></li>
         <li><a href="/source-code">Source Code</a></li>
       </ul>
