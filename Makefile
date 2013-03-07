@@ -220,7 +220,7 @@ $(BUILD)/%/ef.gy.book.css: css/ef.gy.book.css $(BUILD)/%/mimetype
 $(BUILD)/%/ef.gy.cover.css: css/ef.gy.cover.css $(BUILD)/%/mimetype
 	cp $< $@
 
-$(BUILD)/%/publication.opf: $(BUILD)/%.xhtml $(BUILD)/%/META-INF/container.xml $(BUILD)/licence.xml xslt/opf-transcode-xhtml.xslt
+$(BUILD)/%/publication.opf: $(BUILD)/%.xhtml $(BUILD)/%/META-INF/container.xml $(BUILD)/licence.xml xslt/opf-transcode-xhtml.xslt $(PMML2SVG)
 	$(XSLTPROC) $(XSLTPROCARGS) xslt/opf-transcode-xhtml.xslt $< > $@~
 	for i in $(BUILD)/$*/content.xhtml; do\
 		echo converting MathML to SVG: $$i;\
@@ -233,7 +233,7 @@ $(BUILD)/%/publication.opf: $(BUILD)/%.xhtml $(BUILD)/%/META-INF/container.xml $
 	done
 	mv $@~ $@
 
-$(BUILD)/%/publication.opf: $(BUILD)/%.atom $(BUILD)/%/META-INF/container.xml $(BUILD)/licence.xml xslt/opf-transcode-atom.xslt
+$(BUILD)/%/publication.opf: $(BUILD)/%.atom $(BUILD)/%/META-INF/container.xml $(BUILD)/licence.xml xslt/opf-transcode-atom.xslt $(PMML2SVG)
 	$(XSLTPROC) $(XSLTPROCARGS) xslt/opf-transcode-atom.xslt $< > $@~
 	for i in $(BUILD)/$*/content-*.xhtml; do\
 		echo converting MathML to SVG: $$i;\
