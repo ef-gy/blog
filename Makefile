@@ -60,13 +60,13 @@ OPFXHTMLESC:=$(subst :,\:,$(OPFXHTMLS))
 
 BUILDD:=$(BUILD)/.volatile
 DATABASES:=
-XSLTPROCARGS:=--stringparam baseURI "http://ef.gy" --stringparam documentRoot "$$(pwd)" --param licence "document('$$(pwd)/$(BUILD)/licence.xml')"
+XSLTPROCARGS:=--stringparam baseURI "http://ef.gy" --stringparam documentRoot "$$(pwd)" --param licence "document('$$(pwd)/$(BUILD)/licence.xml')" --stringparam builddir $(BUILD)
 
 # don't delete intermediary files
 .SECONDARY:
 
 # meta rules
-all: fortune index
+all: fortune index svgs pdfs mobis epubs
 run: run-fortune
 clean:
 	rm -f $(DATABASES) $(INDICES) $(BUILD)/*; true
@@ -96,8 +96,8 @@ validate: validate-docbook validate-xhtml
 # .volatile files
 $(BUILDD):
 	mkdir -p $(BUILD); true
-	ln -s ../png $(BUILD)/png
-	ln -s ../jpeg $(BUILD)/jpeg
+	ln -s $$(pwd)/png $(BUILD)/png
+	ln -s $$(pwd)/jpeg $(BUILD)/jpeg
 	touch $(BUILDD)
 
 $(DOWNLOAD)/.volatile:
@@ -180,9 +180,10 @@ $(BUILD)/licence.xml: COPYING
 $(BUILD)/%.xhtml: %.xhtml $(BUILDD) $(BUILD)/licence.xml xslt/xhtml-pre-process.xslt
 	$(XSLTPROC) $(XSLTPROCARGS) xslt/xhtml-pre-process.xslt $< > $@
 
-# pattern rule to generate merged ATOMs
-$(BUILD)/%.atom: %.atom $(BUILDD) $(BUILD)/licence.xml xslt/atom-merge.xslt
-	$(XSLTPROC) $(XSLTPROCARGS) xslt/atom-merge.xslt $< > $@
+# pattern rule to generate merged/preprocessed ATOMs
+$(BUILD)/%.atom: %.atom $(BUILDD) $(BUILD)/licence.xml xslt/atom-merge.xslt xslt/xhtml-pre-process.xslt
+	$(XSLTPROC) $(XSLTPROCARGS) xslt/atom-merge.xslt $< | \
+		$(XSLTPROC) $(XSLTPROCARGS) xslt/xhtml-pre-process.xslt - > $@
 
 # pattern rules to generate DocBook files
 $(BUILD)/%.docbook: %.xhtml $(BUILDD) $(BUILD)/licence.xml xslt/docbook-transcode-xhtml.xslt
@@ -199,39 +200,59 @@ $(BUILD)/%.pdf: $(BUILD)/%.docbook $(BUILDD)
 #	xsltproc -xinclude -o $<.fo /usr/share/xml/docbook/stylesheet/docbook-xsl-ns/fo/docbook.xsl $<
 #	fop $<.fo -pdf $@
 
-# pattern rules to generate OPF files
-$(BUILD)/%.nomathml-xhtml: $(BUILD)/%.xhtml $(PMML2SVG)
-	CLASSPATH=$(SAXONJAR) java net.sf.saxon.Transform -ext:off -s:$< -xsl:$(PMML2SVG) -o:$@ initSize=14 minSize=4 svgMasterUnit='pt'
+# pattern rules to generate EPUB/MOBI content
+$(BUILD)/%/mimetype: $(BUILDD)
+	mkdir -p $(BUILD)/$*
+	echo 'application/epub+zip'>$@
+	ln -s $$(pwd)/png $(BUILD)/$*/png
+	ln -s $$(pwd)/jpeg $(BUILD)/$*/jpeg
 
-$(BUILD)/%.opf.xhtml: $(BUILD)/%.nomathml-xhtml $(BUILD)/licence.xml xslt/xhtml-post-process-opf.xslt
-	rm -rf $(BUILDTMP); mkdir -p $(BUILDTMP)
-	$(XSLTPROC) $(XSLTPROCARGS) --stringparam tmpdir $(BUILDTMP) -o $@ xslt/xhtml-split-svg-opf.xslt $<
-#	for i in $(BUILDTMP)/$(notdir $*)/*.svg; do echo "cleaning: $$i"; [ ! -e "$$i" ] || $(INKSCAPE) -f "$$i" --export-text-to-path --export-plain-svg="$$i.clean"; done
-	for i in $(BUILDTMP)/*.svg; do echo "cleaning: $$i"; [ ! -e $$i ] || ($(XVFB) $(INKSCAPE) --with-gui --verb EditSelectAll --verb ObjectToPath --verb FileSave --verb FileQuit $$i); done
-	$(XSLTPROC) $(XSLTPROCARGS) -o $@ xslt/xhtml-post-process-opf.xslt $@
-	rm -rf $(BUILDTMP)
+$(BUILD)/%/META-INF/container.xml: $(BUILD)/%/mimetype
+	mkdir -p $(BUILD)/$*/META-INF
+	echo '<?xml version="1.0"?>'\
+		'<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container"><rootfiles>'\
+		'<rootfile full-path="publication.opf" media-type="application/oebps-package+xml"/>'\
+		'</rootfiles></container>'>$@
 
-$(BUILD)/%.opf: $(BUILD)/%.opf.xhtml $(BUILDD) $(BUILD)/licence.xml xslt/opf-transcode-xhtml.xslt
-	$(XSLTPROC) $(XSLTPROCARGS) xslt/opf-transcode-xhtml.xslt $< > $@
+$(BUILD)/%/ef.gy.book.css: css/ef.gy.book.css $(BUILD)/%/mimetype
+	cp $< $@
 
-$(BUILD)/%.opf: $(BUILD)/%.atom $(BUILDD) $(BUILD)/licence.xml xslt/opf-transcode-atom.xslt $(OPFXHTMLESC)
-	$(XSLTPROC) $(XSLTPROCARGS) xslt/opf-transcode-atom.xslt $< > $@
+$(BUILD)/%/ef.gy.cover.css: css/ef.gy.cover.css $(BUILD)/%/mimetype
+	cp $< $@
+
+$(BUILD)/%/publication.opf: $(BUILD)/%.xhtml $(BUILD)/%/META-INF/container.xml $(BUILD)/licence.xml xslt/opf-transcode-xhtml.xslt
+	$(XSLTPROC) $(XSLTPROCARGS) xslt/opf-transcode-xhtml.xslt $< > $@~
+	for i in $(BUILD)/$*/content.xhtml; do\
+		echo converting MathML to SVG: $$i;\
+		CLASSPATH=$(SAXONJAR) java net.sf.saxon.Transform -ext:off -s:$$i -xsl:$(PMML2SVG) -o:$$i initSize=14 minSize=4 svgMasterUnit='pt';\
+		rm -rf $(BUILD)/$*/tmp; mkdir -p $(BUILD)/$*/tmp || true;\
+		$(XSLTPROC) $(XSLTPROCARGS) --stringparam tmpdir $$(pwd)/$(BUILD)/$*/tmp -o $$i xslt/xhtml-split-svg-opf.xslt $$i;\
+		for j in $(BUILD)/$*/tmp/*.svg; do [ ! -e $$j ] || ( echo " - converting SVG text to outlines: $$j" && $(XVFB) $(INKSCAPE) --with-gui --verb EditSelectAll --verb ObjectToPath --verb FileSave --verb FileQuit $$j ); done;\
+		$(XSLTPROC) $(XSLTPROCARGS) -o $$i xslt/xhtml-post-process-opf.xslt $$i;\
+		rm -rf $(BUILD)/$*/tmp;\
+	done
+	mv $@~ $@
+
+$(BUILD)/%/publication.opf: $(BUILD)/%.atom $(BUILD)/%/META-INF/container.xml $(BUILD)/licence.xml xslt/opf-transcode-atom.xslt
+	$(XSLTPROC) $(XSLTPROCARGS) xslt/opf-transcode-atom.xslt $< > $@~
+	for i in $(BUILD)/$*/content-*.xhtml; do\
+		echo converting MathML to SVG: $$i;\
+		CLASSPATH=$(SAXONJAR) java net.sf.saxon.Transform -ext:off -s:$$i -xsl:$(PMML2SVG) -o:$$i initSize=14 minSize=4 svgMasterUnit='pt';\
+		rm -rf $(BUILD)/$*/tmp; mkdir -p $(BUILD)/$*/tmp || true;\
+		$(XSLTPROC) $(XSLTPROCARGS) --stringparam tmpdir $$(pwd)/$(BUILD)/$*/tmp -o $$i xslt/xhtml-split-svg-opf.xslt $$i;\
+		for j in $(BUILD)/$*/tmp/*.svg; do [ ! -e $$j ] || ( echo " - converting SVG text to outlines: $$j" && $(XVFB) $(INKSCAPE) --with-gui --verb EditSelectAll --verb ObjectToPath --verb FileSave --verb FileQuit $$j ); done;\
+		$(XSLTPROC) $(XSLTPROCARGS) -o $$i xslt/xhtml-post-process-opf.xslt $$i;\
+		rm -rf $(BUILD)/$*/tmp;\
+	done
+	mv $@~ $@
 
 # pattern rule to generate MOBIs
-$(BUILD)/%.mobi: $(BUILD)/%.opf $(BUILD)/ef.gy.book.css $(BUILD)/ef.gy.cover.css
-	cd $(BUILD) && $(KINDLEGEN) $(notdir $<) -o $(notdir $@) || true
+$(BUILD)/%.mobi: $(BUILD)/%/publication.opf $(BUILD)/%/ef.gy.book.css $(BUILD)/%/ef.gy.cover.css
+	cd $(BUILD)/$* && $(KINDLEGEN) publication.opf -o ../$(notdir $@) || true
 
-$(BUILD)/%.epub: $(BUILD)/%.opf $(BUILD)/ef.gy.book.css $(BUILD)/ef.gy.cover.css
-	rm -rf $(BUILD)/mimetype $(BUILD)/META-INF $@
-	mkdir $(BUILD)/META-INF
-	echo 'application/epub+zip'>$(BUILD)/mimetype
-	echo\
-		'<?xml version="1.0"?>'\
-		'<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container"><rootfiles>'\
-		'<rootfile full-path="$*.opf" media-type="application/oebps-package+xml"/>'\
-		'</rootfiles></container>'>$(BUILD)/META-INF/container.xml
-	cd $(BUILD) && $(ZIP) -0 $(notdir $@) mimetype && $(ZIP) $(notdir $@) META-INF/container.xml $*.opf $(shell $(XSLTPROC) xslt/opf-print-manifest.xslt $<)
-	rm -rf $(BUILD)/mimetype $(BUILD)/META-INF
+$(BUILD)/%.epub: $(BUILD)/%/publication.opf $(BUILD)/%/ef.gy.book.css $(BUILD)/%/ef.gy.cover.css
+	rm -f $@
+	cd $(BUILD)/$* && $(ZIP) -0 ../$(notdir $@) mimetype && $(ZIP) ../$(notdir $@) META-INF/container.xml publication.opf $(shell $(XSLTPROC) xslt/opf-print-manifest.xslt $<)
 
 # pattern rules for gnuplot graphs
 %.svg: src/%.plot src/flash-integrity.plot

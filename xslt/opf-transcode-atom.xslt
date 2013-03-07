@@ -13,6 +13,8 @@
               indent="no"
               media-type="application/xml" />
 
+  <xsl:param name="builddir"/>
+
   <xsl:strip-space elements="*" />
 
   <xsl:template match="/atom:feed">
@@ -39,7 +41,7 @@
       </metadata>
 
       <manifest>
-        <xsl:document href=".build/{$name}.cover.opf.xhtml">
+        <xsl:document href="{$builddir}/{$name}/cover.xhtml">
           <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
             <head>
               <title>Cover</title>
@@ -60,17 +62,18 @@
             </body>
           </html>
         </xsl:document>
-        <item id="cover" href="{$name}.cover.opf.xhtml" media-type="application/xhtml+xml"/>
+        <item id="cover" href="cover.xhtml" media-type="application/xhtml+xml"/>
         <item id="css" href="ef.gy.book.css" media-type="text/css"/>
         <item id="cover-css" href="ef.gy.cover.css" media-type="text/css"/>
-        <xsl:for-each select="atom:entry[.//xhtml:meta[@name='unix:name']]">
-          <xsl:if test="substring-after(atom:id,'drupal:')=''">
-            <item id="item-{position()}" href="{atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}.opf.xhtml" media-type="application/xhtml+xml">
-              <xsl:if test=".//svg:svg">
-                <xsl:attribute name="properties">svg</xsl:attribute>
-              </xsl:if>
-            </item>
-          </xsl:if>
+        <xsl:for-each select="atom:entry[atom:content[@type='application/xhtml+xml']]">
+          <xsl:document href="{$builddir}/{$name}/content-{position()}.xhtml">
+            <xsl:copy-of select="atom:content/xhtml:html"/>
+          </xsl:document>
+          <item id="xhtml-{position()}" href="content-{position()}.xhtml" media-type="application/xhtml+xml">
+            <xsl:if test=".//svg:svg">
+              <xsl:attribute name="properties">svg</xsl:attribute>
+            </xsl:if>
+          </item>
         </xsl:for-each>
         <xsl:for-each select=".//xhtml:img">
           <xsl:variable name="bjpeg" select="substring-after(@src,'/jpeg/')"/>
@@ -88,10 +91,8 @@
 
       <spine>
         <itemref idref="cover"/>
-        <xsl:for-each select="atom:entry[.//xhtml:meta[@name='unix:name']]">
-          <xsl:if test="substring-after(atom:id,'drupal:')=''">
-            <itemref idref="item-{position()}"/>
-          </xsl:if>
+        <xsl:for-each select="atom:entry[atom:content[@type='application/xhtml+xml']]">
+          <itemref idref="xhtml-{position()}"/>
         </xsl:for-each>
       </spine>
     </package>

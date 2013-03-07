@@ -17,6 +17,7 @@
 
   <xsl:param name="documentRoot"/>
   <xsl:param name="baseURI"/>
+  <xsl:param name="builddir"/>
 
   <xsl:template match="@*|node()">
     <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
@@ -35,7 +36,7 @@
       </metadata>
 
       <manifest>
-        <xsl:document href=".build/{$name}.cover.opf.xhtml">
+        <xsl:document href="{$builddir}/{$name}/cover.xhtml">
           <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
             <head>
               <link rel="stylesheet" href="ef.gy.cover.css" type="text/css"/>
@@ -49,11 +50,14 @@
             </body>
           </html>
         </xsl:document>
-        <item id="cover" href="{$name}.cover.opf.xhtml" media-type="application/xhtml+xml"/>
+        <item id="cover" href="cover.xhtml" media-type="application/xhtml+xml"/>
         <!--<item id="cover" href="{$name}.cover.opf.svg" media-type="image/svg+xml" properties="cover-image"/>-->
         <item id="css" href="ef.gy.book.css" media-type="text/css"/>
         <item id="cover-css" href="ef.gy.cover.css" media-type="text/css"/>
-        <item id="main" href="{$name}.opf.xhtml" media-type="application/xhtml+xml">
+        <item id="main" href="content.xhtml" media-type="application/xhtml+xml">
+          <xsl:document href="{$builddir}/{$name}/content.xhtml">
+            <xsl:copy-of select="."/>
+          </xsl:document>
           <xsl:if test=".//svg:svg">
             <xsl:attribute name="properties">svg</xsl:attribute>
           </xsl:if>
