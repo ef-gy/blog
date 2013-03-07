@@ -248,7 +248,8 @@ $(BUILD)/%/publication.opf: $(BUILD)/%.atom $(BUILD)/%/META-INF/container.xml $(
 
 # pattern rule to generate MOBIs
 $(BUILD)/%.mobi: $(BUILD)/%/publication.opf $(BUILD)/%/ef.gy.book.css $(BUILD)/%/ef.gy.cover.css
-	cd $(BUILD)/$* && $(KINDLEGEN) publication.opf -o ../$(notdir $@) || true
+	cd $(BUILD)/$* && $(KINDLEGEN) publication.opf -o $(notdir $@) || true
+	mv $(BUILD)/$*/$(notdir $@) $(BUILD)
 
 $(BUILD)/%.epub: $(BUILD)/%/publication.opf $(BUILD)/%/ef.gy.book.css $(BUILD)/%/ef.gy.cover.css
 	rm -f $@
