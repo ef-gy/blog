@@ -454,9 +454,9 @@ body#full:after
     display: inline-block;
     content: " ";
     border: 1px solid #fff;
-    height: 1em;
+    height: 1.15em;
     width: 0.5em;
-    margin: 0 0.25em 0 0;
+    margin: 0 0.25em -0.25em 0;
     background: #a44;
 }
 
