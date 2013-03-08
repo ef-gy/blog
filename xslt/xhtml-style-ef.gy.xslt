@@ -170,6 +170,15 @@
       <xsl:if test="../xhtml:head/xhtml:meta[@name='mtime'] and (../xhtml:head/xhtml:meta[@name='mtime']/@content != ../xhtml:head/xhtml:meta[@name='date']/@content)">
         <p><em>Last Modified: <xsl:value-of select="../xhtml:head/xhtml:meta[@name='mtime']/@content" /></em></p>
       </xsl:if>
+      <xsl:if test="not(($collection = 'fortune') or ($collection = 'about') or ($collection = 'source-code'))">
+        <ul id="hardcopies">
+          <li>transcripts:</li>
+          <li><a rel="alternate" type="application/pdf" href="/pdf/{$collection}">PDF</a></li>
+          <li><a rel="alternate" type="application/x-mobipocket-ebook" href="/mobi/{$collection}.mobi">Kindle/MobiPocket</a></li>
+          <li><a rel="alternate" type="application/epub+zip" href="/epub/{$collection}.epub">EPUB</a></li>
+          <li><a rel="alternate" type="application/docbook+xml" href="/docbook/{$collection}">DocBook 5</a></li>
+        </ul>
+      </xsl:if>
       <xsl:if test="/xhtml:html/xhtml:head/xhtml:meta[@name='author']">
         <xsl:variable name="author" select="/xhtml:html/xhtml:head/xhtml:meta[@name='author']/@content"/>
         <xsl:choose>

@@ -66,8 +66,8 @@
             </xsl:when>
           </xsl:choose>
         </head>
-        <body id="feed">
-          <ul>
+        <body id="full">
+          <ul id="feed">
             <xsl:for-each select="atom:entry">
               <xsl:sort select="atom:published | atom:updated[not(parent::node()/atom:published)]" order="descending"/>
 
