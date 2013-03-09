@@ -284,3 +284,11 @@ js/tesseract.js: src/tesseract.cpp
 # specific rule to run the fortune daemon
 run-fortune: fortune
 	killall fortune; rm -f /var/tmp/fortune.socket && (nohup ./fortune /var/tmp/fortune.socket &) && sleep 1 && chmod a+w /var/tmp/fortune.socket
+
+# specific rules for silly gadgets
+game-of-life.xml: xslt/0p-game-of-life.xslt
+	$(XSLTPROC) $(XSLTPROCARGS) $< $@
+	touch $<
+
+game-of-life.svg: game-of-life.xml xslt/svg-0p-game-of-life.xslt
+	$(XSLTPROC) $(XSLTPROCARGS) -o $@ xslt/svg-0p-game-of-life.xslt $<
