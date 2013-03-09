@@ -1,2 +1,31 @@
 <?xml version="1.0"?>
-<game-of-life xmlns="http://ef.gy/2013/0p"><bit x="10" y="9"/><bit x="11" y="10"/><bit x="9" y="11"/><bit x="10" y="11"/><bit x="11" y="11"/></game-of-life>
+<game-of-life xmlns="http://ef.gy/2013/0p">
+<bit x="0" y="0"/>
+<bit x="1" y="0"/>
+<bit x="2" y="0"/>
+<bit x="3" y="0"/>
+<bit x="4" y="0"/>
+<bit x="5" y="0"/>
+<bit x="6" y="0"/>
+<bit x="7" y="0"/>
+<bit x="9" y="0"/>
+<bit x="10" y="0"/>
+<bit x="11" y="0"/>
+<bit x="12" y="0"/>
+<bit x="13" y="0"/>
+<bit x="17" y="0"/>
+<bit x="18" y="0"/>
+<bit x="19" y="0"/>
+<bit x="26" y="0"/>
+<bit x="27" y="0"/>
+<bit x="28" y="0"/>
+<bit x="29" y="0"/>
+<bit x="30" y="0"/>
+<bit x="31" y="0"/>
+<bit x="32" y="0"/>
+<bit x="34" y="0"/>
+<bit x="35" y="0"/>
+<bit x="36" y="0"/>
+<bit x="37" y="0"/>
+<bit x="38" y="0"/>
+</game-of-life>
