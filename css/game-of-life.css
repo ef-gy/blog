@@ -2,3 +2,8 @@ rect
 {
     fill: #000;
 }
+
+svg
+{
+    width: 100%;
+}
