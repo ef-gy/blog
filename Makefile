@@ -256,10 +256,11 @@ $(BUILD)/%.epub: $(BUILD)/%/publication.opf $(BUILD)/%/ef.gy.book.css $(BUILD)/%
 	cd $(BUILD)/$* && $(ZIP) -0 ../$(notdir $@) mimetype && $(ZIP) ../$(notdir $@) META-INF/container.xml publication.opf $(shell $(XSLTPROC) xslt/opf-print-manifest.xslt $<)
 
 # pattern rules for gnuplot graphs
-%.svg: src/%.plot src/flash-integrity.plot
+%.svg: src/%.plot src/flash-integrity.plot xslt/clean.xslt
 	$(GNUPLOT)\
 		-e 'set terminal svg size 1200,600 dynamic fname "sans-serif"'\
 		$< > $@
+	$(XSLTPROC) $(XSLTPROCARGS) -o $@ xslt/clean.xslt $@
 
 # pattern rule to generate directory indices
 $(INDICES): Makefile $(filter-out %index.atom, $(wildcard download/*))
