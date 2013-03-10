@@ -186,10 +186,10 @@ server {
 		xslt_stylesheet /srv/http/ef.gy/xslt/html-post-process.xslt;
 	}
 
-    location = /game-of-life {
+    location = /svg/game-of-life {
 		try_files /game-of-life.xml =404;
 
-        xslt_stylesheet /srv/http/ef.gy/xslt/0p-game-of-life.xslt;
+#        xslt_stylesheet /srv/http/ef.gy/xslt/0p-game-of-life.xslt;
         xslt_stylesheet /srv/http/ef.gy/xslt/svg-0p-game-of-life.xslt;
     }
 }

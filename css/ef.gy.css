@@ -45,6 +45,9 @@ h1
     border-bottom: 1px solid #ccc;
     margin: -3.5em -1em 1em -1em;
     background: #dedede;
+    background: url(/svg/game-of-life) #dedede;
+    background-size: 30em;
+    background-position: right top;
     padding: 4em 1em 1.2em 1em;
 }
 
@@ -582,6 +585,13 @@ body#full:after
     margin: 0;
     padding: 0;
     width: 50%;
+}
+
+#feed .large h2 + ul li.published,
+#feed .medium h2 + ul li.published,
+#feed .small h2 + ul li.published
+{
+    text-align: left;
 }
 
 p#maths-note:before

@@ -18,7 +18,7 @@
   </xsl:template>
 
   <xsl:template match="z:bit">
-    <rect x="{@x}" y="{@y}" width="1" height="1"/>
+    <rect x="{@x}" y="{@y}" width="1" height="1" fill="#ccc"/>
   </xsl:template>
 
   <xsl:template match="z:game-of-life">
@@ -26,10 +26,8 @@
     <xsl:variable name="maxx" select="z:bit/@x[not(. &lt; ../../z:bit/@x)][1]"/>
     <xsl:variable name="miny" select="z:bit/@y[not(. &gt; ../../z:bit/@y)][1]"/>
     <xsl:variable name="maxy" select="z:bit/@y[not(. &lt; ../../z:bit/@y)][1]"/>
-    <xsl:processing-instruction name="xml-stylesheet">
-      <xsl:text>type="text/css" href="/css/game-of-life"</xsl:text>
-    </xsl:processing-instruction>
     <svg viewBox="{$minx - 1} {$miny - 1} {$maxx - $minx + 3} {$maxy - $miny + 3}">
+      <rect x="{$minx - 1}" y="{$miny - 1}" width="{$maxx - $minx + 3}" height="{$maxy - $miny + 3}" fill="#dedede"/>
       <xsl:apply-templates select="z:bit"/>
     </svg>
   </xsl:template>
