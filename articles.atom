@@ -3,6 +3,7 @@
   <title>ef.gy</title>
   <subtitle>Articles</subtitle>
 
+  <entry xlink:href="xslt:game-of-life.xhtml" />
   <entry xlink:href="transcoding-atom-to-rss.xhtml" />
   <entry xlink:href="vmware-server-ipv6.xhtml" />
   <entry xlink:href="vmware-server-redux.xhtml" />

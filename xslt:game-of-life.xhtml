@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>XSLT: Game of Life</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="Similar to the earlier XSLT mandelbrot, this is a stylesheet implementing Conway's Game of Life in XSLT. It's also extremely slow." />
+<meta name="date" content="2013-03-13T17:50:00Z" />
+<meta name="mtime" content="2013-03-13T17:50:00Z" />
+<meta name="category" content="Articles" />
+<meta name="category" content="XSLT" />
+<meta name="unix:name" content="xslt:game-of-life" />
+</head>
+<body>
+<h1>Of Cells and Automata</h1>
+<p>One of the great things about working in computer science - or any IT field, really - is that you always have an excuse to geek out. In fact, people pretty much expect you to. Which is a good thing, I suppose.</p>
+<p>Among a myriad of other popular, geeky topics perfect for this are cellular automata, and more specifically <a href="http://en.wikipedia.org/wiki/Conway's_Game_of_Life">Conway's Game of Life</a>. A simple 2D simulation programme that leads to surprisingly intricate results, it is a fairly common introductory project when learning a programming language for the first time.</p>
+<p>So I realised that I'd never actually written one of those in XSLT. This would not stand!</p>
+<h1>Implementation</h1>
+<p>An XSLT stylesheet for this is fairly easy to do, like this:</p>
+<pre><code><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet
+              xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+              xmlns:z="http://ef.gy/2013/0p"
+              xmlns="http://ef.gy/2013/0p"
+              version="1.1">
+  <xsl:output method="xml" version="1.0" encoding="UTF-8"
+              indent="no"
+              media-type="application/xml" />
+
+  <xsl:strip-space elements="*" />
+
+  <xsl:template match="@*|node()">
+    <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
+  </xsl:template>
+
+  <xsl:template name="bit">
+    <xsl:param name="x"/>
+    <xsl:param name="y"/>
+    <xsl:variable
+        name="n"
+        select="number(boolean(z:bit[@x=($x - 1)][@y=($y - 1)]))
+              + number(boolean(z:bit[@x=($x    )][@y=($y - 1)]))
+              + number(boolean(z:bit[@x=($x + 1)][@y=($y - 1)]))
+              + number(boolean(z:bit[@x=($x - 1)][@y=($y    )]))
+              + number(boolean(z:bit[@x=($x + 1)][@y=($y    )]))
+              + number(boolean(z:bit[@x=($x - 1)][@y=($y + 1)]))
+              + number(boolean(z:bit[@x=($x    )][@y=($y + 1)]))
+              + number(boolean(z:bit[@x=($x + 1)][@y=($y + 1)]))"/>
+    <xsl:if test="($n = 3) or (($n = 2) and z:bit[@x=($x)][@y=($y)])">
+      <bit x="{$x}" y="{$y}"/>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="bit-loop-x">
+    <xsl:param name="x"/>
+    <xsl:param name="y"/>
+    <xsl:param name="maxx"/>
+    <xsl:param name="maxy"/>
+    <xsl:call-template name="bit">
+      <xsl:with-param name="x" select="$x"/>
+      <xsl:with-param name="y" select="$y"/>
+    </xsl:call-template>
+    <xsl:if test="$x &lt; $maxx">
+      <xsl:call-template name="bit-loop-x">
+        <xsl:with-param name="x" select="$x + 1"/>
+        <xsl:with-param name="y" select="$y"/>
+        <xsl:with-param name="maxx" select="$maxx"/>
+        <xsl:with-param name="maxy" select="$maxy"/>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="bit-loop-y">
+    <xsl:param name="x"/>
+    <xsl:param name="y"/>
+    <xsl:param name="maxx"/>
+    <xsl:param name="maxy"/>
+    <xsl:call-template name="bit-loop-x">
+      <xsl:with-param name="x" select="$x"/>
+      <xsl:with-param name="y" select="$y"/>
+      <xsl:with-param name="maxx" select="$maxx"/>
+      <xsl:with-param name="maxy" select="$maxy"/>
+    </xsl:call-template>
+    <xsl:if test="$y &lt; $maxy">
+      <xsl:call-template name="bit-loop-y">
+        <xsl:with-param name="x" select="$x"/>
+        <xsl:with-param name="y" select="$y + 1"/>
+        <xsl:with-param name="maxx" select="$maxx"/>
+        <xsl:with-param name="maxy" select="$maxy"/>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="z:game-of-life">
+    <xsl:variable name="minx" select="z:bit/@x[not(. &gt; ../../z:bit/@x)][1]"/>
+    <xsl:variable name="maxx" select="z:bit/@x[not(. &lt; ../../z:bit/@x)][1]"/>
+    <xsl:variable name="miny" select="z:bit/@y[not(. &gt; ../../z:bit/@y)][1]"/>
+    <xsl:variable name="maxy" select="z:bit/@y[not(. &lt; ../../z:bit/@y)][1]"/>
+    <game-of-life>
+      <xsl:call-template name="bit-loop-y">
+        <xsl:with-param name="x" select="$minx - 1"/>
+        <xsl:with-param name="y" select="$miny - 1"/>
+        <xsl:with-param name="maxx" select="$maxx + 1"/>
+        <xsl:with-param name="maxy" select="$maxy + 1"/>
+      </xsl:call-template>
+    </game-of-life>
+  </xsl:template>
+</xsl:stylesheet>]]></code></pre>
+<p><a href="/xslt/0p-game-of-life.xslt">This stylesheet</a> closely follows the basic idea behind my earlier <a href="/project:xslt-mandelbrot">XSLT mandelbrot</a>. Applying it to an appropriate input file will return the next generation according to Conway's original rules for his Game of Life. Since we probably don't want to look at raw XML all day, I've wipped up <a href="/xslt/svg-0p-game-of-life.xslt">another stylesheet to turn the data snippets into a simple SVG file</a>:</p>
+<pre><code><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet
+              xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+              xmlns:z="http://ef.gy/2013/0p"
+              xmlns:svg="http://www.w3.org/2000/svg"
+              xmlns="http://www.w3.org/2000/svg"
+              version="1.1">
+  <xsl:output method="xml" version="1.0" encoding="UTF-8"
+              indent="no"
+              media-type="image/svg+xml" />
+
+  <xsl:strip-space elements="*" />
+
+  <xsl:param name="documentRoot"/>
+
+  <xsl:template match="@*|node()">
+    <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
+  </xsl:template>
+
+  <xsl:template match="z:bit">
+    <rect x="{@x}" y="{@y}" width="1" height="1" fill="#000"/>
+  </xsl:template>
+
+  <xsl:template match="z:game-of-life">
+    <xsl:variable name="minx" select="z:bit/@x[not(. &gt; ../../z:bit/@x)][1]"/>
+    <xsl:variable name="maxx" select="z:bit/@x[not(. &lt; ../../z:bit/@x)][1]"/>
+    <xsl:variable name="miny" select="z:bit/@y[not(. &gt; ../../z:bit/@y)][1]"/>
+    <xsl:variable name="maxy" select="z:bit/@y[not(. &lt; ../../z:bit/@y)][1]"/>
+    <svg viewBox="{$minx - 1} {$miny - 1} {$maxx - $minx + 3} {$maxy - $miny + 3}">
+      <xsl:apply-templates select="z:bit"/>
+    </svg>
+  </xsl:template>
+</xsl:stylesheet>]]></code></pre>
+<p>Now we just need some input... like this neat little infinite pattern:</p>
+<pre><code><![CDATA[<?xml version="1.0"?>
+<game-of-life xmlns="http://ef.gy/2013/0p">
+<bit x="0" y="0"/>
+<bit x="1" y="0"/>
+<bit x="2" y="0"/>
+<bit x="3" y="0"/>
+<bit x="4" y="0"/>
+<bit x="5" y="0"/>
+<bit x="6" y="0"/>
+<bit x="7" y="0"/>
+<bit x="9" y="0"/>
+<bit x="10" y="0"/>
+<bit x="11" y="0"/>
+<bit x="12" y="0"/>
+<bit x="13" y="0"/>
+<bit x="17" y="0"/>
+<bit x="18" y="0"/>
+<bit x="19" y="0"/>
+<bit x="26" y="0"/>
+<bit x="27" y="0"/>
+<bit x="28" y="0"/>
+<bit x="29" y="0"/>
+<bit x="30" y="0"/>
+<bit x="31" y="0"/>
+<bit x="32" y="0"/>
+<bit x="34" y="0"/>
+<bit x="35" y="0"/>
+<bit x="36" y="0"/>
+<bit x="37" y="0"/>
+<bit x="38" y="0"/>
+</game-of-life>]]></code></pre>
+<p>Sadly it turns out that this particular stylesheet is slow as molasses when used with xsltproc. It might just be the interpreter, I can't say for certain. It doesn't seem all that complex either. Maybe it's related to something about calling lots of named templates. Either way, it works and I suppose that's what counts.</p>
+</body>
+</html>
