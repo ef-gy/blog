@@ -89,7 +89,9 @@
                   <li class="large"><h1><a href="{$link}"><xsl:value-of select="atom:content/xhtml:html/xhtml:head/xhtml:title"/></a></h1>
                   <ul>
                     <li class="published"><xsl:value-of select="(atom:published | atom:updated)[1]"/></li>
-                    <li class="author"><xsl:value-of select="atom:author/atom:name"/></li>
+                    <xsl:if test="atom:author/atom:name != 'Magnus Achim Deininger'">
+                      <li class="author"><xsl:value-of select="atom:author/atom:name"/></li>
+                    </xsl:if>
                   </ul>
                   <xsl:for-each select="atom:content/xhtml:html/xhtml:body/xhtml:* | atom:content/xhtml:html/xhtml:body/svg:*">
                     <xsl:if test="position() &lt; 5">
@@ -113,7 +115,9 @@
                   <li class="medium"><h1><a href="{$link}"><xsl:value-of select="atom:content/xhtml:html/xhtml:head/xhtml:title"/></a></h1>
                   <ul>
                     <li class="published"><xsl:value-of select="(atom:published | atom:updated)[1]"/></li>
-                    <li class="author"><xsl:value-of select="atom:author/atom:name"/></li>
+                    <xsl:if test="atom:author/atom:name != 'Magnus Achim Deininger'">
+                      <li class="author"><xsl:value-of select="atom:author/atom:name"/></li>
+                    </xsl:if>
                   </ul>
                   <xsl:for-each select="atom:content/xhtml:html/xhtml:body/xhtml:p | atom:content/xhtml:html/xhtml:body/svg:svg">
                     <xsl:if test="position() &lt; 3">
@@ -134,27 +138,14 @@
                   <li class="small"><h1><a href="{$link}"><xsl:value-of select="atom:content/xhtml:html/xhtml:head/xhtml:title"/></a></h1>
                   <ul>
                     <li class="published"><xsl:value-of select="(atom:published | atom:updated)[1]"/></li>
-                    <li class="author"><xsl:value-of select="atom:author/atom:name"/></li>
+                    <xsl:if test="atom:author/atom:name != 'Magnus Achim Deininger'">
+                      <li class="author"><xsl:value-of select="atom:author/atom:name"/></li>
+                    </xsl:if>
                   </ul>
                   <p>
                     <xsl:value-of select="atom:summary"/>
                   </p>
                   <p><a href="{$link}">(read on...)</a></p>
-                  <!--
-                  <li>
-                    <a href="{$link}">
-                      <span><xsl:value-of select="atom:title" /></span>
-                      <xsl:value-of select="concat(' ',atom:summary)" />
-                      <xsl:if test="atom:category[2]"><span class="secondary-category"><xsl:value-of select="concat(' ',atom:category[2]/@term)" /></span></xsl:if>
-                      <xsl:if test="substring-before(atom:category[1]/@term,'/')='download'"><span class="secondary-category"><xsl:value-of select="' download'"/></span></xsl:if>
-                      <xsl:choose>
-                        <xsl:when test="substring-before(atom:author/atom:name,' ')"><span class="author"><xsl:value-of select="concat(' ',substring-before(atom:author/atom:name,' '))" /></span></xsl:when>
-                        <xsl:when test="atom:author/atom:name/text()"><span class="author"><xsl:value-of select="concat(' ',atom:author/atom:name)" /></span></xsl:when>
-                        <xsl:otherwise/>
-                      </xsl:choose>
-                      <span class="updated"><xsl:value-of select="concat(' ',substring-before(atom:updated,'T'))" /></span>
-                    </a>
-                    -->
                   </li>
                 </xsl:otherwise>
               </xsl:choose>

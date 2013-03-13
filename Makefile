@@ -17,6 +17,7 @@ KINDLEGEN:=kindlegen
 INKSCAPE:=inkscape
 ZIP:=zip
 XVFB:=xvfb-run -a
+SQLITE3:=sqlite3
 
 # download locations
 PMML2SVGZIP:=http://heanet.dl.sourceforge.net/project/pmml2svg/pmml2svg/pMML2SVG-0.8.5.zip
@@ -59,7 +60,7 @@ EPUBESC:=$(subst :,\:,$(EPUBS))
 OPFXHTMLESC:=$(subst :,\:,$(OPFXHTMLS))
 
 BUILDD:=$(BUILD)/.volatile
-DATABASES:=
+DATABASES:=life.sqlite3
 XSLTPROCARGS:=--stringparam baseURI "http://ef.gy" --stringparam documentRoot "$$(pwd)" --param licence "document('$$(pwd)/$(BUILD)/licence.xml')" --stringparam builddir $(BUILD)
 
 # don't delete intermediary files
@@ -272,6 +273,10 @@ $(INDICES): Makefile $(filter-out %index.atom, $(wildcard download/*))
 		if [ $${i} != "$@" -a -f $${i} ]; then echo "<entry><id>md5:$$(md5sum -b $${i}|cut -d ' ' -f 1)</id><title>$$(basename $${i})</title><link href='/$${i}' type='$$(file --mime-type $${i}|cut -d ' ' -f 2)'/><updated>$$(stat -c %y $${i}|sed -e 's/\(.\+\) \(.\+\)\.0\+ \(...\)\(..\)/\1T\2\3:\4/')</updated><author><name>$(name)</name></author><category term='$$(echo '$(subst /index.atom,,$@)')'/><summary>File Type: $$(file --mime-type $${i}|cut -d ' ' -f 2). File Checksum (MD5): $$(md5sum -b $${i}|cut -d ' ' -f 1)</summary></entry>"; fi;\
 	done>>$@
 	echo '</feed>'>>$@
+
+# pattern rules for databases
+%.sqlite3: src/%.sql
+	rm -f $@ && $(SQLITE3) $@ < $<
 
 # specific rule to build the fortune daemon
 fortune: src/fortune.cpp include/ef.gy/http.h
