@@ -291,8 +291,13 @@ run-fortune: fortune
 	killall fortune; rm -f /var/tmp/fortune.socket && (nohup ./fortune /var/tmp/fortune.socket &) && sleep 1 && chmod a+w /var/tmp/fortune.socket
 
 # specific rules for silly gadgets
-game-of-life.xml::
+game-of-life.xslt.xml::
 	$(XSLTPROC) $(XSLTPROCARGS) xslt/0p-game-of-life.xslt $@
+
+game-of-life.xml: life.sqlite3
+	echo '<?xml version="1.0"?><game-of-life xmlns="http://ef.gy/2013/0p">' > $@
+	echo "select fragment from vxmlfragment where id = 1;" | $(SQLITE3) $< >> $@
+	echo '</game-of-life>' >> $@
 
 game-of-life.svg: game-of-life.xml xslt/svg-0p-game-of-life.xslt
 	$(XSLTPROC) $(XSLTPROCARGS) -o $@ xslt/svg-0p-game-of-life.xslt $<
