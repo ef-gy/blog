@@ -29,6 +29,10 @@ server {
     xslt_string_param collection $collection;
     xslt_string_param documentRoot $documentRoot;
 
+    if ($request_uri ~ \?.*$ )
+    {
+        rewrite ^/(.*)$ /$1? permanent;
+    }
     if ($request_uri ~ ^/x?html/ )
     {
         rewrite ^/x?html/(.*)$ /$1 permanent;
