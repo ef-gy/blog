@@ -95,7 +95,7 @@ select
 from vscore;
 ]]></code></pre>
 <p>The biggest surprise here was that things got significantly faster once I introduced the dummy data table <em>neighbourspec</em>. The basic workings of this bit of SQL should be obvious: insert board definition into the <em>life</em> table and then the <em>vlifenext</em> view contains the next generation.</p>
-<p>To update the table, use a simple <em>insert or replace into</em> - deleting anything but living cells kinda speed things up as well. Note that the <em>state</em> in that last view there might need a cast, depending on your SQL implementation. In SQLite the following materialised view works rather swell to automate updates to the <em>life</em> table:</p>
+<p>To update the table, use a simple <em>insert or replace into</em> - deleting anything but living cells kinda speeds things up as well. Note that the <em>state</em> in that last view there might need a cast, depending on your SQL implementation. In SQLite the following materialised view works rather swell to automate updates to the <em>life</em> table:</p>
 <pre><code><![CDATA[create view vprogress as
 select 1 as id;
 
@@ -160,6 +160,6 @@ values
   (1, 38, 0, 1)
 ;
 ]]></code></pre>
-<p>Right, enjoy. Also, Snape is fucking badass, but you knew that already.</p>
+<p>Right, enjoy. Also, Snape is bleeding badass. But you knew that already.</p>
 </body>
 </html>
