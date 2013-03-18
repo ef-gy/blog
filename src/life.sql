@@ -10,47 +10,33 @@ create table life
 
 create table neighbourspec
 (
-  id integer not null,
   x integer not null,
   y integer not null,
 
-  primary key (id, x, y)
+  primary key (x, y)
 );
 
 insert into neighbourspec
-  (id, x, y)
+  (x, y)
 values
-  (1, -1, -1),
-  (1, -1,  0),
-  (1, -1,  1),
-  (1,  0, -1),
-  (1,  0,  1),
-  (1,  1, -1),
-  (1,  1,  0),
-  (1,  1,  1);
-
-create view vdimensions as
-select
-  id,
-  min(x) - 1 as minx,
-  max(x) + 1 as maxx,
-  min(y) - 1 as miny,
-  max(y) + 1 as maxy
-from life
-where state = 1
-group by id;
+  (-1, -1),
+  (-1,  0),
+  (-1,  1),
+  ( 0, -1),
+  ( 0,  1),
+  ( 1, -1),
+  ( 1,  0),
+  ( 1,  1);
 
 create view vexpands as
 select
   life.id,
-  null as nid,
   life.x,
   life.y,
   life.state
 from life
 union select
   life.id,
-  neighbourspec.id as nid,
   life.x + neighbourspec.x as x,
   life.y + neighbourspec.y as y,
   0 as state
