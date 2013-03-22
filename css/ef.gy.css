@@ -733,14 +733,15 @@ ul#hardcopies li a:hover
 }
 ul#meta
 {
-  margin: 0 0 2em 0;
+  margin: 0 -2em 2em -2em;
+  background: #eee;
 }
 ul#meta li
 {
   display: block;
   padding: 0.5em 1em;
   text-align: right;
-  margin: 0 -2em;
+  margin: 0;
   color: #444;
 }
 ul#meta li.previous a:after,
