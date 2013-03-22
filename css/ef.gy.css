@@ -17,17 +17,16 @@ svg
 
 html
 {
-    background: #444;
+    background: #dedede;
+    color: #000;
 }
 
 body
 {
-    margin: 0 4em 0 24em;
+    margin: 0 0 0 24em;
     background: #fff;
 	padding: 3.5em 2em 2em 2em;
-    border-left: 0.1em solid #222;
-    border-right: 0.1em solid #222;
-    box-shadow: 0 0 0.5em 0.35em #111;
+    box-shadow: 0 0 0.5em 0.35em #888;
 }
 
 h1, h2, h3, h4, h5, h6
@@ -84,7 +83,7 @@ h1 + ul
     right: 0;
     left: 0;
     display: block;
-	padding: 10px 5em 10px 2em;
+	padding: 10px 2em 10px 2em;
     height: 20px;
     z-Index: 1;
     border-bottom: 0.1em solid #000;
@@ -271,7 +270,6 @@ div.figure
     width: 16em;
     padding: 7em 2em 2em 2em;
     margin: -2em 0 0 -24em;
-    color: #ddd;
 }
 
 div.figure img
@@ -363,7 +361,7 @@ table ul li
 body#full
 {
     vertical-align: top;
-    margin: 0 4em 0 4em;
+    margin: 0;
     line-height: 1.25em;
 }
 
