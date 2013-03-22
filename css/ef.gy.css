@@ -86,7 +86,6 @@ h1 + ul
     z-Index: 1;
     background: #333;
     background: rgba(0,0,0,0.7);
-    color: #eee;
     text-align: right;
     font-size: 1em;
     font-weight: bold;
@@ -104,7 +103,6 @@ h1 + ul + ul li
 	display: inline-block;
     margin: 0;
 	padding: 5px;
-	color: #666;
     width: auto;
 }
 
@@ -116,7 +114,7 @@ a
 h1 + ul a
 {
 	text-decoration: none;
-    color: #ccc;
+    color: #ddd;
 }
 
 a:hover
@@ -212,7 +210,6 @@ address
     position: relative;
     margin: 2em -2em -2em -2em;
     width: auto;
-    color: #000;
     padding: 2em;
 }
 
@@ -226,14 +223,13 @@ address a
     display: block;
     padding: 2em;
     margin: -2em;
-    color: #000;
     text-decoration: none;
 }
 
 address a:hover
 {
     background: #333;
-    color: white;
+    color: #fff;
 }
 
 address span
@@ -279,7 +275,6 @@ div.figure h2
 {
     margin: 0;
     font-size: 1.2em;
-    color: #999;
 }
 
 div.figure li a
@@ -325,6 +320,7 @@ div.figure li + li a
 {
     font-size: 1em;
     padding: 0;
+    color: #222;
 }
 
 th
@@ -400,7 +396,6 @@ body#full:after
     margin: 0.5em -2em;
     font-weight: bold;
     font-size: 1em;
-    color: #555;
     border-bottom: 1px solid #ccc;
     clear: both;
 }
@@ -420,7 +415,6 @@ body#full:after
 {
     background: #ddd;
     background: rgba(0,0,0,0.1);
-    color: #555;
 }
 
 #feed .large h2,
@@ -470,7 +464,6 @@ body#full:after
     margin: 1%;
     padding: 1%;
     float: left;
-    color: #000;
 }
 
 #feed .small
@@ -499,28 +492,6 @@ body#full:after
     margin: 0;
 }
 
-#feed .large li a,
-#feed .medium li a,
-#feed .small li a
-{
-    display: inline-block;
-    padding: 1em 2em;
-    margin: -0.5em;
-    background: #224;
-    color: #ccc;
-    height: auto;
-    width: auto;
-    text-decoration: none;
-}
-
-#feed .large li a:hover,
-#feed .medium li a:hover,
-#feed .small li a:hover
-{
-    background: #557;
-    color: #fff;
-}
-
 #feed .large ul,
 #feed .medium ul,
 #feed .small ul
@@ -546,7 +517,6 @@ body#full:after
     margin: -2em 0 1em 0;
     padding: 0;
     font-weight: bold;
-    color: #555;
     text-align: left;
 }
 
@@ -566,8 +536,6 @@ body#full:after
 #feed .small h2 + ul li.author
 {
     display: inline-block;
-    margin: 0;
-    padding: 0;
     width: 50%;
     min-width: 12em;
 }
@@ -609,14 +577,7 @@ ul#social
 ul#social:hover
 {
   background: #ccc;
-  color: #fff;
   overflow: visible;
-}
-ul#social:hover:before
-{
-  display: inline-block;
-  padding: 0 0.5em;
-  content: "share on ...";
 }
 ul#social:hover li
 {
@@ -698,7 +659,6 @@ ul#social li.share + li + li + li + li a:before
 ul#social li.share + li + li + li + li + li
 {
   background: rgb(235,72,35);
-  color: #fff;
 }
 ul#social li.share + li + li + li + li + li a:before
 {
@@ -724,7 +684,6 @@ ul#hardcopies li a
   margin: -0.5em -1em;
   padding: 0.5em 1em;
   text-decoration: none;
-  color: #444;
 }
 ul#hardcopies li a:hover
 {
@@ -742,7 +701,6 @@ ul#meta li
   padding: 0.5em 1em;
   text-align: right;
   margin: 0;
-  color: #444;
 }
 ul#meta li.previous a:after,
 ul#meta li.next a:after,
@@ -765,7 +723,6 @@ ul#meta li.next a:after
 ul#meta li#published:after
 {
   content: "published";
-  color: #fff;
 }
 ul#meta li#collection a:after
 {
@@ -871,29 +828,8 @@ ul#meta li#published .day
         margin: 2.5em -2em;
         background: none;
         width: auto;
-        color: #000;
         left: 0;
         padding: 2em;
-    }
-
-    div.figure h2
-    {
-        color: black;
-    }
-
-    div.figure li
-    {
-        background: #eee;
-    }
-
-    div.figure li a
-    {
-        color: #333;
-    }
-
-    div.figure li a:hover
-    {
-        color: #000;
     }
 
     div.auto-abstract
