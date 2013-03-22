@@ -26,8 +26,8 @@
     <xsl:variable name="maxx" select="z:bit/@x[not(. &lt; ../../z:bit/@x)][1]"/>
     <xsl:variable name="miny" select="z:bit/@y[not(. &gt; ../../z:bit/@y)][1]"/>
     <xsl:variable name="maxy" select="z:bit/@y[not(. &lt; ../../z:bit/@y)][1]"/>
-    <svg viewBox="{$minx - 1} {$miny - 1} {$maxx - $minx + 3} {$maxy - $miny + 3}">
-      <rect x="{$minx - 1}" y="{$miny - 1}" width="{$maxx - $minx + 3}" height="{$maxy - $miny + 3}" fill="#dedede"/>
+    <svg viewBox="{$minx - 1} {$miny - 1} {$maxx - $minx + 3} {$maxy - $miny + 3}" viewport-fill="#dedede">
+      <rect x="{$minx - 10}" y="{$miny - 10}" width="{$maxx - $minx + 30}" height="{$maxy - $miny + 30}" fill="#dedede"/>
       <xsl:apply-templates select="z:bit"/>
     </svg>
   </xsl:template>
