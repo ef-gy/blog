@@ -17,7 +17,8 @@ svg
 
 html
 {
-    background: #dedede;
+    background: url(/svg/game-of-life) #dedede right -10em;
+    background-size: 60em;
     color: #000;
 }
 
@@ -40,10 +41,8 @@ h1
     font-size: 2em;
     font-weight: bold;
     margin: -3.5em -1em 1em -1em;
-    background: #dedede;
-    background: url(/svg/game-of-life) #dedede;
+    background: url(/svg/game-of-life) #dedede right -3.25em;
     background-size: 30em;
-    background-position: right center;
     padding: 4em 1em 1.2em 1em;
 }
 
@@ -764,7 +763,7 @@ ul#meta li#published .day
 {
   position: absolute;
   width: 12em;
-  left: 5.5em;
+  left: 0;
   top: 7em;
   margin: 0;
   padding: 0;
@@ -777,9 +776,10 @@ ul#meta li#published .day
 }
 ul#meta li#published .year
 {
-  background: #459;
+  background: #447;
   border: 1px solid black;
-  padding: 3.5em 1.5em 2.5em 1.5em;
+  border-left: none;
+  padding: 3.5em 1.5em 2.5em 7.5em;
   color: #aaa;
 }
 ul#meta li#published .month
