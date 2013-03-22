@@ -83,17 +83,20 @@ h1 + ul
 	padding: 10px 2em 10px 2em;
     height: 20px;
     z-Index: 1;
-    background: #333;
-    background: rgba(0,0,0,0.7);
+    background: rgba(255,255,255,0.8);
     text-align: right;
     font-size: 1em;
     font-weight: bold;
-    box-shadow: 0 0 0.5em 0.15em #111;
 }
 
 h1 + ul + ul
 {
     display: block;
+}
+
+h1 + ul a
+{
+    text-decoration: none;
 }
 
 h1 + ul li,
@@ -110,20 +113,9 @@ a
 	color: #222;
 }
 
-h1 + ul a
-{
-	text-decoration: none;
-    color: #ddd;
-}
-
 a:hover
 {
 	color: #999;
-}
-
-h1 + ul a:hover
-{
-    color: #fff;
 }
 
 p, code
@@ -258,9 +250,10 @@ div.figure
 {
     display: block;
     position: absolute;
-    width: 16em;
-    padding: 7em 2em 2em 2em;
-    margin: -2em 0 0 -24em;
+    background: rgba(255,255,255,0.8);
+    width: 17em;
+    padding: 2em 2em 2em 2em;
+    margin: 2em 0 0 -26em;
 }
 
 div.figure img
@@ -575,7 +568,6 @@ ul#social
 }
 ul#social:hover
 {
-  background: #ccc;
   overflow: visible;
 }
 ul#social:hover li
@@ -750,10 +742,7 @@ ul#meta li#collection a:hover
 }
 ul#meta li#published
 {
-  background: #568;
   margin-left: -10em;
-  border-top: 1px solid #000;
-  border-bottom: 1px solid #000;
   visibility: hidden;
   margin: 0 0 -2.3em 0;
 }
@@ -773,29 +762,25 @@ ul#meta li#published .day
   font-weight: bold;
   font-size: 1em;
   visibility: visible;
+  color: #000;
 }
 ul#meta li#published .year
 {
-  background: #447;
-  border: 1px solid black;
-  border-left: none;
+  background: rgba(255,255,255,0.8);
   padding: 3.5em 1.5em 2.5em 7.5em;
-  color: #aaa;
 }
 ul#meta li#published .month
 {
   font-size: 2em;
   width: 7.5em;
-  top: 5.7em;
-  left: 2.75em;
+  top: 4em;
+  left: 2.9em;
 }
 ul#meta li#published .day
 {
-  font-size: 8em;
-  top: 0.3em;
-  left: 0.7em;
-  width: 1.86em;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; 
+  font-size: 7em;
+  top: 0.9em;
+  width: 1.5em;
 }
 @media (max-width: 70em)
 {
@@ -826,7 +811,6 @@ ul#meta li#published .day
     {
         position: relative;
         margin: 2.5em -2em;
-        background: none;
         width: auto;
         left: 0;
         padding: 2em;
@@ -847,13 +831,14 @@ ul#meta li#published .day
         width: 8em;
         left: 1em;
         top: 0em;
-        padding: 6.5em 0 5em 0;
+        padding: 8.5em 0 3em 0;
     }
 
     ul#meta li#published .month
     {
         font-size: 1.3em;
         left: 0.2em;
+        top: 5.2em;
     }
 
     ul#meta li#published .day

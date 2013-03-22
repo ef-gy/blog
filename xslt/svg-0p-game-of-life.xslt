@@ -18,7 +18,7 @@
   </xsl:template>
 
   <xsl:template match="z:bit">
-    <rect x="{@x}" y="{@y}" width="1" height="1" fill="#fff" stroke="#aaa" stroke-width="0.1"/>
+    <rect x="{@x}" y="{@y}" width="1" height="1" fill="#fff" stroke="#cdcdcd" stroke-width="0.1"/>
   </xsl:template>
 
   <xsl:template match="z:game-of-life">
