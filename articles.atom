@@ -3,6 +3,7 @@
   <title>ef.gy</title>
   <subtitle>Articles</subtitle>
 
+  <entry xlink:href="kraut-law:easter-2013.xhtml" />
   <entry xlink:href="dear-web-designers.xhtml" />
   <entry xlink:href="sql:game-of-life.xhtml" />
   <entry xlink:href="xslt:game-of-life.xhtml" />
