@@ -246,6 +246,12 @@ address a:hover span span
     color: #eee;
 }
 
+img.float-right
+{
+    float: right;
+    margin: 2em;
+}
+
 div.figure
 {
     display: block;
