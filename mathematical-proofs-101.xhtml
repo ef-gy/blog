@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Mathematical Proofs 101</title>
+<meta name="author" content="Nadja Klein" />
+<meta name="description" content="A primer for students who struggle with writing mathematical proofs" />
+<meta name="date" content="2013-04-05T08:40:00Z" />
+<meta name="mtime" content="2013-04-05T08:40:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="mathematical-proofs-101" />
+</head>
+<body>
+<h1>Introduction</h1>
+<p>As a teaching assistant for introductory Theoretical Computer Science, I've noticed that a lot of students struggled writing mathematical proofs, so I've decided to put together a couple of guidelines; this article is by no means complete, and focuses on issues that frequently occur with students in this specific class, so you may or may not find it useful. </p>
+
+<h1>Caveat: It's all in the eye of the reader</h1>
+<p>Short of writing a proof entirely in a logical calculus (which, except for the most trivial statements, would lead to very long, nigh unreadable, unwieldy proofs that aren't useful for anyone in practice), there is no one, true, correct way to write a mathematical proof. Those that you're going to encounter in books, lectures, papers and the like always incorporate a certain amount of handwaving - necessarily so, since otherwise, no mathematician could ever get anything done. This also means the only absolute standard mathematical proofs are held to is that they must not be wrong, i.e. not contain any invalid conclusions. The amount of handwaving that is permitted, or how formal it should be written, strictly depends on the audience - thus, this article can't contain any absolute statements beyond "your proofs must never be wrong". </p>
+<p>So why write an article at all? Because even though it's all in the eye of the reader, there are a couple of things that will make your proofs easier to read and understand - which will make it easier for whoever is grading you, and easier for you to notice if you've made a mistake prior to handing it in. Even though this does not aspire to be a Complete And Ultimate Guide To Writing Proofs, it might still help you write better proofs, and possibly save the sanity of a couple of TAs.</p> 
+
+<h1>What are you going to prove?</h1>
+<p>I can only read what you've written, not your mind. (Besides, I'd pick the ability to do supertasks over mind reading as a superpower any day.) 
+So, especially if the statement you are going to prove is not directly in the text of your homework problem, or your proof is part of a larger paper rather than a single homework problem, do take the time to spell it out in your write-up. Even if it is in the text of the exercise, your TA will probably appreciate your copying it - firstly, it makes life easier for us since we don't need to go back to the problem sheet, and secondly, if you misunderstood the problem and didn't copy it verbatim, your write-up will probably point out what it is you misunderstood, which in turn makes it easier for us to help you.</p>
+<p>When you're going to prove multiple statements, it also helps a great deal to indicate which one of them you're proving right now.</p>
+
+<h1>Questions are not statements</h1>
+<p>If your homework problem is a question, like "Is there a DFA with three states or less that recognises (aaaa)*?", this question is not the statement you are trying to prove. Questions are never correct mathematical statements, so any attempt to "prove" them will always be faulty. A proof basically shows why a statement is true, given a set of axioms and statements already known to be true. A question, however, cannot be true or false, so it cannot be proved.</p>
+<p>When you get a question, your task is to find an answer to the question that is correct, and then prove that this answer is, in fact, correct. In the example, your answer is "No, there is no DFA with three states or less that recognises (aaaa)*", and you should subsequently prove this statement - which is another case where spelling out the statement you're going to prove comes in incredibly handy, since it allows the reader to see if you've come up with the correct answer straight away.</p>
+
+<h1>Did you cover all the cases?</h1>
+<p>Sometimes there are multiple cases you need to examine when proving a statement. This frequently occurs in attempts to prove the non-regularity of a language using the Pumping Lemma: students pick a word, examine one possible way to decompose the word, arrive at a contradiction, and call it done; however, there might have been other ways to decompose it which they have neglected to examine. Anytime you assume a possible decomposition, or a subset of a language, or something like that, please stop to think whether your assumption covers everything.
+</p>
+
+<h1>Make it obvious you're done.</h1>
+<p>Once you've stated the last argument that implies the correctness of your statement, don't just stop writing and go on to the next problem. Indicate in some way that this is the end of your proof. Not doing this isn't that problematic when your assignment only consists of one statement, but when you're proving multiple statements in the same assignment (or the same problem), it's nice for the reader to immediately know where one proof stops and the next begins.</p>
+<p>You don't have to write a lot - a square to the right of the last line of the proof - like this: &#x25A1; - is a widely-accepted shorthand for "I've shown what I wanted to show", as is "q.e.d." (short for "quod erat demonstrandum", which is Latin for "what was to be shown").</p>
+<p>While we're at it, I hope those guidelines, however incomplete, are useful for some of you in making your proofs more readable, or less wrong. Stay tuned for the next article in this series which will focus on various forms of mathematical proofs.</p>
+
+</body>
+</html>
