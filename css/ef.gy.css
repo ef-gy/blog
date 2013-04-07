@@ -585,8 +585,6 @@ ul#social li
   display: inline-block;
   margin: -1em 0 0 0;
   font-family: sans-serif;
-  background: rgb(0,170,242);
-  color: #fff;
   padding: 0.8em 1em 0.3em 1em;
   width: 2em;
   text-align: left;
@@ -597,8 +595,6 @@ ul#social li a:before
 {
   display: inline-block;
   width: 2em;
-  content: "t";
-  color: #fff;
 }
 ul#social li a
 {
@@ -617,48 +613,66 @@ ul#social li:hover
 ul#social li:hover a
 {
   width: 10em;
+  color: inherit;
+}
+li.twitter
+{
+  background: rgb(0,170,242);
   color: #fff;
 }
-ul#social li.share + li
+li.twitter a:before
+{
+  color: #fff;
+  content: "t";
+}
+li.linkedin
 {
   background: rgb(0,128,182);
+  color: #fff;
 }
-ul#social li.share + li a:before
+li.linkedin a:before
 {
+  color: #fff;
   content: "in";
 }
-ul#social li.share + li + li
+li.facebook
 {
   background: rgb(59,83,154);
+  color: #fff;
 }
-ul#social li.share + li + li a:before
+li.facebook a:before
 {
+  color: #fff;
   content: "f";
 }
-ul#social li.share + li + li + li
+li.xing
 {
   background: rgb(0,103,106);
   color: rgb(168,209,0);
 }
-ul#social li.share + li + li + li a:before
+li.xing a:before
 {
+  color: rgb(168,209,0);
   content: "x";
 }
-ul#social li.share + li + li + li + li
+li.googleplus
 {
   background: rgb(210,22,0);
   color: #fff;
 }
-ul#social li.share + li + li + li + li a:before
+li.googleplus a:before
 {
+  color: #fff;
   content: "g+";
 }
-ul#social li.share + li + li + li + li + li
+li.stumbleupon
 {
   background: rgb(235,72,35);
+  color: #fff;
 }
-ul#social li.share + li + li + li + li + li a:before
+li.stumbleupon a:before
 {
+  color: #fff;
   content: "su";
 }
 ul#hardcopies
@@ -759,7 +773,7 @@ ul#meta li#published .day
   position: absolute;
   width: 12em;
   left: 0;
-  top: 7em;
+  top: 6.8em;
   margin: 0;
   padding: 0;
   color: #fff;
