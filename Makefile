@@ -99,6 +99,7 @@ $(BUILDD):
 	mkdir -p $(BUILD); true
 	ln -s $$(pwd)/png $(BUILD)/png
 	ln -s $$(pwd)/jpeg $(BUILD)/jpeg
+	ln -s $$(pwd) $(BUILD)/svg
 	touch $(BUILDD)
 
 $(DOWNLOAD)/.volatile:

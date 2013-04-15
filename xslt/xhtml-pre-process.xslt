@@ -27,4 +27,10 @@
   </xsl:template>
 
   <xsl:template match="svg:*[@id='gnuplot_canvas']//@id"/>
+
+  <xsl:template match="xhtml:img/@src[substring-before(., '/') = '']">
+    <xsl:attribute name="src">
+      <xsl:value-of select="substring-after(., '/')"/>
+    </xsl:attribute>
+  </xsl:template>
 </xsl:stylesheet>
