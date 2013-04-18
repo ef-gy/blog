@@ -17,8 +17,9 @@ svg
 
 html
 {
-    background: url(/svg/game-of-life) #dedede right -10em;
+    background: url(/svg/game-of-life) #dedede;
     background-size: 60em;
+    background-position: 30em -10em;
     color: #000;
 }
 
@@ -41,8 +42,9 @@ h1
     font-size: 2em;
     font-weight: bold;
     margin: -3.5em -1em 1em -1em;
-    background: url(/svg/game-of-life) #dedede right -3.23em;
+    background: url(/svg/game-of-life) #dedede;
     background-size: 30em;
+    background-position: 3em -3.26em;
     padding: 4em 1em 1.2em 1em;
 }
 
