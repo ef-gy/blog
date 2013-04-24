@@ -191,8 +191,9 @@ $(BUILD)/%.atom: %.atom $(BUILDD) $(BUILD)/licence.xml xslt/atom-merge.xslt xslt
 $(BUILD)/%.docbook: %.xhtml $(BUILDD) $(BUILD)/licence.xml xslt/docbook-transcode-xhtml.xslt
 	$(XSLTPROC) $(XSLTPROCARGS) --param dblatexWorkaround 1 xslt/docbook-transcode-xhtml.xslt $< > $@
 
-$(BUILD)/%.docbook: $(BUILD)/%.atom $(BUILDD) $(BUILD)/licence.xml xslt/docbook-transcode-xhtml.xslt xslt/docbook-transcode-atom.xslt
-	$(XSLTPROC) $(XSLTPROCARGS) --param dblatexWorkaround 1 xslt/docbook-transcode-xhtml.xslt $< |\
+$(BUILD)/%.docbook: %.atom $(BUILDD) $(BUILD)/licence.xml xslt/docbook-transcode-xhtml.xslt xslt/docbook-transcode-atom.xslt
+	$(XSLTPROC) $(XSLTPROCARGS) xslt/atom-merge.xslt $< | \
+	    $(XSLTPROC) $(XSLTPROCARGS) --param dblatexWorkaround 1 xslt/docbook-transcode-xhtml.xslt - |\
 		$(XSLTPROC) $(XSLTPROCARGS) --param dblatexWorkaround 1 xslt/docbook-transcode-atom.xslt - > $@
 
 # pattern rule to generate PDFs
