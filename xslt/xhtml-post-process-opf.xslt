@@ -55,8 +55,8 @@
   </xsl:template>
 
   <xsl:template match="xhtml:img[@src]">
-    <xsl:variable name="bjpeg" select="substring-after(@src,'/jpeg/')"/>
-    <xsl:variable name="bpng" select="substring-after(@src,'/png/')"/>
+    <xsl:variable name="bjpeg" select="substring-after(@src,'jpeg/')"/>
+    <xsl:variable name="bpng" select="substring-after(@src,'png/')"/>
     <xsl:choose>
       <xsl:when test="$bjpeg != ''">
         <img src="jpeg/{$bjpeg}.jpeg">

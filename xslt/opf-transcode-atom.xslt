@@ -76,8 +76,8 @@
           </item>
         </xsl:for-each>
         <xsl:for-each select=".//xhtml:img">
-          <xsl:variable name="bjpeg" select="substring-after(@src,'/jpeg/')"/>
-          <xsl:variable name="bpng" select="substring-after(@src,'/png/')"/>
+          <xsl:variable name="bjpeg" select="substring-after(@src,'jpeg/')"/>
+          <xsl:variable name="bpng" select="substring-after(@src,'png/')"/>
           <xsl:choose>
             <xsl:when test="$bjpeg != ''">
               <item id="{$bjpeg}" href="jpeg/{$bjpeg}.jpeg" media-type="image/jpeg"/>

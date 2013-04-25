@@ -23,6 +23,20 @@ html
     color: #000;
 }
 
+html#phone
+{
+    background: url(/jpeg/corded-phone) #000 no-repeat;
+    background-size: 120em;
+    background-position: -20em -10em;
+}
+
+html#unicorn-noms
+{
+    background: url(/jpeg/unicorn-noms) #3c160b no-repeat;
+    background-size: 120em;
+    background-position: -20em -18em;
+}
+
 body
 {
     margin: 0 0 0 24em;
@@ -46,6 +60,22 @@ h1
     background-size: 30em;
     background-position: 3em -3.26em;
     padding: 4em 1em 1.2em 1em;
+}
+
+html#phone h1
+{
+    background: url(/jpeg/corded-phone) #000 no-repeat;
+    background-size: 60em;
+    background-position: -22em -3.26em;
+    color: white;
+}
+
+html#unicorn-noms h1
+{
+    background: url(/jpeg/unicorn-noms) #3c160b no-repeat;
+    background-size: 60em;
+    background-position: -22em -7.26em;
+    color: white;
 }
 
 h2
@@ -127,7 +157,8 @@ p, code
 
 blockquote
 {
-    width: 50em;
+    width: auto;
+    max-width: 60em;
     margin: 3.5em auto;
 }
 
@@ -136,22 +167,27 @@ h2 ~ blockquote
     margin: 0.5em auto;
 }
 
-blockquote pre
+blockquote pre,
+blockquote p
 {
-    width: 46em;
+    width: auto;
+    max-width: 56em;
     margin: 0.5em auto;
+    padding: 0 1.5em;
 }
 
-blockquote pre:before
+blockquote pre:before,
+blockquote p:before
 {
     display: block;
     content: "\201c";
     font-size: 5em;
     color: #ccc;
-    margin: 0 -0.5em;
+    margin: 0 -0.5em -0.5em -0.5em;
 }
 
-blockquote pre:after
+blockquote pre:after,
+blockquote p:after
 {
     display: block;
     content: "\201d";
@@ -164,7 +200,7 @@ blockquote pre:after
 blockquote[cite]:after {
     display: block;
     content: attr(cite);
-    width: 40em;
+    max-width: 50em;
     color: #999;
     margin: -4em 0 0 7em;
     font-style: italic;
@@ -804,6 +840,14 @@ ul#meta li#published .day
   top: 0.9em;
   width: 1.4em;
 }
+p.credit, p.last-modified
+{
+  margin-top: 4em;
+}
+p.last-modified + p.credit
+{
+  margin-top: 0.5em;
+}
 @media (max-width: 70em)
 {
     html
@@ -853,7 +897,7 @@ ul#meta li#published .day
         width: 8em;
         left: 1em;
         top: 0em;
-        padding: 8.5em 0 4.5em 0;
+        padding: 8.5em 0 6.5em 0;
     }
 
     ul#meta li#published .month
