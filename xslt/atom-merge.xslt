@@ -41,7 +41,7 @@
       </author>
 
       <content type="application/xhtml+xml">
-        <xsl:copy-of select="$source" />
+        <xsl:apply-templates select="$source" />
       </content>
 
       <source>

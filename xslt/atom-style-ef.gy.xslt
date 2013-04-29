@@ -83,5 +83,7 @@
       </xsl:choose>
     </xsl:copy>
   </xsl:template>
+
+  <xsl:template match="xhtml:html/@id"/>
 </xsl:stylesheet>
 
