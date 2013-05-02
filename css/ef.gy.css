@@ -344,7 +344,7 @@ div.figure li + li
 
 div.figure li a:hover
 {
-    color: #fff;
+    color: #aaa;
 }
 
 div.figure li + li a:before
