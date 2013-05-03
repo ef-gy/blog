@@ -284,6 +284,11 @@ address a:hover span span
     color: #eee;
 }
 
+img
+{
+    max-width: 100%;
+}
+
 img.float-right
 {
     float: right;

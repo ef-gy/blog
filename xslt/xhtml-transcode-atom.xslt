@@ -96,7 +96,7 @@
                   <xsl:for-each select="atom:content/xhtml:html/xhtml:body/xhtml:* | atom:content/xhtml:html/xhtml:body/svg:*">
                     <xsl:if test="position() &lt; 5">
                       <xsl:choose>
-                        <xsl:when test="self::xhtml:p">
+                        <xsl:when test="self::xhtml:p | self::xhtml:img">
                           <xsl:copy-of select="."/>
                         </xsl:when>
                         <xsl:when test="self::xhtml:h1">
@@ -122,7 +122,7 @@
                   <xsl:for-each select="atom:content/xhtml:html/xhtml:body/xhtml:p | atom:content/xhtml:html/xhtml:body/svg:svg">
                     <xsl:if test="position() &lt; 3">
                       <xsl:choose>
-                        <xsl:when test="self::xhtml:p">
+                        <xsl:when test="self::xhtml:p | self::xhtml:img">
                           <xsl:copy-of select="."/>
                         </xsl:when>
                         <xsl:when test="self::svg:svg">
