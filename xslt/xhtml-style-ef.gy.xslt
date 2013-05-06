@@ -100,6 +100,15 @@
           </xsl:when>
         </xsl:choose>
       </xsl:if>
+      <xsl:if test="xhtml:meta[@name='author']">
+        <xsl:variable name="author" select="xhtml:meta[@name='author']/@content"/>
+        <xsl:choose>
+          <xsl:when test="$author='Magnus Achim Deininger'">
+            <link rel="author" href="https://plus.google.com/112902745191014401433"/>
+            <link rel="author" href="https://twitter.com/jyujinX"/>
+          </xsl:when>
+        </xsl:choose>
+      </xsl:if>
     </xsl:copy>
   </xsl:template>
 
@@ -190,11 +199,15 @@
         <xsl:choose>
           <xsl:when test="$author='Magnus Achim Deininger'"><address>
             <a rel="author" href="about">
-              <span>Written by <span>Magnus Achim Deininger</span>.</span> Magnus Achim Deininger is a <del>sellsword</del> freelance computer scientist specialising in peculiar problems, such as embedded development, formal language theory and experiments in minimalistic design. This website serves as his personal journal and testing ground for unusual and/or crazy ideas.</a>
+              <span>Written by <span>Magnus Achim Deininger</span>.</span> Magnus is a <del>sellsword</del> freelance computer scientist specialising in peculiar problems, such as embedded development, formal language theory and experiments in minimalistic design. This website serves as his personal journal and testing ground for unusual and/or crazy ideas.</a>
           </address></xsl:when>
           <xsl:when test="$author='Nadja Klein'"><address>
             <a rel="author" href="http://www.facebook.com/nadja.klein.967">
-              <span>Written by <span>Nadja Klein</span>.</span> Guest blogging on this site, resident coffee junkie Nadja is one of that rare blend of computer scientists with an affinity for maths. She used to work as a developer for a software company until just recently and is currently concentrating on getting her degree in computer science.</a>
+              <span>Written by <span>Nadja Deininiger</span>.</span> Guest blogging on this site, resident coffee junkie Nadja is one of that rare blend of computer scientists with an affinity for maths. She used to work as a developer for a software company until just recently and is currently concentrating on getting her degree in computer science.</a>
+          </address></xsl:when>
+          <xsl:when test="$author='Nadja Deininger'"><address>
+            <a rel="author" href="http://www.facebook.com/nadja.klein.967">
+              <span>Written by <span>Nadja Deininger</span>.</span> Guest blogging on this site, resident coffee junkie Nadja is one of that rare blend of computer scientists with an affinity for maths. She used to work as a developer for a software company until just recently and is currently concentrating on getting her degree in computer science.</a>
           </address></xsl:when>
           <xsl:otherwise><address>
             <span>Written by <span><xsl:value-of select="$author"/></span></span>
