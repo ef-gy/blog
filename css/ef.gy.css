@@ -364,6 +364,36 @@ div.figure li + li a
     color: #222;
 }
 
+ul#subfeeds
+{
+    text-align: right;
+    height: 2em;
+    margin: -5.3em 0 2em 0;
+    padding: 0;
+}
+
+ul#subfeeds li
+{
+    display: inline-block;
+    padding: 1em 2em;
+    margin: 0;
+    background: #fff;
+    background: rgba(255,255,255,0.8);
+}
+
+ul#subfeeds li a
+{
+    background: #eee;
+    display: inline-block;
+    padding: 1em 2em;
+    margin: -1em -2em;
+}
+
+ul#subfeeds li a:hover
+{
+    background: #fff;
+}
+
 th
 {
     text-align: right;

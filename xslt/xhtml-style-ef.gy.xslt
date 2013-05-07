@@ -138,9 +138,22 @@
         <li><a href="/about">About</a></li>
         <li><a href="/fortune">Fortune</a></li>
         <li><a href="/site">Blog</a></li>
-        <li><a href="/archives">Archives</a></li>
         <li><a href="/source-code">Source Code</a></li>
       </ul>
+      <xsl:choose>
+        <xsl:when test="$collection='site'">
+          <ul id="subfeeds">
+            <li>abridged</li>
+            <li><a href="/everything">unabridged</a></li>
+          </ul>
+        </xsl:when>
+        <xsl:when test="$collection='everything'">
+          <ul id="subfeeds">
+            <li><a href="/site">abridged</a></li>
+            <li>unabridged</li>
+          </ul>
+        </xsl:when>
+      </xsl:choose>
       <xsl:if test="//xhtml:meta[@name='unix:name']">
         <xsl:choose>
           <xsl:when test="(string-length($target) > 0) and (string-length($collection) > 0)">
