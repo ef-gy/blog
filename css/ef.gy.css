@@ -495,7 +495,7 @@ body#full:after
     display: block;
     font-size: 1.4em;
     background: none;
-    padding: 0;
+    padding: 0 0 0 1.5em;
     width: auto;
     margin: 0 0 2em 0;
     text-align: left;
@@ -511,8 +511,8 @@ body#full:after
     content: " ";
     border: 1px solid #fff;
     height: 1.15em;
-    width: 0.5em;
-    margin: 0 0.25em -0.25em 0;
+    width: 1.15em;
+    margin: 0 0.25em -0.25em -1.5em;
     background: #a44;
 }
 
