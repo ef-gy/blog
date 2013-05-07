@@ -63,6 +63,29 @@
           </html>
         </xsl:document>
         <item id="cover" href="cover.xhtml" media-type="application/xhtml+xml"/>
+
+        <xsl:document href="{$builddir}/{$name}/toc.xhtml">
+          <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+            <head>
+              <title>Table of Contents</title>
+              <link href="ef.gy.book.css" rel="stylesheet" type="text/css"/>
+            </head>
+            <body>
+              <h1>Table of Contents</h1>
+              <nav epub:type="toc">
+                <h2>Main Content</h2>
+                <ol>
+                  <li><a href="cover.xhtml">Cover</a></li>
+                  <li><a href="toc.xhtml">Table of Contents</a></li>
+                  <xsl:for-each select="atom:entry[atom:content[@type='application/xhtml+xml']]">
+                    <li><a href="{$builddir}/{$name}/content-{position()}.xhtml"><xsl:value-of select="atom:content/xhtml:html/xhtml:head/xhtml:title"/></a></li>
+                  </xsl:for-each>
+                </ol>
+              </nav>
+            </body>
+          </html>
+        </xsl:document>
+        <item id="toc" href="toc.xhtml" media-type="application/xhtml+xml" properties="nav"/>
         <item id="css" href="ef.gy.book.css" media-type="text/css"/>
         <item id="cover-css" href="ef.gy.cover.css" media-type="text/css"/>
         <xsl:for-each select="atom:entry[atom:content[@type='application/xhtml+xml']]">
@@ -91,6 +114,7 @@
 
       <spine>
         <itemref idref="cover"/>
+        <itemref idref="toc"/>
         <xsl:for-each select="atom:entry[atom:content[@type='application/xhtml+xml']]">
           <itemref idref="xhtml-{position()}"/>
         </xsl:for-each>

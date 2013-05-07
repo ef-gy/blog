@@ -51,6 +51,27 @@
           </html>
         </xsl:document>
         <item id="cover" href="cover.xhtml" media-type="application/xhtml+xml"/>
+
+        <xsl:document href="{$builddir}/{$name}/toc.xhtml">
+          <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+            <head>
+              <title>Table of Contents</title>
+              <link href="ef.gy.book.css" rel="stylesheet" type="text/css"/>
+            </head>
+            <body>
+              <h1>Table of Contents</h1>
+              <nav epub:type="toc">
+                <h2>Main Content</h2>
+                <ol>
+                  <li><a href="cover.xhtml">Cover</a></li>
+                  <li><a href="toc.xhtml">Table of Contents</a></li>
+                  <li><a href="content.xhtml"><xsl:value-of select="xhtml:head/xhtml:title"/></a></li>
+                </ol>
+              </nav>
+            </body>
+          </html>
+        </xsl:document>
+        <item id="toc" href="toc.xhtml" media-type="application/xhtml+xml" properties="nav"/>
         <!--<item id="cover" href="{$name}.cover.opf.svg" media-type="image/svg+xml" properties="cover-image"/>-->
         <item id="css" href="ef.gy.book.css" media-type="text/css"/>
         <item id="cover-css" href="ef.gy.cover.css" media-type="text/css"/>
@@ -78,6 +99,7 @@
 
       <spine>
         <itemref idref="cover"/>
+        <itemref idref="toc"/>
         <itemref idref="main"/>
       </spine>
     </package>
