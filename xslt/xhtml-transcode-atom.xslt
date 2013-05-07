@@ -47,7 +47,7 @@
   <xsl:template match="/atom:feed">
     <xsl:choose>
       <xsl:when test="(string-length($target) > 0) and atom:entry/atom:content/xhtml:html[xhtml:head/xhtml:meta/@name='unix:name'][xhtml:head/xhtml:meta/@content=str:decode-uri($target)]"><xsl:copy-of select="atom:entry/atom:content/xhtml:html[xhtml:head/xhtml:meta/@name='unix:name'][xhtml:head/xhtml:meta/@content=str:decode-uri($target)]"/></xsl:when>
-        <xsl:otherwise><html>
+        <xsl:otherwise><html xml:lang="en">
         <head>
           <xsl:choose>
             <xsl:when test="atom:subtitle">
