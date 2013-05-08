@@ -5,6 +5,7 @@
               xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
               xmlns:atom="http://www.w3.org/2005/Atom"
               xmlns:opf="http://www.idpf.org/2007/opf"
+              xmlns:epub="http://www.idpf.org/2007/ops"
               xmlns:dc="http://purl.org/dc/elements/1.1/"
               xmlns:xhtml="http://www.w3.org/1999/xhtml"
               xmlns="http://www.idpf.org/2007/opf"
@@ -78,7 +79,7 @@
                   <li><a href="cover.xhtml">Cover</a></li>
                   <li><a href="toc.xhtml">Table of Contents</a></li>
                   <xsl:for-each select="atom:entry[atom:content[@type='application/xhtml+xml']]">
-                    <li><a href="{$builddir}/{$name}/content-{position()}.xhtml"><xsl:value-of select="atom:content/xhtml:html/xhtml:head/xhtml:title"/></a></li>
+                    <li><a href="content-{position()}.xhtml"><xsl:value-of select="atom:content/xhtml:html/xhtml:head/xhtml:title"/></a></li>
                   </xsl:for-each>
                 </ol>
               </nav>

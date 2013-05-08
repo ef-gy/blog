@@ -7,6 +7,7 @@
               xmlns:mathml="http://www.w3.org/1998/Math/MathML"
               xmlns:svg="http://www.w3.org/2000/svg"
               xmlns:opf="http://www.idpf.org/2007/opf"
+              xmlns:epub="http://www.idpf.org/2007/ops"
               xmlns:dc="http://purl.org/dc/elements/1.1/"
               xmlns:pmml2svg="https://sourceforge.net/projects/pmml2svg/"
               xmlns="http://www.idpf.org/2007/opf"
