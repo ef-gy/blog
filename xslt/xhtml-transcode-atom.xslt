@@ -119,7 +119,7 @@
                       <li class="author"><xsl:value-of select="atom:author/atom:name"/></li>
                     </xsl:if>
                   </ul>
-                  <xsl:for-each select="atom:content/xhtml:html/xhtml:body/xhtml:p | atom:content/xhtml:html/xhtml:body/svg:svg">
+                  <xsl:for-each select="atom:content/xhtml:html/xhtml:body/xhtml:p | atom:content/xhtml:html/xhtml:body/xhtml:img | atom:content/xhtml:html/xhtml:body/svg:svg">
                     <xsl:if test="position() &lt; 3">
                       <xsl:choose>
                         <xsl:when test="self::xhtml:p | self::xhtml:img">
