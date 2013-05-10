@@ -197,7 +197,8 @@ blockquote p:after
     margin: 0 -0.5em;
 }
 
-blockquote[cite]:after {
+blockquote[cite]:after
+{
     display: block;
     content: attr(cite);
     max-width: 50em;
@@ -205,6 +206,28 @@ blockquote[cite]:after {
     margin: -4em 0 0 7em;
     font-style: italic;
     text-align: right;
+}
+
+blockquote.twitter-tweet
+{
+    width: auto;
+    max-width: none;
+    padding: 1em;
+    margin: 1em;
+}
+
+blockquote.twitter-tweet p
+{
+    width: auto;
+    max-width: none;
+    padding: 1em;
+    margin: 0;
+}
+
+blockquote.twitter-tweet p:before,
+blockquote.twitter-tweet p:after
+{
+    display: none;
 }
 
 pre
