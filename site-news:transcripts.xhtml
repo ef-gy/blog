@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Site Update: Ebooks and PDFs</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="The transcripts seem to work fine now, time to announce 'em! Check out the XSLTs and the makefile in the GIT repository if you want to create transcripts of your own pages." />
+<meta name="date" content="2013-05-22T14:27:00Z" />
+<meta name="mtime" content="2013-05-22T14:27:00Z" />
+<meta name="category" content="Site News" />
+<meta name="unix:name" content="site-news:transcripts" />
+</head>
+<body>
+<h1>Want To Read This Blog On Your Kindle? Sure Thing, Boss</h1>
+<p>Ever since I got my new 4th generation Kindle I wondered how hard it would be to write your own ebooks for it. As it turns out, this isn't all that hard to do in principle but there's a lot of funky details to deal with. I think I've now dealt with most of them, so now there's a number of links to a few automatically generated transcripts at the bottom of most pages on this site:</p>
+<img src="/png/transcripts" alt="transcripts: now way at the bottom of most pages on this site"/>
+<p>As you can see in the screenshot, the content of most pages on this site is now available in quite a few formats for your convenience:</p>
+<dl>
+<dt>PDFs</dt>
+<dd>Good ol' trusty Portable Document Format files. Classic if you want to get a hardcopy of a page for whatever reason. Also really handy if your browser doesn't do MathML or SVG and you're stuck on one of the pages relying on that - there's a note explaining all about that on pages that do use MathML.</dd>
+<dt>Kindle/MobiPocket (.mobi)</dt>
+<dd>These files are perfect for your Kindle ebook reader if you have one. There's also a few apps that will let you read those files on most devices. <a href="http://www.amazon.com/gp/feature.html?ie=UTF8&amp;docId=1000765211">Amazon's kindlegen</a> is used to create these files from what is essentially an unzipped EPUB transcript.</dd>
+<dt>EPUB</dt>
+<dd>The <em>other</em> common ebook format. If your ebook reader doesn't do Kindle ebooks, it'll quite probably read these just fine. While the specifications for this format are open, it's sadly one of those ZIP+lots-of-small-XML-files formats. Kind of like the Open Office or Office Open XML formats. This makes generating these files in a typical XML pipeline very, <em>very</em> annoying. Could we get an XML container format for the next EPUB release? Like the one for Microsoft's XML office files? pretty please?</dd>
+<dt>DocBook 5</dt>
+<dd>DocBook is a fairly old, stable, SGML-based series of file formats for text documents. Kind of like (La)TeX in SGML. The latest version - DocBook 5 - is now pure XML instead of SGML, meaning it's a dream to work with in an XML/XSLT pipeline. It also has the very desirable property of only allowing logical markup as opposed to physical markup, making it that much better. I really wish this format was used more in the wild. The PDF transcripts are generated from these DocBook files.</dd>
+</dl>
+<p>The ATOM and RSS feeds are still available, of course. Your web browser or feed reader shouldn't have much of a problem picking the feeds up from the pages' metadata. The PDF, Kindle and EPUB transcripts are generated with a batch job after publishing a new article, which takes a bit. If you get an error trying to download any of these transcripts, just wait a while and try again.</p>
+<p>If you're interested on how these transcripts are generated, feel free to <a href="source-code">check out the GIT repository for this site</a>. The makefile contains all the scripting and there's a few XSLTs that translate between the different formats. I learned quite a bit about writing ebooks in the process, so stay tuned for some articles on that.</p>
+</body>
+</html>
