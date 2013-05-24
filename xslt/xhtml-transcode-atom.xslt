@@ -96,7 +96,7 @@
                   <xsl:for-each select="atom:content/xhtml:html/xhtml:body/xhtml:* | atom:content/xhtml:html/xhtml:body/svg:*">
                     <xsl:if test="position() &lt; 5">
                       <xsl:choose>
-                        <xsl:when test="self::xhtml:p | self::xhtml:img">
+                        <xsl:when test="self::xhtml:p | self::xhtml:img | self::xhtml:blockquote">
                           <xsl:copy-of select="."/>
                         </xsl:when>
                         <xsl:when test="self::xhtml:h1">
@@ -119,10 +119,10 @@
                       <li class="author"><xsl:value-of select="atom:author/atom:name"/></li>
                     </xsl:if>
                   </ul>
-                  <xsl:for-each select="atom:content/xhtml:html/xhtml:body/xhtml:p | atom:content/xhtml:html/xhtml:body/xhtml:img | atom:content/xhtml:html/xhtml:body/svg:svg">
+                  <xsl:for-each select="atom:content/xhtml:html/xhtml:body/xhtml:p | atom:content/xhtml:html/xhtml:body/xhtml:img | atom:content/xhtml:html/xhtml:body/xhtml:blockquote | atom:content/xhtml:html/xhtml:body/svg:svg">
                     <xsl:if test="position() &lt; 3">
                       <xsl:choose>
-                        <xsl:when test="self::xhtml:p | self::xhtml:img">
+                        <xsl:when test="self::xhtml:p | self::xhtml:img | self::xhtml:blockquote">
                           <xsl:copy-of select="."/>
                         </xsl:when>
                         <xsl:when test="self::svg:svg">

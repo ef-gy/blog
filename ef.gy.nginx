@@ -61,6 +61,11 @@ server {
 
         rewrite ^/$ /site permanent;
 
+        # Google+ seems to choke on XHTML
+		if ($http_user_agent ~* Google)
+		{
+			rewrite ^(.*)$ /html$1 last;
+		}
 		if ($http_accept ~* application/xhtml\+xml)
 		{
 			rewrite ^(.*)$ /xhtml$1 last;
