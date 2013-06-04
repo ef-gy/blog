@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>SQL: Sequence Generator</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="Some databases already ship with built-in functions to generate sequences - others don't. This'll come in handy in the latter case." />
+<meta name="date" content="2013-06-04T10:03:00Z" />
+<meta name="mtime" content="2013-06-04T10:03:00Z" />
+<meta name="category" content="Articles" />
+<meta name="category" content="SQL" />
+<meta name="unix:name" content="sql:sequence-generator" />
+</head>
+<body>
+<h1>'Tis A Life Saver!</h1>
+<p>I'm doing a lot of crazy things with databases lately, and the one thing I almost invariably need for all of them is a sequence generator.</p>
+<p>So what's a sequence generator? Well basically that's something that lets you generate a sequence of integers between a start and an end point. I'm using those a lot when initialising tables with blank data of arbitrary sizes, or for certain methods of weighing data - I'll delve deeper into the latter in a separate article.</p>
+<p>Some databases already ship with built-in functions or other primitives for this purpose - <a href="http://www.postgresql.org/docs/8.1/static/sql-createsequence.html">PostgreSQL for example has the CREATE SEQUENCE construct and a set of helpful procedures that go with it</a>, which is also supported in TSQL and Oracle - but what I really need, most of the time, is something that'll just return a dummy table filled with a series of integers - like 0, 1, 2, 3, 4, ... - with one entry per row. Larger databases contain constructs for this purpose as well, but at least SQLite doesn't - and I do use that a lot. So that's where this bit of SQL magic comes in.</p>
+<h1>Implementation</h1>
+<p>This one's straightforward - and might even be ANSI SQL; grab it <a href="src/sequence.sql">here</a>, or as part of <a href="source-code">this site's source code</a>:</p>
+<pre><code><![CDATA[create view vseq1  as select 0 as b union select 1 as b;
+create view vseq2  as select (b1.b << 1)  | (b0.b) as b from vseq1  as b0, vseq1  as b1;
+create view vseq4  as select (b1.b << 2)  | (b0.b) as b from vseq2  as b0, vseq2  as b1;
+create view vseq8  as select (b1.b << 4)  | (b0.b) as b from vseq4  as b0, vseq4  as b1;
+create view vseq16 as select (b1.b << 8)  | (b0.b) as b from vseq8  as b0, vseq8  as b1;
+create view vseq32 as select (b1.b << 16) | (b0.b) as b from vseq16 as b0, vseq16 as b1;
+
+create table seq1
+(
+    b integer not null primary key
+);
+create table seq2
+(
+    b integer not null primary key
+);
+create table seq4
+(
+    b integer not null primary key
+);
+create table seq8
+(
+    b integer not null primary key
+);
+create table seq16
+(
+    b integer not null primary key
+);
+
+insert into seq1  select b from vseq1;
+insert into seq2  select b from vseq2;
+insert into seq4  select b from vseq4;
+insert into seq8  select b from vseq8;
+insert into seq16 select b from vseq16;
+]]></code></pre>
+<p>This creates two things: a set of views that generate the actual sequences, and a set of tables that contain pre-created sequences. The integers in these <em>(v)seqN</em> constructs range from <em>0</em> to <em>(2**N)-1</em>. The generating views build on each other with a cartesian product, which means that each new view squares the range. If you ever needed larger ranges you could just introduce a vseq64 analogously to the other views.</p>
+<p>The views alone would technically already be enough for my requirements, but generating and filtering those sequences with this method is fairly expensive. The tables help a lot with that, especially since the <em>primary key</em> declaration should also create an index - although I've seen sqlite3 "forget" to do so in some versions with a visible performance boost if you used a separate <em>create unique index</em> statement. But that's something for another article.</p>
+</body>
+</html>
