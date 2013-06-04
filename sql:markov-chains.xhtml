@@ -77,7 +77,7 @@ create table markov1
 
 create unique index markov1P on markov2 (id, c0, next);]]></code></pre>
 <p>To train the models, we need somewhere to store the training data along with the parser state. Ordinarily we could omit this, but SQLite doesn't like self-recursive triggers, so we're stuck with a temporary data table.</p>
-<p>To perform the actual training, all we then have to do is to examine the current state and the following symbol and increase the "cnt" in the model by one. Then the symbols are shifted through and the first symbol of the remainder of the string is used as the next symbol. We repeat that until the string is empty. NULLs are used a sentinels for start and end characters in the models.</p>
+<p>To perform the actual training, all we then have to do is to examine the current state and the following symbol and increase the "cnt" in the model by one. Then the symbols are shifted through and the first symbol of the remainder of the string is used as the next symbol. We repeat that until the string is empty. NULLs are used sentinels for start and end characters in the models.</p>
 <p>Usually, in SQL, we'd use a stored procedure for this purpose - but SQLite doesn't support those. So insted we create a handful of views and create <em>instead of insert</em> triggers for them. Instead of calling these procedures, we have to insert into that view, but the net effect is the same as calling a procedure - that's a pretty handy trick in SQLite, by the way.</p> 
 <pre><code><![CDATA[create table trainstate
 (
