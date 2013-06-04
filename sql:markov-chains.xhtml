@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>SQL(ite): markov.sql: Higher Order Markov Chains</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="A simple and straightforward implementtion of higher order markov chains in SQL(ite)." />
+<meta name="date" content="2013-06-04T17:45:00Z" />
+<meta name="mtime" content="2013-06-04T17:45:00Z" />
+<meta name="category" content="Software" />
+<meta name="category" content="SQL" />
+<meta name="unix:name" content="sql:markov-chains" />
+</head>
+<body>
+<h1>Introduction</h1>
+<p>I promised I'd expand on those other uses for <a href="/sql:sequence-generator">that SQL sequence generator</a>, so here we are: higher order markov chains! This particular piece of code I'll be introducing allows generating strings with a model you train with other strings - for example, you could train the model with first names and then tell it to generate a first name based on that.</p>
+<p>Why am I doing this in SQL? Because I can! And because, actually this really is kind of straightforward. The implementation is in SQLite, as usual.</p>
+<p>I've also taken the time to create a separate GIT repository for this in case anyone's interested. The repository contains a pre-trained models with 5000 corporation names from the US tax bureau and the 5000 most popular last names from the US Census Bureau from 1990, along with the most popular female and male first names from the same year. The provided makefile will download and train that data for you, as well.</p>
+<h1>Quick Start</h1>
+<p>The repository for this little project is available at: <a href="http://git.becquerel.org/?p=jyujin/markov.git">http://git.becquerel.org/?p=jyujin/markov.git</a> - you can either grab a ZIP file from there or browse the source code (only 2 files, really). Alternatively, you could also issue the following command on your shell to check out a copy of the repository:</p>
+<pre><code><![CDATA[$ git clone git://git.becquerel.org/jyujin/markov.git]]></code></pre>
+<p>This will create a directory called <em>markov</em> all set up and ready to play.</p>
+<p>Once you have the sources, there is <a href="http://git.becquerel.org/?p=jyujin/markov.git;a=blob_plain;f=dist/markov-data.sql;hb=HEAD">a pre-compiled, pre-trained SQLite database dump under dist/markov-data.sql in that repository</a>. To play with that, issue the following on a command line in this new <em>markov</em>-directory:</p>
+<pre><code><![CDATA[$ sqlite3 markov.sqlite3 < dist/markov-data.sql]]></code></pre>
+<p>Now for the fun part: to create names, insert the type of name you want in the <em>markovconstruct</em> table, then insert the maximum number of iterations in the <em>vautoconstruct</em> view, like this:</p>
+<pre><code><![CDATA[$ sqlite3 markov.sqlite3 
+SQLite version 3.7.13 2012-06-11 02:05:22
+Enter ".help" for instructions
+Enter SQL statements terminated with a ";"
+sqlite> insert into markovconstruct (id) values (3), (3), (3), (3), (3);
+sqlite> insert into vautoconstruct (steps) values (40);]]></code></pre>
+<p>The pre-trained IDs are: 2 for corporation names, 3 for female first names, 4 for male first names and 5 for last names. Once it's done, you should find the results in the <em>markovresult</em> table:</p>
+<pre><code><![CDATA[sqlite> select * from markovresult;
+3|1|alaron
+3|2|roma
+3|3|julia
+3|4|shanie
+3|5|daine]]></code></pre>
+<p>The <em>markovconstruct</em> table has an optional column <em>depth</em>, which controls the which order of model is used to create the output. The default is 3. To train new models yourself, insert the strings to train with into the <em>vtrain</em> table, like this:</p>
+<pre><code><![CDATA[sqlite> insert into vtrain (id, data) values (42, 'foo'), (42, 'frob'), (42, 'barf'), (42, 'bar');]]></code></pre>
+<p>That view should take care of everything. Once the <em>insert</em> operation completes the model will have been updated and you can generate strings based on it like you did with the names above.</p>
+<h1>Implementation</h1>
+<p>Apart from <a href="/sql:sequence-generator">the sequence generator</a>, the following SQL trains and uses the model. A <a href="http://git.becquerel.org/?p=jyujin/markov.git;a=blob_plain;f=src/markov.sql;hb=HEAD">combined source file is available in the previously mentioned GIT repository</a>.</p>
+<p>First we need a few tables to hold the trained model; the tables <em>markov3</em>, <em>markov2</em> and <em>markov1</em> hold this data for us - third order, second order and first order models, respectively:</p>
+<pre><code><![CDATA[create table markov3
+(
+    id integer not null,
+    mroid integer not null primary key,
+    c0 text null,
+    c1 text null,
+    c2 text null,
+    next text null,
+    cnt integer not null
+);
+
+create unique index markov3P on markov3 (id, c0, c1, c2, next);
+
+create table markov2
+(
+    id integer not null,
+    mroid integer not null primary key,
+    c0 text null,
+    c1 text null,
+    next text null,
+    cnt integer not null
+);
+
+create unique index markov2P on markov2 (id, c0, c1, next);
+
+create table markov1
+(
+    id integer not null,
+    mroid integer not null primary key,
+    c0 text null,
+    next text null,
+    cnt integer not null
+);
+
+create unique index markov1P on markov2 (id, c0, next);]]></code></pre>
+<p>To train the models, we need somewhere to store the training data along with the parser state. Ordinarily we could omit this, but SQLite doesn't like self-recursive triggers, so we're stuck with a temporary data table.</p>
+<p>To perform the actual training, all we then have to do is to examine the current state and the following symbol and increase the "cnt" in the model by one. Then the symbols are shifted through and the first symbol of the remainder of the string is used as the next symbol. We repeat that until the string is empty. NULLs are used a sentinels for start and end characters in the models.</p>
+<p>Usually, in SQL, we'd use a stored procedure for this purpose - but SQLite doesn't support those. So insted we create a handful of views and create <em>instead of insert</em> triggers for them. Instead of calling these procedures, we have to insert into that view, but the net effect is the same as calling a procedure - that's a pretty handy trick in SQLite, by the way.</p> 
+<pre><code><![CDATA[create table trainstate
+(
+    id integer not null,
+    c0 text null,
+    c1 text null,
+    c2 text null,
+    c3 text null,
+    remainder text null,
+
+    foreign key (id) references markov3(id)
+);
+
+create view vtrainstep as
+select
+    null as step;
+
+create view vtrain as
+select
+    null as id,
+    null as data,
+    null as steps;
+
+create view vautotrain as
+select
+    null as steps;
+
+create trigger vtrainstepInsert instead of insert on vtrainstep
+for each row begin
+    update trainstate
+       set c0 = c1,
+           c1 = c2,
+           c2 = c3,
+           c3 = substr(remainder, 1, 1),
+           remainder = substr(remainder, 2);
+
+    update trainstate set c0 = null where c0 = '';
+    update trainstate set c1 = null where c1 = '';
+    update trainstate set c2 = null where c2 = '';
+    update trainstate set c3 = null where c3 = '';
+    update trainstate set remainder = null where remainder = '';
+
+    update markov3
+       set cnt = cnt + 1
+     where mroid in (select mroid
+                       from trainstate as s, markov3 as m
+                      where m.id is s.id and m.c0 is s.c0 and m.c1 is s.c1 and m.c2 is s.c2 and m.next is s.c3);
+
+    update markov2
+       set cnt = cnt + 1
+     where mroid in (select mroid
+                       from trainstate as s, markov2 as m
+                      where m.id is s.id and m.c0 is s.c1 and m.c1 is s.c2 and m.next is s.c3);
+
+    update markov1
+       set cnt = cnt + 1
+     where mroid in (select mroid
+                       from trainstate as s, markov2 as m
+                      where m.id is s.id and m.c0 is s.c2 and m.next is s.c3);
+
+    insert or replace into markov3
+        (id, c0, c1, c2, cnt, next)
+        select s.id, s.c0, s.c1, s.c2, 1 as cnt, s.c3 as next
+          from trainstate as s
+          left join markov3 as m on m.id is s.id and m.c0 is s.c0 and m.c1 is s.c1 and m.c2 is s.c2 and m.next is s.c3
+         where m.cnt is null;
+
+    insert or replace into markov2
+        (id, c0, c1, cnt, next)
+        select s.id, s.c1 as c0, s.c2 as c1, 1 as cnt, s.c3 as next
+          from trainstate as s
+          left join markov2 as m on m.id is s.id and m.c0 is s.c1 and m.c1 is s.c2 and m.next is s.c3
+         where m.cnt is null;
+
+    insert or replace into markov1
+        (id, c0, cnt, next)
+        select s.id, s.c2 as c0, 1 as cnt, s.c3 as next
+          from trainstate as s
+          left join markov1 as m on m.id is s.id and m.c0 is s.c2 and m.next is s.c3
+         where m.cnt is null;
+
+    delete from trainstate where c3 is null;
+end;
+
+create trigger vtrainInsert instead of insert on vtrain
+for each row begin
+    insert into trainstate
+        (id, c0, c1, c2, remainder)
+        values
+        (new.id, null, null, null, lower(new.data));
+
+    insert into vtrainstep (step) select b from seq8 where b < coalesce(new.steps, length(new.data));
+end;
+
+create trigger vautotrainInsert instead of insert on vautotrain
+for each row begin
+    insert into vtrainstep
+        (step)
+        select b
+          from seq8
+         where b < coalesce(new.steps, length((select remainder
+                                                 from trainstate
+                                                order by length(remainder) desc
+                                                limit 1)));
+end;]]></code></pre>
+<p>And finally, to create strings with our shiny new model, all we do is we start with a blank state and look up the probabilities for the next character in the appropriate model. This is where that handy sequence generator comes in.</p>
+<p>You may have noticed that the model doesn't contain any totals, and the probabilities aren't expressed as floating point numbers. Instead, the only bit of data in the model is the number of times that the training data had a certain character follow the current state. If this were any other language, we'd have to massage and finalise this model to create a probability (between 0 and 1) to work with, then follow the regular algorithm. But this is SQL!</p>
+<p>Instead, we create a view that selects all possible characters that could come next, given the current state and the model. We then repeat each of these possible next states as often as they occured in the training session with the help of our sequence generator and the cartesian product (or <em>natural join</em> in SQL). For example, if we had "foo" as the current state, and the next character could be an "a", a "b" or a "c" with counts 1, 2 and 3, respectively, then our view would return the result rows "a", "b", "b", "c", "c", "c". From this view we pick <em>one row at random</em>, using a <em>select ... order by random() limit 1</em> clause. This has the same effect as calculating the totals, the probabilities and then choosing a number between 0 and 1 - except it's much more natural in SQL and quite a lot more straightforward. Well, as natural and straightforward as an <em>order by random()</em> select can possibly be, anyway :D.</p>
+<pre><code><![CDATA[create table markovconstruct
+(
+    id integer not null,
+    mvcid integer not null primary key,
+    c0 text null,
+    c1 text null,
+    c2 text null,
+    depth integer not null default 3,
+    data text not null default '',
+
+    foreign key (id) references markov3(id)
+);
+
+create table markovresult
+(
+    id integer not null,
+    mvcid integer not null primary key,
+    result text not null,
+
+    foreign key (id) references markov3(id)
+);
+
+create view vmarkovprobabilities as
+select
+    c.id as id,
+    c.mvcid as mvcid,
+    3 as depth,
+    m.next as next
+from markovconstruct as c
+left join markov3 as m on c.id is m.id and c.c0 is m.c0 and c.c1 is m.c1 and c.c2 is m.c2,
+     seq8 as n
+where n.b < coalesce(cnt, 1)
+union all
+select
+    c.id as id,
+    c.mvcid as mvcid,
+    2 as depth,
+    m.next as next
+from markovconstruct as c
+left join markov2 as m on c.id is m.id and c.c1 is m.c0 and c.c2 is m.c1,
+     seq8 as n
+where n.b < coalesce(cnt, 1)
+union all
+select
+    c.id as id,
+    c.mvcid as mvcid,
+    1 as depth,
+    m.next as next
+from markovconstruct as c
+left join markov1 as m on c.id is m.id and c.c2 is m.c0,
+     seq8 as n
+where n.b < coalesce(cnt, 1)
+;
+
+create view vconstructstep as
+select
+    null as step;
+
+create view vautoconstruct as
+select
+    null as steps;
+
+create trigger vconstructstepInsert instead of insert on vconstructstep
+for each row begin
+    update markovconstruct
+       set c0 = c1,
+           c1 = c2,
+           c2 = (select next
+                   from vmarkovprobabilities as p
+                  where p.mvcid = markovconstruct.mvcid
+                    and p.depth = markovconstruct.depth
+                  order by random()
+                  limit 1)
+     where c2 is not null
+        or (c0 is null and c1 is null and c2 is null);
+
+    update markovconstruct
+       set data = data || coalesce(c2, '');
+
+    insert into markovresult
+        (id, mvcid, result)
+        select id, mvcid, data
+          from markovconstruct
+         where c2 is null;
+
+    delete from markovconstruct where c2 is null;
+end;
+
+create trigger vautoconstructInsert instead of insert on vautoconstruct
+for each row begin
+    insert into vconstructstep
+        (step)
+        select b
+          from seq8
+         where b < coalesce(new.steps, 50);
+end;]]></code></pre>
+<h1>Sample Results</h1>
+<p>This is a very primitive markov chain implementation, but it gets the job done. So I figured it'd be nice to include a few samples with this article. First, a few female first names based on the 1990 US Census Bureau data:</p>
+<p><em>dani
+tristine
+odesire
+bryn
+ang
+jewell
+kylee
+maxie
+athrine
+don
+shari
+coriannetta
+hery
+margarda
+chella
+zuletta
+caretta
+frana
+janilseannelle
+vergie
+sanne
+bonna
+lakiaraine
+antin
+winny
+mona
+ardanna
+selena
+christashirleshanh
+pat
+kim
+ren
+ann
+kenza
+lauree
+nichanne
+rey
+tranchel
+nandra
+vira
+tessidy
+noelleneena
+cele
+chae
+cleonie
+zenor
+margenisha
+sommer
+shelleeshamerri
+chrin</em></p>
+<p>This was generated with the following one liner in the training data: <em>delete from markovresult; delete from markovconstruct; insert into markovconstruct (id) select 3 as id from seq8 where seq8.b &lt; 50; insert into vautoconstruct (steps) values (40); select result from markovresult;</em> - if we use <em>4</em> as the id, we get male names:</p>
+<p><em>conrad
+jeremil
+karendellenard
+pedrigoberrolas
+luis
+bricenzo
+johnnis
+lyle
+ross
+rill
+keenardo
+darrolfonzo
+carson
+tore
+doyle
+vicent
+wilson
+kinley
+joesph
+santon
+cecil
+marcelo
+tyron
+wm
+joseven
+irwinston
+brand
+joan
+judson
+jamerlint
+mckie
+gail
+willis
+lylestefan
+fletch
+johnie
+neil
+sil
+mac
+den
+shelby
+haron
+jord
+fere
+bur
+shirley
+lamario
+normand
+kenny
+wilmerlin
+</em></p>
+<p>And finally, id <em>5</em> in that dataset creates last names:</p>
+<p><em>clandallamy
+busseno
+boa
+mcnaily
+choward
+cavez
+reinriggins
+mundtremblinclaross
+buchen
+ness
+mccliff
+fowley
+frazier
+crosby
+pharterider
+bean
+segayler
+barth
+nutson
+hessiter
+gain
+true
+aquett
+monds
+frie
+colemendrew
+cosgow
+wen
+wald
+hawkins
+dard
+thale
+hamer
+alf
+dell
+clangum
+bland
+ruck
+parrower
+humann
+mas
+varra
+spearce
+mire
+lanill
+ves
+sweedlindes
+marabtreauch
+bron
+druffmancough
+</em></p>
+<p>Gotta love the US Census Bureau :D. Enjoy!</p>
+</body>
+</html>
