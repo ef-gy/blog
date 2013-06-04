@@ -35,7 +35,7 @@ sqlite> insert into vautoconstruct (steps) values (40);]]></code></pre>
 3|3|julia
 3|4|shanie
 3|5|daine]]></code></pre>
-<p>The <em>markovconstruct</em> table has an optional column <em>depth</em>, which controls the which order of model is used to create the output. The default is 3. To train new models yourself, insert the strings to train with into the <em>vtrain</em> table, like this:</p>
+<p>The <em>markovconstruct</em> table has an optional column <em>depth</em>, which controls the order of the model that is used to create the output. The default is 3. To train new models yourself, insert the strings to train with into the <em>vtrain</em> table, like this:</p>
 <pre><code><![CDATA[sqlite> insert into vtrain (id, data) values (42, 'foo'), (42, 'frob'), (42, 'barf'), (42, 'bar');]]></code></pre>
 <p>That view should take care of everything. Once the <em>insert</em> operation completes the model will have been updated and you can generate strings based on it like you did with the names above.</p>
 <h1>Implementation</h1>
