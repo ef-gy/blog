@@ -812,6 +812,7 @@ ul#meta li
 }
 ul#meta li.previous a:after,
 ul#meta li.next a:after,
+ul#meta li.draft:after,
 ul#meta li#published:after,
 ul#meta li#collection a:after,
 ul#social:after
@@ -827,6 +828,10 @@ ul#social:after
 ul#meta li.next a:after
 {
   content: "next";
+}
+ul#meta li.draft:after
+{
+  content: "draft";
 }
 ul#meta li#published:after
 {

@@ -30,6 +30,10 @@
 
         <xsl:if test="../../xhtml:head/xhtml:link[@rel='next']"><li class="next"><a href="{../../xhtml:head/xhtml:link[@rel='next']/@href}"><xsl:value-of select="../../xhtml:head/xhtml:link[@rel='next']/@title"/></a></li></xsl:if>
         <xsl:if test="../../xhtml:head/xhtml:link[@rel='prev']"><li class="previous"><a href="{../../xhtml:head/xhtml:link[@rel='prev']/@href}"><xsl:value-of select="../../xhtml:head/xhtml:link[@rel='prev']/@title"/></a></li></xsl:if>
+
+        <xsl:if test="not(../../xhtml:head/xhtml:link[@rel='next']) and not (../../xhtml:head/xhtml:link[@rel='prev'])">
+          <li class="draft">this article has not yet been published</li>
+        </xsl:if>
       </xsl:copy>
     </xsl:if>
   </xsl:template>
