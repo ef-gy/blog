@@ -3,6 +3,7 @@
   <title>ef.gy</title>
   <subtitle>Articles</subtitle>
 
+  <entry xlink:href="site-news:disqus.xhtml" />
   <entry xlink:href="sql:markov-chains.xhtml" />
   <entry xlink:href="sql:sequence-generator.xhtml" />
   <entry xlink:href="ebook-wtfs.xhtml" />
@@ -32,7 +33,6 @@
   <entry xlink:href="false-advertising.xhtml" />
   <entry xlink:href="eye-cancer-ii.xhtml" />
   <entry xlink:href="site-news:tor-and-ipv6.xhtml" />
-  <entry xlink:href="site-news:einit-kyuba-archives.xhtml" />
 
   <feed xlink:href="mathematics.atom"/>
 </feed>
