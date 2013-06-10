@@ -912,6 +912,10 @@ p.last-modified + p.credit
 {
   margin-top: 0.5em;
 }
+p + div#disqus_thread
+{
+  margin-top: 2em;
+}
 @media (max-width: 70em)
 {
     html
