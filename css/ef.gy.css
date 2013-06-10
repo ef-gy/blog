@@ -774,8 +774,8 @@ li.stumbleupon a:before
 ul#hardcopies
 {
   clear: both;
-  background: #eee;
-  margin: 2em -2em -2em -2em;
+  margin: 3em -2em;
+  width: auto;
   text-align: right;
   padding: 0 1em;
 }
@@ -912,9 +912,22 @@ p.last-modified + p.credit
 {
   margin-top: 0.5em;
 }
-p + div#disqus_thread
+div#disqus_thread
 {
   margin-top: 2em;
+}
+a#comments
+{
+  display: block;
+  background: #eee;
+  padding: 2em;
+  margin: 2em -2em -2em -2em;
+  text-decoration: none;
+}
+a#comments:hover
+{
+  background: #aaa;
+  color: #fff;
 }
 @media (max-width: 70em)
 {
