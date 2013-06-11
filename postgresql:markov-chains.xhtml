@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>(Postgre)SQL: markov.sql: Higher Order Markov Chains, Release 2</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="Release 2 of markov.sql is a port to PostgreSQL. This article also describes the implementation in more detail." />
+<meta name="date" content="2013-06-11T18:53:00Z" />
+<meta name="mtime" content="2013-06-11T18:53:00Z" />
+<meta name="category" content="Software" />
+<meta name="category" content="SQL" />
+<meta name="unix:name" content="postgresql:markov-chains" />
+</head>
+<body>
+<h1>Introduction</h1>
+<p>Last week <a href="/sql:markov-chains">I wrote about markov.sql, a markov chains implementation in SQLite3</a>. As most of you are aware of, I really do like SQLite for most uses, but whenever I need something client-/servery I tend to go with PostgreSQL, no questions asked.</p>
+<p>Unfortunately, PostgreSQL can be a bit difficult if you like some SQL features. In particular, their version of SQL triggers are quite... <em>unusual</em>. The feature set is complete, but all in all PostgreSQL isn't exactly forgiving and some common expressions end up somewhat more convoluted than necessary.</p>
+<p>But here it is anyway: my port of markov.sql to PostgreSQL. The API is pretty much the same as the original, but for some reason this PostgreSQL version is <em>much</em> slower. Training with the same data set as last time took about four and a half times as long as with SQLite3 - that's about four hours and 40 minutes on grog.becquerel.org. Drop me a line if you happen to have an idea as to why that is. Generating strings is pretty fast tho, so no worries if you just want to use it :).</p>
+<h1>Quick Start</h1>
+<p>This article mimics the structure of the first one, so if you read that you should feel right at home.</p>
+<p>The repository for this little project is available at: <a href="http://git.becquerel.org/?p=jyujin/markov.git">http://git.becquerel.org/?p=jyujin/markov.git</a> - you can either grab a tarball from there or browse the source code (only 2 files, really). Alternatively, you could also issue the following command on your shell to check out a copy of the repository:</p>
+<pre><code><![CDATA[$ git clone git://git.becquerel.org/jyujin/markov.git]]></code></pre>
+<p>This will create a directory called <em>markov</em> all set up and ready to play.</p>
+<p>Once you have the sources, there is <a href="http://git.becquerel.org/?p=jyujin/markov.git;a=blob_plain;f=dist/psql.markov-data.sql;hb=HEAD">a pre-compiled, pre-trained PostgreSQL database dump under dist/psql.markov-data.sql in that repository</a>. To play with that, issue the following on a command line in this new <em>markov</em>-directory - assuming your PostgreSQL is set up properly and the user you're currently logged in can create and use databases:</p>
+<pre><code><![CDATA[$ createdb markov
+$ psql markov < dist/psql.markov-data.sql]]></code></pre>
+<p>Now for the fun part: to create names, insert the type of name you want in the <em>markovconstruct</em> table, then insert the maximum number of iterations in the <em>vautoconstruct</em> view, like this:</p>
+<pre><code><![CDATA[$ psql markov
+psql (9.1.8, server 9.1.9)
+Type "help" for help.
+
+markov=> insert into markovconstruct (id) values (3), (3), (3), (3), (3);
+INSERT 0 5
+markov=> insert into vautoconstruct (steps) values (40);
+INSERT 0 1
+markov=>]]></code></pre>
+<p>The pre-trained IDs are: 2 for corporation names, 3 for female first names, 4 for male first names and 5 for last names. Once it's done, you should find the results in the <em>markovresult</em> table:</p>
+<pre><code><![CDATA[markov=> select * from markovresult;
+ id | mvcid |   result   
+----+-------+------------
+  3 | 60362 | lyn
+  3 | 60361 | marva
+  3 | 60364 | angla
+  3 | 60365 | catha
+  3 | 60363 | kenyellisa
+(5 rows)
+
+markov=>]]></code></pre>
+<p>The <em>markovconstruct</em> table has an optional column <em>depth</em>, which controls the order of the model that is used to create the output. The default is 3. To train new models yourself, insert the strings to train with into the <em>vtrain</em> table, like this:</p>
+<pre><code><![CDATA[markov=> insert into vtrain (id, data) values (42, 'foo'), (42, 'frob'), (42, 'barf'), (42, 'bar');]]></code></pre>
+<p>That view should take care of everything. Once the <em>insert</em> operation completes the model will have been updated and you can generate strings based on it like you did with the names above.</p>
+<h1>Implementation</h1>
+<p>Apart from <a href="/sql:sequence-generator">the sequence generator</a>, the following SQL trains and uses the model. A <a href="http://git.becquerel.org/?p=jyujin/markov.git;a=blob_plain;f=src/psql.markov.sql;hb=HEAD">combined source file is available in the previously mentioned GIT repository</a>.</p>
+<p>As with the SQLite version, we first need a few tables to hold the trained model; the tables <em>markov3</em>, <em>markov2</em> and <em>markov1</em> hold this data for us - third order, second order and first order models, respectively. The notable difference between this version and the original is that PostgreSQL doesn't have <em>auto_increment</em> attributes for columns. So instead we use <em>create sequence</em> to generate unique IDs.</p>
+<pre><code><![CDATA[create sequence mroid_seq;
+
+create table markov3
+(
+    id integer not null,
+    mroid integer not null primary key default nextval('mroid_seq'),
+    c0 text null,
+    c1 text null,
+    c2 text null,
+    next text null,
+    cnt integer not null
+);
+
+create index markov3P on markov3 (id, c0, c1, c2, next);
+
+create table markov2
+(
+    id integer not null,
+    mroid integer not null primary key default nextval('mroid_seq'),
+    c0 text null,
+    c1 text null,
+    next text null,
+    cnt integer not null
+);
+
+create index markov2P on markov2 (id, c0, c1, next);
+
+create table markov1
+(
+    id integer not null,
+    mroid integer not null primary key default nextval('mroid_seq'),
+    c0 text null,
+    next text null,
+    cnt integer not null
+);
+
+create index markov1P on markov2 (id, c0, next);]]></code></pre>
+<p>The basic training algorithm is still the same, as are most of the data structures to hold them. Notably I've had to drop the foreign key definitions, because PostgreSQL requires foreign keys to point to columns with a unique constraint. This is actually standard SQL but many database engines relax that rule. Since we don't exactly need that foreign key definition, we just drop it.</p>
+<p>On the bright side, PostgreSQL supports user-created functions. But since I wanted to keep the API the same, I defined the same views and <em>instead of insert</em> triggers. Unfortunately, the PostgreSQL trigger syntax requires you to define a separate function for each trigger you want to define, as their <em>create trigger</em> only supports <em>execute procedure</em> expressions, not <em>begin ... end</em> expressions. Additionally, the <em>create function</em> styntax is plain ol' strange.</p>
+<p>PostgreSQL also doesn't support an <em>expr is expr</em> construct, i.e. <em>is</em> only works in <em>is null</em>, not in <em>a is b</em>. To emulate this <em>is</em> operator, I decided to use <em>coalesce(...,-1) = coalesce(...,-1)</em> instead. PostgreSQL has a <em>generate_series()</em> function, which would ordinarily make the <em>seqX</em> I used obsolete, but PostgreSQL doesn't let you pass parameters to <em>generate_series()</em> in a join when these parameters are computed with values of other parts of that same set of joins - meaning <em>seqX</em> still found its use.</p>
+<p>Finally, there is no <em>insert or replace into</em> or <em>replace</em> statement, but we can emulate that with a <em>create rule</em> statement. This variant has the advantage of making the <em>update</em>s in the trigger obsolete. Yay :).</p>
+<pre><code><![CDATA[create table trainstate
+(
+    id integer not null,
+    c0 text null,
+    c1 text null,
+    c2 text null,
+    c3 text null,
+    remainder text null
+);
+
+create view vtrainstep as
+select
+    1 as step;
+
+create view vtrain as
+select
+    1 as id,
+    cast('' as text) as data,
+    1 as steps;
+
+create view vautotrain as
+select
+    1 as steps;
+
+create rule "replace_markov3" as
+    on insert to "markov3"
+ where exists(select 1
+                from markov3
+               where coalesce(id,-1) = coalesce(new.id,-1)
+                 and coalesce(c0,'') = coalesce(new.c0,'')
+                 and coalesce(c1,'') = coalesce(new.c1,'')
+                 and coalesce(c2,'') = coalesce(new.c2,'')
+                 and coalesce(next,'') = coalesce(new.next,''))
+    do instead
+      (update markov3
+          set cnt = cnt + new.cnt
+        where coalesce(id,-1) = coalesce(new.id,-1)
+          and coalesce(c0,'') = coalesce(new.c0,'')
+          and coalesce(c1,'') = coalesce(new.c1,'')
+          and coalesce(c2,'') = coalesce(new.c2,'')
+          and coalesce(next,'') = coalesce(new.next,''));
+
+create rule "replace_markov2" as
+    on insert to "markov2"
+ where exists(select 1
+                from markov2
+               where coalesce(id,-1) = coalesce(new.id, -1)
+                 and coalesce(c0,'') = coalesce(new.c0,'')
+                 and coalesce(c1,'') = coalesce(new.c1,'')
+                 and coalesce(next,'') = coalesce(new.next,''))
+    do instead
+      (update markov2
+          set cnt = cnt + new.cnt
+        where coalesce(id, -1) = coalesce(new.id, -1)
+          and coalesce(c0,'') = coalesce(new.c0,'')
+          and coalesce(c1,'') = coalesce(new.c1,'')
+          and coalesce(next,'') = coalesce(new.next,''));
+
+create rule "replace_markov1" as
+    on insert to "markov1"
+ where exists(select 1
+                from markov1
+               where coalesce(id,-1) = coalesce(new.id,-1)
+                 and coalesce(c0,'') = coalesce(new.c0,'')
+                 and coalesce(next,'') = coalesce(new.next,''))
+    do instead
+      (update markov1
+          set cnt = cnt + new.cnt
+        where coalesce(id,-1) = coalesce(new.id,-1)
+          and coalesce(c0,'') = coalesce(new.c0,'')
+          and coalesce(next,'') = coalesce(new.next,''));
+
+create function markovtrainstep() returns trigger as $$
+begin
+    update trainstate
+       set c0 = c1,
+           c1 = c2,
+           c2 = c3,
+           c3 = substr(remainder, 1, 1),
+           remainder = substr(remainder, 2);
+
+    update trainstate set c0 = null where c0 = '';
+    update trainstate set c1 = null where c1 = '';
+    update trainstate set c2 = null where c2 = '';
+    update trainstate set c3 = null where c3 = '';
+    update trainstate set remainder = null where remainder = '';
+
+    insert into markov3
+        (id, c0, c1, c2, cnt, next)
+        select s.id, s.c0, s.c1, s.c2, 1 as cnt, s.c3 as next
+          from trainstate as s;
+
+    insert into markov2
+        (id, c0, c1, cnt, next)
+        select s.id, s.c1 as c0, s.c2 as c1, 1 as cnt, s.c3 as next
+          from trainstate as s;
+
+    insert into markov1
+        (id, c0, cnt, next)
+        select s.id, s.c2 as c0, 1 as cnt, s.c3 as next
+          from trainstate as s;
+
+    delete from trainstate where c3 is null;
+
+    return new;
+end
+$$ language plpgsql;
+
+create trigger vtrainstepInsert instead of insert on vtrainstep
+for each row execute procedure markovtrainstep();
+
+create function train() returns trigger as $$
+begin
+    insert into trainstate
+        (id, c0, c1, c2, remainder)
+        values
+        (new.id, null, null, null, lower(new.data));
+
+    insert into vtrainstep (step) select b from seq8 where b < coalesce(new.steps, length(new.data));
+
+    return new;
+end;
+$$ language plpgsql;
+
+create trigger vtrainInsert instead of insert on vtrain
+for each row execute procedure train();
+
+create function autotrain() returns trigger as $$
+begin
+    insert into vtrainstep
+        (step)
+        select generate_series
+          from generate_series
+              (0, coalesce (new.steps, length((select remainder
+                                                 from trainstate
+                                                order by length(remainder) desc
+                                                limit 1))));
+
+    return new;
+end;
+$$ language plpgsql;
+
+create trigger vautotrainInsert instead of insert on vautotrain
+for each row execute procedure autotrain();]]></code></pre>
+<p>Fortunately the generation part of the code was much more straightforward to port. This one really only required ditching some foreign key constraints and blowing up those triggers.</p>
+<pre><code><![CDATA[create table markovconstruct
+(
+    id integer not null,
+    mvcid integer not null primary key default nextval('mroid_seq'),
+    c0 text null,
+    c1 text null,
+    c2 text null,
+    depth integer not null default 3,
+    data text not null default ''
+);
+
+create table markovresult
+(
+    id integer not null,
+    mvcid integer not null primary key default nextval('mroid_seq'),
+    result text not null
+);
+
+create view vmarkovprobabilities as
+select
+    c.id as id,
+    c.mvcid as mvcid,
+    3 as depth,
+    m.next as next
+from markovconstruct as c
+left join markov3 as m on coalesce(c.id,-1) = coalesce(m.id,-1)
+                      and coalesce(c.c0,'') = coalesce(m.c0,'')
+                      and coalesce(c.c1,'') = coalesce(m.c1,'')
+                      and coalesce(c.c2,'') = coalesce(m.c2,''),
+     seq16 as n
+where n.b < coalesce(cnt, 1)
+union all
+select
+    c.id as id,
+    c.mvcid as mvcid,
+    2 as depth,
+    m.next as next
+from markovconstruct as c
+left join markov2 as m on coalesce(c.id,-1) = coalesce(m.id,-1)
+                      and coalesce(c.c1,'') = coalesce(m.c0,'')
+                      and coalesce(c.c2,'') = coalesce(m.c1,''),
+     seq16 as n
+where n.b < coalesce(cnt, 1)
+union all
+select
+    c.id as id,
+    c.mvcid as mvcid,
+    1 as depth,
+    m.next as next
+from markovconstruct as c
+left join markov1 as m on coalesce(c.id,-1) = coalesce(m.id,-1)
+                      and coalesce(c.c2,'') = coalesce(m.c0,''),
+     seq16 as n
+where n.b < coalesce(cnt, 1)
+;
+
+create view vconstructstep as
+select
+    1 as step;
+
+create view vautoconstruct as
+select
+    1 as steps;
+
+create function constructstep() returns trigger as $$
+begin
+    update markovconstruct
+       set c0 = c1,
+           c1 = c2,
+           c2 = (select next
+                   from vmarkovprobabilities as p
+                  where p.mvcid = markovconstruct.mvcid
+                    and p.depth = markovconstruct.depth
+                  order by random()
+                  limit 1)
+     where c2 is not null
+        or (c0 is null and c1 is null and c2 is null);
+
+    update markovconstruct
+       set data = data || coalesce(c2, '');
+
+    insert into markovresult
+        (id, mvcid, result)
+        select id, mvcid, data
+          from markovconstruct
+         where c2 is null;
+
+    delete from markovconstruct where c2 is null;
+
+    return new;
+end;
+$$ language plpgsql;
+
+create trigger vconstructstepInsert instead of insert on vconstructstep
+for each row execute procedure constructstep();
+
+create function autoconstruct() returns trigger as $$
+begin
+    insert into vconstructstep
+        (step)
+        select generate_series
+          from generate_series (0, coalesce(new.steps, 50));
+
+    return new;
+end;
+$$ language plpgsql;
+
+create trigger vautoconstructInsert instead of insert on vautoconstruct
+for each row execute procedure autoconstruct();]]></code></pre>
+<p>I'm going to skip the sample output of the generator, <a href="/sql:markov-chains">have a look at the original article if you want to see some of those</a>. Oh yeah, since I didn't mention this last time: consider this code to be in the public domain - just don't sue me if it blows something up or doesn't work for ya, cause I'm not giving any guarantees whatsoever ;).</p>
+<p>I wonder if I should port this to Oracle as well...</p>
+</body>
+</html>
