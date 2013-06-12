@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>sr4.sql: a SQLite based Shadowrun character generator</title>
+<meta name="author" content="Nadja Deininger" />
+<meta name="description" content="Hardly anyone does SR character generators using a database. I did. Here's an initial release." />
+<meta name="date" content="2013-06-12T16:44:00Z" />
+<meta name="mtime" content="2013-06-12T16:44:00Z" />
+<meta name="category" content="Projects" />
+<meta name="unix:name" content="sr4-sql-1" />
+</head>
+<body>
+<h1>Character generation is a database problem</h1>
+<p>Well, everything is, really, but when I was looking for a character generator to create characters for a Shadowrun game, I kept wondering why I couldn't find one that was web-based. When I looked at the desktop applications I did find, I was surprised that none of them seemed to be using a database; <a href="http://www.chummergen.com/">Chummer</a>, the most complete one (in terms of supported rules) I could find, uses XML files for its data, for instance. I didn't like Chummer's UI so much, and wondered why one wouldn't use a database which could automagically do the maths of character creation for you, and with all those gear and spell tables in SR, a relational database structure seemed to lend itself well to the problem - so I went ahead and started building one. I'm still working on it, and it's lacking quite a few features especially in BP and Karma cost computation, but it could already be used to generate NPCs and things like that. The implementation is in SQLite, since this application doesn't seem to need a client-server based DBS; besides, if someone is going to build a desktop front end for it, people wouldn't want to set up PostgreSQL on their home machines, and I hear embedded PostgreSQL is a pain, so SQLite it is.
+</p>
+<p>In case you've never heard of <a href="http://en.wikipedia.org/wiki/Shadowrun">Shadowrun</a>, it's a tabletop role-playing game that is set several decades into the future, with both cyberpunk and fantasy themes. Just imagine someone had given the tech in Neuromancer a bit of a boost, and put wizards, dragons and trolls into the equation; characters usually are shadowrunners, professional criminals who do less-than-legal operations for megacorporations. The game itself is an interactive story, where N-1 people in the group control one character each, and the remaining person (called the gamemaster) controls everything else. Player characters are generated using a point buy system: every player gets a given amount of build points which they can spend to make their character stronger, smarter, give them additional skills, or even the ability to do magic.</p>
+<p>By the way, yes, I'm aware I'm somewhat late to the party with a Fourth Edition character generator, with Fifth Edition coming out this summer. However, I don't think everyone is going to make the switch to Fifth Edition, a lot of people aren't going to make it right away, and judging from how many groups still play Third Edition, this is still going to be of some use. Besides, with the basic database layout already in place, writing sr5.sql shouldn't be too much of an issue either.</p>
+
+<h1>So how do I use this?</h1>
+<p>For now, there's really just the database, no GUI or CLI front end. One of those days I'm going to get around to write a website, but I'll worry about that when the database is done entirely; however, feel free to take this database and write your own. If you do that, and let me know, I'll be happy to post a link to your project on this site.</p> 
+<p>The public git repository for sr4.sql is here: <a href="http://git.becquerel.org/?p=machinelady/sr4.sql.git">http://git.becquerel.org/?p=machinelady/sr4.sql.git</a>, if you'd like to browse the source code or grab a tarball; or you could clone the repository using </p><pre><code>$ git clone git://git.becquerel.org/machinelady/sr4.sql.git</code></pre><p>, which will create a directory named 'sr4.sql'.</p>
+<p>The directory contains a shell script called sr4.sh which you can run; it just concatenates the SQL files and feeds them to SQLite. sr4chargen.sql contains most of the character generation rules. sr4views.sql contains the views used for BP calculations (and Karma, once that feature is implemented). sr4data.sql has all the data about spells, skills, gear and the like - if you want to add user-generated content like custom spells, or even your own knowledge skills, you  might want to add it to this file. The data in there is not complete by any means. If you have a bit of time to kill, and the relevant source books on your hands, I would greatly appreciate help with the data entry. So far it only has stuff from the SR4A core book, and all that stuff still lacks book references, but they're coming soonish. sr4test.sql has a sample character for you to check out - if you'd just like to take a look at it without downloading the repository, it's here: <a href="http://git.becquerel.org/?p=machinelady/sr4.sql.git;a=blob_plain;f=sr4test.sql">http://git.becquerel.org/?p=machinelady/sr4.sql.git;a=blob_plain;f=sr4test.sql</a>.</p>
+
+<h1>What's next?</h1>
+<p>There are a bunch of essential features still on my to-do list, so here's an overview of what's coming some time soon:</p>
+<ul>
+<li>BP costs for skill specialisations</li>
+<li>BP costs for spells and complex forms</li>
+<li>BP costs for nuyen spent on gear</li>
+<li>Support for Aptitude and Exceptional Attribute qualities</li>
+<li>More data entry, and book references</li>
+<li>Karma character generation and character development</li>
+</ul>
+<p>If I overlooked anything crucial, or you'd simply like a feature not on this list, do let me know - either use the comment function, or email me at <a href="mailto:nadja@ef.gy">nadja at ef dot gy</a>. Enjoy!</p>
+</body>
+</html>

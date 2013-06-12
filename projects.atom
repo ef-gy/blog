@@ -3,6 +3,7 @@
   <title>ef.gy</title>
   <subtitle>Projects</subtitle>
 
+  <entry xlink:href="sr4-sql-1.xhtml" />
   <entry xlink:href="project:fortune.xhtml" />
   <entry xlink:href="project:tesseract.xhtml" />
   <entry xlink:href="project:xslt-mandelbrot.xhtml" />
