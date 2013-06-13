@@ -373,7 +373,7 @@ ul#subfeeds
 {
     text-align: right;
     height: 2em;
-    margin: -5.3em 0 2em 0;
+    margin: -5.3em 0 5em 0;
     padding: 0;
 }
 
@@ -444,8 +444,8 @@ body#full:after
 
 #feed
 {
-    display: inline;
-    margin: 0;
+    display: block;
+    margin: -3em 0 0 0;
     padding: 0;
     vertical-align: top;
 }
@@ -783,7 +783,7 @@ ul#hardcopies li a:hover
 ul#meta
 {
   margin: 0 -2em 2em -2em;
-  background: #efefef;
+  background: #f4f4f4;
 }
 ul#meta li
 {
