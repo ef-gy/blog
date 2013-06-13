@@ -17,9 +17,8 @@ svg
 
 html
 {
-    background: url(/svg/game-of-life) #dedede;
-    background-size: 60em;
-    background-position: 30em -10em;
+    background: url(/jpeg/fractal-flame) #f8f8f8 no-repeat;
+    background-position: -5em 0;
     color: #000;
 }
 
@@ -39,7 +38,7 @@ html#unicorn-noms
 
 body
 {
-    margin: 0 0 0 24em;
+    margin: 14em 0 0 24em;
     background: #fff;
 	padding: 3.5em 2em 2em 2em;
 }
@@ -55,27 +54,10 @@ h1
 {
     font-size: 2em;
     font-weight: bold;
-    margin: -3.5em -1em 1em -1em;
-    background: url(/svg/game-of-life) #dedede;
-    background-size: 30em;
-    background-position: 3em -3.26em;
-    padding: 4em 1em 1.2em 1em;
-}
-
-html#phone h1
-{
-    background: url(/jpeg/corded-phone) #000 no-repeat;
-    background-size: 60em;
-    background-position: -22em -3.26em;
-    color: white;
-}
-
-html#unicorn-noms h1
-{
-    background: url(/jpeg/unicorn-noms) #3c160b no-repeat;
-    background-size: 60em;
-    background-position: -22em -7.26em;
-    color: white;
+    height: 3em;
+    margin: -7.5em -1em 1em -1em;
+    background: rgba(255,255,255,0.5);
+    padding: 1em 1em 1.765em 1em;
 }
 
 h2
@@ -256,7 +238,7 @@ pre code
 
 address
 {
-    background: #ddd;
+    background: #eee;
     padding: 2em;
     font-style: normal;
     position: relative;
@@ -348,7 +330,7 @@ div.figure li a
     padding: 1em;
     font-size: 1.2em;
     text-decoration: none;
-    color: #ddd;
+    color: #eee;
 }
 
 div.figure li
@@ -372,7 +354,7 @@ div.figure li + li
 
 div.figure li a:hover
 {
-    color: #aaa;
+    color: #000;
 }
 
 div.figure li + li a:before
@@ -447,7 +429,7 @@ table ul li
 body#full
 {
     vertical-align: top;
-    margin: 0;
+    margin: 14em 0 0 0;
     line-height: 1.25em;
 }
 
@@ -507,7 +489,7 @@ body#full:after
 
 #feed li a:hover
 {
-    background: #ddd;
+    background: #eee;
     background: rgba(0,0,0,0.1);
 }
 
@@ -801,7 +783,7 @@ ul#hardcopies li a:hover
 ul#meta
 {
   margin: 0 -2em 2em -2em;
-  background: #eee;
+  background: #efefef;
 }
 ul#meta li
 {
@@ -931,14 +913,9 @@ a#comments:hover
 }
 @media (max-width: 70em)
 {
-    html
-    {
-        background: #fff;
-    }
-
     body, body#full
     {
-        margin: 0;
+        margin: 14em 0 0 0;
         border: 0;
         box-shadow: none;
     }
@@ -978,7 +955,7 @@ a#comments:hover
         width: 8em;
         left: 1em;
         top: 0em;
-        padding: 8.5em 0 6.5em 0;
+        padding: 8.5em 0 9em 0;
     }
 
     ul#meta li#published .month

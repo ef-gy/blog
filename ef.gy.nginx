@@ -91,6 +91,7 @@ server {
 
 	location /jpeg {
 		try_files $uri.jpeg $uri.jpg $uri =404;
+        expires 1h;
 	}
 
 	location /pdf {
@@ -197,11 +198,4 @@ server {
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/html-post-process.xslt;
 	}
-
-    location = /svg/game-of-life {
-		try_files /game-of-life.xml =404;
-
-#        xslt_stylesheet /srv/http/ef.gy/xslt/0p-game-of-life.xslt;
-        xslt_stylesheet /srv/http/ef.gy/xslt/svg-0p-game-of-life.xslt;
-    }
 }
