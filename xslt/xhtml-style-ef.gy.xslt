@@ -55,7 +55,8 @@
     <xsl:variable name="entries" select="xhtml:meta[@name='context']/atom:feed/atom:entry"/>
     <xsl:variable name="pre" select="$entries[atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name'][@content=$myname]]/preceding-sibling::*[1]"/>
     <xsl:variable name="post" select="$entries[atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name'][@content=$myname]]/following-sibling::*[1]"/>
-    <xsl:copy>
+    <xsl:variable name="author" select="/xhtml:html/xhtml:head/xhtml:meta[@name='author']/@content"/>
+    <head>
       <link href="/css/ef.gy" rel="stylesheet" type="text/css" />
       <xsl:if test="not(($collection = 'fortune') or ($collection = 'about') or ($collection = 'source-code'))">
         <link rel="alternate" type="application/pdf" href="/pdf/{$collection}"/>
@@ -103,15 +104,18 @@
         </xsl:choose>
       </xsl:if>
       <xsl:if test="xhtml:meta[@name='author']">
-        <xsl:variable name="author" select="xhtml:meta[@name='author']/@content"/>
         <xsl:choose>
           <xsl:when test="$author='Magnus Achim Deininger'">
             <link rel="author" href="https://plus.google.com/112902745191014401433"/>
             <link rel="author" href="https://twitter.com/jyujinX"/>
           </xsl:when>
+          <xsl:when test="($author='Nadja Deininger') or ($author='Nadja Klein')">
+            <link rel="author" href="https://plus.google.com/109198047025182113685"/>
+            <link rel="author" href="https://twitter.com/machine_lady"/>
+          </xsl:when>
         </xsl:choose>
       </xsl:if>
-    </xsl:copy>
+    </head>
   </xsl:template>
 
   <xsl:template match="xhtml:a/@href">
@@ -134,6 +138,7 @@
 
   <xsl:template match="xhtml:body">
     <body>
+      <xsl:variable name="author" select="/xhtml:html/xhtml:head/xhtml:meta[@name='author']/@content"/>
       <xsl:apply-templates select="@*" />
       <h1><xsl:value-of select="/xhtml:html/xhtml:head/xhtml:title"/></h1>
       <ul>
@@ -158,11 +163,25 @@
       </xsl:choose>
       <xsl:if test="//xhtml:meta[@name='unix:name']">
         <xsl:choose>
-          <xsl:when test="(string-length($target) > 0) and (string-length($collection) > 0)">
-            <social:social url="http://ef.gy/{$target}@{$collection}" twitter="jyujinX"/>
+          <xsl:when test="($author='Nadja Klein') or ($author='Nadja Deininger')">
+            <xsl:choose>
+              <xsl:when test="(string-length($target) > 0) and (string-length($collection) > 0)">
+                <social:social url="http://ef.gy/{$target}@{$collection}" twitter="machine_lady"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <social:social url="http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" twitter="machine_lady"/>
+              </xsl:otherwise>
+            </xsl:choose>
           </xsl:when>
           <xsl:otherwise>
-            <social:social url="http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" twitter="jyujinX"/>
+            <xsl:choose>
+              <xsl:when test="(string-length($target) > 0) and (string-length($collection) > 0)">
+                <social:social url="http://ef.gy/{$target}@{$collection}" twitter="jyujinX"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <social:social url="http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" twitter="jyujinX"/>
+              </xsl:otherwise>
+            </xsl:choose>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:if>
@@ -194,6 +213,10 @@
       <xsl:if test="../xhtml:head/xhtml:meta[@name='mtime'] and (../xhtml:head/xhtml:meta[@name='mtime']/@content != ../xhtml:head/xhtml:meta[@name='date']/@content)">
         <p class="last-modified"><em>Last Modified: <xsl:value-of select="../xhtml:head/xhtml:meta[@name='mtime']/@content" /></em></p>
       </xsl:if>
+      <xsl:choose>
+        <xsl:when test="$author='Magnus Achim Deininger'"><p class="follow">Since you came this far, why not <social:follow twitter="jyujinX"/></p></xsl:when>
+        <xsl:when test="($author='Nadja Klein') or ($author='Nadja Deininger')"><p class="follow">Since you came this far, why not <social:follow twitter="machine_lady"/></p></xsl:when>
+      </xsl:choose>
       <xsl:if test="../@id='phone'">
         <p class="credit"><em>Background photo credit: <a href="http://www.flickr.com/photos/w3p706/2872460783/">w3p706</a> / <a href="http://foter.com">Foter.com</a> / <a href="http://creativecommons.org/licenses/by-nc-sa/2.0/">CC BY-NC-SA</a></em></p>
       </xsl:if>
@@ -224,18 +247,13 @@
           </xsl:choose>
         </xsl:if>
       </xsl:if>
-      <xsl:if test="/xhtml:html/xhtml:head/xhtml:meta[@name='author']">
-        <xsl:variable name="author" select="/xhtml:html/xhtml:head/xhtml:meta[@name='author']/@content"/>
+      <xsl:if test="$author != ''">
         <xsl:choose>
           <xsl:when test="$author='Magnus Achim Deininger'"><address>
             <a rel="author" href="about">
               <span>Written by <span>Magnus Achim Deininger</span>.</span> Magnus is a <del>sellsword</del> freelance computer scientist specialising in peculiar problems, such as embedded development, formal language theory and experiments in minimalistic design. This website serves as his personal journal and testing ground for unusual and/or crazy ideas.</a>
           </address></xsl:when>
-          <xsl:when test="$author='Nadja Klein'"><address>
-            <a rel="author" href="http://www.facebook.com/nadja.klein.967">
-              <span>Written by <span>Nadja Deininiger</span>.</span> Guest blogging on this site, resident coffee junkie Nadja is one of that rare blend of computer scientists with an affinity for maths. She used to work as a developer for a software company until just recently and is currently concentrating on getting her degree in computer science.</a>
-          </address></xsl:when>
-          <xsl:when test="$author='Nadja Deininger'"><address>
+          <xsl:when test="($author='Nadja Klein') or ($author='Nadja Deininger')"><address>
             <a rel="author" href="http://www.facebook.com/nadja.klein.967">
               <span>Written by <span>Nadja Deininger</span>.</span> Guest blogging on this site, resident coffee junkie Nadja is one of that rare blend of computer scientists with an affinity for maths. She used to work as a developer for a software company until just recently and is currently concentrating on getting her degree in computer science.</a>
           </address></xsl:when>

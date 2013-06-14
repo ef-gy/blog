@@ -1,4 +1,4 @@
-html, body, h1, h2, h3, h4, h5, h6, p, table, tr, td, ul, li, div, span, pre, code, a, em, blockquote, br, q, img, del, ins, input, label
+html, body, h1, h2, h3, h4, h5, h6, p, table, tr, td, ul, li, div, span, pre, code, a, em, blockquote, br, q, img, del, ins, input, label, iframe
 {
 	padding: 0;
 	margin: 0;
@@ -910,6 +910,23 @@ a#comments:hover
 {
   background: #aaa;
   color: #fff;
+}
+p.follow
+{
+  margin-top: 4em;
+  font-style: italic;
+}
+p.follow iframe
+{
+  border: 0;
+}
+p.last-modified + p.follow
+{
+  margin-top: 0.5em;
+}
+p.follow + p.credit
+{
+  margin-top: 0.5em;
 }
 @media (max-width: 70em)
 {

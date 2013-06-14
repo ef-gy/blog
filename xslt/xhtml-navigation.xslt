@@ -17,6 +17,8 @@
   <xsl:strip-space elements="*" />
   <xsl:preserve-space elements="xhtml:pre" />
 
+  <xsl:param name="userCountry"/>
+
   <xsl:template match="@*|node()">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
@@ -47,6 +49,13 @@
       <li class="googleplus"><a href="https://plus.google.com/share?url={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">Google+</a></li>
       <li class="stumbleupon"><a href="http://www.stumbleupon.com/submit?url={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">StumbleUpon</a></li>
     </ul>
+  </xsl:template>
+
+  <xsl:template match="social:follow">
+    <a href="https://twitter.com/{@twitter}" class="twitter-follow-button">follow <xsl:value-of select="@twitter"/> on Twitter</a>
+    <xsl:if test="$userCountry != 'DEU'">
+      <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
 
