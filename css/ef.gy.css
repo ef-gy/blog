@@ -36,6 +36,11 @@ html#unicorn-noms
     background-position: -20em -18em;
 }
 
+html#phylactery-session
+{
+    background: url(/png/phylactery-corporation-names-session) #000 no-repeat;
+}
+
 body
 {
     margin: 14em 0 0 24em;
