@@ -15,6 +15,7 @@
 
   <xsl:param name="documentRoot"/>
   <xsl:param name="baseURI"/>
+  <xsl:param name="dblatexWorkaround"/>
 
   <xsl:strip-space elements="*" />
   <xsl:preserve-space elements="docbook:literallayout" />
@@ -268,6 +269,25 @@
     <informaltable>
       <xsl:apply-templates select="@*|node()"/>
     </informaltable>
+  </xsl:template>
+
+  <xsl:template match="xhtml:table[xhtml:thead]">
+    <xsl:choose>
+      <xsl:when test="$dblatexWorkaround">
+        <para>(this content had to be redacted due to technical issues with dblatex, see the website or one of the ebooks instead)</para>
+      </xsl:when>
+      <xsl:otherwise>
+        <informaltable>
+          <xsl:apply-templates select="@*|node()"/>
+        </informaltable>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="xhtml:thead">
+    <thead>
+      <xsl:apply-templates select="@*|node()"/>
+    </thead>
   </xsl:template>
 
   <xsl:template match="xhtml:tbody">
