@@ -407,17 +407,29 @@ ul#subfeeds li a:hover
 th
 {
     text-align: right;
-    vertical-align: top;
+}
+
+thead th
+{
+    text-align: center;
 }
 
 th, td
 {
     padding: 0 0.3em;
+    vertical-align: top;
 }
 
-ul li
+ul li,
+ol li
 {
     margin: 0.5em 0.5em 0.5em 2em;
+}
+
+ol
+{
+    margin: 0.2em 0.2em 0.2em 1.5em;
+    padding: 0;
 }
 
 div ul li,
@@ -426,9 +438,22 @@ table ul li
     display: block;
 }
 
-table ul li
+table ul li,
+table ol li
 {
     margin: 0;
+}
+
+table.proper thead th,
+table.proper thead td
+{
+    background: #eee;
+}
+
+table.proper tbody tr th,
+table.proper tbody tr td
+{
+    border-top: 1px solid black;
 }
 
 body#full
