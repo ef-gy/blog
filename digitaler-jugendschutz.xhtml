@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de">
+<head>
+<title>Digitaler Jugendschutz: eine Analyse</title>
+<link rel="alternate" hreflang="en" href="on-age-rating" />
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="Eine Analyse einiger Alterseinstufungssysteme für Computerspiele; für besorgte Eltern, Käufer, F/OSS- und Indie-Entwickler." />
+<meta name="date" content="2013-07-08T10:00:00Z" />
+<meta name="mtime" content="2013-07-08T10:00:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="digitaler-jugendschutz" />
+</head>
+<body>
+<p>Wie einige von euch vielleicht von meinem Twitter oder Google+ wissen, bin ich recht aktiv was Open Source angeht, und entwickle unter anderem auch gerade zwei Konsolenspiele - "Purple Haze" und "Phylactery", und mit Konsole meine ich die gute alte Textkonsole. Da die Situation mit Spielen und dem Jugendschutz international etwas verworren ist, habe ich mir das Ganze einmal etwas genauer angesehen, und versucht die wichtigsten Informationen dazu einmal zusammenzutragen.</p>
+<p>Vorab möchte ich mich an dieser Stelle für das sehr hilfreiche Feedback von Christine Schulz und Paul Dalg von der USK, und Ivar Posthumus von der PEGI bedanken, welche ich um Ostern herum mit etlichen Fragen zu den hier vorgestellten Themen löchern durfte. Ich würde ferner allen Lesern davon abraten, <a href="/site-news:disqus">die neue Kommentarfunktion am Ende des Artikels</a> für Kommentare der Art "OMGIHRSEIDSODOOFMEINLIEBLINGSSPIELISTGESCHNITTEN!!111!12" zu verwenden - dafür hat selbige nämlich eine Blacklist. Mir ist klar, dass das Thema gerade bei Zockern recht schnell zu erhitzten Gemütern führen kann, aber heute bleiben wir dabei doch lieber sachlich.</p>
+<p>Dieser Artikel ist grob in drei Teile gegliedert: wie werden Alterseinstufungen erarbeitet mit den verschiedenen Systemen und welche legalen Folgen hat das, welche Informationen kann ich als besorgtes Elternteil den Alterseinstufungen entnehmen, und was bedeutet das Ganze für Free-/Open-Source- und Indie-Entwickler? Besonders der letzte Teil wird bei dem Ganzen äußerst selten betrachtet, finde ich aber - aus offensichtlichen, persönlichen Gründen - eine sehr wichtige und relevante Thematik, welche nicht sinnvoll ohne die anderen Themengebiete behandelt werden kann.</p>
+<p>Nicht analysiert wird in diesem Artikel die Problematik um klassischere, nicht-interaktive Medien, wie zum Beispiel Filme, Hörspiele, Musik oder auch Bücher. Das würde den Rahmen vollends sprengen. Das <a href="on-age-rating">englische Original dieses Artikels</a> ist ebenfalls auf diesem Blog verfügbar. Und ich würde gerne noch dazu sagen, dass ich kein Anwalt bin, sondern Informatiker. Der Artikel ist also in keiner Form eine Rechtsberatung.</p>
+<h1>Alterseinstufungen</h1>
+<p>Der offensichtlichste Erstkontakt mit Jugendschutzbemühungen bei Computerspielen ist im Allgemeinen wohl über die diversen Alterseinstufungslogos, die man zum Beispiel im Spieleladen um die Ecke auf den Verpackungen oder auf den Webseiten der Entwickler und Publisher finden kann. Was man in Deutschland am häufigsten findet, sind die Einstufungen der USK und der PEGI - der <a href="http://usk.de/">Unterhaltungssoftware Selbstkontrolle</a> und der <a href="http://pegi.info">Pan European Game Information</a>. In gut sortierten Spieleläden findet man dann auch gerne noch Titel mit Logos der ESRB - dem <a href="http://esrb.org/">Entertainment Software Rating Board</a> und der CERO - der <a href="http://www.cero.gr.jp/e/">Computer Entertainment Rating Organization</a>, bzw. <a href="http://www.cero.gr.jp/"><em>Tokutei Hieiri Katsudō Hōjin Konpyūta Entāteinmento Rētingu Kikō</em></a>. In wirklich gut sortierten deutschen Läden findet man dann noch jede Menge gebrauchte Titel mit der alten FSK Einstufung und diversen anderen, inzwischen nicht mehr existenten europäischen Alterseinstufungssystemen, und im Kämmerle hinter dem wegschiebbaren Regal dann noch die ganzen <em>anderen</em> Medien ohne Logos, die von der <a href="http://www.bundespruefstelle.de/">Bundesprüfstelle für jugendgefährdende Medien</a> auf dem einen oder anderen Index gelandet sind.</p>
+<p>Das wirft natürlich die Frage auf: wieso eigentlich so viele unterschiedliche Einstufungen? Und genau das sehen wir uns als erstes an. Allerdings nur für die häufigeren Organisationen; in Deutschland wären das die USK, die PEGI, die ESRB und - weil ich da selber schon einige Male damit zu tun hatte - die Alterseinstufungen im Apple App Store. Die BPjM wird noch hinzugenommen, da deren Einstufungen in Deutschland durchaus zu legalen Problemen führen können, und die BPjM die einzige solche Organisation in westlichen Gesellschaften darstellt.</p>
+<p>Hier ist potentiell viel vergleichbar, daher eine Übersichtstabelle:</p>
+<table class="proper">
+<thead>
+<tr><td/>
+<th>USK</th>
+<th>BPjM</th>
+<th>PEGI</th>
+<th>ESRB</th>
+<th>Apple</th></tr>
+</thead>
+<tbody>
+<tr><th>Einflussgebiet</th>
+<td>Deutschland (teilweise Schweiz, Österreich)</td>
+<td>Deutschland</td>
+<td>Europa</td>
+<td>USA, Kanada</td>
+<td>Global</td>
+</tr>
+<tr><th>mögliche Einstufungen</th>
+<td><ul>
+<li>USK 0  (für jedes Alter)</li>
+<li>USK 6  (6+)</li>
+<li>USK 12 (12+)</li>
+<li>USK 16 (16+)</li>
+<li>USK 18 (18+)</li>
+</ul></td>
+<td><ul>
+<li><em>Spiele</em><ul>
+<li>A (18+)</li>
+<li>B (Verbreitungsverbot)</li>
+<li>C (18+ nicht öffentlich)</li>
+<li>D (Verbreitungsverbot, nicht öffentlich)</li>
+<li>E (18+, vor 2003)</li>
+</ul></li>
+<li><em>Telemedien</em><ul>
+<li>C (18+)</li>
+<li>D (Verbreitungsverbot)</li>
+</ul></li>
+<li><em>Weitere</em></li>
+</ul></td>
+<td><ul>
+<li>3+</li>
+<li>7+</li>
+<li>12+</li>
+<li>16+</li>
+<li>18+</li>
+</ul></td>
+<td><ul>
+<li>eC, Early Childhood (3+)</li>
+<li>E, Everyone (6+)</li>
+<li>E10+, Everyone 10+ (10+)</li>
+<li>T, Teen (13+)</li>
+<li>M, Mature (17+)</li>
+<li>AO, Adults Only (18+)</li>
+</ul></td>
+<td><ul>
+<li>4+</li>
+<li>9+</li>
+<li>12+</li>
+<li>17+</li>
+</ul></td>
+</tr>
+<tr><th>Inhaltsinformation auf Webseite</th>
+<td>nein</td>
+<td>nein</td>
+<td>ja</td>
+<td>ja</td>
+<td>ja, teilweise absichtlich übertrieben</td>
+</tr>
+<tr><th>Inhaltsinformation auf Label</th>
+<td>nein</td>
+<td>-</td>
+<td>ja</td>
+<td>ja</td>
+<td>ja, teilweise absichtlich übertrieben</td>
+</tr>
+<tr><th>öffentliche Einstufungen</th>
+<td>ja</td>
+<td>nur Indizes A, B &amp; E</td>
+<td>ja</td>
+<td>ja</td>
+<td>ja</td>
+</tr>
+<tr><th>Katalog auf Webseite</th>
+<td>ja</td>
+<td>nein</td>
+<td>ja</td>
+<td>ja</td>
+<td>ja</td>
+</tr>
+<tr><th>legal verbindlich</th>
+<td>ja</td>
+<td>ja</td>
+<td>teilweise</td>
+<td>teilweise</td>
+<td>nein</td>
+</tr>
+<tr><th>Einstufungsantrag</th>
+<td>Publisher/Entwickler</td>
+<td>Jugendamt (auch auf Anregung der freien Jugendhilfe)</td>
+<td>Publisher/Entwickler</td>
+<td>Publisher/Entwickler</td>
+<td>Publisher/Entwickler</td>
+</tr>
+<tr><th>Nicht eingestufte Inhalte</th>
+<td>wie 18+</td>
+<td>wie USK</td>
+<td>-</td>
+<td>-</td>
+<td>kein Vertrieb über Plattform</td>
+</tr>
+<tr><th>Verfahren</th>
+<td><ol><li>Spieletester</li>
+<li>Präsentation gegenüber Gutachtern</li>
+<li>Einstufung durch Gutachter</li>
+</ol></td>
+<td><ol><li>Verfahren nicht möglich falls USK Einstufung vorliegt</li>
+<li>Spieletester</li>
+<li>Präsentation gegenüber Gremium</li>
+<li>Entscheidung durch 12er oder 3er Gremium</li>
+<li>Ggf. Anregung eines Verfahrens bei der Staatsanwaltschaft nach Einstufung</li>
+</ol></td>
+<td><ol><li>Online-Fragebogen für Voreinstufung</li>
+<li>Untersuchungspaket (Videos, Demos, etc) für Gutachter vom Publisher</li>
+<li>Dokumentenanalyse und Spieletests</li>
+<li>Endgültige Einstufung durch Gutachter, ebenfalls nach Fragebogen</li>
+</ol></td>
+<td><ol><li>Fragebogen für Voreinstufung</li>
+<li>Demovideo vom Publisher</li>
+<li>Einstufung durch Gutachter</li>
+</ol></td>
+<td><ol><li>Online-Fragebogen für Voreinstufung</li>
+<li>Verifikation durch Mitarbeiter als Teil der Zulassung zum Vertrieb</li>
+<li>Ggf. Verweigerung der Vertriebszulassung bei falscher Einstufung</li>
+</ol></td>
+</tr>
+<tr><th>Prinzipieller Modus Operandi</th>
+<td>Eigenes Gutachten</td>
+<td>Eigenes Gutachten</td>
+<td>Eigenes Gutachten &amp; Verifikation der Herstellerangaben</td>
+<td>Eigenes Gutachten basierend auf Herstellerangaben</td>
+<td>Verifikation der Herstellerangaben</td>
+</tr>
+</tbody>
+</table>
+<p>Die genauen Bewertungsprozesse sind am besten auf der Webseite der jeweiligen Organisation nachzulesen. Die <em>möglichen Einstufungen</em> im Falle der BPjM beziehen sich auf die Einteilung in die diversen Listen die hierfür vorgesehen sind - <a href="http://www.gesetze-im-internet.de/juschg/__18.html">geregelt ist diese Einteilung in §18 JuschG</a>.</p>
+<p>Da die verschiedenen Alterseinstufungsgruppen gegebenenfalls recht interessant sind, hier noch ein Diagramm dazu:</p>
+<table class="proper">
+<thead><tr><th>Alter</th>
+<th colspan="5">USK</th>
+<th colspan="2">BPjM</th>
+<th colspan="5">PEGI</th>
+<th colspan="6">ESRB</th>
+<th colspan="4">Apple</th>
+</tr></thead>
+<tbody>
+<tr><th>0</th>
+<td rowspan="19" style="background: #eee">0</td>
+<td colspan="4"/>
+<td colspan="2"/>
+<td colspan="5"/>
+<td colspan="6"/>
+<td colspan="4"/>
+</tr>
+<tr><th>1</th>
+<td colspan="4"/>
+<td colspan="2"/>
+<td colspan="5"/>
+<td colspan="6"/>
+<td colspan="4"/>
+</tr>
+<tr><th>2</th>
+<td colspan="4"/>
+<td colspan="2"/>
+<td colspan="5"/>
+<td colspan="6"/>
+<td colspan="4"/>
+</tr>
+<tr><th>3</th>
+<td colspan="4"/>
+<td colspan="2"/>
+<td rowspan="16" style="background: #eee">3+</td>
+<td colspan="4"/>
+<td rowspan="16" style="background: #eee">eC</td>
+<td colspan="5"/>
+<td colspan="4"/>
+</tr>
+<tr><th>4</th>
+<td colspan="4"/>
+<td colspan="2"/>
+<td colspan="4"/>
+<td colspan="5"/>
+<td rowspan="15" style="background: #eee">4+</td>
+<td colspan="3"/>
+</tr>
+<tr><th>5</th>
+<td colspan="4"/>
+<td colspan="2"/>
+<td colspan="4"/>
+<td colspan="5"/>
+<td colspan="3"/>
+</tr>
+<tr><th>6</th>
+<td rowspan="13" style="background: #eee">6</td>
+<td colspan="3"/>
+<td colspan="2"/>
+<td colspan="4"/>
+<td rowspan="13" style="background: #eee">E</td>
+<td colspan="4"/>
+<td colspan="3"/>
+</tr>
+<tr><th>7</th>
+<td colspan="3"/>
+<td colspan="2"/>
+<td rowspan="12" style="background: #eee">7+</td>
+<td colspan="3"/>
+<td colspan="4"/>
+<td colspan="3"/>
+</tr>
+<tr><th>8</th>
+<td colspan="3"/>
+<td colspan="2"/>
+<td colspan="3"/>
+<td colspan="4"/>
+<td colspan="3"/>
+</tr>
+<tr><th>9</th>
+<td colspan="3"/>
+<td colspan="2"/>
+<td colspan="3"/>
+<td colspan="4"/>
+<td rowspan="10" style="background: #eee">9+</td>
+<td colspan="2"/>
+</tr>
+<tr><th>10</th>
+<td colspan="3"/>
+<td colspan="2"/>
+<td colspan="3"/>
+<td rowspan="9" style="background: #eee">E10+</td>
+<td colspan="3"/>
+<td colspan="2"/>
+</tr>
+<tr><th>11</th>
+<td colspan="3"/>
+<td colspan="2"/>
+<td colspan="3"/>
+<td colspan="3"/>
+<td colspan="2"/>
+</tr>
+<tr><th>12</th>
+<td rowspan="7" style="background: #eee">12</td>
+<td colspan="2"/>
+<td colspan="2"/>
+<td rowspan="7" style="background: #eee">12+</td>
+<td colspan="2"/>
+<td colspan="3"/>
+<td rowspan="7" style="background: #eee">12+</td>
+<td colspan="1"/>
+</tr>
+<tr><th>13</th>
+<td colspan="2"/>
+<td colspan="2"/>
+<td colspan="2"/>
+<td rowspan="6" style="background: #eee">T</td>
+<td colspan="2"/>
+<td colspan="1"/>
+</tr>
+<tr><th>14</th>
+<td colspan="2"/>
+<td colspan="2"/>
+<td colspan="2"/>
+<td colspan="2"/>
+<td colspan="1"/>
+</tr>
+<tr><th>15</th>
+<td colspan="2"/>
+<td colspan="2"/>
+<td colspan="2"/>
+<td colspan="2"/>
+<td colspan="1"/>
+</tr>
+<tr><th>16</th>
+<td rowspan="3" style="background: #eee">16</td>
+<td colspan="1"/>
+<td colspan="2"/>
+<td rowspan="3" style="background: #eee">16+</td>
+<td colspan="1"/>
+<td colspan="2"/>
+<td colspan="1"/>
+</tr>
+<tr><th>17</th>
+<td colspan="1"/>
+<td colspan="2"/>
+<td colspan="1"/>
+<td rowspan="2" style="background: #eee">M</td>
+<td colspan="1"/>
+<td rowspan="2" style="background: #eee">17+</td>
+</tr>
+<tr><th>18</th>
+<td rowspan="1" style="background: #eee">18</td>
+<td rowspan="1" style="background: #eee">A, C &amp; E</td>
+<td colspan="1"/>
+<td rowspan="1" style="background: #eee">18+</td>
+<td rowspan="1" style="background: #eee">AO</td>
+</tr>
+<tr><th>VV</th>
+<td colspan="5"/>
+<td colspan="1"/>
+<td rowspan="1" style="background: #eee">B &amp; D</td>
+<td colspan="5"/>
+<td colspan="6"/>
+<td colspan="4"/>
+</tr>
+</tbody>
+</table>
+<p>Was sich hier recht schön ablesen lässt, ist dass sich die verschiedenen Organisationen offensichtlich einig sind, dass das Alter einer Person Aufschluss über die geistige Reife gibt, allerdings scheint es bei der genauen Einteilung recht wenig Konsens zu geben.</p>
+<h2>Geltungsbereich</h2>
+<p>Neben diversen legalen Vorgaben, je nach Land, bestehen insbesondere auch Plattformanbieter normalerweise auf einer gültigen Alterseinstufung für die Region, in der ein Publisher ein Spiel veröffentlichen möchte. Möchte ich zum Beispiel ein Spiel in Europa auf der PS3 auf den Markt bringen, so wird Sony auf einer PEGI-Einstufung bestehen um mir die Lizenz zum Veröffentlichen des Spiels auszustellen. Prinzipbedingte Ausnahme ist hier der PC - u.a. Linux, BSD, Macs inbegriffen - bei dem man in der Regel Software ohne Zustimmung des Plattformanbieters veröffentlichen kann. Weitere Ausnahmen wären Plattformen, die sogenannte <em>Homebrew</em> Software ohne größere technische Hürden abspielen - zum Beispiel die Sega Dreamcast - oder modifizierte Varianten der normalen Konsolen.</p>
+<p>Weiterhin gelten generell die verschiedenen Alterseinstufungen nur für Spiele die <em>auf Trägermedien</em> verbreitet werden, also zum Beispiel auf DVDs, BluRays, Speicherchips, USB Sticks, Kassetten oder Lochkarten. Die "klassischen" Einstufungen gelten aber nicht für rein online vertriebene Inhalte - heutzutage wären das hauptsächlich Browserspiele, Spiele die ausschließlich über diverse App Stores vertrieben werden, oder aber auch fast alle F/OSS- und Indiespiele, zumindest in den Anfangsstadien. Problematisch wird die Situation, wenn ein Spiel zuerst nur Online angeboten wird, später dann aber auch auf einem Trägermedium veröffentlicht wird. Das ist naturgemäß bei F/OSS sehr häufig der Fall und wird später betrachtet.</p>
+<p>Reine Onlineinhalte sind aber auch nicht ganz unantastbar: in Deutschland müssen Inhalte, die eine 16+ oder 18+ Einstufung erhalten, würden durchaus vor dem Zugriff Minderjähriger geschützt werden; gleiches gilt für Inhalte mit 12+ Einstufung, sofern diese an Kinder gerichtet sind; Zuwiderhandlung - also, keinen wirksamen Schutz einsetzen - kann durchaus zu legalen Konsequenzen - sprich: heftigen Bußgeldern - führen. Als wirksamen Schutz versteht hier der Gesetzgeber den Einsatz von digitalen Alterskennzeichnungen bei Inhalten mit Einstufung bis 16+, "Sendezeiten" oder Altersverifikationssysteme.</p>
+<p>USK, PEGI und ESRB bieten neben ihren normalen Alterseinstufungen auch freiwillige Einstufungen für reine Onlineinhalte an. Die Einstufungen der USK sind hier etwas besonderes, in dem Sinne, dass diese eine rechtlich verbindliche Auskunft für den Betreiber einer Webseite in Deutschland darstellen - und damit wirksam vor Problemen mit der BPjM schützen. Diese hingegen hat ebenfalls eine Sonderregelung bei der Sache: die BPjM hat durchaus auch die Befugnis, eine Webseite zu indizieren - diese wird dann beim Einsatz entsprechender Jugendschutzsysteme oder etwa bei Suchanfragen bei größeren Suchmaschinen nicht mehr angezeigt. Die Liste der indizierten Webseiten selbst ist allerdings nicht öffentlich einsehbar, und Listeneinträge werden auch nicht über die normalen Kanäle veröffentlicht, da <em>Telemedien</em> nach §24 JuschG nur in die C und D Listen aufgenommen werden können - nachzulesen in §18 JuschG und <a href="http://www.gesetze-im-internet.de/juschg/__24.html">§24 JuschG</a>.</p>
+<h2>Deutschland: USK vs PEGI</h2>
+<p>Dem scharfsinnige Beobachter wird aufgefallen sein, dass Deutschland ein Teil Europas ist. Deutschland ist in der Tat das einzige europäische Land, das nicht die Einstufungen der PEGI verwendet, sondern sein eigenes System - die USK und die BPjM. Das liegt daran, dass in Deutschland der Jugendschutz eine besondere Stellung genießt: der Jugendschutz ist gesetzlich vorgeschrieben, <a href="http://www.gesetze-im-internet.de/bundesrecht/gg/gesamt.pdf">und stellt eine Ausnahme zur sonst gewährten Meinungs- und Pressefreiheit dar (GG, Artikel 5, Absatz 2)</a>. Diese Ausnahme relativiert durchaus auch die sonst gegebene Zensurfreiheit aus dem gleichen Artikel, allerdings ist in den seltensten Fällen ein tatsächlich geschnittenes Spiel "zensiert" im Sinne des Artikels 5, Absatz 1. Dazu später mehr. Wichtigster Punkt hier ist, dass die USK und BPjS in Deutschland lediglich die Bestimmungen aus dem Grundgesetz und aus dem <a href="http://www.gesetze-im-internet.de/juschg/">Jugendschutzgesetz [JuschG]</a> ausführen. Eine Einstufung ist hierbei ein Verwaltungsakt, und sogar <a href="http://www.gesetze-im-internet.de/juschg/__14.html">die möglichen Alterseinstufungen werden im §14 JuschG vorgegeben</a>.</p>
+<p>Im Gegensatz dazu arbeiten Organisationen wie die PEGI eher in Eigenverantwortung, und die Regierungen der Länder die diese Einstufungen durchsetzen geben dabei die Verantwortung für die Einstufung der Medien an diese ab, wie zum Beispiel <a href="http://www.bbc.co.uk/news/technology-19042908">Großbritannien in 2012, als diese ihre eigene BBFC von der Bewertung von Videospielen zurückgezogen hat</a>.</p>
+<p>Es wird oft hieraus geschlossen, dass Deutschland nach der aktuellen Gesetzeslage die PEGI nicht "als Ersatz" verwenden könne - so auch zum Beispiel in einer Petition von 2011, bei der genau dies gefordert wurde. Argumentiert wird hier mit §14 JuschG: im JuschG steht zwar nicht explizit, dass die Inhalte <em>"durch die USK"</em> gekennzeichnet werden müssen sondern vielmehr, <em>"die oberste Landesbehörde oder eine Organisation der freiwilligen Selbstkontrolle im Rahmen des Verfahrens nach Absatz 6 kennzeichnet die Filme und die Film- und Spielprogramme"</em>; allerdings dürfte es im Moment schwerfallen, die PEGI als eine solche <em>Organisation der freiwilligen Selbstkontrolle</em> anzuerkennen, da zum einen die Alterseinstufungsgruppen anders sind, und zum anderen die PEGI nicht an die Vorgaben aus §14 JuschG gebunden ist - insbesondere den Teil, der sie zwingen würde, eine Klassifizierung zu untersagen, um einer Indizierung durch die BPjM keine Steine in den Weg zu legen.</p>
+<p>Ein Wechsel von der USK zur PEGI würde also vermutlich mindestens eine Abschaffung der BPjM mit sich ziehen - was unwahrscheinlich ist; oder eine Gesetzesänderung, mit der die BPjM wieder vorherige Einstufungen ignorieren könnte, wie früher - was niemand will. Bleibt also für's erste der Status Quo.</p>
+<h2>Rechtliche Folgen</h2>
+<p>Im Allgemeinen haben die Einstufungen der einzelnen Organisationen primär informativen Charakter. Allerdings gelten in vielen Ländern inzwischen Gesetze, nach denen es nicht erlaubt ist, Medien an Personen abzugeben, die jünger sind als das vorgeschlagene Mindestalter auf der Verpackung; Zuwiderhandlung führt hier meist zu Bußgeldern. In Deutschland trifft dies auf jeden Fall zu. Eltern haben aber im Regelfall das Recht, ihre Kinder auch Spiele spielen zu lassen, die sonst für ältere Kinder gedacht waren - solange diese nicht indiziert wurden.</p>
+<p>Ohne Alterseinstufung gilt im Normalfall die höchstmögliche Einstufung nach dem jeweiligen System. Allerdings finden sich im Einzelhandel eher selten Medien ohne Alterseinstufung.</p>
+<h1>Informationsgehalt</h1>
+<p>Auf den Webseiten der verschiedenen Organisationen finden sich diverse Informationen zu den einzelnen Spielen. Die BPjM fällt hier heraus, da diese ihre Indexeinträge ausschließlich über ihre vierteljährliche Publikation <em>BPjM-Aktuell</em> veröffentlicht und keine öffentliche Datenbank zur Titelsuche anbietet.</p>
+<p>Auf den Webseiten der übrigen Anbieter findet man folgende Informationen zu den bewerteten Titeln:</p>
+<table class="proper">
+<colgroup>
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
+</colgroup>
+<thead><tr><td/>
+<th>USK</th>
+<th>PEGI</th>
+<th>ESRB</th>
+<th>Apple</th>
+</tr></thead>
+<tbody>
+<tr><th>Öffentliche Datenbank</th>
+<td>ja</td>
+<td>ja</td>
+<td>ja</td>
+<td>ja</td>
+</tr>
+<tr><th colspan="5">Versionsidentifikation</th>
+</tr>
+<tr><th>Titel</th>
+<td>ja</td>
+<td>ja</td>
+<td>ja</td>
+<td>ja</td>
+</tr>
+<tr><th>Plattform</th>
+<td>ja</td>
+<td>ja</td>
+<td>ja</td>
+<td>ja</td>
+</tr>
+<tr><th>Publisher</th>
+<td>ja</td>
+<td>ja</td>
+<td>ja</td>
+<td>ja</td>
+</tr>
+<tr><th>Sprache</th>
+<td>ja</td>
+<td>nein</td>
+<td>nein</td>
+<td>ja</td>
+</tr>
+<tr><th>Prüftag</th>
+<td>ja</td>
+<td>nein</td>
+<td>nein</td>
+<td>nein</td>
+</tr>
+<tr><th>Referenznummer zum Prüfvorgang</th>
+<td>ja</td>
+<td>nein</td>
+<td>nein</td>
+<td>nein</td>
+</tr>
+<tr><th>Releasetag</th>
+<td>nein</td>
+<td>ja</td>
+<td>nein</td>
+<td>ja</td>
+</tr>
+<tr><th>Genre</th>
+<td>ja</td>
+<td>ja</td>
+<td>nein</td>
+<td>nein</td>
+</tr>
+<tr><th>Versionsnummer</th>
+<td>nein</td>
+<td>nein</td>
+<td>nein</td>
+<td>ja</td>
+</tr>
+<tr><th>Updatetag</th>
+<td>nein</td>
+<td>nein</td>
+<td>nein</td>
+<td>ja</td>
+</tr>
+<tr><th>Binarygröße</th>
+<td>nein</td>
+<td>nein</td>
+<td>nein</td>
+<td>ja</td>
+</tr>
+<tr><th>Copyrightstatement</th>
+<td>nein</td>
+<td>nein</td>
+<td>nein</td>
+<td>ja</td>
+</tr>
+<tr><th colspan="5">Inhalt</th>
+</tr>
+<tr><th>Textzusammenfassung der Einstufungsgründe</th>
+<td>nein</td>
+<td>ja</td>
+<td>teilweise</td>
+<td>nein</td>
+</tr>
+<tr><th>Detail der Zusammenfassung</th>
+<td>-</td>
+<td>einzeilig</td>
+<td>ein bis zwei Absätze, mit Beispielen für problematische Stellen</td>
+<td>-</td>
+</tr>
+<tr><th>Screenshots</th>
+<td>nein</td>
+<td>nein</td>
+<td>nein</td>
+<td>ja</td>
+</tr>
+<tr><th>Inhaltszusammenfassung</th>
+<td>-</td>
+<td>-</td>
+<td>kurz als Teil der Einstufungsbegründung</td>
+<td>längere Beschreibung des Herstellers</td>
+</tr>
+<tr><th>Kundenrezensionen</th>
+<td>nein</td>
+<td>nein</td>
+<td>nein</td>
+<td>ja</td>
+</tr>
+<tr><th colspan="5">Detailgrad der Inhaltsmetadaten</th>
+</tr>
+<tr><th>Gewalt</th>
+<td>keine Metadaten</td>
+<td>Vorhanden/nicht Vorhanden</td>
+<td>Animated Blood, Blood, Blood and Gore, Cartoon Violence, Fantasy Violence, Intense Violence, Sexual Violence, Violence, Violent References</td>
+<td>None, Infrequent/Mild, Frequent/Intense: Cartoon or Fantasy Violence, Realistic Violence, Prolonged graphic or sadistic realistic violence</td>
+</tr>
+<tr><th>Sex</th>
+<td>keine Metadaten</td>
+<td>Vorhanden/nicht Vorhanden</td>
+<td>Nudity, Partial Nudity, Sexual Content, Sexual Themes, Sexual Violence, Suggestive Themes, Strong Sexual Content</td>
+<td>None, Infrequent/Mild, Frequent/Intense: Sexual Content or Nudity, Mature/Suggestive Themes, Graphic sexual content and nudity</td>
+</tr>
+<tr><th>Angst</th>
+<td>keine Metadaten</td>
+<td>Vorhanden/nicht Vorhanden</td>
+<td>keine Metadaten</td>
+<td>None, Infrequent/Mild, Frequent/Intense: Horror/Fear Themes</td>
+</tr>
+<tr><th>Drogen</th>
+<td>keine Metadaten</td>
+<td>Vorhanden/nicht Vorhanden</td>
+<td>Alcohol Reference, Drug Reference, Tobacco Reference, Use of Alcohol, Use of Drugs, Use of Tobacco</td>
+<td>None, Infrequent/Mild, Frequent/Intense: Alcohol, Tobacco or Drug Use or Reference</td>
+</tr>
+<tr><th>Sprache</th>
+<td>keine Metadaten</td>
+<td>Vorhanden/nicht Vorhanden</td>
+<td>Comic Mischief, Crude Humor, Language, Lyrics, Mature Humor, Strong Language, Strong Lyrics</td>
+<td>None, Infrequent/Mild, Frequent/Intense: Profanity or Crude Humor</td>
+</tr>
+<tr><th>Diskriminierung</th>
+<td>keine Metadaten</td>
+<td>Vorhanden/nicht Vorhanden</td>
+<td>keine Metadaten</td>
+<td>keine Metadaten</td>
+</tr>
+<tr><th>Glücksspiel</th>
+<td>keine Metadaten</td>
+<td>Vorhanden/nicht Vorhanden</td>
+<td>Real Gambling, Simulated Gambling</td>
+<td>None, Infrequent/Mild, Frequent/Intense: Simulated Gambling</td>
+</tr>
+<tr><th>Onlinefunktionen</th>
+<td>keine Metadaten</td>
+<td>Vorhanden/nicht Vorhanden</td>
+<td>Vorhanden/nicht Vorhanden</td>
+<td>keine Metadaten</td>
+</tr>
+</tbody>
+</table>
+<p>Es sollte bei der USK noch dazu gesagt werden, dass die Begründungen für die Einstufungen zwar nicht öffentlich auf der Webseite einsehbar sind, dass diese aber sehr wohl per Email vom ständigen Vertreter der obersten Landesbehörde angefordert werden können. Das würde im Zweifelsfall Diskussionen in Foren der Art "wieso ist X denn ab N" - "ach bestimmt weil Y" vorbeugen, allerdings zeugt die Häufigkeit solcher Diskussionen davon, dass dieses Informationsangebot nur seltenst wahrgenommen wird.</p>
+<p>Weiterhin sind einige der theoretisch möglichen Einstufungen für Apples App Store K-O Kriterien, bei deren Auswahl im Fragebogen eine Vertriebslizenz auf Apples Plattformen automatisch untersagt wird. Insbesondere gilt dies für jegliche Auswahl bei <em>Prolonged graphic or sadistic realistic violence</em> und <em>Graphic sexual content and nudity</em>. Programme oder Spiele auf die diese Einstufung passen würde sind so gar nicht erst auf Apples Plattformen verfügbar. Desweiteren werden häufig die Einstufungen einiger Kategorien im App Store stark übertrieben, falls diese es einem Anwender ermöglichen, frei im Internet zu browsen. <a href="https://itunes.apple.com/us/app/chrome/id535886823?mt=8">Google Chrome - ein Webbrowser - hat so zum Beispiel in der Kategorie "Mature/Suggestive Themes" eine Bewertung von "Frequent/Intense"</a> - obwohl der Browser, d.h. die App selbst, keine solchen Inhalte enthält.</p>
+<h2>Versionsproblematik</h2>
+<p>Auffällig bei den Bewertungen ist, dass bis auf Apples Einstufungen keine der Organisationen genau sagt, welche Version man in den Händen hält, bzw. welche Version eingestuft wurde. Zwar wird zwischen Versionen für verschiedene Plattformen differenziert, aber selten zwischen verschiedenen Versionen der gleichen Plattform.</p>
+<p>Ein Beispiel hierfür wäre das Windows/OSX/PS2 Spiel <a href="http://en.wikipedia.org/wiki/Giants:_Citizen_Kabuto">Giants: Citizen Kabuto</a>. In der nicht-US Version des Spiels ist eine der Spielercharactere, Delphi, im Spiel mit freiem Oberkörper zu sehen, während die US Version des Spiels stattdessen Delphi ein Bikinioberteil spendiert hat (und buntes Blut). Rein aus den Metadaten auf der Webseite ist aber weder bei der ESRB noch bei der USK ersichtlich, welche der beiden Versionen des Spiels bewertet wurden. Das passiert so bei allerlei Titeln in allerlei Konstellationen von verschiedenen Versionen für verschiedene Regionen.</p>
+<p>Ebenso wird normalerweise bei den Spielen nicht erwähnt, auf welche Programmversion sich eine Bewertung bezieht, sofern diese nicht einen anderen Titel haben - zum Beispiel <a href="http://en.wikipedia.org/wiki/World_of_Warcraft">World of Warcraft (Version 1.x)</a> vs. <a href="http://en.wikipedia.org/wiki/World_of_Warcraft:_Mists_of_Pandaria">World of Warcraft: Mists of Pandaria (Version 5.x)</a>.</p>
+<p>Auch wird oft nicht erwähnt, ob ein Trägermedium mehrere Sprachversionen aufweist - es wäre zum Beispiel denkbar, dass eine deutsche Version eines Spiels wesentlich weniger schlimme Flüche verwendet als eine amerikanische, oder dass einige politische Anspielungen bei der Übersetzung stark abgeschwächt wurden. Wer schon einmal die deutsche und die englische Version der letzten paar Staffeln <a href="http://en.wikipedia.org/wiki/The_Simpsons">der Simpsons</a> gesehen hat, dem dürfte aufgefallen sein, dass einige Themen einfach in der deutschen Version überspielt werden.</p>
+<p>Desweiteren sind diverse Übersetzungen mehr oder weniger gut gelungen und können dem Gesamteindruck eines Spiels einen komplett anderen Charakter verleihen. Die englische Version von <a href="http://en.wikipedia.org/wiki/Hunted:_The_Demon's_Forge">Hunted: The Demon's Forge</a>, zum Beispiel, hat einen sehr düsteren Charakter. Auf der nicht-UK Version der europäischen PS3 Bluray ist diese englische Version allerdings nicht enthalten, sondern nur die <em>anderen</em> europäischen Sprachen - kauft man die PS3 Version also arglos in Deutschland und spielt diese auf einer englischen PS3 ab, so erhält man die französische Version des Spiels. Es ist zwar erkennbar, dass sich die Synchronsprecher von mindestens zwei der Charaktere hier viel Mühe gegeben haben, der Gesamteindruck ist aber leider trotzdem nicht düster sondern eher unfreiwillig komisch. <em>Tu me fais peur, fillette!</em> - <em>Schmunzel</em>. Die deutsche Version ist zwar eher in einem durchaus düstereren Deutsch gehalten, verliert aber durch das verwendete Gutmenschenfantasyvokabular so viel an Charakter, dass es mir persönlich unmöglich war, mehr als das Intro zu spielen, und ich doch wieder auf das unfreiwillig komische Französisch ausgewichen bin.</p>
+<p>Der Grund für diese fehlenden Versionsinformationen ist, dass den Bewertern im Regelfall nicht einmal vom Hersteller gesagt wird, ob es verschiedene Versionen gibt, und welche Version die Gutachter gerade in den Händen halten. Das führt leider zu...</p>
+<h2>Vorurteil: Zensur</h2>
+<p>Unter Spielern geht oft das Gerücht um, dass Bewertungsorganisationen für die Schnitte in den verschiedenen Versionen irgendwie verantwortlich wären. Dem ist nicht so. Es gibt zwar durchaus geschnittene Versionen für bestimmte Märkte - unter anderem auch recht oft für den deutschen Markt, oder wie im Beispiel oben für den amerikanischen - allerdings ist die Entscheidung zur Veröffentlichung einer geschnittenen Version die des Publishers, oder teilweise des Entwicklers, in keinem Fall aber die von Organisationen wie der USK, der PEGI oder der ESRB.</p>
+<p>Publisher versuchen mit geschnittenen Versionen oft die resultierende Alterseinstufung zu beeinflussen - insbesondere in den USA wird dies gemacht, da große Einzelhandelsketten wie Walmart keine Spiele mit einer Alterseinstufung über <em>Teen (13+)</em> in ihrem Sortiment führen - obwohl gerade Walmart vermutlich ihre Stellung hierzu inzwischen geändert haben könnte, laut ihrer Webseite führen diese im Moment wohl alles außer <em>ESRB AO</em>. In Deutschland hingegen will man oft einer Indizierung entgehen, welche ein absolutes Werbeverbot mit sich führen würde, oder eine mögliche <em>USK 18</em> auf eine <em>USK 16</em> abschwächen, aus ähnlichen Gründen.</p>
+<p><em>"Zensur"</em> ist also eine reine Marketingentscheidung der Publisher. <em>"Zensur"</em> ist ferner auch das falsche Wort, da der Schnitt von einer privaten Organisation ausgeht - dem Publisher - und nicht von einer staatlichen Stelle. Nur staatliche Stellen können in diesem Sinne überhaupt <em>zensieren</em> - <a href="http://www.duden.de/rechtschreibung/Zensur">lest es im Duden nach, wenn ihr mir nicht glaubt</a>.</p>
+<p>Eine gewisse Ausnahme ist hier allerdings doch die BPjM: diese ist eine staatliche Stelle und kann sehr wohl mit einer Indizierung ein Werbeverbot, sowie - je nachdem auf welchen Listenindex es ein Titel geschafft hat - auch ein Verbreitungsverbot und gegebenenfalls eine Beschlagnahmung im Einzelhandel bewirken. Die allgemein gewährte Meinungsfreiheit, verbunden mit einer Zensurfreiheit aus Artikel 5, Absatz 1 des Grundgesetzes wird im gleichen Artikel, Absatz 2 zum Zweck des Jugendschutzes aufgehoben. Der Staat hat also durchaus die Möglichkeit, hier Werke zu zensieren - er hat aber nicht die Möglichkeit, einen Publisher zur Zensur am Werk zu zwingen, und so zum Beispiel zu erwirken, dass <a href="http://de.wikipedia.org/wiki/Half-Life#Deutsche_Fassung">die Soldaten in Half-Life jetzt plötzlich Roboter sein sollen</a>. Wobei gerade in dem Fall die Versionsproblematik nicht unbedingt einfacher wird - Half-Life 1 ist hierzulande indiziert... aber auch nicht - je nachdem ob es um die US-Version oder die deutsche Version geht, und beide Versionen haben den Titel "Half-Life" und sind vom gleichen Publisher.</p>
+<p>Die USK, PEGI, ESRB &amp; Co. haben hier aber absolut nichts damit zu tun. Im Gegenteil: eine USK-Einstufung verhindert sogar aktiv eine spätere Indizierung durch die BPjM. Es gibt also keinen Grund sich bei denen über irgendwelche geschnittenen Spiele zu beschweren. Viel sinnvoller wäre es, sich bei den Publishern zu beschweren, dass die nicht genug Schneid zeigen und einen Warnhinweis auf die Packung machen, wenn eine Version geschnitten ist - so wie bei Steam mit dem <em>"Low Violence: Low Violence Version"</em> Vermerk im Store - oder gleich ganz auf eine Anpassung für den deutschen Markt verzichten - so wie Warner Bros. Interactive Entertainment bei <a href="http://en.wikipedia.org/wiki/Mortal_Kombat_(2011_video_game)">Mortal Kombat 2011</a>. Da Schnitte ja eine Marketingentscheidung sind, muss man hier einfach sagen: das kommt viel besser bei der Zielgruppe an, die sich das dann zur Not einfach in Österreich oder Großbritannien kaufen kann.</p>
+<h2>Vorurteil: Organisation X ist "härter" als andere Organisationen</h2>
+<p>Ein weiteres Vorurteil ist, dass einige Organisationen härter bewerten als andere. In Verbindung mit dem Vorurteil über die Zensur hört man dann oft in deutschen Spieleläden so Sätze von den Kunden wie "die USK hat das bestimmt nicht ungeschnitten freigegeben, habt ihr davon auch eine PEGI Version da?" Ironischerweise <a href="http://www.gamesindustry.biz/articles/2012-06-26-pegi-is-stricter-than-the-bbfc-were-not-ashamed-of-that-vsc">sahen Briten die PEGI als neuen, strengeren Wind bei den Einstufungen als ihre BBFC abgelöst wurde</a>. Als Informatiker finde ich so etwas natürlich höchst interessant - und unwahrscheinlich. Zeit also für ein bisschen Statistik mit R:</p>
+<img src="/svg/age-rating-distribution" alt="Verteilung der Alterseinstufungen - Absolut"/>
+<p>In diesem ersten Plot sehen wir, wie viele Einstufungen in den Datenbanken der verschiedenen Anbieter enthalten sind, und für welches Alter diese eingestuft wurden. Das Alter ist auf der X-Achse, die Anzahl der Einstufungen auf der Y-Achse. Rot sind Einstufungen der ESRB, grün die der PEGI und schließlich blau die der USK. Der schwarze Kreis repräsentiert die Gesamtanzahl der Indizierungen durch die BPjM. Deutlich zu erkennen sind einige Cluster bei den Einstufungen ab 12 und höher und generell ein ähnlicher Verlauf der Kurven ab 9-10.</p>
+<img src="/svg/age-rating-distribution-1" alt="Verteilung der Alterseinstufungen - Relativ, Kumulativ"/>
+<p>Da nicht alle Organisationen genau gleich viele Einstufungen vorgenommen haben, sehen wir uns das Ganze nochmal auf einem relativen, kumulativen Plot an. Auf der Y-Achse ist jetzt der Anteil der eingestuften Spiele - höhere Werte bei niedrigerem Alter zeigen an, dass mehr Spiele für ein jüngeres Publikum eingestuft wurden. Die Linien treffen sich naturgemäß bei 1 - also 100%. Neu hinzugekommen ist ein pinker Plot, der die USK und die BPjM Einstufungen kombiniert, da beide in der gleichen Region aktiv sind, und bis auf die Sonderregelungen die BPjM Indizierungen alle wie USK 18+ zählen - damit nachher nicht jemand behauptet, dass das die Statistik unter die PEGI schieben würde.</p>
+<p>Und wir sehen: die härtesten Bewertungen, im Schnitt, statistisch, sind tatsächlich von der PEGI, nicht wie von deutschen Gamern oft postuliert von der USK. Tja, Myth Busted? Naja, noch nicht ganz. Die unterschiedlichen Einstufungen aus den verschiedenen Altersgruppen, und die damit fehlenden Einstufungen in den anderen, theoretisch möglichen Gruppen wurden noch nicht wirklich berücksichtigt. Um das Ganze noch etwas vergleichbarer zu machen, sehen wir uns eine lineare Interpolation der möglichen Einstufungen an:</p>
+<img src="/svg/age-rating-distribution-2" alt="Verteilung der Alterseinstufungen - Relativ, Kumulativ, weniger diskret"/>
+<p>Gleiches Ergebnis. Die PEGI ist also im Schnitt von den dreien am härtesten, auch wenn man die BPjM berücksichtigt, aber ebenfalls statistisch gesehen sind die Verteilungen der Organisationen sehr ähnlich. Der größte Unterschied ist wider erwarten in den <em>unteren</em> Altersgruppen - und da dürfte das Meiste durch die unterschiedlichen Mindestalter - 0 bei der USK, 3 bei PEGI und ESRB - zu erklären sein.</p>
+<p>Insgesamt lässt sich hieraus schließen, dass der Hauptunterschied nur eine andere Gewichtung der Inhalte sein kann - sonst wären deutlichere Ausreisser zu sehen. Leider würde eine Analyse zu diesem Thema nur schwerlich auch nur im Ansatz objektiv realisierbar sein, daher kann an dieser Stelle nicht weiter darauf eingegangen werden. Wer Interesse hat, kann sich aber zum Beispiel <a href="http://en.wikipedia.org/wiki/ESRB#Content_descriptors">bei Wikipedia über die Einstufungskriterien der ESRB</a> informieren, oder <a href="/pdf/PEGI%20Questionnaire%202013">hier den PEGI Fragebogen für Publisher ansehen</a>. Beide geben einen recht guten Eindruck darüber, was wie eingestuft wird - allerdings sollte man dabei beachten, dass die meisten Punkte trotzdem noch sehr subjektiv sind und von verschiedenen Personen schnell anders ausgelegt werden.</p>
+<p>Wer Interesse hat, kann sich übrigens <a href="/src/age-rating-distribution.r">das R-Programm mit dem die Statistik generiert wurde auch direkt hier herunterladen</a>, oder <a href="source-code">im GIT Repository der Webseite nachsehen</a>.</p>
+<h1>Probleme für F/OSS-Entwickler</h1>
+<p>Die ganzen Einstufungsvorgänge sind, wie man schnell sieht, auf die "klassische" Situation mit Entwicklern, Publishern und physischen Medien eingespielt. Das ist absolut logisch, führt aber speziell im Bereich der Free/Open Source Software schnell zu einigen unvorhergesehenen Problemen - nicht zuletzt, da diese im Regelfall primär ohne Publisher und physische Medien agieren. Typischerweise wird F/OSS Software direkt vom Entwickler auch publiziert - und prinzipbedingt werden dabei auch Entwicklungsversionen veröffentlich, da in fast allen Fällen auch immer die Versionsverwaltungsserver der Entwickler auch öffentlich zugänglich sind. Distributionen auf physischen Datenträgern werden manchmal angeboten - nach einigen Releases, aber sehr oft auch, ohne dass der Entwickler davon weiß oder extra zugestimmt hätte. Und das Budget... naja das fängt generell bei 0 an und wird - vielleicht - durch das ein oder andere Flattr oder anonyme Spenden aufgestuft.</p>
+<p>Was also ein Albtraum für jeden klassischen Publisher wäre, ist bei F/OSS an der Tagesordnung - und das auch durchaus absichtlich. Das das natürlich Probleme mit dem Jugendschutz mit sich bringt, dürfte offensichtlich sein. Gut zu wissen ist allerdings, dass F/OSS-Entwickler erst einmal nicht dazu gezwungen werden, eine Alterseinstufung vornehmen zu lassen - die Einstufungen bleiben nach wie vor freiwillig.</p>
+<p>Hier wird speziell auf die Situation bei F/OSS eingegangen, aber vieles hiervon dürfte auch für Indieentwickler gelten, die meistens noch etwas näher an der klassischen Situation arbeiten.</p>
+<h2>Verwaltungsgebühren</h2>
+<p>Es klingt schlecht, aber man muss es einfach trotzdem so sagen: F/OSS-Entwickler haben, bis auf wenige Ausnahmen, kein Budget für ihre Kreationen. Ob es sich dabei um einen neuen Window Manager, Systemsoftware oder Spiele handelt, ist hierbei egal. Und besonders in den Anfangsstadien findet man auch keine Sponsoren - teilweise kommen die auf einen zu, wenn man schon die eine oder andere Version veröffentlicht hat, aber bis dahin ist das Budget, unterm Strich, zwischen nichts, und dem was die Entwickler privat einbringen möchten - oft ebenfalls nichts oder sehr wenig.</p>
+<p>PEGI, USK und ESRB wollen natürlich auf der anderen Seite trotzdem bezahlt werden - ist ja auch vollkommen logisch und nachvollziehbar. Je nach Art des Spiels und Anbieter belaufen sich die Kosten hierfür auf EUR 250 bis EUR 1500. Pro Version. Das ist ein durchaus fairer Preis, wenn man sich den Aufwand ansieht, den die Organisationen damit haben - aber für F/OSS-Entwickler trotzdem einfach absolut unerschwinglich. Sogar wenn man nur die größeren Releases einstufen lassen würde, da bei F/OSS die Faustregel <em>release early, release often</em> gilt.</p>
+<h2>Versionsproblematik</h2>
+<p>Die vorher erwähnte Versionsproblematik ist bei F/OSS um ein Vielfaches schlimmer. Da man oft und häufig veröffentlicht - teilweise fast täglich - unterscheiden sich die einzelnen Versionen teilweise drastisch. Zwar wird man Mühe haben, speziell geschnittene Versionen für irgendeinen Markt zu finden, aber stattdessen wird zum Beispiel aus einem <a href="http://en.wikipedia.org/wiki/Nethack">textbasierten, rundenbasierten RPG, das hauptsächlich durch Textbeschreibungen lebt, durchaus schonmal ein isometrisches, grafisch nicht unbedingt unanspruchsvolles Spiel</a>. Ein Singleplayerspiel kann dann plötzlich auch im Multiplayer gespielt werden - oder andersrum, falls jemand zu einem reinen Multiplayerspiel eine AI für Bots entwickelt. Falls es jemals eine F/OSS Dating Simulation geben sollte, wird ganze bestimmt irgendwo, irgendwer, irgendwann dem Spiel eine <a href="http://tvtropes.org/pmwiki/pmwiki.php/Main/BFG">BFG</a> gönnen. Aus Prinzip. Ach, das wäre unwahrscheinlich? Nix da, wir <a href="http://psdoom.sourceforge.net/">haben inzwischen sogar einen Doom-basierten Taskmanager</a>, da wäre sowas ja fast noch normal!</p>
+<p>Was uns zu dem nächsten Problem bringt: die Sache mit den Forks und den unerwarteten Ports. Jeder kann prinzipiell den Quelltext eines F/OSS Programms nehmen und zu einem eigenen, komplett neuen Spiel umbauen. id Software veröffentlicht zum Beispiel recht häufig die Spielengines von alten Spielen unter Open Source Lizenzen. Da kann es schon passieren, dass Doom plötzlich nicht nur unter DOS läuft, <a href="http://doom.wikia.com/wiki/Text_Mode_Doom">sondern auch auf einer Unix Textkonsole</a>. Oder <a href="https://github.com/kripken/emscripten/wiki">die Unreal 3 Engine plötzlich im Browser läuft</a>. Und <a href="http://ufoai.org/">die Quake 2 Engine lässt einen plötzlich einen X-COM Clone spielen</a>.</p>
+<p>Dann ist da noch die Sache mit den Spieleressourcen - veröffentliche Engines von id Software, zum Beispiel, beinhalten normalerweise nur die Engine, nicht den Spieleinhalt. Prinzipiell stellt die Engine alleine ja noch kein Spiel dar - könnte aber trotzdem jugendgefährdend sein, wenn der Programmcode problematische Dinge ermöglicht - allerdings <a href="http://www.nongnu.org/freedoom/">passiert es durchaus, dass Communityprojekte den Spieleinhalt nachbauen</a> - mit oder ohne Wiederverwertung von Originaldaten aus Demo- oder Sharewareversionen. Ist FreeDoom nun gleich zu bewerten wie Doom? Vielleicht, dafür müsste man die zwei vergleichen - bei den Organisationen kostet das verständlicherweise, aber ob das ein amerikanischer F/OSS Entwickler für den deutschen Markt überhaupt in Betracht zieht? Unwahrscheinlich.</p>
+<p>Die Versionsverwaltungssysteme von einigen dieser Projekte arbeiten oft auf Hochlast - und sind wie gesagt öffentlich zugänglich. Selbst wenn sich ein Entwickler die Mühe machen würde bei jeder Version eine Einstufung zu erlangen, sobald das nächste größere Feature im CVS/SVN/GIT/Mercurial/... Repository landet, stimmt die Einstufung vielleicht nicht mehr. Und welche Version wäre dann eigentlich überhaupt erst gemeint gewesen?</p>
+<h2>Distributionen</h2>
+<p>Das nächste Problem bei F/OSS, ist, dass sehr oft verschiedenste Inhalte bei verschiedenen Versionen von Betriebssystemen beiliegen. Beispiel Linux: hier gibt es - unter anderem - Debian, Ubuntu, Arch, RedHat, <a href="http://distrowatch.com/">und tausende weitere</a> sogenannte <em>Distributionen</em>. Diese gibt es auch noch in verschiedenen Versionen - je nach Distribution mehr oder weniger.</p>
+<p>Bei solchen Distributionen sind Anwendungen und auch Spiele als sogenannte <em>Pakete</em> enthalten. Von harmlosen Büroanwendungen wie OpenOffice, über Systemsoftware wie den Linux Kernel, Compilern und X.org, Webbrowsern wie Firefox, Chromium oder gar Links bis hin zu Spielen ist hier in vielen Fällen ein sehr großer Teil der F/OSS Software bei den Distributionen enthalten. Und auf den DVDs dazu - <a href="http://packages.debian.org/stable/allpackages">bei Debian zum Beispiel, sind neben harmlosen Minesweeper- und Tetris-Clones auch Doom-Engines mitsamt offenen Spieledaten zu finden</a>. Gut, keiner weiß ob FreeDoom jetzt gleich zu bewerten ist wie Doom, und inzwischen ist das Spiel auch nicht mehr in Deutschland auf dem Index, sondern einfach ab 16 von der USK. Aber das ist auch noch nicht so lange her. Und die Distributions-DVDs sind definitiv nicht ab 16 - und sowohl überall in der Welt herunterladbar, als auch teilweise im Einzelhandel zu kaufen. <a href="http://www.debian.org/CD/vendors/#de">Auch in Deutschland, wenn wir beim Beispiel Debian bleiben</a>. Teilweise sogar als Beilage bei Computermagazinen. Das F/OSS Spiel ist also plötzlich, vielleicht sogar ohne Kenntnis des Autors, nicht nur im Internet veröffentlicht, sondern jetzt auch auf einem oder mehreren physischen Datenträgern.</p>
+<p>Hier wird die Sache dann langsam wirklich kompliziert, und ganz ehrlich: die einzige spontan sinnvolle Antwort wäre, Betriebssystem-DVDs im Vorraus ab 18 zu machen. Aber das kann auch nicht wirklich sinnvoll sein. Jugendliche sind durchaus in der Lage, ein Betriebssystem ohne Hilfe auf ihrem Computer zu installieren - ich glaube, meinen ersten Satz Linux-CDs hatte ich damals mit 14 von meiner Schwester gekriegt. Und das war gut so, schließlich hat mir das ziemlich viel über Hardware, Software und Programmierung beigebracht. Nur, naja, ob da keine solchen Inhalte dabei waren? Kann ich nicht mehr sagen, weil ich die CDs nicht mehr habe, aber statistisch gesehen waren sie es vermutlich schon.</p>
+<p>Ahja, und die Distributoren werden oft selber die Versionen der Spiele, die sie mitliefern, mit teilweise recht umfangreichen Patchen versehen - noch mehr Versionschaos.</p>
+<p>Diese Art der Versionsproblematik ist übrigens nicht F/OSS-spezifisch. Ivar Posthumus hat das recht treffend formuliert:</p>
+<blockquote><p>Let's take Doom and it's clones:<br/>
+Doom 3 has a PEGI 18. This game can be released on all PC operating systems if they have a PEGI license. Our license only applies to this version of the game, published by that specific publisher.<br/>
+Now let’s say Doom 3 is being re-released in 4 years. Perhaps it gets tweaked a bit, a DLC is added, who knows what happens. When the original content is altered, the game needs to be re-examined.
+If the game isn't altered (stays 100% identical), but a new publisher wishes to re-release the game. The new publisher has to have an agreement with the original publisher they can re-release it, and we'll make a so called sublicense.<br/>
+This way we know that a new publisher is also selling Doom 3 with our classification.<br/>
+All the open source spinoffs, add-ons, map packs, texture packs, mods etc. are not covered by our rating, since it only applies to the original submitted content.<br/>
+[However...]<br/>
+It may look like official DLC's and version updates need to be examined by PEGI. This is not the case. A game can receive all the normal updates, changing the balance in the game, patching x or y, adding menu features that weren't working properly etc. When a publisher releases a DLC, it does not have to be examined if the content of the dlc doesn't alter the age rating. Only if the DLC would alter the ratings (let's say; add 18 violence to a 16 game), or if the DLC would become be available as a physical boxed product in the stores, would it have to be examined.</p></blockquote>
+<p>Der letzte Abschnitt ist in diesem Kontext besonders wichtig, da er impliziert, dass unter den meisten Bedingungen keine neue Einstufung notwendig wird, wenn lediglich (nicht separat als Produkt erhältliche) Updates oder Patche an einem Produkt vorgenommen werden. Das sollte sich, glücklicherweise, direkt auf Dinge wie Betriebssystemdistributionen übertragen lassen.</p>
+<h2>Zuständigkeit</h2>
+<p>Viele der Probleme hier sind eine direkte Folge daraus, dass F/OSS generell eine globale Zielgruppe anspricht, und viele der Entwickler quer über den Erdball verstreut sind - oder teilweise sogar komplett anonym agieren. Man kann von einem einzelnen Entwickler kaum erwarten, dass dieser sich über die Jugendschutzgegebenheiten in jedem einzelnen Land auf unserem Planeten informiert. Vor allem, da diese so eine weite Spanne haben - und die Spanne zwischen "ist egal" und "Verbreitungs-, Werbeverbot bei bestimmten Inhalten" ist schon ziemlich weit. Besonders, wenn dann nachher sowieso keiner mehr durchblickt, was auf welcher Distribution dabei ist und in welcher Version.</p>
+<p>Daraus folgt auch direkt, dass es recht schwer ist, das irgendwie zu regulieren. Beispiel FreeDoom: Angenommen, dieses wäre ab 18 einzustufen oder gar indizierungswürdig. Ein deutscher Anwalt oder die BPjM könnte vermutlich einen deutschen Versandhandel abmahnen, der Debian DVDs im Angebot hat, aber die Entwickler von FreeDoom würde das vermutlich nicht weiter treffen. Bringt also im Schnitt nichts. Außer die BPjM ging her und würde die Webseite, auf der FreeDoom gehostet ist auf den Index setzen - und damit aus Suchanfragen entfernen. Allerdings ist der Link auf die Seite dazu auch noch auf etlichen Distributionswebseiten verfügbar. Da würde man früher oder später konsequenterweise das halbe Internet auf den Index setzen müssen - was einen untragbaren Kollateralschaden bedeuten würde.</p>
+<h1>Zusammenfassung</h1>
+<p>Generell kann man sagen, dass der Jugendschutz in den meisten Regionen sehr ähnlich agiert - viel variabler sind aber gegebenenfalls die Konsequenzen, die aus verschiedenen Einstufungen folgen können. Als besorgtes Elternteil ist es vermutlich auch keine schlechte Idee, mal bei den anderen Organisationen in der Datenbank nachzusehen, bevor das nächste Weihnachtsgeschenk für die Kinder besorgt wird. Oder noch besser: das Spiel selber durchspielen. Man sollte ja schon vorher wissen, was genau jetzt so problematisch an irgendwelchen Spielen ist.</p>
+<p>Bei F/OSS allerdings, da sieht die Sache wirklich kompliziert aus. Das System so wie es gerade ist, lässt sich dafür einfach nicht sinnvoll verwenden, und das ist irgendwie Schade - sowohl gegenüber der Kreativität der F/OSS Entwickler, als auch gegenüber dem gegebenenfalls dafür notwendigen Jugendschutz, der dabei irgendwie in der Luft hängt. Ich kann mir jedenfalls nicht vorstellen, dass irgendjemand, jemals, bei der Zusammenstellung der Betriebssystem-DVDs an den Jugendschutz gedacht hat - die Spiele sind zwar oft dabei, aber halt auch nur als Zugabe. Und die Distributoren werden bestimmt auch nicht einmal gewusst haben, dass zum Beispiel in Deutschland Spiele auf physischen Datenträgern ohne Einstufung automatisch ab 18 sind. Oder, dass sie oder die Anbieter ihrer Spiegelserver in Schwierigkeiten kommen könnten, weil sie Inhalte, die vielleicht ab 18 wären, jedem zum Download anbieten. Aber vielleicht kommt dieser Artikel ja bei den Distributionsentwicklern an, bevor es der Brief der BPjM oder eines findigen Anwaltes tut.</p>
+<p>Den F/OSS Entwicklern von Spielen kann man abschließend eigentlich nur raten, dass diese ihre Webseite schon einmal für alle Fälle mit 16+ taggen, falls die Spiele irgendwie, irgendwo mit 16+ eingestuft werden könnten. Das sollte den meisten Problemen schon aus dem Weg gehen. Infos dazu gibt es <a href="http://www.usk.de/extramenue/login/publisher/weitere-leistungen/labelgenerator/">auch auf der Seite der USK</a>. Sicher ist sicher.</p>
+</body>
+</html>

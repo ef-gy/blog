@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Video Game Age Rating: an Analysis</title>
+<link rel="alternate" hreflang="de" href="digitaler-jugendschutz" />
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="An analysis of certain video game age rating systems, for the concious buyer and the F/OSS developer." />
+<meta name="date" content="2013-07-08T10:00:00Z" />
+<meta name="mtime" content="2013-07-08T10:00:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="on-age-rating" />
+</head>
+<body>
+<p>As some of you may be aware of if you're following my Twitter or my Google+, I'm an active developer and contributor with certain open source projects, and I also find myself writing two console games at the moment - named "Purple Haze" and "Phylactery". The good, text-mode kind of console. So in light of this, I spent some time analysing some of the age rating systems that we've all come to know by now - their differences, their similarities, their basic modes of operation. Things like that. Because things aren't quite the same all across our lovely blue marble, and some of those differences could get open source developers all over the internet in trouble. And we don't want that.</p>
+<p>Before I begin, I would like to thank Christine Schulz and Paul Dalg with the USK, and Ivar Posthumus with the PEGI. They provided me with some very valuable feedback around Easter, when I was researching some of the details for this article. I'd also like to point out, that <a href="/site-news:disqus">the new commentary function at the bottom of this page</a> won't be used for comments like "OMGMYFAVOURITEGAMEWASCUTYOUBASTERDS!!11!!112". See, the thing about that is, while I realise that this topic in general will lead to a lot of heated discussion from gamers, we'll be staying civil and objective for this analysis. At least with the help of Disqus' black list we will. Pretty sure of that, really.</p>
+<p>This article is roughly divided into three sections: the first section will be dealing with the different kinds of rating that games could get and the legal implications those ratings may have, the second will be dealing with all the information you could gather about those ratings and the content of games on the rating organisations' websites, and the third will look at some of the specific problems your average open source (or indie) project will face with regards to this. The latter is something that is rarely analysed, but it's impossible to do so without the former.</p>
+<p>For the purpose of this article we will not deal with classic, non-interactive media, such as movies, music or books. This would make the article even more unwieldy. A separate <a href="digitaler-jugendschutz">German translation</a> is also available on this blog. Oh and, this should be obvious, but I'm a computer scientist. Not a lawyer. So this is not legal advice. It does contain advice though, and there are notes on legal issues.</p>
+<h1>Age Ratings</h1>
+<p>I'm pretty sure you've noticed those little stickers with age rating information on the back matter of video games in stores, or on websites related to video games. If, like me, you live in Europe, then undoubtedly you've noticed the colourful labels issued by the USK the PEGI - that's the <a href="http://usk.de/">Unterhaltungssoftware Selbstkontrolle</a> and the <a href="http://pegi.info">Pan European Game Information</a>, respectively. If you happen to be in a paricularly well stocked store, or you live somewhere outside of Europe, you'll find labels issued by the ESRB - the <a href="http://esrb.org/">Entertainment Software Rating Board</a> or the CERO - the <a href="http://www.cero.gr.jp/e/">Computer Entertainment Rating Organization</a>, or rather the <a href="http://www.cero.gr.jp/"><em>Tokutei Hieiri Katsudō Hōjin Konpyūta Entāteinmento Rētingu Kikō</em></a>. Other than that there's a plethora of old labels you probably won't be encountering that much, a lot of current labels in other regions than Europe, the US and Japan, and in Germany in particular there's also a certain kind of non-label, or rather an entry in a list of dangerous media by the <a href="http://www.bundespruefstelle.de/">Bundesprüfstelle für jugendgefährdende Medien [BPjM]</a> - i.e. the <em>Federal Department for Media Harmful to Young Persons</em>.</p>
+<p>And that begs the question: why do we have all those rating organisations? So this will be the first thing we'll examine more closely. However, I'll only be focusing on the larger organisations, and this will be somewhat Germany-centric as I happen to live here. Then again, I'm told Germany is a fairly big market for video games, often ranked the second most important market even, so this is probably not a bad thing. This means that I'll be comparing the USK, the PEGI and the ESRB. I'll also throw in the age ratings in the Apple App Stores - because I've personally had to deal with those in the past - and the BPjM, because index entries by those folks have really nasty legal consequences, and because it's pretty much the only such organisation in any western society.</p>
+<p>I've prepared the following table for this comparison:</p>
+<table class="proper">
+<thead>
+<tr><td/>
+<th>USK</th>
+<th>BPjM</th>
+<th>PEGI</th>
+<th>ESRB</th>
+<th>Apple</th></tr>
+</thead>
+<tbody>
+<tr><th>Region</th>
+<td>Germany (sometimes Switzerland, Austria)</td>
+<td>Germany</td>
+<td>Europe</td>
+<td>USA, Canada</td>
+<td>global</td>
+</tr>
+<tr><th>Potential Ratings</th>
+<td><ul>
+<li>USK 0  (all ages)</li>
+<li>USK 6  (6+)</li>
+<li>USK 12 (12+)</li>
+<li>USK 16 (16+)</li>
+<li>USK 18 (18+)</li>
+</ul></td>
+<td><ul>
+<li><em>Games</em><ul>
+<li>A (18+)</li>
+<li>B (18+, restricted)</li>
+<li>C (18+ not public)</li>
+<li>D (18+, restricted, not public)</li>
+<li>E (18+, pre-2003)</li>
+</ul></li>
+<li><em>"Tele-Media"</em><ul>
+<li>C (18+)</li>
+<li>D (18+, restricted)</li>
+</ul></li>
+<li><em>Others</em></li>
+</ul></td>
+<td><ul>
+<li>3+</li>
+<li>7+</li>
+<li>12+</li>
+<li>16+</li>
+<li>18+</li>
+</ul></td>
+<td><ul>
+<li>eC, Early Childhood (3+)</li>
+<li>E, Everyone (6+)</li>
+<li>E10+, Everyone 10+ (10+)</li>
+<li>T, Teen (13+)</li>
+<li>M, Mature (17+)</li>
+<li>AO, Adults Only (18+)</li>
+</ul></td>
+<td><ul>
+<li>4+</li>
+<li>9+</li>
+<li>12+</li>
+<li>17+</li>
+</ul></td>
+</tr>
+<tr><th>Content Information on Website</th>
+<td>no</td>
+<td>no</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes, potentially inaccurate</td>
+</tr>
+<tr><th>Content Information on Label</th>
+<td>no</td>
+<td>-</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes, potentially inaccurate</td>
+</tr>
+<tr><th>Public Ratings</th>
+<td>yes</td>
+<td>only indices A, B &amp; E</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+<tr><th>Rating Database on Website</th>
+<td>yes</td>
+<td>no</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+<tr><th>Legally Binding</th>
+<td>yes</td>
+<td>yes</td>
+<td>sometimes</td>
+<td>sometimes</td>
+<td>no</td>
+</tr>
+<tr><th>Rating Initiated by...</th>
+<td>Publisher/Developer</td>
+<td>Jugendamt (<em>"youth office"</em>)</td>
+<td>Publisher/Developer</td>
+<td>Publisher/Developer</td>
+<td>Publisher/Developer</td>
+</tr>
+<tr><th>Content Without Rating...</th>
+<td>considered 18+</td>
+<td>same as USK rating</td>
+<td>-</td>
+<td>-</td>
+<td>cannot be distributed on App Store</td>
+</tr>
+<tr><th>Process</th>
+<td><ol><li>Game testing</li>
+<li>Presentation by testers to the board</li>
+<li>Rating established by board</li>
+</ol></td>
+<td><ol><li>Process not possible when rated by USK</li>
+<li>Game testing</li>
+<li>Presentation by testers to the board</li>
+<li>Rating established by board</li>
+<li>Board may have to submit report to DA in case content is rated B or D.</li>
+</ol></td>
+<td><ol><li>Online-questionnaire for preliminary rating</li>
+<li>Evaluation pack is sent to the testers by the publisher (including videos, demos, manuals, etc)</li>
+<li>Game testing and examination of provided documents</li>
+<li>Final rating is decided upon, also based on the questionnaire's categorisation</li>
+</ol></td>
+<td><ol><li>Questionnaire</li>
+<li>Demo video is provided by publisher</li>
+<li>Board decides on final rating based no that video</li>
+</ol></td>
+<td><ol><li>Online-questionnaire for preliminary rating</li>
+<li>Age rating is verified by an employee as part of the process of obtaining a publishing licence</li>
+<li>Publishing licence will not be granted if the content does not match the preliminary rating</li>
+</ol></td>
+</tr>
+<tr><th>Basic MO</th>
+<td>independent survey</td>
+<td>independent survey</td>
+<td>survey to verify publisher specifications</td>
+<td>survey based on publisher specifications</td>
+<td>verification of publisher specifications</td>
+</tr>
+</tbody>
+</table>
+<p>The exact process employed by the individual organisations is a lot longer, so if you're interested, you should check their websites for details. The <em>potential ratings</em> in the case of the BPjM refer to the individual indices that a game might be assigned to - <a href="http://www.gesetze-im-internet.de/juschg/__18.html">this is specified in §18 JuschG</a>. Also, the <em>restricted</em> qualifier means that the content is assumed, by the BPjM, to be illegal in accordance with German law.</p>
+<p>The potential age ratings are also rather interesting, so I prepared this diagramme:</p>
+<table class="proper">
+<thead><tr><th>Age</th>
+<th colspan="5">USK</th>
+<th colspan="2">BPjM</th>
+<th colspan="5">PEGI</th>
+<th colspan="6">ESRB</th>
+<th colspan="4">Apple</th>
+</tr></thead>
+<tbody>
+<tr><th>0</th>
+<td rowspan="19" style="background: #eee">0</td>
+<td colspan="4"/>
+<td colspan="2"/>
+<td colspan="5"/>
+<td colspan="6"/>
+<td colspan="4"/>
+</tr>
+<tr><th>1</th>
+<td colspan="4"/>
+<td colspan="2"/>
+<td colspan="5"/>
+<td colspan="6"/>
+<td colspan="4"/>
+</tr>
+<tr><th>2</th>
+<td colspan="4"/>
+<td colspan="2"/>
+<td colspan="5"/>
+<td colspan="6"/>
+<td colspan="4"/>
+</tr>
+<tr><th>3</th>
+<td colspan="4"/>
+<td colspan="2"/>
+<td rowspan="16" style="background: #eee">3+</td>
+<td colspan="4"/>
+<td rowspan="16" style="background: #eee">eC</td>
+<td colspan="5"/>
+<td colspan="4"/>
+</tr>
+<tr><th>4</th>
+<td colspan="4"/>
+<td colspan="2"/>
+<td colspan="4"/>
+<td colspan="5"/>
+<td rowspan="15" style="background: #eee">4+</td>
+<td colspan="3"/>
+</tr>
+<tr><th>5</th>
+<td colspan="4"/>
+<td colspan="2"/>
+<td colspan="4"/>
+<td colspan="5"/>
+<td colspan="3"/>
+</tr>
+<tr><th>6</th>
+<td rowspan="13" style="background: #eee">6</td>
+<td colspan="3"/>
+<td colspan="2"/>
+<td colspan="4"/>
+<td rowspan="13" style="background: #eee">E</td>
+<td colspan="4"/>
+<td colspan="3"/>
+</tr>
+<tr><th>7</th>
+<td colspan="3"/>
+<td colspan="2"/>
+<td rowspan="12" style="background: #eee">7+</td>
+<td colspan="3"/>
+<td colspan="4"/>
+<td colspan="3"/>
+</tr>
+<tr><th>8</th>
+<td colspan="3"/>
+<td colspan="2"/>
+<td colspan="3"/>
+<td colspan="4"/>
+<td colspan="3"/>
+</tr>
+<tr><th>9</th>
+<td colspan="3"/>
+<td colspan="2"/>
+<td colspan="3"/>
+<td colspan="4"/>
+<td rowspan="10" style="background: #eee">9+</td>
+<td colspan="2"/>
+</tr>
+<tr><th>10</th>
+<td colspan="3"/>
+<td colspan="2"/>
+<td colspan="3"/>
+<td rowspan="9" style="background: #eee">E10+</td>
+<td colspan="3"/>
+<td colspan="2"/>
+</tr>
+<tr><th>11</th>
+<td colspan="3"/>
+<td colspan="2"/>
+<td colspan="3"/>
+<td colspan="3"/>
+<td colspan="2"/>
+</tr>
+<tr><th>12</th>
+<td rowspan="7" style="background: #eee">12</td>
+<td colspan="2"/>
+<td colspan="2"/>
+<td rowspan="7" style="background: #eee">12+</td>
+<td colspan="2"/>
+<td colspan="3"/>
+<td rowspan="7" style="background: #eee">12+</td>
+<td colspan="1"/>
+</tr>
+<tr><th>13</th>
+<td colspan="2"/>
+<td colspan="2"/>
+<td colspan="2"/>
+<td rowspan="6" style="background: #eee">T</td>
+<td colspan="2"/>
+<td colspan="1"/>
+</tr>
+<tr><th>14</th>
+<td colspan="2"/>
+<td colspan="2"/>
+<td colspan="2"/>
+<td colspan="2"/>
+<td colspan="1"/>
+</tr>
+<tr><th>15</th>
+<td colspan="2"/>
+<td colspan="2"/>
+<td colspan="2"/>
+<td colspan="2"/>
+<td colspan="1"/>
+</tr>
+<tr><th>16</th>
+<td rowspan="3" style="background: #eee">16</td>
+<td colspan="1"/>
+<td colspan="2"/>
+<td rowspan="3" style="background: #eee">16+</td>
+<td colspan="1"/>
+<td colspan="2"/>
+<td colspan="1"/>
+</tr>
+<tr><th>17</th>
+<td colspan="1"/>
+<td colspan="2"/>
+<td colspan="1"/>
+<td rowspan="2" style="background: #eee">M</td>
+<td colspan="1"/>
+<td rowspan="2" style="background: #eee">17+</td>
+</tr>
+<tr><th>18</th>
+<td rowspan="1" style="background: #eee">18</td>
+<td rowspan="1" style="background: #eee">A, C &amp; E</td>
+<td colspan="1"/>
+<td rowspan="1" style="background: #eee">18+</td>
+<td rowspan="1" style="background: #eee">AO</td>
+</tr>
+<tr><th>restricted</th>
+<td colspan="5"/>
+<td colspan="1"/>
+<td rowspan="1" style="background: #eee">B &amp; D</td>
+<td colspan="5"/>
+<td colspan="6"/>
+<td colspan="4"/>
+</tr>
+</tbody>
+</table>
+<p>One interesting tidbit we can see by looking at this diagramme is that all of the organisations seem to agree that the age of a person directly correlates with their mental stability. On the other hand, there does not seem to be any consensus regarding the exact age at which a person will typically be able to handle differnet content.</p>
+<h2>Area of Influence</h2>
+<p>In principle, all of these age ratings are strictly voluntary. In practice, however, there may be legal requirements or contractual obligations that may force a publisher to acquire an age rating by an organisation operating in the intended target region. Game console manufacturers, for example, will require that a publisher acquire a rating in a given region before issuing a distribution licence. A natural exception to this is the PC market - Linux, BSD and Macs included - where the platform providers generally do not issue a publishing licence for each product. The same applies, in principle, to game consoles that allow <em>homebrew</em> software to run without any technical hurdles - such as the Sega Dreamcast - or modified versions of regular consoles.</p>
+<p>Additionally these ratings typically only apply to <em>physical media</em>, such as DVDs, BluRays, thumb drives, flash memory, cassettes or punch cards. These <em>classic</em> ratings will thus not apply to content that is only distributed online - such as browser games, games that are only available in the various app stores, or F/OSS and sometimes indie games. The situation gets really hairy when content is only distributed online at first, but is then published on physical media later - which, incidentally, also happens a lot with F/OSS and indie games, and which we'll have a closer look at later.</p>
+<p>But of course pure online media are not completely exempt from repercussions due to ratings: for example, in Germany you're legally required to implement measures to prevent kids and juveniles from accessing your website, iff the content would otherwise be rated 16+ or 18+. The same applies to content that would otherwise be rated 12+, if your target audience appears to be under or around that age. Valid protection mechanisms include a machine-processable tag on the pages that your site has an intended target audience of a specific age range or above - if that tag is approved by the state, <a href="http://www.usk.de/extramenue/login/publisher/weitere-leistungen/labelgenerator/">see the USK website for one that is</a>, effective age verification systems and, curiously enough, designated airtime. The latter is, obviously, not really helpful if whatever it is that you do has a global audience. Failure to add one of these protections may result in legal consequences - such as potentially crippling fines. Other countries may or may not implement these regulations, seeing a lawyer about it would probably be a good idea if you don't want to tag your content. Additionally it may be tricky to sue you if you don't have a legal presence in a country where state regulations are violated by your content, but your mileage may vary.</p>
+<p>In light of this the USK, PEGI and ESRB offer additional services that help publishers and content authors with these legalities. Again in Germany, the USK is somewhat special in this regard, as their advice is generally legally binding and may offer protection from repercussions and sanctions that could be issued by the BPjM. The BPjM, however, are also special in this regard, because they have the legal authority to put specific websites on one of their indices - which means that the site will not be visible in web searches in Germany. These ratings are never publicised in any way, other than a filter module for use by search engines and possibly web browsers so they won't be showing that content. Public discussion of such content may or may not violate German law, and it may or may not have been deemed illegal altogether. This may or may not be a good thing, but the handling of these C and D indices is described in <a href="http://www.gesetze-im-internet.de/juschg/__24.html">§24 JuschG</a>.</p>
+<h2>Germany: USK vs PEGI</h2>
+<p>The astute reader may have noticed that Germany is actually part of Europe. Germany is, in fact, the only European country that does not rely on PEGI age ratings, but instead employs its own services - the USK and the BPjM. The reason behind this is that, according to German law, <em>protecting children and juveniles from potentially harmful media</em> is a state issue that has separate legislation, <a href="http://www.gesetze-im-internet.de/bundesrecht/gg/gesamt.pdf">and in fact it supersedes the general provisions for freedom of speech and press as provided by article 5 of Germany's constitution - see article 5, paragraph 1 for the provisions and paragraph 2 for this particular exception.</a>. This exception also applies to the provisions that would otherwise not allow the state to censor content, but at the same time it is exceedingly rare that this is the reason for censored content in video games. More on that later. The important thing to take away from this is, is that the USK and BPjS are actually just implementing the legal requirements that have been worked out by the state in the constitution and the <a href="http://www.gesetze-im-internet.de/juschg/">Jugendschutzgesetz [JuschG]</a>. An age rating is thus an administrative deed, and even the <a href="http://www.gesetze-im-internet.de/juschg/__14.html">potential age ratings are described in §14 JuschG</a>.</p>
+<p>In contrast to this the PEGI operates in an independent fashion, and the states that enforce PEGI ratings choose to do so, and choose to trust the PEGI with this task. A recent, public example for this was <a href="http://www.bbc.co.uk/news/technology-19042908">when Britain chose to abandon the BBFC's video game ratings in favour of the PEGI ratings in 2011</a>.</p>
+<p>The legal implication of this is that, according to German law, it is not possible for Germany to adopt PEGI ratings - which has been requested every now and then, including most recently in 2011 via a public petition. While the law does not specifically say that ratings would have to be performed by the USK, it does state that these ratings are either implemented by the regional authority itself, or that they may rely on the expertise of <em>a self-monitoring organisation</em>. While the PEGI certainly would qualify for that, the PEGI is not typically bound by German law in particular - especially not the part that would require it to refuse a rating if the BPjM might have an interest in certain content, which means the state can't legally rely on their input in accordance with §14 JuschG. That and the actual age rating groups are different from what that same paragraph would require.</p>
+<p>It could be conjectured that an adoption of the PEGI by the German state would require a change in legislation - and possibly also the abolishment of the BPjM - which is unlikely - or allowing them to do their work in spite of any other, effect age ratings, as they used to - which is probably not in the interest of any German consumer or any publisher trying to operate in Germany.</p>
+<h2>Legal Consequences</h2>
+<p>As has been mentioned, these age ratings are primarily intended to be informative for any potential buyers. However, many countries will enforce the age ratings of at least one organisation in public trade situations - often coupled with fines if a vendor chooses to ignore these ratings and sell games to minors regardless. Germany's doing this with their USK ratings, for instance. Parents, on the other hand, tend to be entitled to choose to let their kids play games with a rating that is higher than the kid's age - unless of course you're in Germany and the game made it on any of the BPjM's indices, even the non-public ones, in which case you could get in legal trouble if you did this.</p>
+<p>In countries that do enforce age ratings, a missing label will typically invoke a fallback rule, whereby the game will be treated as though it had the highest possible rating - typically 18+. It is, however, rare to find content like that in stores.</p>
+<h1>Content Descriptors</h1>
+<p>The individual organisations tend to provide a lot of information on their websites regarding the titles they have rated - well, except for the BPjM, which does not provide a public database for the content they have put on one of their indices, and instead they only provide updates to the list in their quarterly journal <em>BPjM-Aktuell</em>. Unless of course, said content managed to get put one of the non-public indices. Then you could try to get the filter module and guess random domain names. Maybe.</p>
+<p>The web sites of the other organisations contain the following information:</p>
+<table class="proper">
+<colgroup>
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
+</colgroup>
+<thead><tr><td/>
+<th>USK</th>
+<th>PEGI</th>
+<th>ESRB</th>
+<th>Apple</th>
+</tr></thead>
+<tbody>
+<tr><th>Public Database</th>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+<tr><th colspan="5">Version Identification</th>
+</tr>
+<tr><th>Title</th>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+<tr><th>Platform</th>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+<tr><th>Publisher</th>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+<tr><th>Language</th>
+<td>yes</td>
+<td>no</td>
+<td>no</td>
+<td>yes</td>
+</tr>
+<tr><th>Date of Rating</th>
+<td>yes</td>
+<td>no</td>
+<td>no</td>
+<td>no</td>
+</tr>
+<tr><th>Rating Reference Number</th>
+<td>yes</td>
+<td>no</td>
+<td>no</td>
+<td>no</td>
+</tr>
+<tr><th>Date of Release</th>
+<td>no</td>
+<td>yes</td>
+<td>no</td>
+<td>yes</td>
+</tr>
+<tr><th>Genre</th>
+<td>yes</td>
+<td>yes</td>
+<td>no</td>
+<td>no</td>
+</tr>
+<tr><th>Version Number</th>
+<td>no</td>
+<td>no</td>
+<td>no</td>
+<td>yes</td>
+</tr>
+<tr><th>Date of Last Update</th>
+<td>no</td>
+<td>no</td>
+<td>no</td>
+<td>yes</td>
+</tr>
+<tr><th>Binary Size</th>
+<td>no</td>
+<td>no</td>
+<td>no</td>
+<td>yes</td>
+</tr>
+<tr><th>Copyright Statement</th>
+<td>no</td>
+<td>no</td>
+<td>no</td>
+<td>yes</td>
+</tr>
+<tr><th colspan="5">Content</th>
+</tr>
+<tr><th>Summary of the Rating Decision</th>
+<td>no</td>
+<td>yes</td>
+<td>partial</td>
+<td>no</td>
+</tr>
+<tr><th>Level of Detail</th>
+<td>-</td>
+<td>single line</td>
+<td>one or two paragraphs, including examples of problematic content</td>
+<td>-</td>
+</tr>
+<tr><th>Screenshots</th>
+<td>no</td>
+<td>no</td>
+<td>no</td>
+<td>yes</td>
+</tr>
+<tr><th>Content Summary</th>
+<td>-</td>
+<td>-</td>
+<td>somtimes, but short and as part of rating summary</td>
+<td>lengthy summary provided by publisher</td>
+</tr>
+<tr><th>Customer Reviews</th>
+<td>no</td>
+<td>no</td>
+<td>no</td>
+<td>yes</td>
+</tr>
+<tr><th colspan="5">Content Descriptor Level of Detail</th>
+</tr>
+<tr><th>Violence</th>
+<td>no content descriptor</td>
+<td>existent/nonexistent</td>
+<td>Animated Blood, Blood, Blood and Gore, Cartoon Violence, Fantasy Violence, Intense Violence, Sexual Violence, Violence, Violent References</td>
+<td>None, Infrequent/Mild, Frequent/Intense: Cartoon or Fantasy Violence, Realistic Violence, Prolonged graphic or sadistic realistic violence</td>
+</tr>
+<tr><th>Sex</th>
+<td>no content descriptor</td>
+<td>existent/nonexistent</td>
+<td>Nudity, Partial Nudity, Sexual Content, Sexual Themes, Sexual Violence, Suggestive Themes, Strong Sexual Content</td>
+<td>None, Infrequent/Mild, Frequent/Intense: Sexual Content or Nudity, Mature/Suggestive Themes, Graphic sexual content and nudity</td>
+</tr>
+<tr><th>Fear</th>
+<td>no content descriptor</td>
+<td>existent/nonexistent</td>
+<td>no content descriptor</td>
+<td>None, Infrequent/Mild, Frequent/Intense: Horror/Fear Themes</td>
+</tr>
+<tr><th>Drugs</th>
+<td>no content descriptor</td>
+<td>existent/nonexistent</td>
+<td>Alcohol Reference, Drug Reference, Tobacco Reference, Use of Alcohol, Use of Drugs, Use of Tobacco</td>
+<td>None, Infrequent/Mild, Frequent/Intense: Alcohol, Tobacco or Drug Use or Reference</td>
+</tr>
+<tr><th>Bad Language</th>
+<td>no content descriptor</td>
+<td>existent/nonexistent</td>
+<td>Comic Mischief, Crude Humor, Language, Lyrics, Mature Humor, Strong Language, Strong Lyrics</td>
+<td>None, Infrequent/Mild, Frequent/Intense: Profanity or Crude Humor</td>
+</tr>
+<tr><th>Discrimination</th>
+<td>no content descriptor</td>
+<td>existent/nonexistent</td>
+<td>no content descriptor</td>
+<td>no content descriptor</td>
+</tr>
+<tr><th>Gambling</th>
+<td>no content descriptor</td>
+<td>existent/nonexistent</td>
+<td>Real Gambling, Simulated Gambling</td>
+<td>None, Infrequent/Mild, Frequent/Intense: Simulated Gambling</td>
+</tr>
+<tr><th>Online Interactions</th>
+<td>no content descriptor</td>
+<td>existent/nonexistent</td>
+<td>existent/nonexistent</td>
+<td>no content descriptor</td>
+</tr>
+</tbody>
+</table>
+<p>It should be noted that, while the USK does not provide the reasoning behind ratings on their website, it does write a lengthy summary which can be acquired via email. While this would presumably cut a lot of the "why is X rated N" - "probably because of Y" style discussions on public forums short, the mere fact that there is typically a plethora of these indicates that this offer is only rarely, if ever, utilised. Also the ratings probably only available in German, so foreign readers may feel left out there.</p>
+<p>Further, some of the possible ratings that are provided for in the Apple App Store submission questionnaire will actually automatically prevent a programme from acquiring a distribution licence. These are the <em>Prolonged graphic or sadistic realistic violence</em> and <em>Graphic sexual content and nudity</em> descriptors. Programmes and games where these would apply cannot be found on the App Store proper. Additionally, some content descriptors are deliberately inflated when an App allows the user to browse the web. <a href="https://itunes.apple.com/us/app/chrome/id535886823?mt=8">Google Chrome, for instance, has a rating of "Frequent/Intense Mature/Suggestive Themes"</a> - even though the app itself does not actually contain any such content.</p>
+<h2>The Problem with Different Versions</h2>
+<p>As a software developer, the first thing you'll notice with those database entries is that - with the exception of the Apple App Store - none of the organisations will tell you which version they've rated. While they do tell you which platform they've rated the game on, the databases do not differentiate between different versions of the same game on the same platform.</p>
+<p>A (relatively mild) example of where this would be of interest would be the Windows/OSX/PS2 game <a href="http://en.wikipedia.org/wiki/Giants:_Citizen_Kabuto">Giants: Citizen Kabuto</a>. In the non-US versions of the game, one of the player characters - Delphi - is seen topless in game, whereas in the US version of this game the developers saw fit to provide her with a bikini top - and the blood is now in all sorts of colours. Based on the rating database, it is not possible to tell which version of the game has been rated by the individual organisations. This is something that, in general, happens a lot with all sorts of titles in all sorts of localisations and ports - sometimes it may be something minor like here, other times <a href="http://en.wikipedia.org/wiki/Fallout_(video_game)">certain versions of a game may be quite impossible to beat due to content that has been cut</a>.</p>
+<p>The ratings will typically not include the programme version of a game that has been rated, unless different versions actually receive different titles - such as <a href="http://en.wikipedia.org/wiki/World_of_Warcraft">World of Warcraft (Version 1.x)</a> vs <a href="http://en.wikipedia.org/wiki/World_of_Warcraft:_Mists_of_Pandaria">World of Warcraft: Mists of Pandaria (Version 5.x)</a>.</p>
+<p>Persumably for the same reason, the ratings will typically not specify whether a physical medium contains several language versions - which is fairly common on Steam or European versions of console titles. Which is slightly odd, considering that different translations may use considerably more or fewer instances of <em>bad language</em>, or things like politically problematic material may have been left out entirely. If you've ever seen <a href="http://en.wikipedia.org/wiki/The_Simpsons">the Simpsons</a> in both the English original dub and the German translation, you've probably noticed this, too.</p>
+<p>Different language versions may also significantly alter the mood of a game. For instance the original, English version of <a href="http://en.wikipedia.org/wiki/Hunted:_The_Demon's_Forge">Hunted: The Demon's Forge</a> has a very dark and sinister overall mood. The non-UK European PS3 Blurays of this game, however, do not contain the English dub - they only contain the other European translations of the game. If you buy this game in Germany, expecting it to contain the English dub, you'll find your English PS3 will present you with the French version of the game instead. Now, while it is obvious that at least two of the voice actors for this game were highly motivated and did a good job in general, for some reason this game ended up being involuntarily funny. <em>Tu me fais peur, fillette!</em> - <em>Giggle</em>. I honestly couldn't keep a straight face playing this game, and it's not that I find French funny on principle - <a href="http://en.wikipedia.org/wiki/Deus_Ex:_Human_Revolution">Deus Ex: Human Revolution</a> suffered the same problem, but the game still didn't end up feeling like a comedy because of it, neither did <a href="http://en.wikipedia.org/wiki/The_Elder_Scrolls_V:_Skyrim">TES: Skyrim</a>. Some games just have poor quality dubs, which can affect the overall feel of the game - incidentally, this is why it's a real shame when publishers decide not to include the original dub on a multilingual game disc.</p>
+<p>Now, the reason for this apparent omission in the rating databases is that the rating organisations are typically completely oblivious to the fact that there are different versions of the game - the publisher will just submit one version, the rating organisation will rate that version and the rating will then apply to that version and that version only. It's obviously an unfair move on the part of the publisher, but that's how it is. Now, sadly, this leads to...</p>
+<h2>Prejudice: Censorship</h2>
+<p>Gamers in general will often postulate that cut versions of games are somehow the fault of whatever rating organisation is dominant in their region. German gamers seem to be particularly susceptible to this. This is, however, quite incorrect. While different editions of games may sometimes omit features or even crucial content - and quite often so for the German and American markets - the rating organisations will not approach a publisher and declare they should give the female protagonists bikini tops or change the colour of the hostiles' blood to yellow with smilies - or, at least the USK, the PEGI and the ESRB won't.</p>
+<p>This is a conscious decision by publishers trying to game the system - SCNR - to get lower age ratings. For example, in the US, certain stores - like Walmart - will not stock games with ratings over <em>ESRB's Teen</em> - although Walmart in particular may have changed their policies in the mean time, as their website only states they don't stock <em>ESRB AO</em> titles. By modifying the version presented to the ESRB - and thus, by extension the US consumers - they are thus trying to increase their sales by making sure popular stores will keep their games in stock. In Germany, on the other hand, the publishers are often trying to avoid getting put on one of the BPjM indices, which would prevent them from marketing the game at all, or they're trying to change a likely <em>USK 18</em> rating to a <em>USK 16</em> rating, in order to maximise profits by increasing the buyer base.</p>
+<p>This <em>"censorship"</em> is thus, for all intents and purposes, a <em>marketing decision</em>. One that none of the rating organisations are even told about.</p>
+<p>Although it should be noted that the previously discussed BPjM is somewhat of an exception to this: they are in fact quite capable of exercising their powers to censor media content in Germany. But they only censor titles as a whole, they still don't send a letter to a publisher, demanding they should <a href="http://de.wikipedia.org/wiki/Half-Life#Deutsche_Fassung">change the soldiers in Half-Life to robots, remove most of the blood stains and make sure none of the humans actually die</a>. Censoring complete works by putting it on their B or D indices is quite in their power, but that's about it. And it does make the versioning problem a lot worse: Half-Life 1 is actually on one of their indices, so you can't advertise it in Germany. But that only applies to the non-German version, the latter having been modified as just described and has been rated 16+. Again you wouldn't know which version is which just by looking at the ratings, and they're both by the same publisher, with the same title.</p>
+<p>But, again the USK, PEGI, ESRB et al have nothing to do with this. On the contrary: as mentioned before a rating by the USK will, in fact, prevent the BPjM from doing their thing. So there's no reason to complain about their work. It would be much more sensible to complain about this to the publishers if they don't show enough chutzpah to include a warning sticker on their back matter if they cut things - as Steam does with their <em>"Low Violence: Low Violence Version"</em> note in their store directory - or to just not localise a game if they can't get the desired rating - as Warner Bros. Interactive Entertainment did with <a href="http://en.wikipedia.org/wiki/Mortal_Kombat_(2011_video_game)">Mortal Kombat 2011</a>. Since cuts are nothing more than a marketing decision, let it be known that most adults will in fact go out on a limb to buy their games abroad if they can't get a localised version. So show some back bone, will ya?</p>
+<h2>Prejudice: Organisation X is Stricter than Others</h2>
+<p>This one is also fairly common with German games - you'll find a lot of them asking store clerks for "PEGI versions" on general principle, because they'll simply assume the USK would issue much stricter ratings than the PEGI. Ironically <a href="http://www.gamesindustry.biz/articles/2012-06-26-pegi-is-stricter-than-the-bbfc-were-not-ashamed-of-that-vsc">the British thought the same about the PEGI ratings when they switch to those in favour of their own BBFC</a>. Now, I'm a computer scientist, and this is clearly quite an unlikely scenario. So I did what we always do in a case like this, I ran some numbers with R:</p>
+<img src="/svg/age-rating-distribution" alt="age rating distribution - absolute"/>
+<p>This first plot shows the number of ratings the individual organisations have in their database - as found on their website. The x axis represents the rated age of a game, the number of such ratings is on the y axis. The red circles are ESRB ratings, green are PEGI and blue are USK. The black circle is the number of games on the public indices as published in the statistics section of the BPjM. You'll notice the quite obvious clustering near most of the higher ratings, and a very similar curve for the three organisations starting at around 9-10.</p>
+<img src="/svg/age-rating-distribution-1" alt="age rating distribution - relative, cumulative"/>
+<p>Since the organisations have not all rated the exact same number of games, we're now looking at a relative, cumulative plot of these ratings. The y axis is now the relative number of games that have been rated the age on the y axis or lower. Obviously the lines will all meet at the same point - 100% at age 18. I've also added a new, pink line which represents the ratings performed by the USK and BPjM combined - all of the latter simply count as 18+ for most intents and purposes - to prevent people from claiming that would skew the stats and make the USK look less strict.</p>
+<p>A higher number on the y axis at a lower age compared to another organisation on this plot means, that there are more games available for someone of that age based on that organisations' ratings.</p>
+<p>Which means: the strictest ratings, statistically, on average, are indeed issued by the PEGI. Well, German gamers, ain't that a kick in the teeth? Ok, there's one more way we can look at this: since the different organisations use different age categories, this plot isn't quite fair just yet. To make it slightly better to compare in light of this, we'll have a look at a linear interpolation of the data we have:</p>
+<img src="/svg/age-rating-distribution-2" alt="age rating distribution - relative, cumulative, with linear interpolation"/>
+<p>Same results - who'da thunk? The PEGI is indeed the strictest of the lot - even if we account for the BPjM's doings. But at the same time we can also see that all of them have very similar curves - similar enough for the differences to be statistically insignificant for most intents and purpose. The largest differences are, in fact, in the <em>lower</em> age ranges, and most of those are easily explained with the different minimum ages in the organisations' systems.</p>
+<p>The only logical conclusion here is that the main difference between the ratings are different weights for the individual contributing factors. Everything else would lead to quite dissimilar curves in that last graph. Sadly, this is by definition a very subjective matter, so I won't be able to cover this in more detail. But if you're interested in working this out yourself, you could <a href="http://en.wikipedia.org/wiki/ESRB#Content_descriptors">head over to wikipedia and have a look at their summary of the different ESRB content descriptors</a>, or <a href="/pdf/PEGI%20Questionnaire%202013">have a look at PEGI's content questionnaire for publishers</a>. Both of those give quite a bit of insight into the weighting employed by those organisations, but keep in mind that the actual ratings are still worked out by actual, real people. Which means they're still subjective by definition.</p>
+<p>Also, if you're interested, <a href="/src/age-rating-distribution.r">the R programme that generated these graphs is available for download right here</a>, or <a href="source-code">via this site's GIT repository</a>.</p>
+<h1>F/OSS-Specific Problems</h1>
+<p>The whole age rating process is, as is quite apparent, designed to fit the "classic" developer/publisher/physical media scenario. This makes a lot of sense in principle, but if you consider how free/open source software works you'll find that things get quite hairy, quite fast. This is because, with F/OSS projects, typically a developer works without a separate publisher, without any physical media and without any budget. Instead, the developer will tpyically publish their content themselves, for free, while allowing public access to their development versioning system servers. Any actual budget tends to be via Flattr or anonymous donations.</p>
+<p>Basically, a traditional publisher's worst nightmare is the typical, common, deliberate situation with F/OSS. That this will raise problems with the classic methods employed to protect minors should be obvious. On the bright side, there is no law forcing any F/OSS developers to actually get their content rated - it's still just as voluntary as it would be for regular publishers.</p>
+<p>Note that I'll specifically be dealing with F/OSS here, but a lot of this should apply to indie developers in general, too.</p>
+<h2>Administrative Fees</h2>
+<p>It sounds stupid, I know, but I still have to reiterate this point regardless: F/OSS developers will, with very few exceptions, have no budget whatsoever for their creations. It doesn't matter if they're developing a new window manager, system software of some kind or games. It might be possible to raise some funding with sponsors, but that's generally not going to happen until they've managed to churn out some releases. Until then the budget is somewhere between nonexistent and whatever the devs can spare - also typically nonexistent, save maybe for just enough to pay the server bills.</p>
+<p>PEGI, USK and ESRB obviously don't offer their services for free - which is perfectly natural, considering the amount of work they have to do. Depending on the type of game you're trying to get rated and the rating organisation you're trying to have it rated by, those fees will be somewhere between EUR 250 and EUR 1500 - per version. This is definitely a fair price, but if you consider the sheer number of distinct versions a F/OSS game may have, and the complete lack of a budget, it's nearly impossible for any developers to foot that bill.</p>
+<h2>The Problem with Different Versions - Reloaded</h2>
+<p>While identifying different versions is a mere nuisance with regular titles, with F/OSS titles it's nothing short of crippling. F/OSS typically follows the mantra <em>release early, release often</em> - something you're definitely <em>not</em> going to find in traditional media. Some projects will churn out releases on a daily basis - with hourly commits to their source control systems. Because of this, different versions of a game will sometimes be radically different. While you'll be hard pressed to find even a single game that has been adjusted for a certain market - censorship, voluntary or otherwise, doesn't sit well with software developers in general - you may find differences as radical as <a href="http://en.wikipedia.org/wiki/Nethack">a text based RPG turning into an isometric game with fancy-ish graphics</a>. A single player game could offer multi player modes in the next release - or vice versa, if someone thought it'd be neat to have bots and implemented an AI. Hell, if there's ever going to be a F/OSS dating sim, somone, somewhere is probably going to add a <a href="http://tvtropes.org/pmwiki/pmwiki.php/Main/BFG">BFG</a> on general principle. Don't think that's likely? Well, <a href="http://psdoom.sourceforge.net/">we have a friggin' Doom-based task manager</a>, so the BFG thing doesn't seem all that unusual in comparison.</p>
+<p>And that brings us to the next problem with F/OSS in this context: forks and ports. In principle, everyone can check out the current version of a F/OSS programme's source code and create their own, possibly completely new game based on that source code. That's why it's called free/open source software. Case in point: id Software will often release the game engines that power their games as open source software, once they lose interest in marketing the game it powered. And they're not the only company to do this. Given that, it's entirely likely that Doom will, all of a sudden, not just run on DOS but also <a href="http://doom.wikia.com/wiki/Text_Mode_Doom">in a Unix text console</a>. Or <a href="https://github.com/kripken/emscripten/wiki">someone will get the Unreal 3 engine to work in a web browser</a>. Or <a href="http://ufoai.org/">the Quake 2 engine might get repurposed for an X-COM clone</a>.</p>
+<p>Then there's the thing about game resources. These published game engines by id Software, for example, do not actually contain the game data files that make up a complete video game - no levels, no sounds, no models, etc. In principle, these engines themselves shouldn't get anyone in trouble - unless they allow for some really weird things, I'd suppose - but <a href="http://www.nongnu.org/freedoom/">there often are projects to create free game data sets as well</a> - possibly even reusing demo or shareware content of those games. Does FreeDoom qualify as being sufficiently similar to Doom to warrant the same ratings automatically? Maybe. You could get a rating for that from some organisations, but obviously that'll cost you. And it is, for example, exceedingly unlikely that an American open source developer would even consider doing so for any European markets.</p>
+<p>With the version control services of some of these projects being completely open to the public, and commits getting checked in literally all the time, it's quite unfeasible to rate most of these games. Even if a developer went ahead and got each of their releases rated, with their CVS/SVN/GIT/Mercurial/... server being open the next check in could already make that rating obsolete. And then you'd still wonder which version the rating did apply to in the first place.</p>
+<h2>Software Distributions</h2>
+<p>With F/OSS being open the way it is, it should come as no surprise that even open operating systems have a plethora of different versions. With Linux, for example, there is Debian, Ubuntu, Arch, RedHat, <a href="http://distrowatch.com/">and thousands of other</a>, so-called <em>distributions</em>. And, of course, there's new releases of those every couple of months. And online post-release updates.</p>
+<p>The actual software with these distributions is provided in so-called <em>packages</em>. These range from harmless office applications, such as OpenOffice, to system software like the Linux kernel, compilers, X.org, to web browsers like Firefox, Chromium or even Links, to a large number of games. All in all, a typical, major distribution will include a significant part of the available open source software on the internet. And so do the distributions' DVD sets. <a href="http://packages.debian.org/stable/allpackages">Debian, for instance, includes games ranging from harmless Minesweeper and Tetris clones to ports of the Doom engine along with open game content sets like FreeDoom</a>. Ok, admittedly we still don't know if FreeDoom would get the same rating as Doom, and by now Doom itself is no longer on any of the BPjM's indices. Instead it's rated 16+ by the USK. But the FreeDoom data files are definitely quite similar to the original, so it's not much of a stretch to assume they'd get a 16+ rating, too. The Debian DVD set, however, is certainly not rated 16+. But it is available in stores all over the globe. <a href="http://www.debian.org/CD/vendors/#de">Including in Germany</a>. Sometimes even as a cover disk in computer magazines - which didn't receive a 16+ rating either. So FreeDoom is, all of a sudden - quite possibly even without the author knowing - available on physical media.</p>
+<p>And that's where things start to get really messy. In Germany, for instance, without a rating the game would have to be considered 18+. But rating all of Debian 18+ because of some games it includes doesn't make much sense, as kids these days are quite capable of choosing and installing their own operating system on their hardware. I did it when I was 14 when I got my first Linux CD set from my sister, and that was years ago, back when installing Linux wasn't as easy as clicking yes a couple times and typing in your name. It taught me a lot about computers in general, about the hardware I had and the software I could run - or even write myself, thanks to the bundled collection of compilers. This is not something you'd want to limit to grown ups - you want children to learn these things at an early age - in their teens at the latest. But, well, I don't even remember if these CDs contained a Doom clone or not - and back then Doom was still rated as quite dangerous to children in Germany. Statistically, I'd say it probably did include one version of the game or another. And that could be all the leverage a motivated open source opponent would need to do some serious harm to the community as a whole. And that, that would be really bad for everyone, in the long run.</p>
+<p>Oh, did I mention distributors will often apply all manner of patches to the programmes they ship? Yeah, that versioning thing just got that much more complicated, too.</p>
+<p>This kind of versioning problem isn't specific to F/OSS, by the way. Ivar Posthumus put it quite nicely, saying:</p>
+<blockquote><p>Let's take Doom and it's clones:<br/>
+Doom 3 has a PEGI 18. This game can be released on all PC operating systems if they have a PEGI license. Our license only applies to this version of the game, published by that specific publisher.<br/>
+Now let’s say Doom 3 is being re-released in 4 years. Perhaps it gets tweaked a bit, a DLC is added, who knows what happens. When the original content is altered, the game needs to be re-examined.
+If the game isn't altered (stays 100% identical), but a new publisher wishes to re-release the game. The new publisher has to have an agreement with the original publisher they can re-release it, and we'll make a so called sublicense.<br/>
+This way we know that a new publisher is also selling Doom 3 with our classification.<br/>
+All the open source spinoffs, add-ons, map packs, texture packs, mods etc. are not covered by our rating, since it only applies to the original submitted content.<br/>
+[However...]<br/>
+It may look like official DLC's and version updates need to be examined by PEGI. This is not the case. A game can receive all the normal updates, changing the balance in the game, patching x or y, adding menu features that weren't working properly etc. When a publisher releases a DLC, it does not have to be examined if the content of the dlc doesn't alter the age rating. Only if the DLC would alter the ratings (let's say; add 18 violence to a 16 game), or if the DLC would become be available as a physical boxed product in the stores, would it have to be examined.</p></blockquote>
+<p>This last part bears special significance, in that it suggests that regular (online) post-release updates and patches would not require a new rating under most circumstances. This is very fortunate with respect to, say, an OS distribution.</p>
+<h2>Jurisdiction</h2>
+<p>A lot of these problems are a direct consequence of how F/OSS in general has a global target audience - or rather they don't have an explicit target audience and with everything being open like that it gets used across the globe - and the developing community is also spread across the globe. Sometimes the developers even act completely anonymously - for various reasons, not the least of which is that with some kinds of software they could compromise a project if they openly admitted to committing certain changes. Export regulations and all. Now, obviously you can't expect a single developer - working for free, no less - to figure out the intrinsics of every law in every country regarding the protection of minors. They don't have the time. They aren't lawyers. They don't even get paid. And with the potential repercussions ranging from "none" to "you're not allowed to advertise, import or even talk about it in public in that country", that would be requiring way too much of them. And it'd be unlikely that even if they did try to figure it all out, that they'd be able to interpret it the same way as the locals.</p>
+<p>A corollary of this is that this is really, really, hard to regulate in any meaningful way. Let's use FreeDoom as an example, again: let's assume this would have to be rated 18+ or would even make BPjM's index. A German lawyer or a representative of the BPjM would be well within their rights to send the developers a warning and demand the content be taken offline. Now, assuming the devs behind FreeDoom aren't German, they'd probably ignore that. So the BPjM would then, possibly, put the site hosting FreeDoom on one of their indices. Which would make sure this content wouldn't show up in search results. But there'd still be a lot of links to that content on a lot of web sites - distribution sites that ship FreeDoom, for instance. So, consequently, these sites would then point to legally problematic content in Germany - which might also net them the same warning and possibly a place on one of those indices. Not to mention the guys that actually sold Debian DVDs. Ad recursivum. And sooner or later, half the open source web out there won't be available in Germany, unless you happen to have remembered the link to one of them. That's a very slippery slope, right there - and unacceptable collateral damage.</p>
+<h1>Summary</h1>
+<p>At the end of the day, most organisations that rate games do so in quite a similar way - but there is a bit of variance with the legal repercussions those ratings could have, depending on the organisation and the region you're in. If you're a parent, just pick one and stick with it - it'd probably be a good idea to check out the others' ratings on their website, to get a better idea of the content involved. Or, better yet: play the game yourself before you get it for your kids' Hanukkah/Winter Solstice/whatever. That's probably a good idea in general, since you should know what's best for your kids.</p>
+<p>With F/OSS, on the other hand, things are still a bit grim indeed. There's no sensible way to have the systems currently in place apply to open source games - and that's something that's quite impossible to fix on the F/OSS side of things, because its very nature conflicts with the established organisations' MO. I mean, I'm quite certain nobody even thought that including games in their OS distribution could be problematic in any way - much less so because of this angle. But it is. And making all OS distributions 18+ by default is not going to help much, either. So here's me hoping someone can come up with something, before anyone gets their first warning letter from a lawyer - or the BPjM.</p>
+<p>And if you happen to be a F/OSS developer, probably the only thing you can do is to be quite conservative and simply assume your game will be 12+ or 16+ if that's even remotely conceivable. If so, just tag your things with an approved age rating system for web sites - if you happen to read German, <a href="http://www.usk.de/extramenue/login/publisher/weitere-leistungen/labelgenerator/">try this label generator over at the USK's site</a>. Just, you know, to be on the safe side.</p>
+</body>
+</html>

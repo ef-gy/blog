@@ -3,6 +3,8 @@
   <title>ef.gy</title>
   <subtitle>Articles</subtitle>
 
+  <entry xlink:href="on-age-rating.xhtml" />
+  <entry xlink:href="digitaler-jugendschutz.xhtml" />
   <entry xlink:href="hollywood-algorithmik.xhtml" />
   <entry xlink:href="postgresql:markov-chains.xhtml" />
   <entry xlink:href="site-news:disqus.xhtml" />

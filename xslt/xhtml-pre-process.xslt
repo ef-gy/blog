@@ -3,6 +3,7 @@
               xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
               xmlns:xhtml="http://www.w3.org/1999/xhtml"
               xmlns:svg="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
               xmlns="http://www.w3.org/1999/xhtml"
               version="1.0">
   <xsl:output method="xml" version="1.0" encoding="UTF-8"
@@ -27,6 +28,23 @@
   </xsl:template>
 
   <xsl:template match="svg:*[@id='gnuplot_canvas']//@id"/>
+
+  <xsl:template match="svg:symbol/@id">
+    <xsl:attribute name="id"><xsl:value-of select="generate-id(..)"/></xsl:attribute>
+  </xsl:template>
+
+  <xsl:template match="svg:*[descendant::svg:symbol]//svg:use/@xlink:href">
+    <xsl:variable name="hr" select="substring-after(.,'#')"/>
+    <xsl:variable name="newid" select="concat('#',generate-id(//svg:symbol[@id=$hr]))"/>
+    <xsl:choose>
+      <xsl:when test="$newid != '#'">
+        <xsl:attribute name="xlink:href"><xsl:value-of select="$newid"/></xsl:attribute>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy-of select="."/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
   <xsl:template match="xhtml:img/@src[substring-before(., '/') = '']">
     <xsl:attribute name="src">

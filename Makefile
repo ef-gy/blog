@@ -13,6 +13,7 @@ BUILDTMP:=$(shell pwd)/$(BUILD)/tmp
 # programmes
 XSLTPROC:=xsltproc
 GNUPLOT:=gnuplot
+R:=R
 KINDLEGEN:=kindlegen
 INKSCAPE:=inkscape
 ZIP:=zip
@@ -34,6 +35,7 @@ PMML2SVG:=$(BUILD)/$(PMML2SVGZIPBASE)/XSLT2/pmml2svg.xsl
 # source files
 XHTMLS:=$(wildcard *.xhtml)
 PLOTS:=$(filter-out src/flash-integrity.plot,$(wildcard src/*.plot))
+RS:=$(wildcard src/*.r)
 DOCUMENTS:=$(filter-out source-code.xhtml about.xhtml,$(wildcard *.xhtml) $(wildcard *.atom))
 
 # escaped file names
@@ -47,7 +49,7 @@ PDFS:=$(addsuffix .pdf,$(BUILDRAW))
 OPFS:=$(addsuffix .opf,$(BUILDRAW))
 MOBIS:=$(addsuffix .mobi,$(BUILDRAW))
 EPUBS:=$(addsuffix .epub,$(BUILDRAW))
-SVGS:=$(addsuffix .svg,$(basename $(notdir $(PLOTS))))
+SVGS:=$(addsuffix .svg,$(basename $(notdir $(PLOTS))) $(basename $(notdir $(RS))))
 OPFXHTMLS:=$(addprefix $(BUILD)/,$(addsuffix .opf.xhtml,$(basename $(notdir $(wildcard *.xhtml)))))
 
 # escaped target file names
@@ -258,12 +260,16 @@ $(BUILD)/%.epub: $(BUILD)/%/publication.opf $(BUILD)/%/ef.gy.book.css $(BUILD)/%
 	rm -f $@
 	cd $(BUILD)/$* && $(ZIP) -0 ../$(notdir $@) mimetype && $(ZIP) ../$(notdir $@) META-INF/container.xml publication.opf $(shell $(XSLTPROC) xslt/opf-print-manifest.xslt $<)
 
-# pattern rules for gnuplot graphs
+# pattern rule for gnuplot graphs
 %.svg: src/%.plot src/flash-integrity.plot xslt/clean.xslt
 	$(GNUPLOT)\
 		-e 'set terminal svg size 1200,600 dynamic fname "sans-serif"'\
 		$< > $@
 	$(XSLTPROC) $(XSLTPROCARGS) -o $@ xslt/clean.xslt $@
+
+# pattern rule for R graphs
+%.svg: src/%.r
+	$(R) --no-save < $<
 
 # pattern rule to generate directory indices
 $(INDICES): Makefile $(filter-out %index.atom, $(wildcard download/*))
