@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>sr4.sql: a SQLite based Shadowrun character generator</title>
+<meta name="author" content="Nadja Deininger" />
+<meta name="description" content="Still working on that character generation database." />
+<meta name="date" content="2013-07-10T15:44:00Z" />
+<meta name="mtime" content="2013-07-105T15:44:00Z" />
+<meta name="category" content="Projects" />
+<meta name="unix:name" content="sr4-sql-2" />
+</head>
+<body>
+<h1>So I'm still working on that thing...</h1>
+<p>With the PDF release of 5th edition just around the corner, you'd think it's obsolete, but I'm looking forward to checking out Fifth Edition and translating it to SQL, too... well, the latter, not so much. It's pretty clear the rules are designed to be interpreted by humans, not computers, so the SQL is getting more complex and bloated than I'd like. I heard they streamlined the rules quite a bit in Fifth Edition though, so this bodes well for sr5.sql. 
+</p>
+<p>Anyway I've been working on the Fourth Edition version, as time permitted, and I've got a couple of new features for you:
+<ul>
+<li>BP cost for skill specialisations</li>
+<li>BP costs for spells and complex forms</li>
+<li>BP costs for registered sprites at character generation</li>
+<li>Skill groups</li>
+<li>Essence cost computation</li>
+<li>Reduction of maximum Magic and Resonance attribute by Essence loss</li>
+<li>native languages for characters</li>
+</ul>
+Don't worry, magic users - your foci and bound spirits are still on my list. You're gonna get your toys, it's just that I'm quite fond of technomancers, so they got theirs first in this release. It's your turn in the next one though. By the way, for the time being this database only works correctly for starting characters - character advancement is on my list, so you'll eventually be able to maintain a current copy of your shadowrunner through the database, but right now all you can do is create a new one.
+</p>
+
+<h1>So how do I use this?</h1>
+<p>For now, there's really just the database, no GUI or CLI front end yet. A web-based front end is planned; I'm probably going to start working on it after this release. Feel free to grab the database and write your own front end, web based or not; if you do that and tell me about your project I'll be happy to link to it.</p> 
+<p>The public git repository for sr4.sql is here: <a href="http://git.becquerel.org/?p=machinelady/sr4.sql.git">http://git.becquerel.org/?p=machinelady/sr4.sql.git</a>, if you'd like to browse the source code or grab a tarball; or you could clone the repository using <pre><code>$ git clone git://git.becquerel.org/machinelady/sr4.sql.git</code></pre>, which will create a directory named 'sr4.sql'. Run sr4.sh to concatenate the SQL files and feed them to SQLite; if you'd like to add user-generated content, I put all the data about spells, gear and the like into sr4data.sql, so you could edit that file or create your own.</p>
+
+<h1>What's next?</h1>
+<p>There are a bunch of features still on my to-do list, so here's an overview of what's coming in the next few releases.
+<ul>
+<li>BP costs for bound spirits and foci at character generation</li> 
+<li>Support for Aptitude and Exceptional Attribute qualities</li>
+<li>More data entry, and book references</li>
+<li>Karma character generation and character development</li>
+<li>A bit more fine tuning: maximum skill ratings and the like</li>
+<li>Character advancement</li>
+</ul>
+If I overlooked anything crucial, or you'd simply like a feature that's not yet on this list, <em>or</em> if you've simply got something encouraging or constructive to say about the project, do let me know - either use the comment function, or email me at <a href="mailto:nadja@ef.gy">nadja at ef dot gy</a> - or ping me on Google+, I'm using my real name there, or even on Twitter (@machine_lady there). Enjoy!
+</p>
+</body>
+</html>
