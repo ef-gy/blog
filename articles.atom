@@ -3,6 +3,7 @@
   <title>ef.gy</title>
   <subtitle>Articles</subtitle>
 
+  <entry xlink:href="scrambled-eggs.xhtml" />
   <entry xlink:href="on-age-rating.xhtml" />
   <entry xlink:href="hollywood-algorithmik.xhtml" />
   <entry xlink:href="postgresql:markov-chains.xhtml" />
