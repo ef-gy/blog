@@ -57,7 +57,15 @@
     <xsl:variable name="author" select="@name"/>
     <xsl:variable name="authordata" select="$authors[@name=$author][1]"/>
     <address>
-    <span class="profile">Author Profile: <xsl:value-of select="@name"/></span>
+    <xsl:choose>
+      <xsl:when test="@author-box='yes'">
+        <xsl:attribute name="class">author-box</xsl:attribute>
+        <span>Written by <xsl:value-of select="@name"/></span>
+      </xsl:when>
+      <xsl:otherwise>
+        <span>Author Profile: <xsl:value-of select="@name"/></span>
+      </xsl:otherwise>
+    </xsl:choose>
     <ul class="social-grid">
       <xsl:if test="$authordata/@image">
         <li class="image"><img src="{$authordata/@image}" alt="Author Mugshot: {@name}"/></li>

@@ -137,6 +137,7 @@
   <xsl:template match="xhtml:body">
     <body>
       <xsl:variable name="author" select="/xhtml:html/xhtml:head/xhtml:meta[@name='author']/@content"/>
+      <xsl:variable name="authordata" select="$authors[@name=$author][1]"/>
       <xsl:apply-templates select="@*" />
       <h1><xsl:value-of select="/xhtml:html/xhtml:head/xhtml:title"/></h1>
       <ul>
@@ -245,18 +246,8 @@
           </xsl:choose>
         </xsl:if>
       </xsl:if>
-      <xsl:variable name="authordata" select="$authors[@name=$author][1]"/>
       <xsl:if test="$author != ''">
-        <xsl:choose>
-          <xsl:when test="$authordata"><address>
-            <a rel="author" href="{$authordata/@uri}">
-              <span>Written by <span><xsl:value-of select="$authordata/@display"/></span>.</span> <xsl:copy-of select="$authordata/text() | $authordata/*"/>
-            </a>
-          </address></xsl:when>
-          <xsl:otherwise><address>
-            <span>Written by <span><xsl:value-of select="$author"/></span></span>
-          </address></xsl:otherwise>
-        </xsl:choose>
+        <social:grid author-box="yes" name="{$author}"/>
       </xsl:if>
     </body>
   </xsl:template>

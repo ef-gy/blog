@@ -48,6 +48,13 @@ body
 	padding: 3.5em 2em 2em 2em;
 }
 
+body:after
+{
+    display: block;
+    content: " ";
+    clear: both;
+}
+
 h1, h2, h3, h4, h5, h6
 {
 	font-family: Verdana, Helvetica, sans-serif;
@@ -850,7 +857,7 @@ li.skype
 li.skype a:before
 {
   color: #fff;
-  content: "S";
+  content: "s";
 }
 ul.social-grid li.bio
 {
@@ -874,7 +881,7 @@ ul.social-grid li.image img
 {
   width: 10em;
 }
-address span.profile
+address span
 {
   display: block;
   background: #f9f9f9;
