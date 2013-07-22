@@ -5,8 +5,9 @@
               xmlns:social="http://ef.gy/2012/social"
               xmlns:atom="http://www.w3.org/2005/Atom"
               xmlns:georss="http://www.georss.org/georss"
+              xmlns:data="http://ef.gy/2013/data"
               xmlns="http://www.w3.org/1999/xhtml"
-              exclude-result-prefixes="xhtml social atom georss xsl"
+              exclude-result-prefixes="xhtml social atom georss xsl data"
               version="1.0">
   <xsl:output method="xml" version="1.0" encoding="UTF-8"
               doctype-public="-//W3C//DTD XHTML 1.1//EN"
@@ -18,6 +19,9 @@
   <xsl:preserve-space elements="xhtml:pre" />
 
   <xsl:param name="userCountry"/>
+  <xsl:param name="documentRoot"/>
+
+  <xsl:variable name="authors" select="document(concat($documentRoot,'/authors.xml'))/data:data/data:author"/>
 
   <xsl:template match="@*|node()">
     <xsl:copy>
@@ -49,9 +53,57 @@
     </xsl:if>
   </xsl:template>
 
+  <xsl:template match="social:grid">
+    <xsl:variable name="author" select="@name"/>
+    <xsl:variable name="authordata" select="$authors[@name=$author][1]"/>
+    <address>
+    <span class="profile">Author Profile: <xsl:value-of select="@name"/></span>
+    <ul class="social-grid">
+      <xsl:if test="$authordata/@image">
+        <li class="image"><img src="{$authordata/@image}" alt="Author Mugshot: {@name}"/></li>
+      </xsl:if>
+      <xsl:if test="$authordata/@skype">
+        <li class="skype"><a href="{$authordata/@skype}">Skype</a></li>
+      </xsl:if>
+      <xsl:if test="$authordata/@twitter">
+        <li class="twitter"><a href="https://twitter.com/{$authordata/@twitter}">Twitter</a></li>
+      </xsl:if>
+      <xsl:if test="$authordata/@linkedin">
+        <li class="linkedin"><a href="http://www.linkedin.com/in/{$authordata/@linkedin}">LinkedIn</a></li>
+      </xsl:if>
+      <xsl:if test="$authordata/@facebook">
+        <li class="facebook"><a href="https://www.facebook.com/{$authordata/@facebook}">Facebook</a></li>
+      </xsl:if>
+      <xsl:if test="$authordata/@xing">
+        <li class="xing"><a href="http://www.xing.com/profiles/{$authordata/@xing}">Xing</a></li>
+      </xsl:if>
+      <xsl:if test="$authordata/@googleplus">
+        <li class="googleplus"><a href="https://plus.google.com/{$authordata/@googleplus}">Google+</a></li>
+      </xsl:if>
+      <xsl:if test="$authordata/@flattr">
+        <li class="flattr"><a href="https://flattr.com/profile/{$authordata/@flattr}">Flattr</a></li>
+      </xsl:if>
+      <xsl:if test="$authordata/@email">
+        <li class="email"><a href="mailto:{$authordata/@email}">E-Mail</a></li>
+      </xsl:if>
+      <xsl:if test="$authordata/@irc">
+        <li class="irc"><a href="{$authordata/@irc}">IRC</a></li>
+      </xsl:if>
+      <xsl:if test="$authordata/@phone">
+        <li class="phone"><a href="tel:{$authordata/@phone}">Phone</a></li>
+      </xsl:if>
+      <xsl:if test="$authordata/text()">
+        <li class="bio"><xsl:copy-of select="$authordata/* | $authordata/text()"/></li>
+      </xsl:if>
+    </ul>
+    </address>
+  </xsl:template>
+
   <xsl:template match="social:social">
     <ul id="social">
-      <li class="twitter"><a href="https://twitter.com/share?url={@url}&amp;via={@twitter}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">Twitter</a></li>
+      <xsl:if test="@twitter">
+        <li class="twitter"><a href="https://twitter.com/share?url={@url}&amp;via={@twitter}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">Twitter</a></li>
+      </xsl:if>
       <li class="linkedin"><a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">LinkedIn</a></li>
       <li class="facebook"><a href="http://www.facebook.com/sharer.php?u={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=630');return false;">Facebook</a></li>
       <li class="xing"><a href="https://www.xing.com/app/user?op=share&amp;url={@url}" onclick="javascript:window.open(this.href,'','');return false;">Xing</a></li>

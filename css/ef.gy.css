@@ -680,15 +680,25 @@ ul#social
   height: 1em;
   overflow: hidden;
 }
-ul#social:hover
+ul.social-grid
+{
+  display: block;
+  padding: 2em 8em 0 0;
+  margin: 0 0 0 -2em;
+  overflow: visible;
+}
+ul#social:hover,
+ul.social-grid:hover
 {
   overflow: visible;
 }
-ul#social:hover li
+ul#social:hover li,
+ul.social-grid:hover li
 {
   position: relative;
 }
-ul#social li
+ul#social li,
+ul.social-grid li
 {
   display: inline-block;
   margin: -1em 0 0 0;
@@ -699,12 +709,19 @@ ul#social li
   vertical-align: top;
   height: 1.9em;
 }
-ul#social li a:before
+ul.social-grid li
+{
+  margin: 0;
+  width: 4em;
+}
+ul#social li a:before,
+ul.social-grid li a:before
 {
   display: inline-block;
   width: 2em;
 }
-ul#social li a
+ul#social li a,
+ul.social-grid li a
 {
   display: inline-block;
   width: 2em;
@@ -714,11 +731,13 @@ ul#social li a
   color: transparent;
   text-decoration: none;
 }
-ul#social li:hover
+ul#social li:hover,
+ul.social-grid li:hover
 {
   width: 10em;
 }
-ul#social li:hover a
+ul#social li:hover a,
+ul.social-grid li:hover a
 {
   width: 10em;
   color: inherit;
@@ -792,6 +811,78 @@ li.flattr a:before
 {
   color: #fff;
   content: "fl";
+}
+li.email
+{
+  background: #080;
+  color: #fff;
+}
+li.email a:before
+{
+  color: #fff;
+  content: "@";
+}
+li.irc
+{
+  background: #050;
+  color: #fff;
+}
+li.irc a:before
+{
+  color: #fff;
+  content: "I";
+}
+li.phone
+{
+  background: #000;
+  color: #fff;
+}
+li.phone a:before
+{
+  color: #fff;
+  content: ":/";
+}
+li.skype
+{
+  background: #00aff0;
+  color: #fff;
+}
+li.skype a:before
+{
+  color: #fff;
+  content: "S";
+}
+ul.social-grid li.bio
+{
+  padding: 1em 2em;
+  display: block;
+  width: auto;
+  height: auto;
+}
+ul.social-grid li.image
+{
+  padding: 0;
+  margin: 0;
+  display: block;
+  float: right;
+  width: auto;
+  position: absolute;
+  top: 0;
+  right: 0
+}
+ul.social-grid li.image img
+{
+  width: 10em;
+}
+address span.profile
+{
+  display: block;
+  background: #f9f9f9;
+  padding: 0.5em 2em;
+  margin: -2em;
+  font-size: inherit;
+  color: #000;
+  font-weight: bold;
 }
 ul#hardcopies
 {

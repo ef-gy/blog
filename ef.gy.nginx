@@ -30,7 +30,7 @@ server {
     xslt_string_param documentRoot $documentRoot;
     xslt_string_param userAgent $http_user_agent;
     xslt_string_param userCountry $geoip_country_code3;
-    xslt_string_param cookie $cookie_o;
+    xslt_string_param cookieDisqus $cookie_disqus;
 
     if ($request_uri ~ \?.*$ )
     {
