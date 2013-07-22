@@ -7,7 +7,7 @@
               xmlns:data="http://ef.gy/2013/data"
               xmlns:math="http://www.w3.org/1998/Math/MathML"
               xmlns="http://www.w3.org/1999/xhtml"
-              exclude-result-prefixes="xhtml"
+              exclude-result-prefixes="xhtml data"
               version="1.0">
   <xsl:output method="xml" version="1.0" encoding="UTF-8"
               doctype-public="-//W3C//DTD XHTML 1.1//EN"
@@ -19,6 +19,9 @@
   <xsl:param name="collection"/>
   <xsl:param name="userCountry"/>
   <xsl:param name="cookie"/>
+  <xsl:param name="documentRoot"/>
+
+  <xsl:variable name="authors" select="document(concat($documentRoot,'/authors.xml'))/data:data/data:author"/>
 
   <data:month-name number="01">January</data:month-name>
   <data:month-name number="02">February</data:month-name>
@@ -55,7 +58,8 @@
     <xsl:variable name="entries" select="xhtml:meta[@name='context']/atom:feed/atom:entry"/>
     <xsl:variable name="pre" select="$entries[atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name'][@content=$myname]]/preceding-sibling::*[1]"/>
     <xsl:variable name="post" select="$entries[atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name'][@content=$myname]]/following-sibling::*[1]"/>
-    <xsl:variable name="author" select="/xhtml:html/xhtml:head/xhtml:meta[@name='author']/@content"/>
+    <xsl:variable name="author" select="xhtml:meta[@name='author']/@content"/>
+    <xsl:variable name="authordata" select="$authors[@name=$author][1]"/>
     <head>
       <link href="/css/ef.gy" rel="stylesheet" type="text/css" />
       <xsl:if test="not(($collection = 'fortune') or ($collection = 'about') or ($collection = 'source-code'))">
@@ -103,17 +107,11 @@
           </xsl:when>
         </xsl:choose>
       </xsl:if>
-      <xsl:if test="xhtml:meta[@name='author']">
-        <xsl:choose>
-          <xsl:when test="$author='Magnus Achim Deininger'">
-            <link rel="author" href="https://plus.google.com/112902745191014401433"/>
-            <link rel="author" href="https://twitter.com/jyujinX"/>
-          </xsl:when>
-          <xsl:when test="($author='Nadja Deininger') or ($author='Nadja Klein')">
-            <link rel="author" href="https://plus.google.com/109198047025182113685"/>
-            <link rel="author" href="https://twitter.com/machine_lady"/>
-          </xsl:when>
-        </xsl:choose>
+      <xsl:if test="$authordata/@googleplus">
+        <link rel="author" href="https://plus.google.com/{$authordata/@googleplus}"/>
+      </xsl:if>
+      <xsl:if test="$authordata/@twitter">
+        <link rel="author" href="https://twitter.com/{$authordata/@twitter}"/>
       </xsl:if>
     </head>
   </xsl:template>
@@ -247,15 +245,13 @@
           </xsl:choose>
         </xsl:if>
       </xsl:if>
+      <xsl:variable name="authordata" select="$authors[@name=$author][1]"/>
       <xsl:if test="$author != ''">
         <xsl:choose>
-          <xsl:when test="$author='Magnus Achim Deininger'"><address>
-            <a rel="author" href="about">
-              <span>Written by <span>Magnus Achim Deininger</span>.</span> Magnus is a <del>sellsword</del> freelance computer scientist specialising in peculiar problems, such as embedded development, formal language theory and experiments in minimalistic design. This website serves as his personal journal and testing ground for unusual and/or crazy ideas.</a>
-          </address></xsl:when>
-          <xsl:when test="($author='Nadja Klein') or ($author='Nadja Deininger')"><address>
-            <a rel="author" href="http://www.facebook.com/nadja.klein.967">
-              <span>Written by <span>Nadja Deininger</span>.</span> Guest blogging on this site, resident coffee junkie Nadja is one of that rare blend of computer scientists with an affinity for maths. She used to work as a developer for a software company until just recently and is currently concentrating on getting her degree in computer science.</a>
+          <xsl:when test="$authordata"><address>
+            <a rel="author" href="{$authordata/@uri}">
+              <span>Written by <span><xsl:value-of select="$authordata/@display"/></span>.</span> <xsl:copy-of select="$authordata/text() | $authordata/*"/>
+            </a>
           </address></xsl:when>
           <xsl:otherwise><address>
             <span>Written by <span><xsl:value-of select="$author"/></span></span>
