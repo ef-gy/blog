@@ -720,6 +720,8 @@ ul.social-grid li
 {
   margin: 0;
   width: 4em;
+  padding-top: 0.3em;
+  height: 1.3em;
 }
 ul#social li a:before,
 ul.social-grid li a:before

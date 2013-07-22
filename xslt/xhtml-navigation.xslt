@@ -71,7 +71,7 @@
         <li class="image"><img src="{$authordata/@image}" alt="Author Mugshot: {@name}"/></li>
       </xsl:if>
       <xsl:if test="$authordata/@skype">
-        <li class="skype"><a href="{$authordata/@skype}">Skype</a></li>
+        <li class="skype"><a href="skype:{$authordata/@skype}">Skype</a></li>
       </xsl:if>
       <xsl:if test="$authordata/@twitter">
         <li class="twitter"><a href="https://twitter.com/{$authordata/@twitter}">Twitter</a></li>
