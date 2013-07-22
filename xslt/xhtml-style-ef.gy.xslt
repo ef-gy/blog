@@ -166,20 +166,20 @@
           <xsl:when test="($author='Nadja Klein') or ($author='Nadja Deininger')">
             <xsl:choose>
               <xsl:when test="(string-length($target) > 0) and (string-length($collection) > 0)">
-                <social:social url="http://ef.gy/{$target}@{$collection}" twitter="machine_lady"/>
+                <social:social url="http://ef.gy/{$target}@{$collection}" twitter="machine_lady" flattr="machinelady"/>
               </xsl:when>
               <xsl:otherwise>
-                <social:social url="http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" twitter="machine_lady"/>
+                <social:social url="http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" twitter="machine_lady" flattr="machinelady"/>
               </xsl:otherwise>
             </xsl:choose>
           </xsl:when>
           <xsl:otherwise>
             <xsl:choose>
               <xsl:when test="(string-length($target) > 0) and (string-length($collection) > 0)">
-                <social:social url="http://ef.gy/{$target}@{$collection}" twitter="jyujinX"/>
+                <social:social url="http://ef.gy/{$target}@{$collection}" twitter="jyujinX" flattr="magnus.deininger"/>
               </xsl:when>
               <xsl:otherwise>
-                <social:social url="http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" twitter="jyujinX"/>
+                <social:social url="http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" twitter="jyujinX" flattr="magnus.deininger"/>
               </xsl:otherwise>
             </xsl:choose>
           </xsl:otherwise>
@@ -214,8 +214,8 @@
         <p class="last-modified"><em>Last Modified: <xsl:value-of select="../xhtml:head/xhtml:meta[@name='mtime']/@content" /></em></p>
       </xsl:if>
       <xsl:choose>
-        <xsl:when test="$author='Magnus Achim Deininger'"><p class="follow">Since you came this far, why not <social:follow twitter="jyujinX"/></p></xsl:when>
-        <xsl:when test="($author='Nadja Klein') or ($author='Nadja Deininger')"><p class="follow">Since you came this far, why not <social:follow twitter="machine_lady"/></p></xsl:when>
+        <xsl:when test="$author='Magnus Achim Deininger'"><p class="follow">Since you came this far, why not <social:follow twitter="jyujinX" flattr="magnus.deininger"/></p></xsl:when>
+        <xsl:when test="($author='Nadja Klein') or ($author='Nadja Deininger')"><p class="follow">Since you came this far, why not <social:follow twitter="machine_lady" flattr="machinelady"/></p></xsl:when>
       </xsl:choose>
       <xsl:if test="../@id='phone'">
         <p class="credit"><em>Background photo credit: <a href="http://www.flickr.com/photos/w3p706/2872460783/">w3p706</a> / <a href="http://foter.com">Foter.com</a> / <a href="http://creativecommons.org/licenses/by-nc-sa/2.0/">CC BY-NC-SA</a></em></p>

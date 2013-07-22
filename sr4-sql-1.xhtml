@@ -5,12 +5,13 @@
 <meta name="author" content="Nadja Deininger" />
 <meta name="description" content="Hardly anyone does SR character generators using a database. I did. Here's an initial release." />
 <meta name="date" content="2013-06-12T16:44:00Z" />
-<meta name="mtime" content="2013-06-12T16:44:00Z" />
+<meta name="mtime" content="2013-07-22T11:16:00Z" />
 <meta name="category" content="Projects" />
 <meta name="unix:name" content="sr4-sql-1" />
 </head>
 <body>
 <h1>Character generation is a database problem</h1>
+<p><em>Update: <a href="/sr4-sql-2">a second release of this project hit the servers a while ago</a>!</em></p>
 <p>Well, everything is, really, but when I was looking for a character generator to create characters for a Shadowrun game, I kept wondering why I couldn't find one that was web-based. When I looked at the desktop applications I did find, I was surprised that none of them seemed to be using a database; <a href="http://www.chummergen.com/">Chummer</a>, the most complete one (in terms of supported rules) I could find, uses XML files for its data, for instance. I didn't like Chummer's UI so much, and wondered why one wouldn't use a database which could automagically do the maths of character creation for you, and with all those gear and spell tables in SR, a relational database structure seemed to lend itself well to the problem - so I went ahead and started building one. I'm still working on it, and it's lacking quite a few features especially in BP and Karma cost computation, but it could already be used to generate NPCs and things like that. The implementation is in SQLite, since this application doesn't seem to need a client-server based DBS; besides, if someone is going to build a desktop front end for it, people wouldn't want to set up PostgreSQL on their home machines, and I hear embedded PostgreSQL is a pain, so SQLite it is.
 </p>
 <p>In case you've never heard of <a href="http://en.wikipedia.org/wiki/Shadowrun">Shadowrun</a>, it's a tabletop role-playing game that is set several decades into the future, with both cyberpunk and fantasy themes. Just imagine someone had given the tech in Neuromancer a bit of a boost, and put wizards, dragons and trolls into the equation; characters usually are shadowrunners, professional criminals who do less-than-legal operations for megacorporations. The game itself is an interactive story, where N-1 people in the group control one character each, and the remaining person (called the gamemaster) controls everything else. Player characters are generated using a point buy system: every player gets a given amount of build points which they can spend to make their character stronger, smarter, give them additional skills, or even the ability to do magic.</p>

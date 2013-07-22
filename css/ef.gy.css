@@ -783,6 +783,16 @@ li.stumbleupon a:before
   color: #fff;
   content: "su";
 }
+li.flattr
+{
+  background: rgb(125,178,73);
+  color: #fff;
+}
+li.flattr a:before
+{
+  color: #fff;
+  content: "fl";
+}
 ul#hardcopies
 {
   clear: both;

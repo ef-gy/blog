@@ -25,6 +25,7 @@
     <svg xmlns="http://www.w3.org/2000/svg">
       <xsl:apply-templates select="$svg/@* | @id | @preserveAspectRatio | $svg/*"/>
     </svg>
+    <em><a href="{@src}">Source SVG: "<xsl:value-of select="@alt"/>"</a>.</em>
   </xsl:template>
 
   <xsl:template match="svg:*[@id='gnuplot_canvas']//@id"/>
