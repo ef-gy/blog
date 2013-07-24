@@ -67,7 +67,7 @@
     <title>http://ef.gy/ :: <xsl:value-of select="."/></title>
   </xsl:template>
 
-  <xsl:template match="//atom:entry/atom:link/@href[@rel!='payment']">
+  <xsl:template match="//atom:entry/atom:link[@rel!='payment']/@href">
     <xsl:attribute name="href">http://ef.gy<xsl:value-of select="."/></xsl:attribute>
   </xsl:template>
 

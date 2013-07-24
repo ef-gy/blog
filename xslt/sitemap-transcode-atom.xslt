@@ -18,7 +18,7 @@
     </urlset>
   </xsl:template>
 
-  <xsl:template match="atom:link">
+  <xsl:template match="atom:link[@rel!='payment']">
     <url>
       <loc><xsl:value-of select="@href"/></loc>
       <xsl:if test="../atom:updated">
