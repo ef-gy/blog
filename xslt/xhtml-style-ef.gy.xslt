@@ -22,6 +22,7 @@
   <xsl:param name="documentRoot"/>
 
   <xsl:variable name="authors" select="document(concat($documentRoot,'/authors.xml'))/data:data/data:author"/>
+  <xsl:variable name="referers" select="document(concat($documentRoot,'/referers.xml'))/data:referers/data:referer"/>
 
   <data:month-name number="01">January</data:month-name>
   <data:month-name number="02">February</data:month-name>
@@ -138,6 +139,12 @@
     <body>
       <xsl:variable name="author" select="/xhtml:html/xhtml:head/xhtml:meta[@name='author']/@content"/>
       <xsl:variable name="authordata" select="$authors[@name=$author][1]"/>
+      <xsl:variable name="suri"><xsl:choose>
+        <xsl:when test="(string-length($target) > 0) and (string-length($collection) > 0)">/<xsl:value-of select="@target"/>@<xsl:value-of select="@collection"/></xsl:when>
+        <xsl:otherwise>/<xsl:value-of select="//xhtml:meta[@name='unix:name']/@content"/></xsl:otherwise>
+      </xsl:choose></xsl:variable>
+      <xsl:variable name="uri" select="concat('http://ef.gy', $suri)"/>
+      <xsl:variable name="uname" select="//xhtml:meta[@name='unix:name']/@content"/>
       <xsl:apply-templates select="@*" />
       <h1><xsl:value-of select="/xhtml:html/xhtml:head/xhtml:title"/></h1>
       <ul>
@@ -160,29 +167,10 @@
           </ul>
         </xsl:when>
       </xsl:choose>
-      <xsl:if test="//xhtml:meta[@name='unix:name']">
-        <xsl:choose>
-          <xsl:when test="($author='Nadja Klein') or ($author='Nadja Deininger')">
-            <xsl:choose>
-              <xsl:when test="(string-length($target) > 0) and (string-length($collection) > 0)">
-                <social:social url="http://ef.gy/{$target}@{$collection}" twitter="machine_lady" flattr="machinelady"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <social:social url="http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" twitter="machine_lady" flattr="machinelady"/>
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:choose>
-              <xsl:when test="(string-length($target) > 0) and (string-length($collection) > 0)">
-                <social:social url="http://ef.gy/{$target}@{$collection}" twitter="jyujinX" flattr="magnus.deininger"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <social:social url="http://ef.gy/{//xhtml:meta[@name='unix:name']/@content}" twitter="jyujinX" flattr="magnus.deininger"/>
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:otherwise>
-        </xsl:choose>
+      <xsl:if test="$uname">
+        <social:social url="{$uri}">
+          <xsl:copy-of select="$authordata/@twitter | $authordata/@flattr"/>
+        </social:social>
       </xsl:if>
       <ul id="meta">
         <xsl:if test="../xhtml:head/xhtml:meta[@name='date']/@content">
@@ -222,6 +210,18 @@
       <xsl:if test="../@id='unicorn-noms'">
         <p class="credit"><em>Background photo credit: <a href="http://www.flickr.com/photos/dolske/7639692938/">Justin Dolske</a> / <a href="http://foter.com">Foter.com</a> / <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA</a></em></p>
       </xsl:if>
+      <xsl:if test="$uname">
+        <xsl:variable name="my-referers" select="$referers[@location=$suri]"/>
+        <xsl:if test="$my-referers">
+          <h2>Refbacks</h2>
+          <p>This page was linked from the following sources:</p>
+          <ul id="referers">
+            <xsl:for-each select="$my-referers">
+              <li><a href="{.}"><xsl:value-of select="."/></a></li>
+            </xsl:for-each>
+          </ul>
+        </xsl:if>
+      </xsl:if>
       <xsl:if test="not(($collection = 'fortune') or ($collection = 'about') or ($collection = 'source-code'))">
         <ul id="hardcopies">
           <li>transcripts:</li>
@@ -235,7 +235,7 @@
           <xsl:choose>
             <xsl:when test="($userCountry = 'DEU') and ($cookieDisqus != 'on')">
               <script type="text/javascript">var disqus_shortname = 'efgy'; <xsl:if test="/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']">var disqus_identifier = '<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content"/>';</xsl:if></script>
-              <a id="comments" class="dsq-brlink" href="http://disqus.com" onclick="var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true; dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js'; (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq); document.cookie='disqus=on'; return false;">comments powered by <span class="logo-disqus">Disqus</span>; Comments are not shown by default for privacy reasons, click here to enable them. This will request data from the disqus.com servers, which reside in the US; this may additionally request data from the Google Analytics servers. The data that is transmitted in this request includes anything your browser sends on standard HTTP requests, including IP address and browser type. None of this should be personally identifiable in any common sense of the word, but your mileage may vary. Clicking this link will also set a cookie that will automatically load disqus comments on further page loads on this website. If you change your mind later, simply remove this cookie in your browser.</a>
+              <a id="comments" class="dsq-brlink" href="http://disqus.com" onclick="var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true; dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js'; (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq); document.cookie='disqus=on'; return false;">comments powered by <span class="logo-disqus">Disqus</span>; Comments are not shown by default for privacy reasons, click here to enable them. This will make your browser request data from the third-party disqus.com servers and may additionally request data from the Google Analytics servers. Clicking this link will also set a cookie that will automatically load disqus comments on further page loads on this website. If you change your mind later, simply remove this cookie in your browser.</a>
               <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
             </xsl:when>
             <xsl:otherwise>
