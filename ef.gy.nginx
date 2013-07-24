@@ -159,7 +159,6 @@ server {
         alias $documentRoot;
 		try_files $uri.xhtml $uri.atom $uri =404;
 
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-context.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-pre-process.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-transcode-atom.xslt;
@@ -171,7 +170,6 @@ server {
         alias $documentRoot;
 		try_files $uri.xhtml $uri.atom $uri =404;
 
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-context.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-pre-process.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-transcode-atom.xslt;

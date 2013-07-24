@@ -78,7 +78,7 @@ scrub: clean
 	rm -rf $(BUILD)
 
 databases: $(DATABASES)
-index: $(INDICES)
+index: $(INDICES) index.xml
 
 svgs: $(SVGS)
 docbooks: $(DOCBOOKESC)
@@ -281,6 +281,12 @@ $(INDICES): Makefile $(filter-out %index.atom, $(wildcard download/*))
 		if [ $${i} != "$@" -a -f $${i} ]; then echo "<entry><id>md5:$$(md5sum -b $${i}|cut -d ' ' -f 1)</id><title>$$(basename $${i})</title><link href='/$${i}' type='$$(file --mime-type $${i}|cut -d ' ' -f 2)'/><updated>$$(stat -c %y $${i}|sed -e 's/\(.\+\) \(.\+\)\.0\+ \(...\)\(..\)/\1T\2\3:\4/')</updated><author><name>$(name)</name></author><category term='$$(echo '$(subst /index.atom,,$@)')'/><summary>File Type: $$(file --mime-type $${i}|cut -d ' ' -f 2). File Checksum (MD5): $$(md5sum -b $${i}|cut -d ' ' -f 1)</summary></entry>"; fi;\
 	done>>$@
 	echo '</feed>'>>$@
+
+# global navigation index
+index.xml: $(BUILD)/everything.atom xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt xslt/index-transcode-atom.xslt
+	$(XSLTPROC) $(XSLTPROCARGS) xslt/atom-style-ef.gy.xslt $< |\
+		$(XSLTPROC) $(XSLTPROCARGS) xslt/atom-sort.xslt - |\
+		$(XSLTPROC) $(XSLTPROCARGS) xslt/index-transcode-atom.xslt - > $@
 
 # pattern rules for databases
 %.sqlite3: src/%.sql

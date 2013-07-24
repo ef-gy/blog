@@ -23,6 +23,7 @@
 
   <xsl:variable name="authors" select="document(concat($documentRoot,'/authors.xml'))/data:data/data:author"/>
   <xsl:variable name="referers" select="document(concat($documentRoot,'/referers.xml'))/data:referers/data:referer"/>
+  <xsl:variable name="indices" select="document(concat($documentRoot,'/index.xml'))/data:data/data:index"/>
 
   <data:month-name number="01">January</data:month-name>
   <data:month-name number="02">February</data:month-name>
@@ -56,9 +57,12 @@
 
   <xsl:template match="xhtml:head">
     <xsl:variable name="myname" select="xhtml:meta[@name='unix:name']/@content"/>
-    <xsl:variable name="entries" select="xhtml:meta[@name='context']/atom:feed/atom:entry"/>
-    <xsl:variable name="pre" select="$entries[atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name'][@content=$myname]]/preceding-sibling::*[1]"/>
-    <xsl:variable name="post" select="$entries[atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name'][@content=$myname]]/following-sibling::*[1]"/>
+    <xsl:variable name="suri"><xsl:choose>
+      <xsl:when test="(string-length($target) > 0) and (string-length($collection) > 0)">/<xsl:value-of select="$target"/>@<xsl:value-of select="$collection"/></xsl:when>
+      <xsl:otherwise>/<xsl:value-of select="xhtml:meta[@name='unix:name']/@content"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
+    <xsl:variable name="pre" select="$indices[@href=$suri][1]/data:previous"/>
+    <xsl:variable name="post" select="$indices[@href=$suri][1]/data:next"/>
     <xsl:variable name="author" select="xhtml:meta[@name='author']/@content"/>
     <xsl:variable name="authordata" select="$authors[@name=$author][1]"/>
     <head>
@@ -82,31 +86,11 @@
           <link rel="alternate" type="application/rss+xml" href="/rss/site" />
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:if test="$pre/atom:content">
-        <xsl:choose>
-          <xsl:when test="$pre/atom:link">
-            <link rel="prev" href="/{$pre/atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}" title="{$pre/atom:title}"/>
-          </xsl:when>
-          <xsl:when test="$pre/atom:category[@term='einit.org']">
-            <link rel="prev" href="/{$pre/atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}@drupal-einit" title="{$pre/atom:title}"/>
-          </xsl:when>
-          <xsl:when test="$pre/atom:category[@term='kyuba.org']">
-            <link rel="prev" href="/{$pre/atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}@drupal-kyuba" title="{$pre/atom:title}"/>
-          </xsl:when>
-        </xsl:choose>
+      <xsl:if test="$pre">
+        <link rel="prev" href="{$pre/@href}" title="{$pre/@title}"/>
       </xsl:if>
-      <xsl:if test="$post/atom:content">
-        <xsl:choose>
-          <xsl:when test="$post/atom:link">
-            <link rel="next" href="/{$post/atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}" title="{$post/atom:title}"/>
-          </xsl:when>
-          <xsl:when test="$post/atom:category[@term='einit.org']">
-            <link rel="next" href="/{$post/atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}@drupal-einit" title="{$post/atom:title}"/>
-          </xsl:when>
-          <xsl:when test="$post/atom:category[@term='kyuba.org']">
-            <link rel="next" href="/{$post/atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}@drupal-kyuba" title="{$post/atom:title}"/>
-          </xsl:when>
-        </xsl:choose>
+      <xsl:if test="$post">
+        <link rel="next" href="{$post/@href}" title="{$post/@title}"/>
       </xsl:if>
       <xsl:if test="$authordata/@googleplus">
         <link rel="author" href="https://plus.google.com/{$authordata/@googleplus}"/>
@@ -140,7 +124,7 @@
       <xsl:variable name="author" select="/xhtml:html/xhtml:head/xhtml:meta[@name='author']/@content"/>
       <xsl:variable name="authordata" select="$authors[@name=$author][1]"/>
       <xsl:variable name="suri"><xsl:choose>
-        <xsl:when test="(string-length($target) > 0) and (string-length($collection) > 0)">/<xsl:value-of select="@target"/>@<xsl:value-of select="@collection"/></xsl:when>
+        <xsl:when test="(string-length($target) > 0) and (string-length($collection) > 0)">/<xsl:value-of select="$target"/>@<xsl:value-of select="$collection"/></xsl:when>
         <xsl:otherwise>/<xsl:value-of select="//xhtml:meta[@name='unix:name']/@content"/></xsl:otherwise>
       </xsl:choose></xsl:variable>
       <xsl:variable name="uri" select="concat('http://ef.gy', $suri)"/>
@@ -253,7 +237,6 @@
   </xsl:template>
 
   <xsl:template match="xhtml:meta[@name='unix:name']" />
-  <xsl:template match="xhtml:meta[@name='context']" />
 
   <xsl:template match="xhtml:h1">
     <h2>
