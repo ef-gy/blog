@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>FEED, Release 1</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="A command line syndication feed reader, supporting Atom, RSS and automatic feed discovery." />
+<meta name="date" content="2013-08-10T11:25:00Z" />
+<meta name="mtime" content="2013-08-10T11:25:00Z" />
+<meta name="category" content="Software" />
+<meta name="unix:name" content="feed-1" />
+</head>
+<body>
+<h1>Introduction</h1>
+<p><em>FEED</em> is a command line feed reader supporting Atom and RSS feeds. The programme is comprised of two parts: a simple command line frontend for a sqlite3 database that stores all of the feeds and related entries that you're interested in, and a daemon that downloads, processes and stores those feeds.</p>
+<p>The daemon is automatically started when using a new database file with the client for the first time - or restarted if it's no longer running. This daemon will also gather additional information loosely related to the feeds to process, such as DNS data and WHOIS record for the domains involved. A typical session might look something like this:</p>
+<img src="/png/feed-1-1" alt="Screenshot of FEED/1 in action"/>
+<p>The daemon will keep running even if you close the terminal window.</p>
+<p>A friendly warning before you begin: I'd consider this release a beta at best. It works for me, and it works well even, but it's not been tested nearly enough to warrant being called <em>stable</em> in any way.</p>
+<h1>Quick Start</h1>
+<p>The repository for this project is available at: <a href="http://git.becquerel.org/?p=jyujin/feed.git">http://git.becquerel.org/?p=jyujin/feed.git</a> - you can either grab a tarball from there or browse the source code. Alternatively, you could also grab <a href="/download/feed-1.tar.gz">the release tarball for release 1</a>.</p>
+<h2>Compiling</h2>
+<p>Make sure you have CLANG++, BOOST::Regex, libsqlite3, libcurl and libxml2 installed, along with the development headers for those libraries. Untar the release tarball - or grab the sources with git at <em>http://git.becquerel.org/jyujin/feed.git/</em>. Then just run make and make install, like so:</p>
+<pre><code>$ cd feed-1
+$ make
+$ sudo make PREFIX=/usr install</code></pre>
+<p>Substitute sudo as appropriate.</p>
+<h2>Binaries</h2>
+<p>It's always neat to have binaries available if you don't want to install a compiler. You'll still need the aforementioned libraries installed for the programme to work though:</p>
+<table>
+<thead><tr><th>OS</th><th>Downloads</th></tr></thead>
+<tbody>
+<tr><td>Debian squeeze/testing</td>
+<td><a href="/download/debian/feed_1-1_amd64.deb">amd64</a></td></tr>
+</tbody>
+</table>
+<h2>Notes</h2>
+<p>Both <em>make install</em> and the Debian binaries include a set of C++ header files to write your own clients, man pages for <em>feed</em> and <em>feedd</em> and a shell script at <em>/etc/profile.d/feed.sh</em> that sets up an environment variable so it doesn't matter which directory you use the <em>feed</em> programme in. It's recommended that you relog after installing the programme - or that you'd at least source your profile again.</p>
+<p>If your distribution doesn't use <em>/etc/profile.d</em>, it would be a good idea to set the global environment variable <em>FEED_DATABASE</em> to something user-specific - like <em>$HOME/.feed</em>.</p>
+<p><em>feed</em> uses common command line programmes to read entries - in particular, HTML and anything that looks like it will be read with <em>links</em>, so make sure that's installed.</p>
+<h1>Usage</h1>
+<p>You don't really have to worry about much, just run <em>feed</em> like you would any other programme and it'll set up the database and spawn the background process:</p>
+<pre><code>$ feed</code></pre>
+<p><em>feed</em> uses queries and macros that are stored in the database to manipulate the database and to present any data it contains. These queries are identified by the command line parameters; if you don't pass any, then it's assumed you meant the <em>new</em> query, which displays any unread feed entries - the command you just ran would have printed any pending, unread feed entries if you'd added a feed yet.</p>
+<p>To get started, you'll only need three queries: <em>new</em>, which I've just described, <em>add</em>, which adds new feeds for the daemon to process, and <em>next</em>, which reads the next unread feed entry with an appropriate programme - typically <em>links</em> or <em>less</em> - and shows the title of the next entry you'd read if you ran <em>next</em> again.</p>
+<p>There's also <em>read</em>, which reads an entry with the specified ID (the number in square brackets in the output of <em>new</em>), and <em>skip</em>, which marks the current entry as read and shows the title of the next entry - like <em>next</em>, but it doesn't read the entry. See the man page of <em>feed</em> for a description of all of the default queries and macros, including those I skipped:</p>
+<pre><code>$ man 1 feed</code></pre>
+<h2>Example</h2>
+<p>Let's assume you've never used the programme before. The first thing you'll want to do, is you'll want to add a feed to read. <em>feed</em> will only handle Atom and RSS, but it is able to automatically find Atom and RSS feeds on websites if they've declared them in the headers of the a page, so you'd do the following if, for example, you'd want to read this site's feed:</p>
+<pre><code>$ feed add http://ef.gy/</code></pre>
+<p>This would also start the daemon if it's not active yet, create an appropriate databas, etc. The download will probably take a few seconds, so wait a bit. Then run this:</p>
+<pre><code>$ feed</code></pre>
+<p>This should now display the entries of the feed(s) at the website or feed that you just added. To read the latest enry, run this:</p>
+<pre><code>$ feed next</code></pre>
+<p>If you went with the example, then <em>feed</em> will spawn <em>links</em> and show the contents of the latest blog entry on this site. Once you're done reading, hit <em>q</em> to quit the reader, and <em>feed</em> will mark the entry you just read as <em>read</em>, so the next call to <em>next</em> will bring up a new entry - the heading of which will be shown right away, as well.</p>
+<h1>Proxies</h1>
+<p><em>feed</em> uses libcurl to access the internet, so if you've set up your environment so that curl is able to read things, <em>feed</em> should be able to do so as well. If you'd like <em>feed</em> to use a different proxy, you can set one in the options table like this:</p>
+<pre><code>$ feed use-proxy socks5h://127.0.0.1:12050</code></pre>
+<p>The parameter you pass to use-proxy must be in format for proxy strings that curl employs - you'll probably use either <em>http://host:port</em> for a typical HTTP proxy, or, as in the example, <em>socks5h://host:port</em> if you're using <em>ssh -D</em> to bounce traffic around with SSH. The settings don't take effect until you restart the daemon, so you should also run this command:</p>
+<pre><code>$ feed quit</code></pre>
+<p>... which will tell the daemon to shut down the next chance it gets.</p>
+<h1>Contact</h1>
+<p>I don't like mailing lists... so I didn't set one up. Just email me if you run into any issues or, better yet, join me on #kyuba over at freenode via your favourite IRC client.</p>
+</body>
+</html>
