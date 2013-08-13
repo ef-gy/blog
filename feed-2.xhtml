@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-<title>FEED, Release 1</title>
+<title>FEED, Release 2</title>
 <meta name="author" content="Magnus Achim Deininger" />
 <meta name="description" content="A command line syndication feed reader, supporting Atom, RSS and automatic feed discovery." />
-<meta name="date" content="2013-08-10T11:25:00Z" />
-<meta name="mtime" content="2013-08-13T17:53:00Z" />
+<meta name="date" content="2013-08-13T17:44:00Z" />
+<meta name="mtime" content="2013-08-13T17:44:00Z" />
 <meta name="category" content="Software" />
-<meta name="unix:name" content="feed-1" />
+<meta name="unix:name" content="feed-2" />
 </head>
 <body>
 <h1>Introduction</h1>
-<p><em>Update: <a href="feed-2">Release 2 is now available</a> - this release includes a lot of bugfixes, so you really should head over to that page and grab that release instead of using this one.</em></p>
 <p><em>FEED</em> is a command line feed reader supporting Atom and RSS feeds. The programme is comprised of two parts: a simple command line frontend for a sqlite3 database that stores all of the feeds and related entries that you're interested in, and a daemon that downloads, processes and stores those feeds.</p>
 <p>The daemon is automatically started when using a new database file with the client for the first time - or restarted if it's no longer running. This daemon will also gather additional information loosely related to the feeds to process, such as DNS data and WHOIS record for the domains involved. A typical session might look something like this:</p>
 <img src="/png/feed-1-1" alt="Screenshot of FEED/1 in action"/>
 <p>The daemon will keep running even if you close the terminal window.</p>
 <p>A friendly warning before you begin: I'd consider this release a beta at best. It works for me, and it works well even, but it's not been tested nearly enough to warrant being called <em>stable</em> in any way.</p>
+<h1>Release Notes</h1>
+<p>Release 2 primarily fixes a lot of bugs found in <a href="feed-1">release 1</a>. As such, this file is mostly a copy of the first release's release notes with the links fixed to reflect the new release. Most of the changes that weren't bug fixes were to make the parsers more intelligent.</p>
+<p>This release does, however, fix some compilation and runtime problems encountered with FEED on Ubuntu 12.04. The build process will now also download and compile a copy of SQLite, because the version bundled with Ubuntu is horridly outdated.</p>
 <h1>Quick Start</h1>
-<p>The repository for this project is available at: <a href="http://git.becquerel.org/?p=jyujin/feed.git">http://git.becquerel.org/?p=jyujin/feed.git</a> - you can either grab a tarball from there or browse the source code. Alternatively, you could also grab <a href="/download/feed-1.tar.gz">the release tarball for release 1</a>.</p>
+<p>The repository for this project is available at: <a href="http://git.becquerel.org/?p=jyujin/feed.git">http://git.becquerel.org/?p=jyujin/feed.git</a> - you can either grab a tarball from there or browse the source code. Alternatively, you could also grab <a href="/download/feed-2.tar.gz">the release tarball for release 2</a>.</p>
 <h2>Compiling</h2>
 <p>Make sure you have CLANG++, BOOST::Regex, libsqlite3, libcurl and libxml2 installed, along with the development headers for those libraries. Untar the release tarball - or grab the sources with git at <em>http://git.becquerel.org/jyujin/feed.git/</em>. Then just run make and make install, like so:</p>
-<pre><code>$ cd feed-1
+<pre><code>$ cd feed-2
 $ make
 $ sudo make PREFIX=/usr install</code></pre>
 <p>Substitute sudo as appropriate.</p>
@@ -31,7 +33,7 @@ $ sudo make PREFIX=/usr install</code></pre>
 <thead><tr><th>OS</th><th>Downloads</th></tr></thead>
 <tbody>
 <tr><td>Debian squeeze/testing</td>
-<td><a href="/download/debian/feed_1-1_amd64.deb">amd64</a></td></tr>
+<td><a href="/download/debian/feed_2-1_amd64.deb">amd64</a></td></tr>
 </tbody>
 </table>
 <h2>Notes</h2>

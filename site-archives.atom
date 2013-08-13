@@ -3,6 +3,7 @@
   <title>ef.gy</title>
   <subtitle>Archives</subtitle>
 
+  <entry xlink:href="feed-1.xhtml" />
   <entry xlink:href="digitaler-jugendschutz.xhtml" />
   <entry xlink:href="sr4-sql-1.xhtml" />
   <entry xlink:href="irs:logimat-2013.xhtml" />

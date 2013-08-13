@@ -272,7 +272,7 @@ $(BUILD)/%.epub: $(BUILD)/%/publication.opf $(BUILD)/%/ef.gy.book.css $(BUILD)/%
 	$(R) --no-save < $<
 
 # pattern rule to generate directory indices
-$(INDICES): Makefile $(filter-out %index.atom, $(wildcard download/*))
+$(INDICES): makefile $(filter-out %index.atom, $(wildcard download/*))
 	echo '<?xml version="1.0" encoding="utf-8"?>'\
 		'<feed xmlns="http://www.w3.org/2005/Atom">'\
 		'<id>$(root)$@</id><title>/$(subst /index.atom,,$@)</title><link rel="self" href="$(root)atom/$(subst .atom,,$@)"/>'\
