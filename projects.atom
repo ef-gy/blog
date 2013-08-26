@@ -5,9 +5,7 @@
 
   <entry xlink:href="feed-2.xhtml" />
   <entry xlink:href="sr4-sql-2.xhtml" />
-  <entry xlink:href="project:fortune.xhtml" />
   <entry xlink:href="project:tesseract.xhtml" />
   <entry xlink:href="project:xslt-mandelbrot.xhtml" />
-  <entry xlink:href="project:xslt-formatting-dates-in-maya.xhtml" />
   <entry xlink:href="topologic.xhtml" />
 </feed>

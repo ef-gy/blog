@@ -3,39 +3,20 @@
   <title>ef.gy</title>
   <subtitle>Articles</subtitle>
 
+  <entry xlink:href="visualising-syndication-feeds.xhtml" />
   <entry xlink:href="scrambled-eggs.xhtml" />
   <entry xlink:href="on-age-rating.xhtml" />
   <entry xlink:href="hollywood-algorithmik.xhtml" />
-  <entry xlink:href="postgresql:markov-chains.xhtml" />
-  <entry xlink:href="site-news:disqus.xhtml" />
   <entry xlink:href="sql:markov-chains.xhtml" />
-  <entry xlink:href="sql:sequence-generator.xhtml" />
   <entry xlink:href="ebook-wtfs.xhtml" />
-  <entry xlink:href="site-news:transcripts.xhtml" />
-  <entry xlink:href="kruzifixe-und-gerichtssaele.xhtml" />
   <entry xlink:href="germany-do-you-read-i.xhtml" />
-  <entry xlink:href="the-parcel.xhtml" />
   <entry xlink:href="albtraum-datenschutz.xhtml" />
-  <entry xlink:href="kraut-law:easter-2013.xhtml" />
-  <entry xlink:href="dear-web-designers.xhtml" />
   <entry xlink:href="sql:game-of-life.xhtml" />
-  <entry xlink:href="xslt:game-of-life.xhtml" />
   <entry xlink:href="transcoding-atom-to-rss.xhtml" />
-  <entry xlink:href="vmware-server-ipv6.xhtml" />
   <entry xlink:href="vmware-server-redux.xhtml" />
   <entry xlink:href="ubuntu-cedarview-drivers.xhtml" />
-  <entry xlink:href="moving-oracle-install-to-debian.xhtml" />
-  <entry xlink:href="makefile-atom-directory-index.xhtml" />
   <entry xlink:href="forwarding-ipv4-to-ipv6.xhtml" />
-  <entry xlink:href="serving-an-atom-bundle.xhtml" />
-  <entry xlink:href="exporting-a-drupal-database-to-atom.xhtml" />
-  <entry xlink:href="embedding-tweets-on-websites-with-xslt.xhtml" />
   <entry xlink:href="using-nginx-as-a-proxy-server.xhtml" />
-  <entry xlink:href="stylesheet-magic:keeping-tabs-with-:checked.xhtml" />
-  <entry xlink:href="eye-cancer.xhtml" />
-  <entry xlink:href="form-over-function.xhtml" />
-  <entry xlink:href="false-advertising.xhtml" />
-  <entry xlink:href="eye-cancer-ii.xhtml" />
 
   <feed xlink:href="mathematics.atom"/>
 </feed>
