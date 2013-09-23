@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Finite-State Machines with recursive SQL</title>
+<meta name="author" content="Nadja Deininger" />
+<meta name="description" content="Regular expression matching with finite state machines, implemented in recursive SQL." />
+<meta name="date" content="2013-09-23T16:28:00Z" />
+<meta name="mtime" content="2013-09-23T16:28:00Z" />
+<meta name="category" content="Software" />
+<meta name="unix:name" content="fsm-recursive-sql" />
+</head>
+<body>
+<h1>Really, everything is a database problem.</h1>
+<p>One of the reasons I like PostgreSQL is that it supports recursive queries through common table expressions. This gives you the tools to properly use recursive data structures, like graphs, in SQL and perform queries on them. Neat, huh? You could, for example, represent a network of some kind in your database - modeling it as a graph is an obvious choice, and if you want to traverse it, solve a reachability problem on it or something, recursive SQL may be your tool of choice.
+</p>
+<p>Now, regular expression matching is really a graph traversion problem - that is, <em>if</em> your regular expression actually is <a href="http://en.wikipedia.org/wiki/Regular_language">regular</a>. Most of the modern regex libraries in various programming languages provide features like backreferences that exceed the capability of regular languages, but we're working with the definition of regular expressions in formal language theory, which is, given a finite alphabet:
+<ul>
+<li>The empty set is a regular expression.</li>
+<li>The empty string and all characters of the alphabet are regular expressions.</li>
+<li>if <em>a</em> is a regular expression, so is its <a href="http://en.wikipedia.org/wiki/Kleene_star">Kleene star</a> <em>a*</em></li>
+<li>if <em>a</em> and <em>b</em> are regular expressions, their concatenation <em>ab</em> and their alternation <em>(a|b)</em> are regular expressions</li>
+</ul>
+So, no backreferences, no other fancy stuff, just plain regular expressions. Now those expressions are neat to describe a formal language - a set of strings that match the pattern -, but if you are given a string and you'd like to know if it matches, looking at the regular expression itself isn't going to be very efficient. Luckily, regular expressions aren't the only way to represent regular languages - your other option is to use a <a href="http://en.wikipedia.org/wiki/Finite-state_machine">finite-state machine</a>, and there are algorithms to convert a regular expression into a finite-state machine and back. A finite-state machine is an abstract model of a machine that is in one of several states at any given moment, and can transition into a different state upon a given event. When used to model a regular language, strings are read by the machine character by character, and each character may trigger a state transition. If, at the end of the string, the machine is in a state that is marked as "accepting",
+ the string is an element of the language; if either the machine is in a non-accepting state after reading the string, or, when reading a character, there isn't a valid transition from the current state for that character (so the matching aborts before the end of the string), it isn't an element of the language. State machines are often visualised as graphs, so it makes sense to model them as such, and in that case, you can formulate the word problem (= "is this string in that language?") for regular languages as "consider a state machine for the language; is there a path through its graph that begins in a starting state, ends in an accepting state, and the edges contain the characters of that string in the exact order?".</p>
+<p>One more thing about finite-state machines: they come in two flavours, deterministic and nondeterministic. With deterministic FSM, there must be exactly one starting state (though there may be multiple accepting states), and every state must have exactly one transition for every character. Nondeterministic FSM can have multiple starting states, multiple (or no) transitions for a character from the same state, and "epsilon transitions" - that is, you can go from one state to another without reading a character. (If you can have multiple transitions per character, the latter is just syntactic sugar, but it comes in handy at times) With nondeterministic FSM, while reading a string you might have to guess which state to start in, or to which state to transition, at some point, but as long as there is a set of guesses that leads you to an accepting state, the string is an element of the language.</p>
+<p>We've established that regular expression matching is a graph traversion problem, and recursive queries allow us to properly traverse graphs in SQL - so we can get a database to recognise regular languages. It just goes to show that really pretty much everything is, or can be seen as, a database problem.</p>
+<h1>Let's get down to the SQL.</h1>
+<p>So this table definition models a finite state machine. Each entry describes a single transition.</p>
+<pre><code>
+create table fsm(
+state integer not null, -- current state
+trans char(1),          -- transition character
+to_ integer,            -- new state after transition 
+final integer not null, -- 1 = the new state is an accepting state, 0 otherwise
+check(final in (0,1))
+);
+</code></pre>
+
+<p>I found this way of representing strings more readable for demonstration purposes than using string manipulating functions on a plain SQL string. We have a table for the string, and each row represents a single character with its position within the string.</p>
+<pre><code>
+create table word(
+pos integer not null,
+item char(1) not null
+);
+</code></pre>
+
+<p>Note that this implementation does not put any constraints on the number of transitions for any one state and character, nor does it even know about starting states. We'll define which states are the starting states in the statement that does the actual recognition; in the implementation I'll give, there is only one for simplicity. So what we've got here is, in general, a nondeterministic FSM, but if you've paid attention you'll have noticed that nondeterministic FSM <em>can</em> have multiple starting states and multiple transitions per character, but they don't necessarily have to - so any deterministic FSM can be viewed as a nondeterministic FSM as well. (Yes, this is a little confusing; it would be clearer to call the latter "not necessarily deterministic", but that's clumsy to write.)</p>
+<p>Note further that I sacrificed robustness for simplicity and readability here: you're not going to want the information that your target state is an accepting state in your transition table, you're going to have to ensure that there are no gaps in your string positions and that each position has exactly one character, and you probably won't want a single table for each FSM and string (you might want to use string functions on SQL strings anyway). I wrote this code for demonstration purposes, not to be used in the real world, so if you have a use for it, don't just copy and paste my code. (Or if you do, don't complain to me when it came back to bite you.)</p>
+<p>So let's look at how we can actually check if a word is in the language of a given FSM. Let's fill the table with some data:</p>
+
+<pre><code>
+insert into fsm
+(state, trans, to_, final)
+values
+(1, 'a', 2, 0),
+(1, 'b', 3, 0),
+(2, 'a', 2, 0),
+(2, 'c', 4, 1),
+(3, 'b', 3, 0),
+(3, 'd', 4, 1);
+</code></pre>
+<p>The graph of the state machine this SQL just described looks like this: <img src="/png/fsm" />
+
+The language it recognises can be described by the regular expression (aa*c|bb*d).</p>
+
+<pre><code>
+with recursive check_word (curr_state, final, curr_pos) as
+(
+select m.state as curr_state, m.final as final, w.pos as curr_pos from FSM m, word w where m.state = 1 and w.pos = 1
+union all
+select m.to_ as curr_state, m.final as final, cw.curr_pos + 1 as curr_pos from check_word cw, FSM m, word w 
+        where m.state = curr_state and w.pos = cw.curr_pos and w.item = m.trans
+)
+select distinct 'accept' as check from check_word cw where final = 1 and curr_pos >= all (select c.curr_pos from check_word c);
+</code></pre>
+<p>As you can see in the initial select statement, in this case we have state 1 as the only starting state, but of course the statement can be altered to have more of them. The statement traverses the transition graph, moving along the edge(s) that are labeled with the character at the current string position in each step. If, after the recursive statement terminates, an accepting state has been reached, and the 'curr_pos >= all  (select c.curr_pos from check_word c)' condition ensures this has happened at the end of the string, 'accept' is returned. We need to make sure the accepting state is reached at the end of the string because in general, accepting states can be reached mid-word and later be left again. So if we left this condition out, we wouldn't only be accepting all the strings in the language our state machine describes, but also all their prefixes.</p>
+
+<h1>An example</h1>
+<p>We're going to check if the string 'aaaac' is in the language described by our FSM, so let's insert it into the 'word' table.</p>
+<pre><code>
+
+insert into word
+(pos, item)
+values
+(1, 'a'),
+(2, 'a'),
+(3, 'a'),
+(4, 'a'),
+(5, 'c');
+</code></pre>
+
+<p>If we run our code, we get</p>
+<pre><code>
+accept
+</code></pre>
+<p>as expected.</p>
+
+<p>It's easy for us to verify, by the above regular expression or the state machine graph, that 'aaaac' is really an element of the language. What about a different word that isn't in the language - like 'aabca'?</p>
+<pre><code>
+delete from word;
+insert into word
+(pos, item)
+values
+(1, 'a'),
+(2, 'a'),
+(3, 'b'),
+(4, 'c'),
+(5, 'a');
+</code></pre>
+
+<p>If we run the recursive query on this, it returns 0 rows - so the word is not accepted, just as we wanted.</p>
+
+<p>I put everything into a <a href="fsm-recursive.sql">comprehensive SQL file</a> for your convenience (not going to bother with a repository for a couple lines of demonstration code that I'm probably not going to touch again), so feel free to download it - consider it to be in the public domain.</p>
+</body>
+</html>
