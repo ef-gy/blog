@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" id="unicorn-noms">
+<head>
+<title>Bundestagswahl 2013: Daten</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="Die offiziellen Daten sind leider nicht in einem sinnvoll weiterverwertbaren Format. Die hier schon." />
+<meta name="date" content="2013-09-23T13:00:00Z" />
+<meta name="mtime" content="2013-09-23T13:00:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="bundestagswahl-2013-daten" />
+</head>
+<body>
+<h1>Gestern war Wahl, ...</h1>
+<p>... und heute ist ein schwarzer Tag.</p>
+<p>Nichtsdestotrotz möchte sich der eine oder andere vielleicht die Daten mal genauer ansehen. Im Moment gibt es erst vorläufige Ergebnisse, aber leider habe ich beim Suchen nur <a href="http://www.bundeswahlleiter.de/de/bundestagswahlen/BTW_BUND_13/ergebnisse/bundesergebnisse/">bereits ausgewertete Daten auf www.bundeswahlleiter.de gefunden</a> - keine sinnvoll weiterverwertbaren Daten. Tja, selbst ist der Mann in der Not.</p>
+<p>Ich habe kurz wget, htmltidy, xsltproc und make zusammengeworfen und ein Script gebastelt, das ein SQLite3 Datenbankdump zusammenbastelt. <a href="http://git.becquerel.org/?p=jyujin/btw-data.git">Haben könnt ihr das ganze auf git.becquerel.org</a>. Nicht vergessen: die Daten sind laut Webseite noch vorläufig. Und es können sich natürlich Fehler bei der Verarbeitung eingeschlichen haben. Hoffentlich nicht, aber: Daten sind daher ohne Gewähr.</p>
+<p>Im Repository findet sich auch <a href="http://git.becquerel.org/?p=jyujin/btw-data.git;a=blob;f=election-2013.sql">ein bereits zusammengebasteltes Dump mit den Daten</a> - für alle die entweder kein IPv4 haben oder grade keine 45MB Webseitendaten runterladen möchten. Das Extraktionsskript wird vermutlich auch noch im Laufe der Woche verbessert mit mehr Informationen - aktuell extrahiert es den Wahlkreis (numerisch), die gewählten Parteien (bzw. Direktkandidaten) und die Erst- und Zweitstimmen.</p>
+<p>Ich möchte an dieser Stelle erwähnen, dass ich es sehr schade finde, dass es sich so schwierig gestaltet, einen sinnvoll weiterverarbeitbaren Datensatz für so wichtige Dinge wie die Ergebnisse der Bundestagswahl zu finden. Auf bundestag.de scheint man nur die Ergebnisse für einzelne Wahlkreise abgreifen zu können, und bundeswahlleiter.de eben nur die bereits verwerteten Daten, keine Rohdatensätze. Das ist im Jahr 2013 eigentlich nicht mehr zu vertreten. Desweiteren weist das XHTML auf bundeswahlleiter.de vielerlei Fehler auf und schafft es nicht einmal durch den W3C Validator. Tut mir Leid, aber das ist irgendwo peinlich.</p>
+<h1>Beispiele</h1>
+<p>Daten-Repository clonen (oder alternativ von <a href="http://git.becquerel.org/?p=jyujin/btw-data.git">http://git.becquerel.org/?p=jyujin/btw-data.git</a> ein Tarball ziehen):</p>
+<pre><code>$ git clone git://git.bequerel.org/jyujin/btw-data.git</code></pre>
+<p>Datenbank einrichten:</p>
+<pre><code>$ sqlite3 election-2013.sqlite3 &lt; election-2013.sql</code></pre>
+<p>... oder ...</p>
+<pre><code>$ make election-2013.sqlite3</code></pre>
+<p>Top 5 Ergebnisse:</p>
+<pre><code>$ sqlite3 election-2013.sqlite3
+sqlite&gt; .header on
+sqlite&gt; select party, sum(primaryVote), sum(secondaryVote) from rawResult group by party order by sum(secondaryVote) desc, sum(primaryVote) desc limit 5;
+party|sum(primaryVote)|sum(secondaryVote)
+CDU|16225769|14913921
+SPD|12835933|11247283
+DIE LINKE|3583050|3752577
+GRÜNE|3177269|3690314
+CSU|3543733|3243335</code></pre>
+<p>Die Rohdaten sollten vermutlich noch angepasst werden. Dabei sollte es reichen, die Datei <em>meta.sql</em> mit zusätzlichen Tabellen und Triggern zu erweitern. Viel Spass bei der Datenanalyse!</p>
+</body>
+</html>
