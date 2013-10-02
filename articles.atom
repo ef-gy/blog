@@ -3,6 +3,8 @@
   <title>ef.gy</title>
   <subtitle>Articles</subtitle>
 
+  <entry xlink:href="topologic-cli.xhtml" />
+  <entry xlink:href="libefgy-1.xhtml" />
   <entry xlink:href="fsm-recursive-sql.xhtml" />
   <entry xlink:href="bundestagswahl-2013-daten.xhtml" />
   <entry xlink:href="visualising-syndication-feeds.xhtml" />

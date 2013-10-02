@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>libefgy, Release 1</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="A set of C++ header-only templates. Mostly maths, but also some other fun things." />
+<meta name="date" content="2013-10-02T11:30:00Z" />
+<meta name="mtime" content="2013-10-02T11:30:00Z" />
+<meta name="category" content="Software" />
+<meta name="unix:name" content="libefgy-1" />
+</head>
+<body>
+<h1>Introduction</h1>
+<p>A lot of the programmes on this site - and some of the related sites - deal with maths. Lots of it. So over time I've been accumulating math-y C++ templates. So far these templates had all been available in <a href="/source-code">this site's GIT repository</a>. But that led to all sorts of consistency problems, with the headers getting replicated and slightly modified in several projects.</p>
+<p>So, naturally, the time has come to fix this. By releasing the most current version of the templates properly. This was, in part, motivated by me trying to release a proper version of Topologic's CLI variant. More on that in a separate post. And yeah, I know the name is bollocks, but c'mon, what was I gonna use instead? libmath? libmathtemplates? libtemplatemagic? Yeah right.</p>
+<p>The headers include templates for fractional arithmetic, big integers (and thus "big fractions"), calculating &#960;, e, some calculations with those (think trigonometrics), matrix manipulations, tuples, polar and euclidian spaces in arbitrary dimensions, (perspective) projections and colour space manipulations in RGB and HSL. Also assorted other things. Not so much documentation as of yet, sorry about that. Enjoy your maths ;D.</p>
+<h1>Installation</h1>
+<p>This is a template library, so you won't actually compile this code and then install it as you would with most other libraries. Instead all you have to do is copy the header files to your compiler's default include path - i.e. copy the directory <em>include/ef.gy</em> to <em>/usr/include</em>. There's a makefile macro that does this for you, too.</p>
+<p>To obtain the source code, either <a href="/download/libefgy-1.tar.gz">grab this source tarball for release 1</a>, or grab the sources with git at <em>http://git.becquerel.org/jyujin/libefgy.git</em>. <a href="http://git.becquerel.org/?p=jyujin/libefgy.git">As usual you can browse the sources via gitweb at http://git.becquerel.org/?p=jyujin/libefgy.git</a>. Then just untar the whole thing and either copy the headers you need, or do something like this:</p>
+<pre><code>$ cd libefgy-1
+$ sudo make PREFIX=/usr install</code></pre>
+<p>Substitute sudo as appropriate. Et voila, enjoy!</p>
+<p>Oh yeah, do note the MIT/X-style licence in the <em>COPYING</em> file and browse through the <em>README</em> while you're at it.</p>
+</body>
+</html>

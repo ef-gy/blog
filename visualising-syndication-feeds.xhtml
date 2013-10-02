@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Visualising Syndication Feeds</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="Yay, pretty graphs! This is what happens when you combine fun things - in this case, FEED's database and Graphviz." />
+<meta name="date" content="2013-08-15T18:38:00Z" />
+<meta name="mtime" content="2013-08-15T18:38:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="visualising-syndication-feeds" />
+</head>
+<body>
+<h1>Oooooh, Shinyyy</h1>
+<p>Did I mention that I like a good graph every now and then? I'm sure I did. Here's a pretty one:</p>
+<img src="/svg/feed-graph" alt="FEED Database + Graphviz = Fun SVGs"/>
+<p>So, how'd that happen? Well, basically, I was trying to come up with new ways to visualise and present syndication feeds - <a href="feed-2">seeing as how I just released the second version of my command line feed reader</a>. As it turns out it's been a really good idea to use SQLite to store all the data it downloads, because that made it really, really easy to rig up <a href="http://git.becquerel.org/?p=jyujin/feed.git;a=blob;f=src/feed-graph;hb=HEAD">a shell script to convert the database's contents to a DOT file and feed it to Graphviz</a>. That pretty picture there is a freshly cleaned database with Slashdot, TheDailyWTF, XKCD and this here blog added as feeds. Turned out quite well, really.</p>
+<p>Graphviz is smart enough to allow hyperlinks to be placed in SVG output, meaning you can actually click on the individual entries in the graph. Might come out a bit small though, so click on the "source SVG" link if you want to zoom in a bit. <a href="http://git.becquerel.org/?p=jyujin/feed.git">The script is in FEED's git repository</a>, and will, of course, be included in the next release. Promise ;).</p>
+<p>I wonder what would happen if I could find a few feeds that cross-reference each other...</p>
+</body>
+</html>
