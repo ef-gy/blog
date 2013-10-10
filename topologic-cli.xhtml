@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-<title>Topologic CLI/Release 5</title>
+<title>Topologic CLI/GLUT; Releases 5 and 6</title>
 <meta name="author" content="Magnus Achim Deininger" />
 <meta name="description" content="A CLI-only version of the 'Topologic' App, available on the Mac App Store." />
 <meta name="date" content="2013-10-02T12:10:00Z" />
-<meta name="mtime" content="2013-10-02T12:10:00Z" />
+<meta name="mtime" content="2013-10-10T20:55:00Z" />
 <meta name="category" content="Software" />
 <meta name="unix:name" content="topologic-cli" />
 </head>
@@ -14,16 +14,18 @@
 <p><a href="/topologic">Topologic</a>, your friendly Mac App Store App to visualise higher-dimensional geometric primitives, is currently getting a series of cleanups. Part of these cleanups is a CLI programme that can't display these primitives, but it can read and generate the SVGs produced by the App. In other words, you get to use your command line to type <em>topologic --model cube --depth 4 --render-depth 4 > 4-cube.svg</em>, and that results in this pretty thing:</p>
 <img src="/svg/4-cube" alt="the result of 'topologic --model cube --depth 4 --render-depth 4 --id-prefix cube-4x4- > 4-cube.svg'"/>
 <p>Also works with simplices, spheres, moebius strips and klein bagels.</p>
+<p><em>Update (2013-10-10):</em> Release 6 is out now, which includes more cleanups, an open source GLUT client, majour improvements to the mouse handling and sierpinski gaskets and carpets.</p>
 <h1>Build Requirements</h1>
 <p>To compile the programme, you'll need a current version of clang++ (with partial C++0x support), libxml2 with development headers and <a href="/libefgy-1">this site's maths templates, libefgy</a>.</p>
 <p>It may be possible to compile this programme with g++, but I've never actually tried that.</p>
 <h1>Compiling</h1>
-<p>First you're going to need the source code, either <a href="/download/topologic-5.tar.gz">grab this source tarball for release 5</a>, or grab the sources with git at <em>http://git.becquerel.org/jyujin/topologic.git</em>. <a href="http://git.becquerel.org/jyujin/topologic.git">As usual you can browse the sources via gitweb at http://git.becquerel.org/jyujin/topologic.git</a>. Then you need to untar whatever you got and do something like this in a shell:</p>
+<p>First you're going to need the source code, either <a href="/download/topologic-6.tar.gz">grab this source tarball for release 6</a>, or grab the sources with git at <em>http://git.becquerel.org/jyujin/topologic.git</em>. <a href="http://git.becquerel.org/jyujin/topologic.git">As usual you can browse the sources via gitweb at http://git.becquerel.org/jyujin/topologic.git</a>. Then you need to untar whatever you got and do something like this in a shell:</p>
 <pre><code>$ cd libefgy-1
 $ make
 $ sudo make PREFIX=/usr install</code></pre>
 <p>Substitute sudo as appropriate. This should install the binary in /usr/bin/topologic and the related header files in /usr/include/topologic. The latter is somewhat important, as the programme is highly template-y.</p>
 <p>Oh yeah, do note the MIT/X-style licence in the <em>COPYING</em> file and browse through the <em>README</em> while you're at it.</p>
+<p><em>Update (2013-10-10):</em> use <em>make topologic-glut</em> to build the GLUT frontend. This is a separate frontend that is not build by default because it requires OpenGL and GLUT libraries to be installed. Usage is exactly the same as the regular CLI frontend, but the output is rendered in a new OpenGL window instead of as an SVG to stdout.</p>
 <h1>Manual</h1>
 <p>The programme supports the default <em>--help</em> switch to show a summary of the available options. Better yet, it comes with a fairly elaborate man page that tries to explain all about how to use the programme. You really ought to read that.</p>
 </body>
