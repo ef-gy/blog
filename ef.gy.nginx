@@ -80,7 +80,7 @@ server {
 	}
 
     location /include/ef.gy {
-        rewrite ^/(.*) http://git.becquerel.org/?p=jyujin/libefgy.git&f=$1 redirect;
+        rewrite ^/(.*) http://git.becquerel.org/jyujin/libefgy.git?f=$1 redirect;
     }
 
 	location /.git {
