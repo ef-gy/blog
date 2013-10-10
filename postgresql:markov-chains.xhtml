@@ -17,10 +17,10 @@
 <p>But here it is anyway: my port of markov.sql to PostgreSQL. The API is pretty much the same as the original, but for some reason this PostgreSQL version is <em>much</em> slower. Training with the same data set as last time took about four and a half times as long as with SQLite3 - that's about four hours and 40 minutes on grog.becquerel.org. Drop me a line if you happen to have an idea as to why that is. Generating strings is pretty fast tho, so no worries if you just want to use it :).</p>
 <h1>Quick Start</h1>
 <p>This article mimics the structure of the first one, so if you read that you should feel right at home.</p>
-<p>The repository for this little project is available at: <a href="http://git.becquerel.org/?p=jyujin/markov.git">http://git.becquerel.org/?p=jyujin/markov.git</a> - you can either grab a tarball from there or browse the source code (only 2 files, really). Alternatively, you could also issue the following command on your shell to check out a copy of the repository:</p>
+<p>The repository for this little project is available at: <a href="http://git.becquerel.org/jyujin/markov.git">http://git.becquerel.org/jyujin/markov.git</a> - you can either grab a tarball from there or browse the source code (only 2 files, really). Alternatively, you could also issue the following command on your shell to check out a copy of the repository:</p>
 <pre><code><![CDATA[$ git clone git://git.becquerel.org/jyujin/markov.git]]></code></pre>
 <p>This will create a directory called <em>markov</em> all set up and ready to play.</p>
-<p>Once you have the sources, there is <a href="http://git.becquerel.org/?p=jyujin/markov.git;a=blob_plain;f=dist/psql.markov-data.sql;hb=HEAD">a pre-compiled, pre-trained PostgreSQL database dump under dist/psql.markov-data.sql in that repository</a>. To play with that, issue the following on a command line in this new <em>markov</em>-directory - assuming your PostgreSQL is set up properly and the user you're currently logged in can create and use databases:</p>
+<p>Once you have the sources, there is <a href="http://git.becquerel.org/jyujin/markov.git?a=blob_plain;f=dist/psql.markov-data.sql;hb=HEAD">a pre-compiled, pre-trained PostgreSQL database dump under dist/psql.markov-data.sql in that repository</a>. To play with that, issue the following on a command line in this new <em>markov</em>-directory - assuming your PostgreSQL is set up properly and the user you're currently logged in can create and use databases:</p>
 <pre><code><![CDATA[$ createdb markov
 $ psql markov < dist/psql.markov-data.sql]]></code></pre>
 <p>Now for the fun part: to create names, insert the type of name you want in the <em>markovconstruct</em> table, then insert the maximum number of iterations in the <em>vautoconstruct</em> view, like this:</p>
@@ -49,7 +49,7 @@ markov=>]]></code></pre>
 <pre><code><![CDATA[markov=> insert into vtrain (id, data) values (42, 'foo'), (42, 'frob'), (42, 'barf'), (42, 'bar');]]></code></pre>
 <p>That view should take care of everything. Once the <em>insert</em> operation completes the model will have been updated and you can generate strings based on it like you did with the names above.</p>
 <h1>Implementation</h1>
-<p>Apart from <a href="/sql:sequence-generator">the sequence generator</a>, the following SQL trains and uses the model. A <a href="http://git.becquerel.org/?p=jyujin/markov.git;a=blob_plain;f=src/psql.markov.sql;hb=HEAD">combined source file is available in the previously mentioned GIT repository</a>.</p>
+<p>Apart from <a href="/sql:sequence-generator">the sequence generator</a>, the following SQL trains and uses the model. A <a href="http://git.becquerel.org/jyujin/markov.git?a=blob_plain;f=src/psql.markov.sql;hb=HEAD">combined source file is available in the previously mentioned GIT repository</a>.</p>
 <p>As with the SQLite version, we first need a few tables to hold the trained model; the tables <em>markov3</em>, <em>markov2</em> and <em>markov1</em> hold this data for us - third order, second order and first order models, respectively. The notable difference between this version and the original is that PostgreSQL doesn't have <em>auto_increment</em> attributes for columns. So instead we use <em>create sequence</em> to generate unique IDs.</p>
 <pre><code><![CDATA[create sequence mroid_seq;
 

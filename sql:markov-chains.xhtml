@@ -17,10 +17,10 @@
 <p>I've also taken the time to create a separate GIT repository for this in case anyone's interested. The repository contains a set of pre-trained models with 5000 corporation names from the US tax bureau and the 5000 most popular last names from the US Census Bureau from 1990, along with the most popular female and male first names from the same year. The provided makefile will download and train that data for you, as well.</p>
 <p><em>Update: <a href="/postgresql:markov-chains.xhtml">Release 2 of markov.sql is a port to PostgreSQL; have a look at that if you prefer PostgreSQL, or if you enjoy reading about weird SQL hacks in general</a>. As part of this update I've renamed some files in the repository to make it clear which database they're supposed to be used with and I've changed the links in this article to reflect this.</em></p>
 <h1>Quick Start</h1>
-<p>The repository for this little project is available at: <a href="http://git.becquerel.org/?p=jyujin/markov.git">http://git.becquerel.org/?p=jyujin/markov.git</a> - you can either grab a tarball from there or browse the source code (only 2 files, really). Alternatively, you could also issue the following command on your shell to check out a copy of the repository:</p>
+<p>The repository for this little project is available at: <a href="http://git.becquerel.org/jyujin/markov.git">http://git.becquerel.org/jyujin/markov.git</a> - you can either grab a tarball from there or browse the source code (only 2 files, really). Alternatively, you could also issue the following command on your shell to check out a copy of the repository:</p>
 <pre><code><![CDATA[$ git clone git://git.becquerel.org/jyujin/markov.git]]></code></pre>
 <p>This will create a directory called <em>markov</em> all set up and ready to play.</p>
-<p>Once you have the sources, there is <a href="http://git.becquerel.org/?p=jyujin/markov.git;a=blob_plain;f=dist/sqlite3.markov-data.sql;hb=HEAD">a pre-compiled, pre-trained SQLite database dump under dist/sqlite3.markov-data.sql in that repository</a>. To play with that, issue the following on a command line in this new <em>markov</em>-directory:</p>
+<p>Once you have the sources, there is <a href="http://git.becquerel.org/jyujin/markov.git?a=blob_plain;f=dist/sqlite3.markov-data.sql;hb=HEAD">a pre-compiled, pre-trained SQLite database dump under dist/sqlite3.markov-data.sql in that repository</a>. To play with that, issue the following on a command line in this new <em>markov</em>-directory:</p>
 <pre><code><![CDATA[$ sqlite3 markov.sqlite3 < dist/sqlite3.markov-data.sql]]></code></pre>
 <p>Now for the fun part: to create names, insert the type of name you want in the <em>markovconstruct</em> table, then insert the maximum number of iterations in the <em>vautoconstruct</em> view, like this:</p>
 <pre><code><![CDATA[$ sqlite3 markov.sqlite3 
@@ -40,7 +40,7 @@ sqlite> insert into vautoconstruct (steps) values (40);]]></code></pre>
 <pre><code><![CDATA[sqlite> insert into vtrain (id, data) values (42, 'foo'), (42, 'frob'), (42, 'barf'), (42, 'bar');]]></code></pre>
 <p>That view should take care of everything. Once the <em>insert</em> operation completes the model will have been updated and you can generate strings based on it like you did with the names above.</p>
 <h1>Implementation</h1>
-<p>Apart from <a href="/sql:sequence-generator">the sequence generator</a>, the following SQL trains and uses the model. A <a href="http://git.becquerel.org/?p=jyujin/markov.git;a=blob_plain;f=src/sqlite3.markov.sql;hb=HEAD">combined source file is available in the previously mentioned GIT repository</a>.</p>
+<p>Apart from <a href="/sql:sequence-generator">the sequence generator</a>, the following SQL trains and uses the model. A <a href="http://git.becquerel.org/jyujin/markov.git?a=blob_plain;f=src/sqlite3.markov.sql;hb=HEAD">combined source file is available in the previously mentioned GIT repository</a>.</p>
 <p>First we need a few tables to hold the trained model; the tables <em>markov3</em>, <em>markov2</em> and <em>markov1</em> hold this data for us - third order, second order and first order models, respectively:</p>
 <pre><code><![CDATA[create table markov3
 (
