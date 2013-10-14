@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>sr4.sql: a SQLite based Shadowrun character generator</title>
+<meta name="author" content="Nadja Deininger" />
+<meta name="description" content="More progress on the character generation database: BP generation rules are fully implemented, and I implemented the magic users' fun stuff now, too" />
+<meta name="date" content="2013-10-12T06:44:00Z" />
+<meta name="mtime" content="2013-10-12T06:44:00Z" />
+<meta name="category" content="Projects" />
+<meta name="unix:name" content="sr4-sql-4" />
+</head>
+<body>
+<h1>Yay, another release!</h1>
+<p>Fifth Edition is here by now, and I promise, there <em>will</em> be a database for that one as well. (I wrote an initiative tracker for Fifth Edition, by the way. Expect another blog post about that one soon-ish.) I really like some of the changes, like what they did to Initiative, but I'm not so fond of other things - they could've done without the limits, in my opinion. I haven't played it yet - we're currently scheduling a play test, though. For now, I've been working on the Fourth Edition database a little, and I've got just a couple more features for you:
+<ul>
+<li>BP cost and tables for bound spirits</li>
+<li>BP cost and tables for bound foci</li>
+<li>Tables for spirits (skills, powers, spirit types and the like)</li>
+<li>Support for Aptitude and Exceptional Attribute qualities</li>
+<li>and a couple of bug fixes in BP cost computation</li>
+<li>as well as fixed boundary checks for skills and skill groups</li>
+</ul>
+So now the magic users have got their toys as well as the technomancers - sorry for the delay, but good things come to those who wait, right? ;) I still need to do a lot of data entry, and character improvement still isn't implemented, but the basic rules for BP character generation should all be covered by now. 
+</p>
+
+<h1>So how do I use this?</h1>
+<p>I'm working on a website for this database right now; check out its early stages at <a href="http://sr4.ef.gy">http://sr4.ef.gy</a>. However, that website is still under construction, so please don't expect it to be all that usable just yet - when it is, I'll post about it on the blog. You're welcome to play around with it and make suggestions for the interface, but don't expect anything complete or working just yet. Feel free to grab the database and write your own front end, web based or not; if you do that and tell me about your project I'll be happy to link to it.</p> 
+<p>The public git repository for sr4.sql is here: <a href="http://git.becquerel.org/?p=machinelady/sr4.sql.git">http://git.becquerel.org/?p=machinelady/sr4.sql.git</a>, if you'd like to browse the source code or grab a tarball; or you could clone the repository using </p><pre><code>$ git clone git://git.becquerel.org/machinelady/sr4.sql.git</code></pre><p>, which will create a directory named 'sr4.sql'. Run sr4.sh to concatenate the SQL files and feed them to SQLite; if you'd like to add user-generated content, I put all the data about spells, gear and the like into sr4data.sql, so you could edit that file or create your own.</p>
+
+<h1>What's next?</h1>
+<p>There are a bunch of features still on my to-do list, so here's an overview of what's coming in the next few releases.
+<ul>
+<li>Karma character generation and character development</li>
+<li>More data entry, and book references</li>
+<li>Character advancement</li>
+<li>Magical traditions and technomancer streams</li>
+</ul>
+If I overlooked anything crucial, or you'd simply like a feature that's not yet on this list, <em>or</em> if you've simply got something encouraging or constructive to say about the project, do let me know - either use the comment function, or email me at <a href="mailto:nadja@ef.gy">nadja at ef dot gy</a> - or ping me on Google+, I'm using my real name there, or even on Twitter (@machine_lady there). Enjoy!
+</p>
+</body>
+</html>

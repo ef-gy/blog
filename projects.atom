@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:id="projects" xmlns:xlink="http://www.w3.org/1999/xlink">
   <title>ef.gy</title>
   <subtitle>Projects</subtitle>
-
+  <entry xlink:href="sr4-sql-4.xhtml" />
   <entry xlink:href="feed-2.xhtml" />
   <entry xlink:href="sr4-sql-2.xhtml" />
   <entry xlink:href="project:tesseract.xhtml" />
