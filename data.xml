@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <data xmlns='http://ef.gy/2013/data'>
+  <weight name='fsm-recursive-sql'>5</weight>
   <weight name='using-nginx-as-a-proxy-server'>3</weight>
   <weight name='topologic'>3</weight>
   <weight name='statistics:ssd-write-endurance'>3</weight>
