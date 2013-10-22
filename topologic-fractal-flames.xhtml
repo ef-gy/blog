@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>I See Pretty Things in Topologic/V7</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="I've wanted to mess with fractal flames for years, but it seems like I've finally found the time to actually do so." />
+<meta name="date" content="2013-10-22T07:23:00Z" />
+<meta name="mtime" content="2013-10-22T07:23:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="topologic-fractal-flames" />
+</head>
+<body>
+<h1>News From the Front</h1>
+<p>So, <a href="/topologic">Topologic</a> and <a href="/topologic-cli">its CLI/GLUT counterpart</a> are obviously great for visualising geometric primitives in - more or less - arbitrary dimensions. But there's only so much excitement you can come up with over cubes and spheres. But what about... prettier things? Like this, maybe:</p>
+<img src="/svg/topologic-7-random-flame-1" alt="random black-and-white 3D fractal flame"/>
+<p>Yep, that's right, I'm working on an implementation of <a href="http://flam3.com/flame_draves.pdf">the original fractal flames - as described by Scott Draves and Erik Reckase in their 2003 paper</a> - but <em>IN SPACE</em>. Well, in higher dimensional geometric spaces anyway. This particular beauty up there came up yesterday when I extended V6's IFS code with the variations described by Draves and Reckase, so I thought I'd share it while it's still hot.</p>
+<p>Much unlike the original version of the flames described in the paper, the version in libefgy/Topologic doesn't use a variant of the chaos game but rather it deforms a reference mesh directly. The result is very similar with higher levels of iterations, but it seems somewhat faster and more predictably to calculate. It also works a lot better in 3D and up, because it doesn't simulate depth - it actually has depth. Colouring's going to be a pain though, might have to skip that for a release.</p>
+<p>Stay tuned for more pretty things - <em>IN SPACE</em> ;).</p>
+</body>
+</html>
