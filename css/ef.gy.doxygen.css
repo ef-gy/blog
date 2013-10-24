@@ -1,0 +1,29 @@
+html
+{
+    padding-right: 31em;
+}
+
+div#comment-pane
+{
+    position: absolute;
+    right: 1em;
+    top: 1em;
+    width: 33.5em;
+}
+
+@media (max-width: 70em)
+{
+    html
+    {
+        padding-right: 0;
+    }
+
+    div#comment-pane
+    {
+        position: static;
+        width: auto;
+        right: default;
+        top: default;
+        margin: 1em;
+    }
+}
