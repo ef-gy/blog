@@ -2,12 +2,9 @@
 <xsl:stylesheet
               xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
               xmlns:xhtml="http://www.w3.org/1999/xhtml"
-              xmlns:social="http://ef.gy/2012/social"
-              xmlns:atom="http://www.w3.org/2005/Atom"
-              xmlns:data="http://ef.gy/2013/data"
               xmlns:math="http://www.w3.org/1998/Math/MathML"
               xmlns="http://www.w3.org/1999/xhtml"
-              exclude-result-prefixes="xhtml data"
+              exclude-result-prefixes="xhtml math"
               version="1.0">
   <xsl:output method="xml" version="1.0" encoding="UTF-8"
               doctype-public="-//W3C//DTD XHTML 1.1//EN"
@@ -40,6 +37,8 @@
   <xsl:template match="xhtml:script[@src='jquery.js']">
     <script type="text/javascript" src="/js/jquery"/>
   </xsl:template>
+
+  <xsl:template match="comment()"/>
 
   <xsl:template match="xhtml:body">
     <body>
