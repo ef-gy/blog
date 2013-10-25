@@ -6,8 +6,7 @@
               xmlns="http://www.w3.org/1999/xhtml"
               exclude-result-prefixes="xhtml math"
               version="1.0">
-  <xsl:output method="xml" version="1.0" encoding="UTF-8"
-              omit-xml-declaration="yes"
+  <xsl:output method="html" encoding="UTF-8"
               indent="no"
               media-type="text/html" />
 
@@ -31,12 +30,6 @@
     </xsl:copy>
   </xsl:template>
 
-  <xsl:template match="xhtml:script[not(node())]">
-    <xsl:copy>
-      <xsl:apply-templates select="@*|node()" />/**/
-    </xsl:copy>
-  </xsl:template>
-
   <xsl:template match="xhtml:head">
     <head>
       <xsl:apply-templates select="node()"/>
@@ -45,7 +38,7 @@
   </xsl:template>
 
   <xsl:template match="xhtml:script[@src='jquery.js']">
-    <script type="text/javascript" src="/js/jquery">/**/</script>
+    <script type="text/javascript" src="/js/jquery"/>
   </xsl:template>
 
   <xsl:template match="xhtml:meta"/>
