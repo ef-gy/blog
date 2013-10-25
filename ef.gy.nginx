@@ -206,8 +206,8 @@ server {
 		xslt_stylesheet /srv/http/ef.gy/xslt/html-post-process.xslt;
 	}
 
-    location /documentation {
-	    xslt_types application/xhtml+xml application/atom+xml image/svg+xml text/html;
+    location /documentation/ {
+        xslt_types application/xhtml+xml application/xml text/html;
 
         xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-documentation-post-process.xslt;
     }

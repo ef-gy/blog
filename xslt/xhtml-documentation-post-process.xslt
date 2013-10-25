@@ -7,8 +7,6 @@
               exclude-result-prefixes="xhtml math"
               version="1.0">
   <xsl:output method="xml" version="1.0" encoding="UTF-8"
-              doctype-public="-//W3C//DTD XHTML 1.1//EN"
-              doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"
               indent="no"
               media-type="application/xhtml+xml" />
 
