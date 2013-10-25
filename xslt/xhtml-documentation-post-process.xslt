@@ -46,12 +46,15 @@
     <script type="text/javascript" src="/js/jquery">/**/</script>
   </xsl:template>
 
+<!--
   <xsl:template match="xhtml:*[xhtml:a/@name][not(self::xhtml:map)]">
     <xsl:copy>
-      <xsl:attribute name="id"><xsl:value-of select="xhtml:a/@id"/></xsl:attribute>
-      <xsl:apply-templates select="@*|node()[not(self::xhtml:a/@name)]" />
+      <xsl:attribute name="id"><xsl:value-of select="xhtml:a/@name"/></xsl:attribute>
+      <xsl:apply-templates select="@*" />
+      <xsl:apply-templates select="node()[not(self::xhtml:a/@name)]" />
     </xsl:copy>
   </xsl:template>
+  -->
 
   <xsl:template match="xhtml:meta"/>
   <xsl:template match="comment()"/>
