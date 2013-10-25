@@ -7,8 +7,9 @@
               exclude-result-prefixes="xhtml math"
               version="1.0">
   <xsl:output method="xml" version="1.0" encoding="UTF-8"
+              omit-xml-declaration="yes"
               indent="no"
-              media-type="application/xhtml+xml" />
+              media-type="text/html" />
 
   <xsl:param name="target"/>
   <xsl:param name="collection"/>
@@ -19,9 +20,20 @@
   <xsl:strip-space elements="*" />
   <xsl:preserve-space elements="xhtml:pre" />
 
+  <xsl:template match="/">
+    <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;</xsl:text>
+    <xsl:apply-templates select="node()" />
+  </xsl:template>
+
   <xsl:template match="@*|node()">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()" />
+    </xsl:copy>
+  </xsl:template>
+
+  <xsl:template match="xhtml:script[not(node())]">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()" />/**/
     </xsl:copy>
   </xsl:template>
 
@@ -33,16 +45,17 @@
   </xsl:template>
 
   <xsl:template match="xhtml:script[@src='jquery.js']">
-    <script type="text/javascript" src="/js/jquery"/>
+    <script type="text/javascript" src="/js/jquery">/**/</script>
   </xsl:template>
 
+  <xsl:template match="xhtml:meta"/>
   <xsl:template match="comment()"/>
 
   <xsl:template match="xhtml:body">
     <body>
       <xsl:apply-templates select="@*|node()"/>
       <div id="comment-pane">
-          <div id="disqus_thread"/>
+          <div id="disqus_thread">Loading Disqus...</div>
           <xsl:choose>
             <xsl:when test="($userCountry = 'DEU') and ($cookieDisqus != 'on')">
               <script type="text/javascript">var disqus_shortname = 'efgy';</script>
