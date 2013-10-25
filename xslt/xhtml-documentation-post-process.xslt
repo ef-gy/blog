@@ -6,7 +6,9 @@
               xmlns="http://www.w3.org/1999/xhtml"
               exclude-result-prefixes="xhtml math"
               version="1.0">
-  <xsl:output method="html" encoding="UTF-8"
+  <xsl:output method="xml" version="1.0" encoding="UTF-8"
+              doctype-public="-//W3C//DTD XHTML 1.1//EN"
+              doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"
               indent="no"
               media-type="text/html" />
 
@@ -18,11 +20,6 @@
 
   <xsl:strip-space elements="*" />
   <xsl:preserve-space elements="xhtml:pre" />
-
-  <xsl:template match="/">
-    <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;</xsl:text>
-    <xsl:apply-templates select="node()" />
-  </xsl:template>
 
   <xsl:template match="@*|node()">
     <xsl:copy>
@@ -37,8 +34,23 @@
     </head>
   </xsl:template>
 
+  <xsl:template match="xhtml:script[@src!=''][not(text())]">
+    <script><xsl:apply-templates select="@*" />/**/</script>
+  </xsl:template>
+
+  <xsl:template match="xhtml:iframe">
+    <iframe><xsl:apply-templates select="@*" />/**/</iframe>
+  </xsl:template>
+
   <xsl:template match="xhtml:script[@src='jquery.js']">
-    <script type="text/javascript" src="/js/jquery"/>
+    <script type="text/javascript" src="/js/jquery">/**/</script>
+  </xsl:template>
+
+  <xsl:template match="xhtml:*[xhtml:a/@name][not(self::xhtml:map)]">
+    <xsl:copy>
+      <xsl:attribute name="id"><xsl:value-of select="xhtml:a/@id"/></xsl:attribute>
+      <xsl:apply-templates select="@*|node()[not(self::xhtml:a/@name)]" />
+    </xsl:copy>
   </xsl:template>
 
   <xsl:template match="xhtml:meta"/>
