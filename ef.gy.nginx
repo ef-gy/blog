@@ -43,8 +43,8 @@ server {
         rewrite ^/x?html/(.*)$ /$1 permanent;
     }
 
-    rewrite ^/documentation/libefgy/?$ /documentation/libefgy/index.html redirect;
-    rewrite ^/documentation/topologic/?$ /documentation/topologic/index.html redirect;
+    rewrite ^/documentation/libefgy/?$ /documentation/libefgy/index.xhtml redirect;
+    rewrite ^/documentation/topologic/?$ /documentation/topologic/index.xhtml redirect;
 
     rewrite ^(.*)/(kyuba:[^@]+)@([^@]*archives)$ $1/$2@drupal-kyuba permanent;
     rewrite ^(.*)/(einit:[^@]+)@([^@]*archives)$ $1/$2@drupal-einit permanent;
@@ -207,7 +207,7 @@ server {
 	}
 
     location /documentation/ {
-        xslt_types application/xhtml+xml application/xml text/html;
+        xslt_types application/xhtml+xml application/xml;
 
         xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-documentation-post-process.xslt;
     }
