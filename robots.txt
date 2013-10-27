@@ -1,4 +1,6 @@
 Sitemap: http://ef.gy/sitemap.xml
+Sitemap: http://ef.gy/documentation/libefgy/sitemap.xml
+Sitemap: http://ef.gy/documentation/topologic/sitemap.xml
 
 User-agent: *
 Disallow:
