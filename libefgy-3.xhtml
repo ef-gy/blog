@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>libefgy, Release 3</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="A set of C++ header-only templates. Mostly maths, but also some other fun things." />
+<meta name="date" content="2013-10-31T13:45:00Z" />
+<meta name="mtime" content="2013-10-31T13:45:00Z" />
+<meta name="category" content="Software" />
+<meta name="unix:name" content="libefgy-3" />
+</head>
+<body>
+<h1>libefgy-3: Release Notes</h1>
+<p>libefgy is a set of C++ header files containing templates and whatnot, all dealing with maths in all its glory. Well, that and some other things ;). The <a href="/libefgy-1">first release was not all that long ago</a> but a lot of things changed since then.</p>
+<h2>Downloads</h2>
+<p>The canonical master repository is at <a href="http://git.becquerel.org/jyujin/libefgy.git">http://git.becquerel.org/jyujin/libefgy.git</a>. <a href="/download/libefgy-3.tar.gz">A tarball for release 3 is available as a separate download</a>, in case you prefer those.</p>
+<h3>New: Mirrors</h3>
+<p>People do like to work on their own terms, and these days that does seem to include Github and Google Code as a majour source of source code. So I've taken the time to set up my primary source code repository to automatically mirror any changes to <em>both</em> Github and Google Code. These repositories are available at the following locations:</p>
+<ul>
+<li><a href="https://github.com/jyujin/libefgy">https://github.com/jyujin/libefgy</a></li>
+<li><a href="https://code.google.com/p/libefgy/">https://code.google.com/p/libefgy/</a></li>
+</ul>
+<h2>New Features</h2>
+<p>We've prepared some real treats for ya this time :). Here we go...</p>
+<h3>Fractal Flames and Random Affine IFSs</h3>
+<p>There's been a lot of improvements to all areas of the geometry and rendering code primarily used in <a href="/topologic">Topologic</a>. The most prominent feature here is the addition of fractal flames and random affine IFSs. For fractal flames that also includes an approximation of the original colouring algorithm. In case you're not quite sure what to make of those, here's a demonstration I've uploaded to YouTube:</p>
+<iframe width="100%" height="500" src="//www.youtube.com/embed/XzObtC66g3c" frameborder="0"></iframe>
+<p>These flames use a new 'plane' primitive that provides a somewhat smoother mesh for the flame transformations to deform. The random affine IFSs are rather straightforward in that they simply generate a set of transformations and then apply them recursively to a 2D square.</p>
+<p>On a sidenote, the OpenGL renderer has been updated to be compatible with OpenGL 3.2/OpenGL ES 2.0/WebGL 1.0. Yep, that means exactly what you think it means: lots of new frontends for Topologic. Unfortunately that does mean any desktop frontends will be needing OpenGL 3.2 compatible graphics drivers.</p>
+<h3>Mersenne Twister</h3>
+<p><em>Nadja</em> was quite busy for this release as well; this release includes her custom Mersenne Twister and the early stages of a generic genetic algorithm. The MT is used primarily with the random affine IFSs and fractal flames, to get decent random numbers and to make sure that the same seed on different system results in the same primitives. It also does appear to be rather fast, and having it available as a proper template at compile time should let the compiler do quite a bit of its magic, too.</p>
+<h2>Documentation</h2>
+<p>The documentation for releases 1 and 2 was in quite a sorry state indeed, so I've tried to improve on that. Documentation is nowhere complete, but it's definitely getting there. Documentation for this project relies on doxygen, and <a href="http://ef.gy/documentation/libefgy">up-to-date documentation for the current master branch in the git repository is available right here on this site</a>.</p>
+<h3>Test Cases</h3>
+<p>I hate when things don't work like they should; don't you? Well, you're going to like this, then: this release includes test cases for some of the code and I intend to add a veeeery long list of test cases for the code. As time permits, anyway. To run the test cases, all you have to do is run this in a shell:</p>
+<pre><code>$ make test</code></pre>
+<p>If any of the tests fail to compile or run as expected then it'd be nice if you dropped me a line.</p>
+<h2>Removed Features</h2>
+<p>This release removes the <em>scratchPad</em> and the <em>buffer</em> templates because the STL provides for better things to use here. The next release will no longer include the <em>math::set</em> template either.</p>
+<p>I've also changed quite a bit while writing test cases for some parts of the code that was rarely used before. Some of these changes are mere bandaids, so they'll be gone soon, too.</p>
+<p>Enjoy what's left of the code. ;)</p>
+</body>
+</html>

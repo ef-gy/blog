@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Topologic, Release 7</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="Pretty things! Squeee! Even if you don't have a Mac!" />
+<meta name="date" content="2013-10-31T16:00:00Z" />
+<meta name="mtime" content="2013-10-31T16:00:00Z" />
+<meta name="category" content="Software" />
+<meta name="unix:name" content="topologic-7" />
+</head>
+<body>
+<h1>Topologic-7: Release Notes</h1>
+<p>It's time for another release of Topologic. Huzzah! But before I go into details, I'd like to showcase the best new feature this release has to offer to all non-geeks and non-OSXers: a WebGL client! Don't know what to make of that? Well, let me show you...</p>
+<img src="/png/topologic-7-webgl" alt="http://ef.gy/webgl/topologic.html#--depth+3+--render-depth+3+--model+random-affine-ifs+--seed+15+--surface+0+0+0+0.5+--wireframe+0+0+0+0.8+--background+1+1+1+1+--iterations+8+--functions+4"/>
+<p>Yep, that's right, now you don't need a Mac nor a compiler to play with Topologic. Now it runs right in your browser window! <a href="http://ef.gy/webgl/topologic.html">Go ahead, give it a try</a>. <a href="http://ef.gy/webgl/topologic.html#--depth+3+--render-depth+3+--model+random-affine-ifs+--seed+15+--surface+0+0+0+0.5+--wireframe+0+0+0+0.8+--background+1+1+1+1+--iterations+8+--functions+4">It takes the same arguments as the CLI version as a <em>#fragment</em>-identifier, too, by the way</a>. Sadly this does require a recent browser and proper graphics drivers on your box. But I've been told it works on Mint with FF and Chromium, and I've tried it on OSX and Windows with Chrome, Firefox and Safari, so chances are it'll work for you, too. If not, try updating your browser and your graphics drivers. Also, <a href="https://github.com/kripken/emscripten">let's all praise kripken for their 'emscripten' C++-to-JS cross compiler</a>. That really helped with porting, hehe.</p>
+<h2>Downloads</h2>
+<p>The canonical master repository is at <a href="http://git.becquerel.org/jyujin/topologic.git">http://git.becquerel.org/jyujin/topologic.git</a>. <a href="/download/topologic-7.tar.gz">A tarball for release 7 is available as a separate download</a>, in case you prefer those.</p>
+<h3>New: Mirrors</h3>
+<p>I've already announced this in <a href="/libefgy-3">libefgy-3 release notes</a>, but it probably won't hurt to repeat myself here either; both libefgy and Topologic are now available through Github and Google Code as well as via the main repository, seeing as how people really seem to like using Github ;). Mirror locations are:</p>
+<ul>
+<li><a href="https://github.com/jyujin/topologic">https://github.com/jyujin/topologic</a></li>
+<li><a href="https://code.google.com/p/topologic-foss/">https://code.google.com/p/topologic-foss/</a></li>
+</ul>
+<h2>New Features</h2>
+<p>Like the WebGL client at <a href="http://ef.gy/webgl/topologic.html">http://ef.gy/webgl/topologic.html</a>? Yeah, well, you're in for two additional treats as well. No tricks - cept for them puns, those are intended.</p>
+<h3>Fractal Flames</h3>
+<p>I've already pointed out how the latest libefgy added fractal flames, but it's worth repeating. The implementation even includes a fragment shader implementation of their colouring algorithm - it's still a bit dodgy, of course, but hey, it's pretty damn impressive. Since I already used the 3D fractal flame youtube video on the libefgy-3 release notes, here's a different one in 4D:</p>
+<iframe width="100%" height="500" src="//www.youtube.com/embed/e6Tfuw3lD5M" frameborder="0"></iframe>
+<p>As I pointed out in the libefgy-3 release notes, the OpenGL renderer has been updated to be compatible with OpenGL 3.2/OpenGL ES 2.0/WebGL 1.0. So... expect an iOS client sometime soon.</p>
+<h3>Random Affine IFSs</h3>
+<p>Noticed how that the screenshot of the WebGL client didn't show a hypercube? Yeah, that's a random affine IFS. They're kind of pretty, really...</p>
+<h2>Documentation</h2>
+<p>I've been... neglecting... the documentation for a few releases now. Well, didn't quite get around to it all that much this release either, but I've set up a cronjob to automatically extract what little documentation there is with doxygen and to then put it right <a href="http://ef.gy/documentation/topologic">here on this site at http://ef.gy/documentation/topologic</a>.</p>
+<p>Hope you enjoy this latest release ;). Oh and if you're on OSX and you <a href="http://itunes.apple.com/us/app/topologic/id558300160">happen to have bought the App Store version of Topologic</a>, don't worry: I'll turn in the update for V7 for review really soon. V6 only took a handful of days to get published, so V7 shouldn't take long this time either.</p>
+</body>
+</html>
