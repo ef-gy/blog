@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:id="everything" xmlns:xlink="http://www.w3.org/1999/xlink">
   <title>ef.gy</title>
-  <subtitle>ephemeris magni</subtitle>
+  <subtitle>le bloeg, unabridged</subtitle>
 
   <link rel="via" href="http://ef.gy/atom/site" type="application/atom+xml" />
   <link rel="related" href="http://ef.gy/site" type="application/xhtml+xml" />
