@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Topologic/iOS</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="Pretty things, now for your iPad and iPhone." />
+<meta name="date" content="2013-11-02T16:00:00Z" />
+<meta name="mtime" content="2013-11-02T16:00:00Z" />
+<meta name="category" content="Software" />
+<meta name="unix:name" content="topologic-ios" />
+</head>
+<body>
+<h1>Topologic for iOS</h1>
+<p>Dive right into the fourth dimension and beyond with <a href="/topologic">Topologic</a> for iOS. This latest port of the programme, designed for iPads but working quite fine on iPhones, features improved touch controls and all the neat things added in <a href="/topologic-7">Topologic's seventh release</a>. That includes the random IFSs and the fractal flames with the fractal flame colouring algorithm.</p>
+<img src="/png/ipad-topologic-7-screenshot-2" alt="Random affine IFS on iPad"/>
+<p>The app is fully-featured and should work on all recent iOS devices and versions. However, while the code would in theory work with arbitrarily many spatial dimensions, it is limited to 7D because the calculations get somewhat involved after that.</p>
+<h1>Usage</h1>
+<p>Select the model on the parameter tabs, then switch back to the render tab to see the output.</p>
+<p>Pan with one finger to rotate the model, pinch to zoom. Pan with more than one finger to rotate in higher dimensions, e.g. pan with two fingers to rotate in 4D, three to rotate in 5D and so on.</p>
+<h1>Fractal Flame Colouring</h1>
+<p>The app contains an implementation of the fractal flame colouring algorithm; to use it, choose the 'Fractal Flame' colour option. The colour map is generated randomly whenever the fractal flame colouring mode is enabled. Due to how the algorithm is designed, this will only produce output for models with lots of overlapping sections, and it will only use more than one colour for IFS-based models. Use one of the normal colour sets for other models.</p>
+<h1>WebGL Frontend</h1>
+<p>Wonder what Topologic is all about but don't feel like spending the 99c for it? Why not give it a try <a href="/webgl/topologic.html">right in your browser window on your desktop</a>. Nobody said you'd have to buy the app in blind faith ;).</p>
+<h1>Source Code</h1>
+<p>While the source code for the iOS frontend is not open source, the sources for the WebGL, CLI and GLUT versions certainly are. See <a href="https://github.com/jyujin/topologic">https://github.com/jyujin/topologic</a> and <a href="https://github.com/jyujin/libefgy">https://github.com/jyujin/libefgy</a> for those sources.</p>
+</body>
+</html>
