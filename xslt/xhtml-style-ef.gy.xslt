@@ -21,6 +21,7 @@
   <xsl:param name="cookieDisqus"/>
   <xsl:param name="documentRoot"/>
   <xsl:param name="baseURI"/>
+  <xsl:param name="disqusShortname"/>
 
   <xsl:variable name="authors" select="document(concat($documentRoot,'/authors.xml'))/data:data/data:author"/>
   <xsl:variable name="referers" select="document(concat($documentRoot,'/referers.xml'))/data:referers/data:referer"/>
@@ -203,16 +204,16 @@
           <li><a rel="alternate" type="application/epub+zip" href="/epub/{$collection}.epub">EPUB</a></li>
           <li><a rel="alternate" type="application/docbook+xml" href="/docbook/{$collection}">DocBook 5</a></li>
         </ul>
-        <xsl:if test="not(xhtml:ul[@id='feed'])">
+        <xsl:if test="not(xhtml:ul[@id='feed']) and ($disqusShortname != '')">
           <div id="disqus_thread"/>
           <xsl:choose>
             <xsl:when test="($userCountry = 'DEU') and ($cookieDisqus != 'on')">
-              <script type="text/javascript">var disqus_shortname = 'efgy'; <xsl:if test="/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']">var disqus_identifier = '<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content"/>';</xsl:if></script>
+              <script type="text/javascript">var disqus_shortname = '<xsl:value-of select="$disqusShortname"/>'; <xsl:if test="/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']">var disqus_identifier = '<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content"/>';</xsl:if></script>
               <a id="comments" class="dsq-brlink" href="http://disqus.com" onclick="var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true; dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js'; (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq); document.cookie='disqus=on'; return false;">comments powered by <span class="logo-disqus">Disqus</span>; Comments are not shown by default for privacy reasons, click here to enable them. This will make your browser request data from the third-party disqus.com servers and may additionally request data from the Google Analytics servers. Clicking this link will also set a cookie that will automatically load disqus comments on further page loads on this website. If you change your mind later, simply remove this cookie in your browser.</a>
               <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
             </xsl:when>
             <xsl:otherwise>
-              <script type="text/javascript">var disqus_shortname = 'efgy'; <xsl:if test="/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']">var disqus_identifier = '<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content"/>';</xsl:if> (function() { var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true; dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js'; (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq); })();</script>
+              <script type="text/javascript">var disqus_shortname = '<xsl:value-of select="$disqusShortname"/>'; <xsl:if test="/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']">var disqus_identifier = '<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content"/>';</xsl:if> (function() { var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true; dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js'; (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq); })();</script>
               <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
               <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
             </xsl:otherwise>

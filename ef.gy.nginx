@@ -34,6 +34,7 @@ server {
     xslt_string_param cookieTwitter $cookie_twitter;
     xslt_string_param cookieFlattr $cookie_flattr;
     xslt_string_param baseURI 'http://$http_host';
+    xslt_string_param disqusShortname 'efgy';
 
     if ($request_uri ~ \?.*$ )
     {
