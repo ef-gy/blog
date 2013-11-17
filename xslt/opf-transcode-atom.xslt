@@ -46,7 +46,7 @@
           <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
             <head>
               <title>Cover</title>
-              <link rel="stylesheet" href="ef.gy.cover.css" type="text/css"/>
+              <link rel="stylesheet" href="cover.css" type="text/css"/>
             </head>
             <body id="cover">
               <h1><xsl:value-of select="atom:title"/></h1>
@@ -88,7 +88,7 @@
         </xsl:document>
         <item id="toc" href="toc.xhtml" media-type="application/xhtml+xml" properties="nav"/>
         <item id="css" href="book.css" media-type="text/css"/>
-        <item id="cover-css" href="ef.gy.cover.css" media-type="text/css"/>
+        <item id="cover-css" href="cover.css" media-type="text/css"/>
         <xsl:for-each select="atom:entry[atom:content[@type='application/xhtml+xml']]">
           <xsl:document href="{$builddir}/{$name}/content-{position()}.xhtml">
             <xsl:copy-of select="atom:content/xhtml:html"/>

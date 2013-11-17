@@ -124,7 +124,7 @@ $(EPUBDEST)/.volatile:
 $(BUILD)/book.css: css/book.css $(BUILDD)
 	cp $< $@
 
-$(BUILD)/ef.gy.cover.css: css/ef.gy.cover.css $(BUILDD)
+$(BUILD)/cover.css: css/cover.css $(BUILDD)
 	cp $< $@
 
 # build data file downloads
@@ -222,7 +222,7 @@ $(BUILD)/%/META-INF/container.xml: $(BUILD)/%/mimetype
 $(BUILD)/%/book.css: css/book.css $(BUILD)/%/mimetype
 	cp $< $@
 
-$(BUILD)/%/ef.gy.cover.css: css/ef.gy.cover.css $(BUILD)/%/mimetype
+$(BUILD)/%/cover.css: css/cover.css $(BUILD)/%/mimetype
 	cp $< $@
 
 $(BUILD)/%/publication.opf: $(BUILD)/%.xhtml $(BUILD)/%/META-INF/container.xml $(BUILD)/licence.xml xslt/opf-transcode-xhtml.xslt $(PMML2SVG)
@@ -252,11 +252,11 @@ $(BUILD)/%/publication.opf: $(BUILD)/%.atom $(BUILD)/%/META-INF/container.xml $(
 	mv $@~ $@
 
 # pattern rule to generate MOBIs
-$(BUILD)/%.mobi: $(BUILD)/%/publication.opf $(BUILD)/%/book.css $(BUILD)/%/ef.gy.cover.css
+$(BUILD)/%.mobi: $(BUILD)/%/publication.opf $(BUILD)/%/book.css $(BUILD)/%/cover.css
 	cd $(BUILD)/$* && $(KINDLEGEN) publication.opf -o $(notdir $@) || true
 	mv $(BUILD)/$*/$(notdir $@) $(BUILD)
 
-$(BUILD)/%.epub: $(BUILD)/%/publication.opf $(BUILD)/%/book.css $(BUILD)/%/ef.gy.cover.css
+$(BUILD)/%.epub: $(BUILD)/%/publication.opf $(BUILD)/%/book.css $(BUILD)/%/cover.css
 	rm -f $@
 	cd $(BUILD)/$* && $(ZIP) -0 ../$(notdir $@) mimetype && $(ZIP) ../$(notdir $@) META-INF/container.xml publication.opf $(shell $(XSLTPROC) xslt/opf-print-manifest.xslt $<)
 

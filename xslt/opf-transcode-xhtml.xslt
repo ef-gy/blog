@@ -40,7 +40,7 @@
         <xsl:document href="{$builddir}/{$name}/cover.xhtml">
           <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
             <head>
-              <link rel="stylesheet" href="ef.gy.cover.css" type="text/css"/>
+              <link rel="stylesheet" href="cover.css" type="text/css"/>
               <title>Cover</title>
             </head>
             <body id="cover">
@@ -75,7 +75,7 @@
         <item id="toc" href="toc.xhtml" media-type="application/xhtml+xml" properties="nav"/>
         <!--<item id="cover" href="{$name}.cover.opf.svg" media-type="image/svg+xml" properties="cover-image"/>-->
         <item id="css" href="book.css" media-type="text/css"/>
-        <item id="cover-css" href="ef.gy.cover.css" media-type="text/css"/>
+        <item id="cover-css" href="cover.css" media-type="text/css"/>
         <item id="main" href="content.xhtml" media-type="application/xhtml+xml">
           <xsl:document href="{$builddir}/{$name}/content.xhtml">
             <xsl:copy-of select="."/>
