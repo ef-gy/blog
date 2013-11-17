@@ -44,10 +44,10 @@
               <title>Cover</title>
             </head>
             <body id="cover">
-              <h1>ef.gy</h1>
+              <h1><xsl:value-of select="$baseURI"/></h1>
               <h2><xsl:value-of select="xhtml:head/xhtml:title"/></h2>
               <p>Written by <xsl:value-of select="xhtml:head/xhtml:meta[@name='author']/@content"/>.</p>
-              <p>This ebook was automatically transcribed from an XHTML file available at <a href="http://ef.gy/{@name}">ef.gy</a>. Certain elements of the source document may not be present in this ebook transcript due to technical limitations.</p>
+              <p>This ebook was automatically transcribed from an XHTML file available at <a href="{$baseURI}/{@name}"><xsl:value-of select="concat($baseURI,'/',@name)"/></a>. Certain elements of the source document may not be present in this ebook transcript due to technical limitations.</p>
             </body>
           </html>
         </xsl:document>

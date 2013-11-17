@@ -13,6 +13,7 @@
   <xsl:param name="target"/>
   <xsl:param name="collection"/>
   <xsl:param name="userAgent"/>
+  <xsl:param name="baseURI"/>
 
   <xsl:variable name="simpleFeed" select="contains($userAgent, 'MagpieRSS')"/>
 
@@ -31,19 +32,19 @@
         <xsl:when test="atom:id"/>
 
         <xsl:when test="@xml:id">
-          <id>http://ef.gy/atom/<xsl:value-of select="@xml:id"/></id>
+          <id><xsl:value-of select="$baseURI"/>/atom/<xsl:value-of select="@xml:id"/></id>
         </xsl:when>
       </xsl:choose>
 
       <xsl:if test="@xml:id">
-        <link href="http://ef.gy/atom/{@xml:id}" rel="self" />
+        <link href="{$baseURI}/atom/{@xml:id}" rel="self" />
         <xsl:if test="not($simpleFeed)">
-          <link href="http://ef.gy/pdf/{@xml:id}" rel="alternate" type="application/pdf" />
-          <link href="http://ef.gy/mobi/{@xml:id}.mobi" rel="alternate" type="application/x-mobipocket-ebook" />
-          <link href="http://ef.gy/epub/{@xml:id}.epub" rel="alternate" type="application/epub+zip" />
-          <link href="http://ef.gy/rss/{@xml:id}" rel="alternate" type="application/rss+xml" />
+          <link href="{$baseURI}/pdf/{@xml:id}" rel="alternate" type="application/pdf" />
+          <link href="{$baseURI}/mobi/{@xml:id}.mobi" rel="alternate" type="application/x-mobipocket-ebook" />
+          <link href="{$baseURI}/epub/{@xml:id}.epub" rel="alternate" type="application/epub+zip" />
+          <link href="{$baseURI}/rss/{@xml:id}" rel="alternate" type="application/rss+xml" />
         </xsl:if>
-        <link href="http://ef.gy/{@xml:id}" rel="alternate" type="application/xhtml+xml" />
+        <link href="{$baseURI}/{@xml:id}" rel="alternate" type="application/xhtml+xml" />
       </xsl:if>
 
       <xsl:choose>
@@ -64,11 +65,11 @@
   </xsl:template>
 
   <xsl:template match="/atom:feed/atom:title">
-    <title>http://ef.gy/ :: <xsl:value-of select="."/></title>
+    <title><xsl:value-of select="$baseURI"/>/ :: <xsl:value-of select="."/></title>
   </xsl:template>
 
   <xsl:template match="//atom:entry/atom:link[(@rel!='payment') or not(@rel)]/@href">
-    <xsl:attribute name="href">http://ef.gy<xsl:value-of select="."/></xsl:attribute>
+    <xsl:attribute name="href"><xsl:value-of select="$baseURI"/><xsl:value-of select="."/></xsl:attribute>
   </xsl:template>
 
   <xsl:template match="//atom:entry">
@@ -77,13 +78,13 @@
       <xsl:choose>
         <xsl:when test="atom:link/@href"/>
         <xsl:when test="atom:category[@term='einit.org']">
-          <link href="{concat('http://ef.gy/',atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content,'@drupal-einit')}"/>
+          <link href="{concat($baseURI,'/',atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content,'@drupal-einit')}"/>
         </xsl:when>
         <xsl:when test="atom:category[@term='kyuba.org']">
-          <link href="{concat('http://ef.gy/',atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content,'@drupal-kyuba')}"/>
+          <link href="{concat($baseURI,'/',atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content,'@drupal-kyuba')}"/>
         </xsl:when>
         <xsl:otherwise>
-          <link href="{concat('http://ef.gy/',atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content,'@',$collection)}"/>
+          <link href="{concat($baseURI,'/',atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content,'@',$collection)}"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:copy>

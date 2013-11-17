@@ -15,6 +15,7 @@
               media-type="application/xml" />
 
   <xsl:param name="builddir"/>
+  <xsl:param name="baseURI"/>
 
   <xsl:strip-space elements="*" />
 
@@ -59,7 +60,7 @@
                   <li><xsl:value-of select="atom:name"/></li>
                 </xsl:for-each>
               </ul>
-              <p>This ebook was automatically transcribed from source documents available at <a href="http://ef.gy/source-code">ef.gy</a>. Certain elements of the source documents may not be present in this ebook transcript due to technical limitations.</p>
+              <p>This ebook was automatically transcribed from source documents available at <a href="{$baseURI}/source-code"><xsl:value-of select="$baseURI"/>/source-code</a>. Certain elements of the source documents may not be present in this ebook transcript due to technical limitations.</p>
             </body>
           </html>
         </xsl:document>

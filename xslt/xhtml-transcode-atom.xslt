@@ -17,6 +17,7 @@
   <xsl:param name="target"/>
   <xsl:param name="collection"/>
   <xsl:param name="documentRoot"/>
+  <xsl:param name="baseURI"/>
 
   <xsl:variable name="weights" select="document(concat($documentRoot, '/data.xml'))//data:weight"/>
 
@@ -59,7 +60,7 @@
           </xsl:choose>
           <xsl:choose>
             <xsl:when test="@xml:id">
-              <link rel="alternate" type="application/atom+xml" href="http://ef.gy/atom/{@xml:id}" />
+              <link rel="alternate" type="application/atom+xml" href="{$baseURI}/atom/{@xml:id}" />
             </xsl:when>
             <xsl:when test="atom:link[@rel='self']/@href">
               <link rel="alternate" type="application/atom+xml" href="{atom:link[@rel='self']/@href}" />

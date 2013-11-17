@@ -20,6 +20,7 @@
   <xsl:param name="userCountry"/>
   <xsl:param name="cookieDisqus"/>
   <xsl:param name="documentRoot"/>
+  <xsl:param name="baseURI"/>
 
   <xsl:variable name="authors" select="document(concat($documentRoot,'/authors.xml'))/data:data/data:author"/>
   <xsl:variable name="referers" select="document(concat($documentRoot,'/referers.xml'))/data:referers/data:referer"/>
@@ -75,13 +76,13 @@
       </xsl:if>
       <xsl:apply-templates select="@*|node()" />
       <xsl:choose>
-        <xsl:when test="//xhtml:link[@href='http://ef.gy/atom/site']" />
+        <xsl:when test="//xhtml:link[@href=concat($baseURI,'/atom/site')]" />
         <xsl:otherwise>
           <link rel="alternate" type="application/atom+xml" href="/atom/site" />
         </xsl:otherwise>
       </xsl:choose>
       <xsl:choose>
-        <xsl:when test="//xhtml:link[@href='http://ef.gy/rss/site']" />
+        <xsl:when test="//xhtml:link[@href=concat($baseURI,'/rss/site')]" />
         <xsl:otherwise>
           <link rel="alternate" type="application/rss+xml" href="/rss/site" />
         </xsl:otherwise>
@@ -108,17 +109,6 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template match="xhtml:title">
-    <xsl:choose>
-      <xsl:when test="substring-after(.,'ef.gy') != ''">
-        <title><xsl:apply-templates select="@*|node()" /></title>
-      </xsl:when>
-      <xsl:otherwise>
-        <title>ef.gy :: <xsl:apply-templates select="@*|node()" /></title>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
   <xsl:template match="xhtml:body">
     <body>
       <xsl:variable name="author" select="/xhtml:html/xhtml:head/xhtml:meta[@name='author']/@content"/>
@@ -127,7 +117,7 @@
         <xsl:when test="(string-length($target) > 0) and (string-length($collection) > 0)">/<xsl:value-of select="$target"/>@<xsl:value-of select="$collection"/></xsl:when>
         <xsl:otherwise>/<xsl:value-of select="//xhtml:meta[@name='unix:name']/@content"/></xsl:otherwise>
       </xsl:choose></xsl:variable>
-      <xsl:variable name="uri" select="concat('http://ef.gy', $suri)"/>
+      <xsl:variable name="uri" select="concat($baseURI, $suri)"/>
       <xsl:variable name="uname" select="//xhtml:meta[@name='unix:name']/@content"/>
       <xsl:apply-templates select="@*" />
       <h1><xsl:value-of select="/xhtml:html/xhtml:head/xhtml:title"/></h1>
