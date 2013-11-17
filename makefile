@@ -121,7 +121,7 @@ $(EPUBDEST)/.volatile:
 	touch $@
 
 # css files (for epub/kindle)
-$(BUILD)/ef.gy.book.css: css/ef.gy.book.css $(BUILDD)
+$(BUILD)/book.css: css/book.css $(BUILDD)
 	cp $< $@
 
 $(BUILD)/ef.gy.cover.css: css/ef.gy.cover.css $(BUILDD)
@@ -219,7 +219,7 @@ $(BUILD)/%/META-INF/container.xml: $(BUILD)/%/mimetype
 		'<rootfile full-path="publication.opf" media-type="application/oebps-package+xml"/>'\
 		'</rootfiles></container>'>$@
 
-$(BUILD)/%/ef.gy.book.css: css/ef.gy.book.css $(BUILD)/%/mimetype
+$(BUILD)/%/book.css: css/book.css $(BUILD)/%/mimetype
 	cp $< $@
 
 $(BUILD)/%/ef.gy.cover.css: css/ef.gy.cover.css $(BUILD)/%/mimetype
@@ -252,11 +252,11 @@ $(BUILD)/%/publication.opf: $(BUILD)/%.atom $(BUILD)/%/META-INF/container.xml $(
 	mv $@~ $@
 
 # pattern rule to generate MOBIs
-$(BUILD)/%.mobi: $(BUILD)/%/publication.opf $(BUILD)/%/ef.gy.book.css $(BUILD)/%/ef.gy.cover.css
+$(BUILD)/%.mobi: $(BUILD)/%/publication.opf $(BUILD)/%/book.css $(BUILD)/%/ef.gy.cover.css
 	cd $(BUILD)/$* && $(KINDLEGEN) publication.opf -o $(notdir $@) || true
 	mv $(BUILD)/$*/$(notdir $@) $(BUILD)
 
-$(BUILD)/%.epub: $(BUILD)/%/publication.opf $(BUILD)/%/ef.gy.book.css $(BUILD)/%/ef.gy.cover.css
+$(BUILD)/%.epub: $(BUILD)/%/publication.opf $(BUILD)/%/book.css $(BUILD)/%/ef.gy.cover.css
 	rm -f $@
 	cd $(BUILD)/$* && $(ZIP) -0 ../$(notdir $@) mimetype && $(ZIP) ../$(notdir $@) META-INF/container.xml publication.opf $(shell $(XSLTPROC) xslt/opf-print-manifest.xslt $<)
 

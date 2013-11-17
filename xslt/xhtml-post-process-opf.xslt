@@ -18,7 +18,7 @@
 
   <xsl:template match="xhtml:head">
     <head>
-      <link rel="stylesheet" href="ef.gy.book.css" type="text/css"/>
+      <link rel="stylesheet" href="book.css" type="text/css"/>
       <xsl:apply-templates select="node()"/>
     </head>
   </xsl:template>
