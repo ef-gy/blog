@@ -45,6 +45,7 @@ server {
 
     rewrite ^/documentation/libefgy/?$ /documentation/libefgy/index.xhtml redirect;
     rewrite ^/documentation/topologic/?$ /documentation/topologic/index.xhtml redirect;
+    rewrite ^/documentation/bourne\+\+/?$ /documentation/bourne++/index.xhtml redirect;
 
     rewrite ^(.*)/(kyuba:[^@]+)@([^@]*archives)$ $1/$2@drupal-kyuba permanent;
     rewrite ^(.*)/(einit:[^@]+)@([^@]*archives)$ $1/$2@drupal-einit permanent;
