@@ -33,6 +33,7 @@ server {
     xslt_string_param cookieDisqus $cookie_disqus;
     xslt_string_param cookieTwitter $cookie_twitter;
     xslt_string_param cookieFlattr $cookie_flattr;
+    xslt_string_param baseURI 'http://$http_host';
 
     if ($request_uri ~ \?.*$ )
     {

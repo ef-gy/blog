@@ -14,6 +14,7 @@
 
   <xsl:param name="documentRoot"/>
   <xsl:param name="userAgent"/>
+  <xsl:param name="baseURI"/>
 
   <xsl:variable name="authors" select="document(concat($documentRoot,'/authors.xml'))/data:data/data:author"/>
   <xsl:variable name="simpleFeed" select="contains($userAgent, 'MagpieRSS')"/>
@@ -31,14 +32,14 @@
       <xsl:variable name="authordata" select="$authors[@name=$author][1]"/>
 
       <title><xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:title" /></title>
-      <id>http://ef.gy/<xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content" /></id>
+      <id><xsl:value-of select="$baseURI"/>/<xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content" /></id>
       <link href="/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}" rel="alternate" type="application/xhtml+xml" />
       <xsl:if test="not($simpleFeed)">
         <link href="/pdf/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}" rel="alternate" type="application/pdf" />
         <link href="/mobi/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}.mobi" rel="alternate" type="application/x-mobipocket-ebook" />
         <link href="/epub/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}.epub" rel="alternate" type="application/epub+zip" />
         <xsl:if test="$authordata/@flattr != ''">
-          <link href="https://flattr.com/submit/auto?url=http://ef.gy/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}&amp;user_id={$authordata/@flattr}&amp;title={translate($source/xhtml:html/xhtml:head/xhtml:title,'&#34; ÄÖÜäöüß',&#34;&#39;+AOUaous&#34;)}" rel="payment" type="application/rss+xml" />
+          <link href="https://flattr.com/submit/auto?url={$baseURI}/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}&amp;user_id={$authordata/@flattr}&amp;title={translate($source/xhtml:html/xhtml:head/xhtml:title,'&#34; ÄÖÜäöüß',&#34;&#39;+AOUaous&#34;)}" rel="payment" type="application/rss+xml" />
         </xsl:if>
       </xsl:if>
       <summary><xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='description']/@content" /></summary>
