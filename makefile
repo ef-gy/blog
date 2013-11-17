@@ -69,6 +69,8 @@ XSLTPROCARGS:=--stringparam baseURI "http://ef.gy" --stringparam documentRoot "$
 .SECONDARY:
 
 # meta rules
+update: index pdfs mobis epubs install
+
 all: fortune index svgs pdfs mobis epubs
 run: run-fortune
 clean:
@@ -283,7 +285,7 @@ $(INDICES): makefile $(filter-out %index.atom, $(wildcard download/*))
 	echo '</feed>'>>$@
 
 # global navigation index
-index.xml: $(BUILD)/everything.atom xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt xslt/index-transcode-atom.xslt
+index.xml: $(BUILD)/everything.atom xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt xslt/index-transcode-atom.xslt *.atom
 	$(XSLTPROC) $(XSLTPROCARGS) xslt/atom-style-ef.gy.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCARGS) xslt/atom-sort.xslt - |\
 		$(XSLTPROC) $(XSLTPROCARGS) xslt/index-transcode-atom.xslt - > $@
