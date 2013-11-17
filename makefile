@@ -187,7 +187,7 @@ $(BUILD)/%.xhtml: %.xhtml $(BUILDD) $(BUILD)/licence.xml xslt/xhtml-pre-process.
 	$(XSLTPROC) $(XSLTPROCARGS) xslt/xhtml-pre-process.xslt $< > $@
 
 # pattern rule to generate merged/preprocessed ATOMs
-$(BUILD)/%.atom: %.atom $(BUILDD) $(BUILD)/licence.xml xslt/atom-merge.xslt xslt/xhtml-pre-process.xslt
+$(BUILD)/%.atom: %.atom $(BUILDD) $(BUILD)/licence.xml xslt/atom-merge.xslt xslt/xhtml-pre-process.xslt *.atom
 	$(XSLTPROC) $(XSLTPROCARGS) xslt/atom-merge.xslt $< | \
 		$(XSLTPROC) $(XSLTPROCARGS) xslt/xhtml-pre-process.xslt - > $@
 
@@ -285,7 +285,7 @@ $(INDICES): makefile $(filter-out %index.atom, $(wildcard download/*))
 	echo '</feed>'>>$@
 
 # global navigation index
-index.xml: $(BUILD)/everything.atom xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt xslt/index-transcode-atom.xslt *.atom
+index.xml: $(BUILD)/everything.atom xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt xslt/index-transcode-atom.xslt
 	$(XSLTPROC) $(XSLTPROCARGS) xslt/atom-style-ef.gy.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCARGS) xslt/atom-sort.xslt - |\
 		$(XSLTPROC) $(XSLTPROCARGS) xslt/index-transcode-atom.xslt - > $@
