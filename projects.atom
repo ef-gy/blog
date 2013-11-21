@@ -3,6 +3,7 @@
   <title>ef.gy</title>
   <subtitle>Projects</subtitle>
 
+  <entry xlink:href="topologic-ios.xhtml" />
   <entry xlink:href="topologic-7.xhtml" />
   <entry xlink:href="libefgy-3.xhtml" />
   <entry xlink:href="sr4-sql-4.xhtml" />
