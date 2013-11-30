@@ -11,7 +11,7 @@ map $request_uri $target {
 }
 
 server {
-    listen [::]:80;
+    listen [::]:80 default;
 
 	server_name  ef.gy;
 
@@ -48,6 +48,8 @@ server {
     rewrite ^/documentation/libefgy/?$ /documentation/libefgy/index.xhtml redirect;
     rewrite ^/documentation/topologic/?$ /documentation/topologic/index.xhtml redirect;
     rewrite ^/documentation/bourne\+\+/?$ /documentation/bourne++/index.xhtml redirect;
+    rewrite ^/documentation/libcurie/?$ /documentation/curie/index.xhtml redirect;
+    rewrite ^/documentation/curie/?$ /documentation/curie/index.xhtml redirect;
 
     rewrite ^(.*)/(kyuba:[^@]+)@([^@]*archives)$ $1/$2@drupal-kyuba permanent;
     rewrite ^(.*)/(einit:[^@]+)@([^@]*archives)$ $1/$2@drupal-einit permanent;
