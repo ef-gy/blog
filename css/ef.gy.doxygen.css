@@ -11,6 +11,11 @@ div#comment-pane
     width: 33.5em;
 }
 
+div.image img
+{
+    max-width: 100%;
+}
+
 @media (max-width: 70em)
 {
     html
