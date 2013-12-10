@@ -24,7 +24,6 @@
   <xsl:param name="disqusShortname"/>
 
   <xsl:variable name="authors" select="document(concat($documentRoot,'/authors.xml'))/data:data/data:author"/>
-  <xsl:variable name="referers" select="document(concat($documentRoot,'/referers.xml'))/data:referers/data:referer"/>
   <xsl:variable name="indices" select="document(concat($documentRoot,'/index.xml'))/data:data/data:index"/>
 
   <data:month-name number="01">January</data:month-name>
@@ -183,18 +182,6 @@
       </xsl:if>
       <xsl:if test="../@id='unicorn-noms'">
         <p class="credit"><em>Background photo credit: <a href="http://www.flickr.com/photos/dolske/7639692938/">Justin Dolske</a> / <a href="http://foter.com">Foter.com</a> / <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA</a></em></p>
-      </xsl:if>
-      <xsl:if test="$uname">
-        <xsl:variable name="my-referers" select="$referers[@location=$suri]"/>
-        <xsl:if test="$my-referers">
-          <h2>Refbacks</h2>
-          <p>This page was linked from the following sources:</p>
-          <ul id="referers">
-            <xsl:for-each select="$my-referers">
-              <li><a href="{.}"><xsl:value-of select="."/></a></li>
-            </xsl:for-each>
-          </ul>
-        </xsl:if>
       </xsl:if>
       <xsl:if test="not(($collection = 'fortune') or ($collection = 'about') or ($collection = 'source-code'))">
         <ul id="hardcopies">
