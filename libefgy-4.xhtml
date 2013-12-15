@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>libefgy, Release 4</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="A set of C++ header-only templates. Mostly maths, but also some other fun things." />
+<meta name="date" content="2013-12-14T17:58:00Z" />
+<meta name="mtime" content="2013-12-14T17:58:00Z" />
+<meta name="category" content="Software" />
+<meta name="unix:name" content="libefgy-4" />
+</head>
+<body>
+<h1>libefgy-4: Release Notes</h1>
+<p>libefgy is a set of C++ header files containing templates and whatnot, all dealing with maths in all its glory. Well, that and some other things ;). The <a href="/libefgy-1">first release was not all that long ago</a> and this is now the fourth releases in the series.</p>
+<h2>Downloads</h2>
+<p>The canonical master repository is at <a href="http://git.becquerel.org/jyujin/libefgy.git">http://git.becquerel.org/jyujin/libefgy.git</a>. Mirror are avaiable over at <a href="https://github.com/jyujin/libefgy">Github</a> and <a href="https://code.google.com/p/libefgy/">Google Code</a>. Starting with this release I'm no longer providing canonical tarballs; the git frontends do provide download capabilities, however. <a href="https://github.com/jyujin/libefgy/releases">Github's releases page is paricularly useful in this respect</a>.</p>
+<h2>New Features</h2>
+<p>Not terribly many features in this release, nor are they very exciting. The primary focus this time around was on documenting things and removing features that C++11 provides.</p>
+<h3>Higher-order Markov Chains</h3>
+<p>Not exactly creative, I know, <a href="/sql:markov-chains">especially considering I already did that in SQL</a>, but I had an idea for something and I'll be needing that so there. <a href="http://ef.gy/documentation/libefgy/classefgy_1_1markov_1_1chain.xhtml">It's sort of well documented, at least</a>. Like with the SQL variant I ended up using the purely integer-based approach again. I'm kind of growing fond of that. There's also a pseudo-test-case, which doesn't exactly "test" the code in as much as it's an example of how to use it.</p>
+<h3>Terminal/VT100 output</h3>
+<p>The library now contains the <a href="http://ef.gy/documentation/libefgy/classefgy_1_1terminal_1_1vt100.xhtml">terminal::vt100</a> template, which provides access to most text-based terminals and enables a very simple interface for full-screen terminal applications - optionally including a post-processing step, which is something curses really didn't seem to have, and which is demoed by...</p>
+<h3>The Matrix Demo</h3>
+<p>... a very simple full-screen text animation that sort of mimicks the 'scrolling streams of text' animation found in 'the matrix' on their terminals. I know, this implementation is definitely not goind to get an award for being the most innovative programme ever, but it does demonstrate how to use the library.</p>
+<img src="/documentation/libefgy/matrix.png" alt="Matrix demo, running in Terminal.app"/>
+<p><a href="http://ef.gy/documentation/libefgy/matrix_8cpp.xhtml">The source code for this demo is also fairly well-documented</a>, so it should serve as a good starting point for a full-scren TUI app using libefgy.</p>
+<h3>Range Iterators</h3>
+<p>Finally, a very small new feature in this release - but new nonetheless - is a range iterator that I cooked up to clean up some other code here and there. It's very simple in design: construct one with a start point and an end point, possibly a step size, and use it in your for() loops to clean things up properly. <a href="http://ef.gy/documentation/libefgy/classefgy_1_1range.xhtml">Documentation will end up here soon</a>, and examples are all over the library - including a set of test cases.</p>
+<h2>Documentation</h2>
+<p>The documentation for releases 1 and 2 was in quite a sorry state indeed, so I've tried to improve on that. Documentation is nowhere complete, but it's definitely getting there. Documentation for this project relies on doxygen, and <a href="http://ef.gy/documentation/libefgy">up-to-date documentation for the current master branch in the git repository is available right here on this site</a>.</p>
+<h3>Test Cases</h3>
+<p>I hate when things don't work like they should; don't you? Well, you're going to like this, then: this release includes test cases for some of the code and I intend to add a veeeery long list of test cases for the code. As time permits, anyway. To run the test cases, all you have to do is run this in a shell:</p>
+<pre><code>$ make test</code></pre>
+<p>If any of the tests fail to compile or run as expected then it'd be nice if you dropped me a line.</p>
+<h2>Removed Features</h2>
+<p>Contrary to what I said last time, <em>math::set</em> has not yet been removed, but <em>math::tuple</em> found itself under a knife, as did the <em>data</em> subnamespace.</p>
+<p>As usual, enjoy what's left of the code. ;)</p>
+<h2>Dependant projects</h2>
+<p><a href="/topologic-7">Topologic/8</a> was released to match this new version of libefgy; there aren't any major feature enhancements, save for <a href="/topologic-ios">the iOS version</a>, so that did not quite warrant separate release notes. <a href="http://ef.gy/documentation/topologic">I'm happy to say that Topologic's source code documentation now covers every class, every template and every method</a>, however.</p>
+</body>
+</html>
