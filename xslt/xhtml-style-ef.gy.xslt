@@ -142,7 +142,7 @@
       </xsl:choose>
       <xsl:if test="$uname">
         <social:social url="{$uri}">
-          <xsl:copy-of select="$authordata/@twitter | $authordata/@flattr"/>
+          <xsl:copy-of select="$authordata/@twitter"/>
         </social:social>
       </xsl:if>
       <ul id="meta">
