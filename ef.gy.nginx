@@ -50,6 +50,7 @@ server {
     rewrite ^/documentation/bourne\+\+/?$ /documentation/bourne++/index.xhtml redirect;
     rewrite ^/documentation/libcurie/?$ /documentation/curie/index.xhtml redirect;
     rewrite ^/documentation/curie/?$ /documentation/curie/index.xhtml redirect;
+    rewrite ^/documentation/duat/?$ /documentation/duat/index.xhtml redirect;
     rewrite ^/documentation/metaquest/?$ /documentation/metaquest/index.xhtml redirect;
 
     rewrite ^(.*)/(kyuba:[^@]+)@([^@]*archives)$ $1/$2@drupal-kyuba permanent;
