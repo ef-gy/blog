@@ -3,6 +3,8 @@ ef.gy
 
 A blog on computer science, linear algebra and general awesomeness - may contain traces of crude humour, Britishisms, Kraut nagging, politics or handicrafts. You've been warned.
 
+To read the content of the site on-line just use this link: http://ef.gy/
+
 Download
 --------
 
