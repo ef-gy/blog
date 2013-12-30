@@ -1,0 +1,32 @@
+Format: 1.8
+Date: Tue, 13 Aug 2013 18:46:12 +0100
+Source: feed
+Binary: feed
+Architecture: source amd64
+Version: 2-1
+Distribution: UNRELEASED
+Urgency: low
+Maintainer: Magnus Deininger <magnus@ef.gy>
+Changed-By: Magnus Deininger <magnus@ef.gy>
+Description: 
+ feed       - read syndication feeds
+Changes: 
+ feed (2-1) UNRELEASED; urgency=low
+ .
+   * Initial release. (Closes: #XXXXXX)
+   * Second release contains lots of bugfixes
+Checksums-Sha1: 
+ 92e3e8adf6647da52e797b60a59ec68e7d2950f1 751 feed_2-1.dsc
+ 4bd3c6cfb69022aaa22757542ced4cfbe3e7e4f9 53559 feed_2.orig.tar.gz
+ a0fddd5458378c1bf3c10dd2f5c060d1347741ed 20 feed_2-1.diff.gz
+ 2fa10a65d8d5b49bff9eb25a12050af9463146da 1007034 feed_2-1_amd64.deb
+Checksums-Sha256: 
+ 0662a45431d4641fca107ee50d890201b027e9ac27dbb108cfc02831fecba5d1 751 feed_2-1.dsc
+ 890c93eee91a7e4fe45b25a73c4ce8aeb7a7e47de7f6b59771195dbe6e254741 53559 feed_2.orig.tar.gz
+ f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec 20 feed_2-1.diff.gz
+ 41c6cbabe7bec060b5b96f206ae701897c0660f1f20945c75104c411db90d3ac 1007034 feed_2-1_amd64.deb
+Files: 
+ ed40e00deffb61559d2c6c2128613409 751 misc optional feed_2-1.dsc
+ c113de346004bbd9d5cc5453465a1b91 53559 misc optional feed_2.orig.tar.gz
+ 4a4dd3598707603b3f76a2378a4504aa 20 misc optional feed_2-1.diff.gz
+ 1d61c6a42bdad913f00b0736a20f8ac5 1007034 misc optional feed_2-1_amd64.deb
