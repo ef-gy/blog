@@ -68,7 +68,7 @@
     <xsl:variable name="authordata" select="$authors[@name=$author][1]"/>
     <head>
       <link href="/css/ef.gy" rel="stylesheet" type="text/css" />
-      <xsl:if test="not(($collection = 'fortune') or ($collection = 'about') or ($collection = 'source-code'))">
+      <xsl:if test="not(($collection = 'fortune') or ($collection = 'about'))">
         <link rel="alternate" type="application/pdf" href="/pdf/{$collection}"/>
         <link rel="alternate" type="application/x-mobipocket-ebook" href="/mobi/{$collection}.mobi"/>
         <link rel="alternate" type="application/epub+zip" href="/epub/{$collection}.epub"/>
@@ -125,7 +125,6 @@
         <li><a href="/about">About</a></li>
         <li><a href="/fortune">Fortune</a></li>
         <li><a href="/site">Blog</a></li>
-        <li><a href="/source-code">Source Code</a></li>
       </ul>
       <xsl:choose>
         <xsl:when test="$collection='site'">

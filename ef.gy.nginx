@@ -56,6 +56,7 @@ server {
     rewrite ^(.*)/(kyuba:[^@]+)@([^@]*archives)$ $1/$2@drupal-kyuba permanent;
     rewrite ^(.*)/(einit:[^@]+)@([^@]*archives)$ $1/$2@drupal-einit permanent;
     rewrite ^(.*)/([^@]+)@([^@]+)$ $1/$3;
+    rewrite ^/source-code$ /about#source-code permanent;
 
     location = /robots.txt {
     }
