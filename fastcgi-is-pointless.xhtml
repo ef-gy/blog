@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>FastCGI is Pointless</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="Why do we have a plethora of gateway interfaces with new protocols that mimic CGI when we could have just used a web server instead?" />
+<meta name="date" content="2014-01-13T08:05:00Z" />
+<meta name="mtime" content="2014-01-13T08:05:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="fastcgi-is-pointless" />
+<style>table.proper th { min-width: 12em; }
+table.proper td { width: 50%; max-width: 50%; }</style>
+</head>
+<body>
+<h1>This is not the interface you were looking for...</h1>
+<p>I've been writing a lot of web applications over the years, and in doing so I've grown rather fond of our favourite, stateless resource transfer protocol HTTP. It's got a lot going for it: it's simple, stable, reliable, extensible. Some implementations may be broken or a little off but in general it does what it's supposed to rather swell. In fact, it's so versatile that it's quite often used as the basis for completely different protocols. Which makes sense, as HTTP itself is really just MIME with an added request line. About the only thing I don't like about the protocol, is that the headers are plain text and would probably be a lot smaller if we had a binary version of the protocol to use instead. And even that tends to be a bonus when writing software that has to parse or talk HTTP.</p>
+<p>With HTTP being all that great, I have a hard time figuring out why the designers of FastCGI - or pretty much any "updated" CGI variant - had to go out of their way to design a completely new wire protocol for web servers to talk with FastCGI backend servers. For those of you who forgot, FastCGI was designed to solve the problem of the CGI interface wasting resources by spawning a new process every time a resource on a web server that was handled via CGI was accessed. Process creation sounds negligible, but often these CGI binaries were things like perl scripts, which meant that every single time a request was to be handled a fully-blown script interpreter was launched, the script was compiled and run - or interpreted - and then the interpreter instance was killed off. This imposes a natural limit on how many simultaneous connections a web server can process.</p>
+<p>FastCGI's solution to this is to allow the interpreter - or proper programme - to remain in memory, waiting for an incoming network connection to handle. The solution is quite sound, especially compared to the one other typical solution at the time, which was to use an extension API provided by the web server you're using. The advantage of FastCGI, here, is that it's vendor-neutral in that there is a single API for all web servers, and a malfunctioning FastCGI programme cannot nuke the web server itself. By now it has also become a feature that virtually all web servers support, so the vendor-neutrality is a real thing and not just a promise. Nevertheless, FastCGI is, sadly, solving a problem that is not actually there, with new twists that would not have been necessary.</p>
+<h1>FastCGI vs. HTTP</h1>
+<p>"But you just said it's solving the problem CGIs had!" - Indeed I did. The thing is, we already have a vendor-neutral protocol for accessing potentially generated resources from a web server that is supported by all major web servers and doesn't require spawning a new process for each requested resource: it's called HTTP! All decent web servers can proxy incoming requests to other web servers via HTTP. This has been a feature of virtually all web servers since long before FastCGI came around. In fact, the best web server currently alive and kicking - nginx - is famous for this capability. You'll stumble over a lot of guides and howtos describing how to use nginx as a load balancer for "heavy duty" web servers like Apache, by intercepting HTTP requests and proxying them to one of several backend servers. So why would you use FastCGI for your next web application's backend? Let's compare the two...</p>
+<table class="proper">
+<thead>
+<tr><th>Feature</th><th>FastCGI</th><th>HTTP</th></tr>
+</thead>
+<tbody>
+<tr><th>Purpose</th><td>Generate dynamic responses to HTTP queries</td><td>Allow web clients to talk to web servers</td></tr>
+<tr><th>Specified in...</th><td><a href="http://www.fastcgi.com/drupal/node/22">FastCGI 1.0 [1996]</a></td><td><a href="http://www.w3.org/Protocols/HTTP/AsImplemented.html">HTTP/0.9 [c. 1991]</a>, <a href="http://www.ietf.org/rfc/rfc1945.txt">RFC 1945 [1996]</a>, currently <a href="http://www.ietf.org/rfc/rfc2616.txt">RFC 2616 [1999]</a></td></tr>
+<tr><th colspan="3">Protocol</th></tr>
+<tr><th>Requirements</th><td colspan="2">any bi-directional, stream-based network communication method (TCP/IP, Unix sockets, duplex pipes, ...)</td></tr>
+<tr><th>Standard Use</th><td>FastCGI process is launched by a web server like a CGI binary; fd=0 (stdin) is initialised with a bi-directional communication channel, fd=1 and fd=2 (stdout/stderr) are closed; programme then receives requests on fd=0, which it accept()s and subsequently processes. The programme may be kept around to answer to arbitrarily many requests.</td><td>HTTP server is started separately on the server host and will listen on TCP/IP port number 80. Incoming connections are accept()ed by the server, processed and the server closes the connection.</td></tr>
+<tr><th>Common Extensions</th><td>Web servers may support connecting to externally-managed daemons speaking the FastCGI protocol on a TCP/IP or local Unix socket.</td><td>Web servers typically support proxying incoming requests to other web servers accessible via TCP/IP or local Unix sockets. HTTP servers typically allow users to specify the TCP/IP port to bind to, and may support binding to local Unix sockets.</td></tr>
+<tr><th>Common Limitations</th><td>Some web servers do not support starting FastCGI programmes themselves, e.g. nginx; Web servers typically do not support the Filter and Authorizer roles of FastCGI programmes.</td><td>Web servers never support automatic spawning of proxy target HTTP servers, so those would need to be started separately.</td></tr>
+<tr><th>Security</th><td>Some implementations may support SSL encrypted connections to remote FastCGI servers. This is not defined in the original standard (which would not need it as the web server will launch the binary and only communicate with the FastCGI programme through a loopback socket).</td><td>SSL/TLS encryption and authentication is a standard feature defined in <a href="http://www.ietf.org/rfc/rfc2818.txt">RFC 2818 [2000]</a> and generally well-supported.</td></tr>
+<tr><th>Protocol Summary</th><td>Custom binary protocol that multiplexes several streams over a single duplex channel.</td><td>Standard MIME messages with added request/status line.</td></tr>
+<tr><th>Request Summary</th><td>Client and server exchange messages of the form <pre><code>VERSION[1]
+TYPE[1]
+REQUESTID[2]
+CONTENTLENGTH[2]
+PADDINGLENGTH[1]
+RESERVED[1]
+CONTENTDATA[PADDINGLENGTH]
+PADDINGDATA[PADDINGLENGTH]</code></pre> (square brackets indicate field length in bytes). The <em>TYPE</em> field is used to distinguish between different streams within the same <em>REQUESTID</em> and to set up new requests or complete old ones. <em>REQUESTID</em>s are managed by the calling application. Supported streams are <em>FCGI_STDIN</em>, <em>FCGI_STDOUT</em> and <em>FCGI_STDERR</em>, mimicking the capabilities of CGI. A simple request taken from the FastCGI specifications in the form <em>{ TYPE, REQUESTID, CONTENTDATA }</em>:
+<pre><code><![CDATA[C: {FCGI_BEGIN_REQUEST, 1, {FCGI_RESPONDER, 0}}
+C: {FCGI_PARAMS, 1, "\013\002SERVER_PORT80\013\016SERVER_ADDR199.170.183.42 ... "}
+C: {FCGI_PARAMS, 1, ""}
+C: {FCGI_STDIN, 1, ""}
+S: {FCGI_STDOUT, 1, "<MIME HEADER> <CR> <LF> <MIME BODY> ... "}
+S: {FCGI_STDOUT, 1, ""}
+S: {FCGI_END_REQUEST, 1, {0, FCGI_REQUEST_COMPLETE}}
+]]></code></pre></td><td><pre><code><![CDATA[C: <CONNECTS TO HTTP SERVER>
+C: <METHOD> /<RESOURCE> HTTP/<V.v> <CR> <LF>
+C: MIME HEADER <CR> <LF>
+C: <CR> <LF>
+C: <MIME BODY>
+S: <CODE> <DESCRIPTION> <CR> <LF>
+S: MIME HEADER <CR> <LF>
+S: <CR> <LF>
+S: <MIME BODY>
+S: <DISCONNECT>]]></code></pre></td></tr>
+<tr><th colspan="3">Performance Features</th></tr>
+<tr><th>Pipelining</th><td>supported</td><td>optionally supported</td></tr>
+<tr><th>Multiplexing Requests</th><td>supported</td><td>not supported</td></tr>
+<tr><th>Concurrent Sessions</th><td>optionally supported</td><td>typically supported</td></tr>
+</tbody>
+</table>
+<p>... so what does tell us? Well, basically, it'll be a lot easier to just use or implement your own HTTP server and run that on a Unix socket instead of implementing FastCGI for the same purpose. You'll probably be prone to fewer bugs in other people's code and you'll get the exact request you're trying to respond to, and considering HTTP is a lot easier to read, you'll also be making fewer bugs parsing it yourself. It's quite easy, really, <a href="https://github.com/jyujin/libefgy/blob/master/include/ef.gy/http.h">I came up with a 400-ish line C++ header that implements an HTTP server with Boost::ASIO</a>.</p>
+<p>Using your own HTTP server has another advantage: it's easier to debug since you can just run it on a TCP/IP socket and connect to it with your browser. You can't do that in FastCGI - although you could run that directly on the command line. But then you'd have to set up tons of environment variables and hope the library you're using acts the same with regular CGI requests than with FastCGI requests and the bug isn't just in the latter.</p>
+<p>There's absolutely no point to FastCGI or other "improved" CGI variants these days, so don't fall for them for your next web application project. Go straight for the real thing, use HTTP.</p>
+</body>
+</html>
