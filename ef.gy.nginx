@@ -51,6 +51,7 @@ server {
     rewrite ^/documentation/libcurie/?$ /documentation/curie/index.xhtml redirect;
     rewrite ^/documentation/curie/?$ /documentation/curie/index.xhtml redirect;
     rewrite ^/documentation/duat/?$ /documentation/duat/index.xhtml redirect;
+    rewrite ^/documentation/dev9/?$ /documentation/dev9/index.xhtml redirect;
     rewrite ^/documentation/metaquest/?$ /documentation/metaquest/index.xhtml redirect;
     rewrite ^/documentation/verthandi/?$ /documentation/verthandi/index.xhtml redirect;
 
