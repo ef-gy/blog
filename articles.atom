@@ -3,6 +3,7 @@
   <title>ef.gy</title>
   <subtitle>Articles</subtitle>
 
+  <entry xlink:href="women-in-it.xhtml" />
   <entry xlink:href="fastcgi-is-pointless.xhtml" />
   <entry xlink:href="topologic-fractal-flames.xhtml" />
   <entry xlink:href="topologic-cli.xhtml" />
@@ -22,6 +23,5 @@
   <entry xlink:href="ubuntu-cedarview-drivers.xhtml" />
   <entry xlink:href="forwarding-ipv4-to-ipv6.xhtml" />
   <entry xlink:href="using-nginx-as-a-proxy-server.xhtml" />
-
   <feed xlink:href="mathematics.atom"/>
 </feed>
