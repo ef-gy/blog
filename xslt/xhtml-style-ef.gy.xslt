@@ -123,7 +123,6 @@
       <h1><xsl:value-of select="/xhtml:html/xhtml:head/xhtml:title"/></h1>
       <ul>
         <li><a href="/about">About</a></li>
-        <li><a href="/fortune">Fortune</a></li>
         <li><a href="/site">Blog</a></li>
       </ul>
       <xsl:choose>

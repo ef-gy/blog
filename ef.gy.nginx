@@ -195,27 +195,6 @@ server {
 		xslt_stylesheet /srv/http/ef.gy/xslt/html-post-process.xslt;
 	}
 
-	location /svg/fortune {
-		proxy_pass http://unix:/var/tmp/fortune.socket:/fortune;
-
-		xslt_stylesheet /srv/http/ef.gy/xslt/svg-style-ef.gy.xslt;
-	}
-
-	location /xhtml/fortune {
-		proxy_pass http://unix:/var/tmp/fortune.socket:/fortune;
-
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-fortune.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
-	}
-
-	location /html/fortune {
-		proxy_pass http://unix:/var/tmp/fortune.socket:/fortune;
-
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-fortune.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/html-post-process.xslt;
-	}
-
     location /documentation/ {
         xslt_types application/xhtml+xml application/xml;
 
