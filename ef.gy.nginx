@@ -29,7 +29,6 @@ server {
     xslt_string_param collection $collection;
     xslt_string_param documentRoot $documentRoot;
     xslt_string_param userAgent $http_user_agent;
-    xslt_string_param userCountry $geoip_country_code3;
     xslt_string_param cookieDisqus $cookie_disqus;
     xslt_string_param cookieTwitter $cookie_twitter;
     xslt_string_param cookieFlattr $cookie_flattr;
