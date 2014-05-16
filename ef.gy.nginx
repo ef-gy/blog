@@ -11,6 +11,14 @@ map $request_uri $target {
 }
 
 server {
+    listen [::]:80;
+
+    server_name *.ef.gy;
+
+    rewrite ^/(.*)$ http://ef.gy/$1 permanent;
+}
+
+server {
     listen [::]:80 default;
 
 	server_name  ef.gy;
