@@ -38,14 +38,14 @@
   </xsl:template>
 
   <xsl:template match="xhtml:ul[@id='meta']">
-    <xsl:if test="node() | ../../xhtml:head/xhtml:link[@rel='next'] | ../../xhtml:head/xhtml:link[@rel='prev']">
+    <xsl:if test="../../xhtml:head/xhtml:link[@rel='next'] | ../../xhtml:head/xhtml:link[@rel='prev']">
       <xsl:copy>
         <xsl:apply-templates select="@*|node()"/>
 
         <xsl:if test="../../xhtml:head/xhtml:link[@rel='next']"><li class="next"><a href="{../../xhtml:head/xhtml:link[@rel='next']/@href}"><xsl:value-of select="../../xhtml:head/xhtml:link[@rel='next']/@title"/></a></li></xsl:if>
         <xsl:if test="../../xhtml:head/xhtml:link[@rel='prev']"><li class="previous"><a href="{../../xhtml:head/xhtml:link[@rel='prev']/@href}"><xsl:value-of select="../../xhtml:head/xhtml:link[@rel='prev']/@title"/></a></li></xsl:if>
 
-        <xsl:if test="not(../../xhtml:head/xhtml:link[@rel='next']) and not (../../xhtml:head/xhtml:link[@rel='prev'])">
+        <xsl:if test="not(../../xhtml:head/xhtml:link[@rel='next']) and not(../../xhtml:head/xhtml:link[@rel='prev']) and not(../../xhtml:head/xhtml:meta[@name='category'][@content='auxiliary'])">
           <li class="draft">this article has not yet been published</li>
         </xsl:if>
       </xsl:copy>

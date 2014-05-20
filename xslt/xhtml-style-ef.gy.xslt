@@ -67,7 +67,7 @@
     <xsl:variable name="authordata" select="$authors[@name=$author][1]"/>
     <head>
       <link href="/css/ef.gy" rel="stylesheet" type="text/css" />
-      <xsl:if test="not(($collection = 'fortune') or ($collection = 'about'))">
+      <xsl:if test="not(xhtml:meta[@name='category'][@content='auxiliary'])">
         <link rel="alternate" type="application/pdf" href="/pdf/{$collection}"/>
         <link rel="alternate" type="application/x-mobipocket-ebook" href="/mobi/{$collection}.mobi"/>
         <link rel="alternate" type="application/epub+zip" href="/epub/{$collection}.epub"/>
@@ -122,6 +122,7 @@
       <h1><xsl:value-of select="/xhtml:html/xhtml:head/xhtml:title"/></h1>
       <ul>
         <li><a href="/about">About</a></li>
+        <li><a href="/public-keys">Public Keys</a></li>
         <li><a href="/site">Blog</a></li>
       </ul>
       <xsl:choose>
@@ -180,7 +181,7 @@
       <xsl:if test="../@id='unicorn-noms'">
         <p class="credit"><em>Background photo credit: <a href="http://www.flickr.com/photos/dolske/7639692938/">Justin Dolske</a> / <a href="http://foter.com">Foter.com</a> / <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA</a></em></p>
       </xsl:if>
-      <xsl:if test="not(($collection = 'fortune') or ($collection = 'about') or ($collection = 'source-code'))">
+      <xsl:if test="not(../xhtml:head/xhtml:meta[@name='category'][@content='auxiliary'])">
         <ul id="hardcopies">
           <li>transcripts:</li>
           <li><a rel="alternate" type="application/pdf" href="/pdf/{$collection}">PDF</a></li>
