@@ -780,16 +780,6 @@ li.facebook a:before
   color: #fff;
   content: "f";
 }
-li.xing
-{
-  background: rgb(0,103,106);
-  color: rgb(168,209,0);
-}
-li.xing a:before
-{
-  color: rgb(168,209,0);
-  content: "x";
-}
 li.googleplus
 {
   background: rgb(210,22,0);
@@ -799,26 +789,6 @@ li.googleplus a:before
 {
   color: #fff;
   content: "g+";
-}
-li.stumbleupon
-{
-  background: rgb(235,72,35);
-  color: #fff;
-}
-li.stumbleupon a:before
-{
-  color: #fff;
-  content: "su";
-}
-li.flattr
-{
-  background: rgb(125,178,73);
-  color: #fff;
-}
-li.flattr a:before
-{
-  color: #fff;
-  content: "fl";
 }
 li.email
 {
@@ -839,26 +809,6 @@ li.irc a:before
 {
   color: #fff;
   content: "I";
-}
-li.phone
-{
-  background: #000;
-  color: #fff;
-}
-li.phone a:before
-{
-  color: #fff;
-  content: ":/";
-}
-li.skype
-{
-  background: #00aff0;
-  color: #fff;
-}
-li.skype a:before
-{
-  color: #fff;
-  content: "s";
 }
 ul.social-grid li.bio
 {
