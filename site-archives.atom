@@ -3,10 +3,23 @@
   <title>ef.gy</title>
   <subtitle>Archives</subtitle>
 
+  <entry xlink:href="ebook-wtfs.xhtml" />
+  <entry xlink:href="transcoding-atom-to-rss.xhtml" />
+  <entry xlink:href="hollywood-algorithmik.xhtml" />
+  <entry xlink:href="on-age-rating.xhtml" />
+  <entry xlink:href="albtraum-datenschutz.xhtml" />
+  <entry xlink:href="project:tesseract.xhtml" />
+  <entry xlink:href="project:xslt-mandelbrot.xhtml" />
+  <entry xlink:href="germany-do-you-read-i.xhtml" />
+  <entry xlink:href="bundestagswahl-2013-daten.xhtml" />
+  <entry xlink:href="fastcgi-is-pointless.xhtml" />
+  <entry xlink:href="scrambled-eggs.xhtml" />
   <entry xlink:href="libefgy-3.xhtml" />
   <entry xlink:href="libefgy-1.xhtml" />
+  <entry xlink:href="feed-2.xhtml" />
   <entry xlink:href="feed-1.xhtml" />
   <entry xlink:href="digitaler-jugendschutz.xhtml" />
+  <entry xlink:href="sr4-sql-2.xhtml" />
   <entry xlink:href="sr4-sql-1.xhtml" />
   <entry xlink:href="irs:logimat-2013.xhtml" />
   <entry xlink:href="site-news:einit-kyuba-archives.xhtml" />
