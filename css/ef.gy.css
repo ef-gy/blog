@@ -663,9 +663,11 @@ p#maths-note:before
     content: "Note: "
 }
 
-pre
+pre, pre code
 {
     white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: monospace;
 }
 
 math[display=block]
@@ -1017,13 +1019,6 @@ p.follow + p.credit
   margin-top: 0.5em;
 }
 
-pre.key, pre.key code
-{
-    white-space: pre-line;
-    word-wrap: break-word;
-    font-family: monospace;
-    font-size: 0.9;
-}
 @media (max-width: 70em)
 {
     body, body#full
