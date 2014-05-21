@@ -11,17 +11,29 @@ map $request_uri $target {
 }
 
 server {
+    listen 80;
     listen [::]:80;
 
     server_name *.ef.gy;
 
-    rewrite ^/(.*)$ http://ef.gy/$1 permanent;
+    return 301 https://ef.gy$request_uri;
 }
 
 server {
+    listen 80 default;
     listen [::]:80 default;
+    listen 443 ssl spdy;
+    listen [::]:443 ssl spdy;
 
-	server_name  ef.gy;
+    server_name  ef.gy;
+
+    ssl_certificate      /srv/certificates/ef.gy/ef.gy.crt;
+    ssl_certificate_key  /srv/certificates/ef.gy/ef.gy.key;
+
+    gzip            on;
+    gzip_min_length 1000;
+    gzip_proxied    expired no-cache no-store private auth;
+    gzip_types      text/plain application/xml text/css text/html application/xhtml+xml application/javascript text/javascript;
 
     add_header Vary Accept;
 
@@ -110,34 +122,61 @@ server {
 	}
 
 	location /css {
-		try_files $uri.css $uri =404;
+		try_files $uri.css.minified $uri.css $uri =404;
+
+                expires 1h;
+                add_header Pragma public;
+                add_header Cache-Control "public";
 	}
 
 	location /png {
 		try_files $uri.png $uri =404;
+
+                expires 1h;
+                add_header Pragma public;
+                add_header Cache-Control "public";
 	}
 
 	location /jpeg {
 		try_files $uri.jpeg $uri.jpg $uri =404;
-        expires 1h;
+
+                expires 1h;
+                add_header Pragma public;
+                add_header Cache-Control "public";
 	}
 
 	location /pdf {
 		try_files $uri.pdf $uri =404;
+
+                expires 1h;
+                add_header Pragma public;
+                add_header Cache-Control "public";
 	}
 
 	location /mobi {
 		try_files $uri.mobi $uri =404;
         types { application/x-mobipocket-ebook mobi; }
+
+                expires 1h;
+                add_header Pragma public;
+                add_header Cache-Control "public";
     }
 
 	location /epub {
 		try_files $uri.mobi $uri =404;
         types { application/epub+zip epub; }
+
+                expires 1h;
+                add_header Pragma public;
+                add_header Cache-Control "public";
     }
 
 	location /js {
 		try_files $uri.js $uri =404;
+
+                expires 1h;
+                add_header Pragma public;
+                add_header Cache-Control "public";
 	}
 
 	location /atom {
@@ -147,6 +186,10 @@ server {
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-pre-process.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-style-ef.gy.xslt;
+
+                expires 1h;
+                add_header Pragma public;
+                add_header Cache-Control "public";
 	}
 
 	location /rss {
@@ -157,6 +200,10 @@ server {
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-pre-process.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/atom-style-ef.gy.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/rss-transcode-atom.xslt;
+
+                expires 1h;
+                add_header Pragma public;
+                add_header Cache-Control "public";
 	}
 
 	location /docbook {
@@ -167,6 +214,10 @@ server {
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-pre-process.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/docbook-transcode-xhtml.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/docbook-transcode-atom.xslt;
+
+                expires 1h;
+                add_header Pragma public;
+                add_header Cache-Control "public";
 	}
 
 	location /raw {

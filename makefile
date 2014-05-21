@@ -71,7 +71,7 @@ XSLTPROCARGS:=--stringparam baseURI "http://ef.gy" --stringparam documentRoot "$
 # meta rules
 update: index pdfs mobis epubs install
 
-all: fortune index svgs pdfs mobis epubs
+all: fortune index svgs pdfs mobis epubs csss
 run: run-fortune
 clean:
 	rm -f $(DATABASES) $(INDICES) $(BUILD)/*; true
@@ -88,6 +88,8 @@ pdfs: $(PDFESC)
 opfs: $(OPFESC)
 mobis: $(MOBIESC)
 epubs: $(EPUBESC)
+
+csss: css/ef.gy.css.minified
 
 install: install-pdf install-mobi install-epub
 install-pdf: $(PDFDEST)/.volatile $(addprefix $(PDFDEST)/,$(notdir $(PDFESC)))
@@ -123,6 +125,9 @@ $(EPUBDEST)/.volatile:
 	touch $@
 
 # css files (for epub/kindle)
+css/%.minified: css/%
+	cssmin < $< > $@
+
 $(BUILD)/book.css: css/book.css $(BUILDD)
 	cp $< $@
 
