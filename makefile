@@ -89,7 +89,7 @@ opfs: $(OPFESC)
 mobis: $(MOBIESC)
 epubs: $(EPUBESC)
 
-csss: css/ef.gy.css.minified
+csss: css/ef.gy.minified.css
 
 install: install-pdf install-mobi install-epub
 install-pdf: $(PDFDEST)/.volatile $(addprefix $(PDFDEST)/,$(notdir $(PDFESC)))
@@ -125,7 +125,7 @@ $(EPUBDEST)/.volatile:
 	touch $@
 
 # css files (for epub/kindle)
-css/%.minified: css/%
+css/%.minified.css: css/%.css
 	cssmin < $< > $@
 
 $(BUILD)/book.css: css/book.css $(BUILDD)

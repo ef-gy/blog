@@ -130,7 +130,7 @@ server {
 	}
 
 	location /css {
-		try_files $uri.css.minified $uri.css $uri =404;
+		try_files $uri.minified.css $uri.css $uri =404;
 
                 expires 1h;
                 add_header Pragma public;
