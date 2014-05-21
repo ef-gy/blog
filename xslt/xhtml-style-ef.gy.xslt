@@ -97,6 +97,7 @@
       <xsl:if test="$authordata/@twitter">
         <link rel="author" href="https://twitter.com/{$authordata/@twitter}"/>
       </xsl:if>
+      <meta name="viewport" content="width=device-width, initial-scale=0.5"/>
     </head>
   </xsl:template>
 
