@@ -14,7 +14,6 @@
 
   <xsl:param name="target"/>
   <xsl:param name="collection"/>
-  <xsl:param name="cookieDisqus"/>
   <xsl:param name="documentRoot"/>
   <xsl:param name="disqusShortname"/>
 

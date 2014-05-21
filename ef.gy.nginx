@@ -10,6 +10,11 @@ map $request_uri $target {
   ~^(.*)/(?<ta>[^@]+)@([^@]+)$ $ta;
 }
 
+map $http_host $preferredScheme {
+  default  "http";
+  ~^ef.gy$ "https";
+}
+
 server {
     listen 80;
     listen [::]:80;
@@ -25,10 +30,11 @@ server {
     listen 443 ssl spdy;
     listen [::]:443 ssl spdy;
 
-    server_name  ef.gy;
+    server_name ef.gy;
+    server_name vturtipc7vmz6xjy.onion;
 
-    ssl_certificate      /srv/certificates/ef.gy/ef.gy.crt;
-    ssl_certificate_key  /srv/certificates/ef.gy/ef.gy.key;
+    ssl_certificate     /srv/certificates/ef.gy/ef.gy.crt;
+    ssl_certificate_key /srv/certificates/ef.gy/ef.gy.key;
 
     gzip            on;
     gzip_min_length 1000;
@@ -39,23 +45,25 @@ server {
 
     add_header Content-Security-Policy "default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' platform.twitter.com efgy.disqus.com go.disqus.com; frame-src 'self' platform.twitter.com disqus.com www.youtube.com; img-src 'self' 'unsafe-inline' *.disqus.com *.disquscdn.com";
 
-	access_log  /var/log/nginx/ef.gy.access.log;
+    access_log  /var/log/nginx/ef.gy.access.log;
 
-	xslt_types application/xhtml+xml application/atom+xml image/svg+xml;
+    xslt_types application/xhtml+xml application/atom+xml image/svg+xml;
 
     set $documentRoot /srv/http/ef.gy;
 
-	root $documentRoot;
+    root $documentRoot;
  
     xslt_string_param target $target;
     xslt_string_param collection $collection;
     xslt_string_param documentRoot $documentRoot;
     xslt_string_param userAgent $http_user_agent;
-    xslt_string_param cookieDisqus $cookie_disqus;
-    xslt_string_param cookieTwitter $cookie_twitter;
-    xslt_string_param cookieFlattr $cookie_flattr;
-    xslt_string_param baseURI 'http://$http_host';
+    xslt_string_param baseURI '$preferredScheme://$http_host';
     xslt_string_param disqusShortname 'efgy';
+
+    if ($preferredScheme != $scheme)
+    {
+        return 301 $preferredScheme://$http_host$request_uri;
+    }
 
     if ($request_uri ~ \?.*$ )
     {
@@ -114,7 +122,7 @@ server {
 	}
 
     location /include/ef.gy {
-        rewrite ^/(.*) http://git.becquerel.org/jyujin/libefgy.git?f=$1 redirect;
+        rewrite ^/(.*) https://github.com/ef-gy/libefgy/tree/master$1 redirect;
     }
 
 	location /.git {
