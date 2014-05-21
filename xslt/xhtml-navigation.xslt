@@ -78,9 +78,6 @@
       <xsl:if test="$authordata/@facebook">
         <li class="facebook"><a href="https://www.facebook.com/{$authordata/@facebook}">Facebook</a></li>
       </xsl:if>
-      <xsl:if test="$authordata/@xing">
-        <li class="xing"><a href="http://www.xing.com/profiles/{$authordata/@xing}">Xing</a></li>
-      </xsl:if>
       <xsl:if test="$authordata/@googleplus">
         <li class="googleplus"><a href="https://plus.google.com/{$authordata/@googleplus}">Google+</a></li>
       </xsl:if>
@@ -104,9 +101,7 @@
       </xsl:if>
       <li class="linkedin"><a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">LinkedIn</a></li>
       <li class="facebook"><a href="http://www.facebook.com/sharer.php?u={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=630');return false;">Facebook</a></li>
-      <li class="xing"><a href="https://www.xing.com/app/user?op=share&amp;url={@url}" onclick="javascript:window.open(this.href,'','');return false;">Xing</a></li>
       <li class="googleplus"><a href="https://plus.google.com/share?url={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">Google+</a></li>
-      <li class="stumbleupon"><a href="http://www.stumbleupon.com/submit?url={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">StumbleUpon</a></li>
     </ul>
   </xsl:template>
 
