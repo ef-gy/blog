@@ -17,8 +17,7 @@ svg
 
 html
 {
-    background: url(/jpeg/fractal-flame) #f8f8f8 no-repeat;
-    background-position: -5em 0;
+    background: radial-gradient(#f8f8f8, #bbc);
     color: #000;
 }
 
