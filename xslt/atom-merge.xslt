@@ -38,9 +38,6 @@
         <link href="/pdf/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}" rel="alternate" type="application/pdf" />
         <link href="/mobi/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}.mobi" rel="alternate" type="application/x-mobipocket-ebook" />
         <link href="/epub/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}.epub" rel="alternate" type="application/epub+zip" />
-        <xsl:if test="$authordata/@flattr != ''">
-          <link href="https://flattr.com/submit/auto?url={$baseURI}/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}&amp;user_id={$authordata/@flattr}&amp;title={translate($source/xhtml:html/xhtml:head/xhtml:title,'&#34; ÄÖÜäöüß',&#34;&#39;+AOUaous&#34;)}" rel="payment" type="application/rss+xml" />
-        </xsl:if>
       </xsl:if>
       <summary><xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='description']/@content" /></summary>
       <published><xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='date']/@content" /></published>

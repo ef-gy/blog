@@ -31,9 +31,6 @@
   <xsl:template match="xhtml:head">
     <head>
       <xsl:apply-templates select="@*|node()"/>
-      <xsl:if test="//social:social/@flattr">
-        <link rel="payment" href="https://flattr.com/submit/auto?url={//social:social/@url}&amp;user_id={//social:social/@flattr}&amp;title={translate(/xhtml:html/xhtml:head/xhtml:title,'&#34; ',&#34;&#39;+&#34;)}&amp;description={translate(/xhtml:html/xhtml:head/xhtml:meta[@name='description']/@content,'&#34; ',&#34;&#39;+&#34;)}"/>
-      </xsl:if>
     </head>
   </xsl:template>
 
@@ -87,17 +84,11 @@
       <xsl:if test="$authordata/@googleplus">
         <li class="googleplus"><a href="https://plus.google.com/{$authordata/@googleplus}">Google+</a></li>
       </xsl:if>
-      <xsl:if test="$authordata/@flattr">
-        <li class="flattr"><a href="https://flattr.com/profile/{$authordata/@flattr}">Flattr</a></li>
-      </xsl:if>
       <xsl:if test="$authordata/@email">
         <li class="email"><a href="mailto:{$authordata/@email}">E-Mail</a></li>
       </xsl:if>
       <xsl:if test="$authordata/@irc">
         <li class="irc"><a href="{$authordata/@irc}">IRC</a></li>
-      </xsl:if>
-      <xsl:if test="$authordata/@phone">
-        <li class="phone"><a href="tel:{$authordata/@phone}">Phone</a></li>
       </xsl:if>
       <xsl:if test="$authordata/text()">
         <li class="bio"><xsl:copy-of select="$authordata/* | $authordata/text()"/></li>
@@ -116,9 +107,6 @@
       <li class="xing"><a href="https://www.xing.com/app/user?op=share&amp;url={@url}" onclick="javascript:window.open(this.href,'','');return false;">Xing</a></li>
       <li class="googleplus"><a href="https://plus.google.com/share?url={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">Google+</a></li>
       <li class="stumbleupon"><a href="http://www.stumbleupon.com/submit?url={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">StumbleUpon</a></li>
-      <xsl:if test="@flattr">
-        <li class="flattr"><a href="https://flattr.com/submit/auto?url={@url}&amp;user_id={@flattr}&amp;title={translate(/xhtml:html/xhtml:head/xhtml:title,'&#34; ',&#34;&#39;+&#34;)}&amp;description={translate(/xhtml:html/xhtml:head/xhtml:meta[@name='description']/@content,'&#34; ',&#34;&#39;+&#34;)}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">Flattr</a></li>
-      </xsl:if>
     </ul>
   </xsl:template>
 

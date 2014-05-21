@@ -173,7 +173,7 @@
         <p class="last-modified"><em>Last Modified: <xsl:value-of select="../xhtml:head/xhtml:meta[@name='mtime']/@content" /></em></p>
       </xsl:if>
       <xsl:if test="$authordata/@twitter != ''">
-        <p class="follow">Since you came this far, why not <social:follow twitter="{$authordata/@twitter}" flattr="{$authordata/@flattr}"/></p>
+        <p class="follow">Since you came this far, why not <social:follow twitter="{$authordata/@twitter}"/></p>
       </xsl:if>
       <xsl:if test="../@id='phone'">
         <p class="credit"><em>Background photo credit: <a href="http://www.flickr.com/photos/w3p706/2872460783/">w3p706</a> / <a href="http://foter.com">Foter.com</a> / <a href="http://creativecommons.org/licenses/by-nc-sa/2.0/">CC BY-NC-SA</a></em></p>
