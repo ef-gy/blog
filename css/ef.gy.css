@@ -659,11 +659,6 @@ body#full:after
     text-align: left;
 }
 
-p#maths-note:before
-{
-    content: "Note: "
-}
-
 pre, pre code
 {
     white-space: pre-wrap;
