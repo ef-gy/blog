@@ -1,7 +1,7 @@
-Sitemap: http://ef.gy/sitemap.xml
-Sitemap: http://ef.gy/documentation/libefgy/sitemap.xml
-Sitemap: http://ef.gy/documentation/topologic/sitemap.xml
-Sitemap: http://ef.gy/documentation/curie/sitemap.xml
+Sitemap: https://ef.gy/sitemap.xml
+Sitemap: https://ef.gy/documentation/libefgy/sitemap.xml
+Sitemap: https://ef.gy/documentation/topologic/sitemap.xml
+Sitemap: https://ef.gy/documentation/curie/sitemap.xml
 
 User-agent: *
 Disallow:
