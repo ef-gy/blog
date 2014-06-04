@@ -95,6 +95,8 @@
         <link rel="author" href="https://plus.google.com/{$authordata/@googleplus}"/>
       </xsl:if>
       <xsl:choose>
+        <xsl:when test="(xhtml:meta[@name='category']/@content='Pictures') and //xhtml:a[@class='inline-img-src']"><meta name="photo" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/rasterised{//xhtml:a[@class='inline-img-src'][1]/@href}"/><meta property="og:image" content="{$baseURI}/rasterised{//xhtml:a[@class='inline-img-src'][1]/@href}"/></xsl:when>
+        <xsl:when test="(xhtml:meta[@name='category']/@content='Pictures') and //xhtml:img"><meta name="twitter:card" content="photo"/><meta name="twitter:image:src" content="{$baseURI}/{//xhtml:img[1]/@src}"/><meta property="og:image" content="{$baseURI}/{//xhtml:img[1]/@src}"/></xsl:when>
         <xsl:when test="xhtml:meta[@property='og:image']"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{xhtml:meta[@property='og:image']/@content}"/></xsl:when>
         <xsl:when test="//xhtml:a[@class='inline-img-src']"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/rasterised{//xhtml:a[@class='inline-img-src'][1]/@href}"/><meta property="og:image" content="{$baseURI}/rasterised{//xhtml:a[@class='inline-img-src'][1]/@href}"/></xsl:when>
         <xsl:when test="//xhtml:img"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/{//xhtml:img[1]/@src}"/><meta property="og:image" content="{$baseURI}/{//xhtml:img[1]/@src}"/></xsl:when>
