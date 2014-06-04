@@ -109,6 +109,7 @@
       <xsl:if test="../descendant::math:math">
         <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       </xsl:if>
+      <meta name="twitter:domain" content="ef.gy"/> 
       <meta name="twitter:title" content="{xhtml:title[1]}"/>
       <meta name="twitter:description" content="{xhtml:meta[@name='description']/@content}"/>
       <meta property="og:title" content="{xhtml:title[1]}"/>
