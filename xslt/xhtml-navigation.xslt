@@ -31,6 +31,11 @@
   <xsl:template match="xhtml:head">
     <head>
       <xsl:apply-templates select="@*|node()"/>
+      <xsl:if test="//social:social or //social:follow">
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+        <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&amp;version=v2.0"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
+        <script type="text/javascript">(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true; po.src = 'https://apis.google.com/js/platform.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
+      </xsl:if>
     </head>
   </xsl:template>
 
@@ -92,18 +97,17 @@
   </xsl:template>
 
   <xsl:template match="social:social">
-    <ul id="social">
+    <ul id="share">
+      <li><div class="g-plusone" data-size="medium" data-annotation="none" data-href="{@url}"/><div class="g-plus" data-action="share" data-annotation="bubble" data-href="{@url}"/></li>
+      <li><div id="fb-root"/><div class="fb-like" data-href="{@url}" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"/></li>
       <xsl:if test="@twitter">
-        <li class="twitter"><a href="https://twitter.com/share?url={@url}&amp;via={@twitter}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">Twitter</a></li>
+        <li><a href="https://twitter.com/share" class="twitter-share-button" data-url="{@url}" data-via="{@twitter}">Tweet</a></li>
       </xsl:if>
-      <li class="facebook"><a href="http://www.facebook.com/sharer.php?u={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=630');return false;">Facebook</a></li>
-      <li class="googleplus"><a href="https://plus.google.com/share?url={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">Google+</a></li>
     </ul>
   </xsl:template>
 
   <xsl:template match="social:follow">
     <a href="https://twitter.com/{@twitter}" class="twitter-follow-button">follow <xsl:value-of select="@twitter"/> on Twitter</a>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
   </xsl:template>
 </xsl:stylesheet>
 

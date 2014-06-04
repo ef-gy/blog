@@ -100,12 +100,12 @@ h6
 
 h1 + ul
 {
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     left: 0;
     display: block;
-	padding: 10px 2em 10px 2em;
+    padding: 10px 2em 10px 2em;
     height: 20px;
     z-Index: 1;
     background: rgba(255,255,255,0.8);
@@ -674,15 +674,26 @@ math[display=block]
     display: block;
 }
 
-ul#social
+ul#share
 {
-  display: block;
-  padding: 0.5em 1em;
-  margin: -4em -2em 0 -2em;
-  text-align: right;
-  height: 1em;
-  overflow: hidden;
+  position: fixed;
+  top: 0.2em;
+  left: 0.2em;
+  z-Index: 255;
 }
+
+ul#share li
+{
+  display: inline-block;
+  height: 2em;
+  vertical-align: top;
+}
+
+ul#share iframe
+{
+  border: 0;
+}
+
 ul.social-grid
 {
   display: block;
@@ -690,17 +701,14 @@ ul.social-grid
   margin: 0 0 0 -2em;
   overflow: visible;
 }
-ul#social:hover,
 ul.social-grid:hover
 {
   overflow: visible;
 }
-ul#social:hover li,
 ul.social-grid:hover li
 {
   position: relative;
 }
-ul#social li,
 ul.social-grid li
 {
   display: inline-block;
@@ -719,13 +727,11 @@ ul.social-grid li
   padding-top: 0.3em;
   height: 1.3em;
 }
-ul#social li a:before,
 ul.social-grid li a:before
 {
   display: inline-block;
   width: 2em;
 }
-ul#social li a,
 ul.social-grid li a
 {
   display: inline-block;
@@ -736,12 +742,10 @@ ul.social-grid li a
   color: transparent;
   text-decoration: none;
 }
-ul#social li:hover,
 ul.social-grid li:hover
 {
   width: 10em;
 }
-ul#social li:hover a,
 ul.social-grid li:hover a
 {
   width: 10em;
@@ -868,7 +872,7 @@ ul#hardcopies li a:hover
 }
 ul#meta
 {
-  margin: 0 -2em 2em -2em;
+  margin: -2em -2em 2em -2em;
   background: #f4f4f4;
 }
 ul#meta li
@@ -882,8 +886,7 @@ ul#meta li.previous a:after,
 ul#meta li.next a:after,
 ul#meta li.draft:after,
 ul#meta li#published:after,
-ul#meta li#collection a:after,
-ul#social:after
+ul#meta li#collection a:after
 {
   display: inline-block;
   width: 5em;
@@ -908,11 +911,6 @@ ul#meta li#published:after
 ul#meta li#collection a:after
 {
   content: "collection";
-}
-ul#social:after
-{
-  content: "social";
-  display: none;
 }
 ul#meta li.previous a,
 ul#meta li.next a,

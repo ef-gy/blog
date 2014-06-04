@@ -36,7 +36,7 @@ PMML2SVG:=$(BUILD)/$(PMML2SVGZIPBASE)/XSLT2/pmml2svg.xsl
 XHTMLS:=$(wildcard *.xhtml)
 PLOTS:=$(filter-out src/flash-integrity.plot,$(wildcard src/*.plot))
 RS:=$(wildcard src/*.r)
-DOCUMENTS:=$(filter-out about.xhtml,$(wildcard *.xhtml) $(wildcard *.atom))
+DOCUMENTS:=$(filter-out about.xhtml public-keys.xhtml,$(wildcard *.xhtml) $(wildcard *.atom))
 
 # escaped file names
 XHTMLESC:=$(subst :,\:,$(XHTMLS))
