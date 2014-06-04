@@ -247,6 +247,11 @@ server {
 		xslt_stylesheet /srv/http/ef.gy/xslt/svg-style-ef.gy.xslt;
 	}
 
+	location /rasterised/svg {
+                alias $documentRoot/png/rasterised;
+		try_files $uri.png $uri =404;
+	}
+
 	location /xhtml {
         alias $documentRoot;
 		try_files $uri.xhtml $uri.atom $uri =404;

@@ -50,6 +50,7 @@ OPFS:=$(addsuffix .opf,$(BUILDRAW))
 MOBIS:=$(addsuffix .mobi,$(BUILDRAW))
 EPUBS:=$(addsuffix .epub,$(BUILDRAW))
 SVGS:=$(addsuffix .svg,$(basename $(notdir $(PLOTS))) $(basename $(notdir $(RS))))
+PNGS:=$(addprefix png/rasterised/,$(addsuffix .png,$(basename $(SVGS) $(basename $(notdir $(wildcard *.svg))))))
 OPFXHTMLS:=$(addprefix $(BUILD)/,$(addsuffix .opf.xhtml,$(basename $(notdir $(wildcard *.xhtml)))))
 
 # escaped target file names
@@ -59,6 +60,7 @@ PDFESC:=$(subst :,\:,$(PDFS))
 OPFESC:=$(subst :,\:,$(OPFS))
 MOBIESC:=$(subst :,\:,$(MOBIS))
 EPUBESC:=$(subst :,\:,$(EPUBS))
+PNGESC:=$(subst :,\:,$(PNGS))
 OPFXHTMLESC:=$(subst :,\:,$(OPFXHTMLS))
 
 BUILDD:=$(BUILD)/.volatile
@@ -69,7 +71,7 @@ XSLTPROCARGS:=--stringparam baseURI "http://ef.gy" --stringparam documentRoot "$
 .SECONDARY:
 
 # meta rules
-update: index pdfs mobis epubs install
+update: index pdfs mobis epubs pngs install
 
 all: fortune index svgs pdfs mobis epubs csss
 run: run-fortune
@@ -88,6 +90,7 @@ pdfs: $(PDFESC)
 opfs: $(OPFESC)
 mobis: $(MOBIESC)
 epubs: $(EPUBESC)
+pngs: $(PNGESC)
 
 csss: css/ef.gy.minified.css
 
@@ -124,6 +127,10 @@ $(EPUBDEST)/.volatile:
 	mkdir -p $(EPUBDEST); true
 	touch $@
 
+png/rasterised/.volatile:
+	mkdir -p png/rasterised; true
+	touch $@
+
 # css files (for epub/kindle)
 css/%.minified.css: css/%.css
 	cssmin < $< > $@
@@ -133,6 +140,10 @@ $(BUILD)/book.css: css/book.css $(BUILDD)
 
 $(BUILD)/cover.css: css/cover.css $(BUILDD)
 	cp $< $@
+
+# SVG rasterisation rules
+png/rasterised/%.png: %.svg png/rasterised/.volatile
+	rsvg-convert --keep-aspect-ratio --width 1920 $< -o $@
 
 # build data file downloads
 $(DOWNLOAD)/docbook-5.0.zip: $(DOWNLOAD)/.volatile

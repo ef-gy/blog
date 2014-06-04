@@ -94,11 +94,33 @@
       <xsl:if test="$authordata/@googleplus">
         <link rel="author" href="https://plus.google.com/{$authordata/@googleplus}"/>
       </xsl:if>
+      <xsl:choose>
+        <xsl:when test="xhtml:meta[@property='og:image']"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{xhtml:meta[@property='og:image']/@content}"/></xsl:when>
+        <xsl:when test="//xhtml:a[@class='inline-img-src']"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/rasterised{//xhtml:a[@class='inline-img-src'][1]/@href}"/><meta property="og:image" content="{$baseURI}/rasterised{//xhtml:a[@class='inline-img-src'][1]/@href}"/></xsl:when>
+        <xsl:when test="//xhtml:img"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/{//xhtml:img[1]/@src}"/><meta property="og:image" content="{$baseURI}/{//xhtml:img[1]/@src}"/></xsl:when>
+        <xsl:when test="../@id='unicorn-noms'"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/jpeg/unicorn-noms"/><meta property="og:image" content="{$baseURI}/jpeg/unicorn-noms"/></xsl:when>
+        <xsl:when test="../@id='phone'"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/jpeg/corded-phone"/><meta property="og:image" content="{$baseURI}/jpeg/corded-phone"/></xsl:when>
+        <xsl:otherwise><meta name="twitter:card" content="summary"/></xsl:otherwise>
+      </xsl:choose>
       <xsl:if test="$authordata/@twitter">
-        <link rel="author" href="https://twitter.com/{$authordata/@twitter}"/>
+        <meta name="twitter:site" content="@{$authordata/@twitter}"/> 
+        <meta name="twitter:creator" content="@{$authordata/@twitter}"/> 
       </xsl:if>
       <xsl:if test="../descendant::math:math">
         <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      </xsl:if>
+      <meta name="twitter:title" content="{xhtml:title[1]}"/>
+      <meta name="twitter:description" content="{xhtml:meta[@name='description']/@content}"/>
+      <meta property="og:title" content="{xhtml:title[1]}"/>
+      <meta property="og:type" content="article" />
+      <meta property="og:url" content="{$baseURI}{$suri}"/>
+      <meta property="og:description" content="{xhtml:meta[@name='description']/@content}"/>
+      <meta property="og:site_name" content="ef.gy :: le bloeg d'enfer"/>
+      <xsl:if test="xhtml:meta[@name='date']">
+        <meta property="article:published_time" content="{xhtml:meta[@name='date']/@content}"/>
+      </xsl:if>
+      <xsl:if test="xhtml:meta[@name='mtime']">
+        <meta property="article:modified_time" content="{xhtml:meta[@name='mtime']/@content}"/>
       </xsl:if>
     </head>
   </xsl:template>
