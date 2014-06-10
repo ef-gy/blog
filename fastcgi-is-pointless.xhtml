@@ -41,7 +41,7 @@ RESERVED[1]
 CONTENTDATA[PADDINGLENGTH]
 PADDINGDATA[PADDINGLENGTH]</code></pre> (square brackets indicate field length in bytes). The <em>TYPE</em> field is used to distinguish between different streams within the same <em>REQUESTID</em> and to set up new requests or complete old ones. <em>REQUESTID</em>s are managed by the calling application. Supported streams are <em>FCGI_STDIN</em>, <em>FCGI_STDOUT</em> and <em>FCGI_STDERR</em>, mimicking the capabilities of CGI. A simple request taken from the FastCGI specifications in the form <em>{ TYPE, REQUESTID, CONTENTDATA }</em>:
 <pre><code><![CDATA[C: {FCGI_BEGIN_REQUEST, 1, {FCGI_RESPONDER, 0}}
-C: {FCGI_PARAMS, 1, "\013\002SERVER_PORT80\013\016SERVER_ADDR199.170.183.42 ... "}
+C: {FCGI_PARAMS, 1, "\013\002SERVER_PORT80" "\013\016SERVER_ADDR199.170.183.42 ... "}
 C: {FCGI_PARAMS, 1, ""}
 C: {FCGI_STDIN, 1, ""}
 S: {FCGI_STDOUT, 1, "<MIME HEADER> <CR> <LF> <MIME BODY> ... "}
