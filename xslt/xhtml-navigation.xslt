@@ -98,7 +98,7 @@
 
   <xsl:template match="social:social">
     <ul id="share">
-      <li><div class="g-plusone" data-size="medium" data-annotation="none" data-href="{@url}"/></li>
+      <li><div class="g-plusone" data-size="medium" data-href="{@url}"/></li>
       <li><div id="fb-root"/><div class="fb-like" data-href="{@url}" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"/></li>
       <xsl:if test="@twitter">
         <li><a href="https://twitter.com/share" class="twitter-share-button" data-url="{@url}" data-via="{@twitter}">Tweet</a></li>
