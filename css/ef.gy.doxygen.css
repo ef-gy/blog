@@ -1,6 +1,6 @@
 html
 {
-    padding-right: 31em;
+    padding-right: 23em;
 }
 
 div#comment-pane
@@ -8,7 +8,7 @@ div#comment-pane
     position: absolute;
     right: 1em;
     top: 1em;
-    width: 33.5em;
+    width: 24em;
 }
 
 div.image img
