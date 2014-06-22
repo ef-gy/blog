@@ -1013,6 +1013,11 @@ p.follow + p.credit
   margin-top: 0.5em;
 }
 
+.twitter-share-button
+{
+  width: 80px !important;
+}
+
 @media (max-width: 70em)
 {
     body, body#full
