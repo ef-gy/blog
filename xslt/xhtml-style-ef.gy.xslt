@@ -126,6 +126,7 @@
         <meta property="article:modified_time" content="{xhtml:meta[@name='mtime']/@content}"/>
       </xsl:if>
       <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <link href="https://plus.google.com/106167538536350810461" rel="publisher"/>
     </head>
   </xsl:template>
 
