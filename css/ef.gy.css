@@ -1084,6 +1084,11 @@ p.follow + p.credit
 
 @media (max-width: 42.9em)
 {
+    html
+    {
+        font-size: 0.8em;
+    }
+
     #feed .large,
     #feed .medium,
     #feed .small,
