@@ -55,28 +55,29 @@
   <xsl:template match="social:grid">
     <xsl:variable name="author" select="@name"/>
     <xsl:variable name="authordata" select="$authors[@name=$author][1]"/>
-    <address>
-    <xsl:attribute name="class">author-box</xsl:attribute>
-    <h2>Written by <xsl:value-of select="$authordata/@display"/></h2>
-    <xsl:choose>
-      <xsl:when test="$authordata/@image">
-        <img src="{$authordata/@image}" alt="Author Mugshot: {@name}"/>
-      </xsl:when>
-    </xsl:choose>
-    <xsl:if test="$authordata/@googleplus">
-      <div class="g-person" data-href="//plus.google.com/{$authordata/@googleplus}" data-width="260" data-rel="author"/>
+    <xsl:if test="$authordata">
+      <address>
+      <xsl:attribute name="class">author-box</xsl:attribute>
+      <h2>Written by <xsl:value-of select="$authordata/@display"/></h2>
+      <xsl:choose>
+        <xsl:when test="$authordata/@image">
+          <img src="{$authordata/@image}" alt="Author Mugshot: {@name}"/>
+        </xsl:when>
+      </xsl:choose>
+      <xsl:if test="$authordata/@googleplus">
+        <div class="g-person" data-href="//plus.google.com/{$authordata/@googleplus}" data-width="260" data-rel="author"/>
+      </xsl:if>
+      <xsl:if test="$authordata/@twitter">
+        <a href="https://twitter.com/{$authordata/@twitter}" class="twitter-follow-button">follow <xsl:value-of select="$authordata/@twitter"/> on Twitter</a>
+      </xsl:if>
+      <xsl:if test="$authordata/text()">
+        <p><xsl:copy-of select="$authordata/* | $authordata/text()"/></p>
+      </xsl:if>
+      <xsl:if test="$authordata/@email">
+        <p><a href="mailto:{$authordata/@email}">E-Mail the author.</a></p>
+      </xsl:if>
+      </address>
     </xsl:if>
-
-    <xsl:if test="$authordata/@twitter">
-      <a href="https://twitter.com/{$authordata/@twitter}" class="twitter-follow-button">follow <xsl:value-of select="$authordata/@twitter"/> on Twitter</a>
-    </xsl:if>
-    <xsl:if test="$authordata/text()">
-      <p><xsl:copy-of select="$authordata/* | $authordata/text()"/></p>
-    </xsl:if>
-    <xsl:if test="$authordata/@email">
-      <p><a href="mailto:{$authordata/@email}">E-Mail the author.</a></p>
-    </xsl:if>
-    </address>
   </xsl:template>
 
   <xsl:template match="social:social">
