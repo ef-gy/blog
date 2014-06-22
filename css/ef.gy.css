@@ -247,17 +247,6 @@ pre code
     margin: 1em;
 }
 
-address
-{
-    background: #eee;
-    padding: 2em;
-    font-style: normal;
-    position: relative;
-    margin: 2em -2em -2em -2em;
-    width: auto;
-    padding: 2em;
-}
-
 address ul li
 {
     display: inline-block;
@@ -275,29 +264,6 @@ address a:hover
 {
     background: #333;
     color: #fff;
-}
-
-address span
-{
-    display: block;
-    font-weight: bold;
-    font-size: 1.2em;
-    color: #999;
-    margin: 0 0 0.5em 0;
-}
-
-address span span
-{
-    display: inline;
-    font-size: 1em;
-    color: #444;
-    margin: 0;
-    white-space: nowrap;
-}
-
-address a:hover span span
-{
-    color: #eee;
 }
 
 img
@@ -694,154 +660,30 @@ ul#share iframe
   border: 0;
 }
 
-ul.social-grid
+address
 {
-  display: block;
-  padding: 2em 8em 0 0;
-  margin: 0 0 0 -2em;
-  overflow: visible;
-}
-ul.social-grid:hover
-{
-  overflow: visible;
-}
-ul.social-grid:hover li
-{
-  position: relative;
-}
-ul.social-grid li
-{
-  display: inline-block;
-  margin: -1em 0 0 0;
-  font-family: sans-serif;
-  padding: 0.8em 1em 0.3em 1em;
-  width: 2em;
-  text-align: left;
-  vertical-align: top;
-  height: 1.9em;
-}
-ul.social-grid li
-{
-  margin: 0;
-  width: 4em;
-  padding-top: 0.3em;
-  height: 1.3em;
-}
-ul.social-grid li a:before
-{
-  display: inline-block;
-  width: 2em;
-}
-ul.social-grid li a
-{
-  display: inline-block;
-  width: 2em;
-  margin: -0.8em -1em -0.3em -1em;
-  padding: 0.9em 0.5em 0.9em 1.5em;
-  overflow: hidden;
-  color: transparent;
-  text-decoration: none;
-}
-ul.social-grid li:hover
-{
-  width: 10em;
-}
-ul.social-grid li:hover a
-{
-  width: 10em;
-  color: inherit;
-}
-li.twitter
-{
-  background: rgb(0,170,242);
-  color: #fff;
-}
-li.twitter a:before
-{
-  color: #fff;
-  content: "t";
-}
-li.linkedin
-{
-  background: rgb(0,128,182);
-  color: #fff;
-}
-li.linkedin a:before
-{
-  color: #fff;
-  content: "in";
-}
-li.facebook
-{
-  background: rgb(59,83,154);
-  color: #fff;
-}
-li.facebook a:before
-{
-  color: #fff;
-  content: "f";
-}
-li.googleplus
-{
-  background: rgb(210,22,0);
-  color: #fff;
-}
-li.googleplus a:before
-{
-  color: #fff;
-  content: "g+";
-}
-li.email
-{
-  background: #080;
-  color: #fff;
-}
-li.email a:before
-{
-  color: #fff;
-  content: "@";
-}
-li.irc
-{
-  background: #050;
-  color: #fff;
-}
-li.irc a:before
-{
-  color: #fff;
-  content: "I";
-}
-ul.social-grid li.bio
-{
-  padding: 1em 2em;
-  display: block;
-  width: auto;
-  height: auto;
-}
-ul.social-grid li.image
-{
-  padding: 0;
-  margin: 0;
-  display: block;
-  float: right;
-  width: auto;
+  background: rgba(255,255,255,0.8);
+  padding: 2em;
+  font-style: normal;
   position: absolute;
-  top: 0;
-  right: 0
+  top: 40em;
+  left: 0;
+  width: 17em;
+  padding: 2em;
 }
-ul.social-grid li.image img
+address iframe
+{
+  border: 0;
+  padding: 2px;
+  margin: 0;
+}
+address img
 {
   width: 10em;
 }
-address span
+address h2
 {
-  display: block;
-  background: #f9f9f9;
-  padding: 0.5em 2em;
-  margin: -2em;
-  font-size: inherit;
-  color: #000;
-  font-weight: bold;
+  margin-top: 0;
 }
 ul#hardcopies
 {
@@ -1078,6 +920,25 @@ p.follow + p.credit
         left: 0.3em;
         top: 0.8em;
         width: 2.3em;
+    }
+
+    address
+    {
+        position: relative;
+        top: 0;
+        left: 0;
+        width: auto;
+        padding: 0;
+    }
+
+    address div
+    {
+        float: right !important;
+    }
+
+    address h2
+    {
+        margin-top: 2em;
     }
 }
 
