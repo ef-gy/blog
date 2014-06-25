@@ -102,6 +102,7 @@
         <xsl:when test="//xhtml:img"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/{//xhtml:img[1]/@src}"/><meta property="og:image" content="{$baseURI}/{//xhtml:img[1]/@src}"/></xsl:when>
         <xsl:when test="../@id='unicorn-noms'"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/jpeg/unicorn-noms"/><meta property="og:image" content="{$baseURI}/jpeg/unicorn-noms"/></xsl:when>
         <xsl:when test="../@id='phone'"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/jpeg/corded-phone"/><meta property="og:image" content="{$baseURI}/jpeg/corded-phone"/></xsl:when>
+        <xsl:when test="../@id='server-grill'"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/jpeg/7389234452_a0d7b0fd34_o"/><meta property="og:image" content="{$baseURI}/jpeg/7389234452_a0d7b0fd34_o"/></xsl:when>
         <xsl:otherwise><meta name="twitter:card" content="summary"/></xsl:otherwise>
       </xsl:choose>
       <xsl:if test="$authordata/@twitter">
@@ -199,6 +200,9 @@
       </xsl:if>
       <xsl:if test="../@id='phone'">
         <p class="credit"><em>Background photo credit: <a href="http://www.flickr.com/photos/w3p706/2872460783/">w3p706</a> / <a href="http://foter.com">Foter.com</a> / <a href="http://creativecommons.org/licenses/by-nc-sa/2.0/">CC BY-NC-SA</a></em></p>
+      </xsl:if>
+      <xsl:if test="../@id='server-grill'">
+        <p class="credit"><em>Background photo credit: <a href="https://www.flickr.com/photos/bigpresh/7389234452/">bigpresh</a> / <a href="http://foter.com/">Foter</a> / <a href="http://creativecommons.org/licenses/by/2.0/">Creative Commons Attribution 2.0 Generic (CC BY 2.0)</a></em></p>
       </xsl:if>
       <xsl:if test="../@id='unicorn-noms'">
         <p class="credit"><em>Background photo credit: <a href="http://www.flickr.com/photos/dolske/7639692938/">Justin Dolske</a> / <a href="http://foter.com">Foter.com</a> / <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA</a></em></p>
