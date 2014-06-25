@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+    <head>
+        <title>Accessing PostgreSQL via HTTP using nginx</title>
+        <meta name="author" content="Nadja Deininger" />
+        <meta name="description" content="How to communicate with a PostgreSQL database through HTTP requests using nginx." />
+        <meta name="date" content="2014-06-25T15:00:00Z" />
+        <meta name="mtime" content="2014-06-25T16:03:00Z" />
+        <meta name="category" content="Articles" />
+        <meta name="unix:name" content="using-postgresql-with-nginx" />
+    </head>
+<body>
+<h1>Using PostgreSQL via HTTP requests with nginx</h1>
+<p>Having a remote database system on a server that needs to talk to clients is not exactly an uncommon situation. Even if your client's chosen platform has a client library, you might not want to expose your database to the Internet directly, but instead use a web server, like nginx, to handle communication with the database system, and have the client communicate with the web server through HTTP requests.</p>
+<p>There is more than one way to do this, of course. For example, you could use node.js with a <a href="https://github.com/brianc/node-postgres">PostgreSQL client</a>, but what I chose to do in the project I'm currently working on is to use nginx with a third-party <a href="https://github.com/FRiCKLE/ngx_postgres">PostgreSQL module</a>.</p> 
+<h2>Building nginx from source with modules</h2>
+<p>First, since nginx links all of its modules statically, you have to compile it from source with the PostgreSQL module. Since responses are generated in RDS, a custom binary format, you might want to add a module that converts RDS into something readable, for example, the ngx_rds_json module by Openresty. If you want to do the RESTful thing and use POST requests for your inserts, you might also want something like the <a href="https://github.com/calio/form-input-nginx-module">form input module</a> that parses the arguments in the body of POST and PUT requests into variables (nginx only gives you the entire request body out of the box, and that isn't of much use to you). Download <a href="http://nginx.org/en/download.html">the nginx source</a>,  <a href="https://github.com/FRiCKLE/ngx_postgres/releases">the PostgreSQL module</a> and <a href="https://github.com/openresty/rds-json-nginx-module/releases">the ngx_rds_json module</a>, <a href="https://github.com/calio/form-input-nginx-module/releases">the form input module</a> and the <a href="https://github.com/simpl/ngx_devel_kit/releases">ngx_devel_kit</a> it depends on, and unpack the tarballs. Navigate into the directory you unpacked the nginx tarball to, and run the following commands (assuming you want to install nginx to /opt/nginx):</p>
+<p><pre><code>./configure --prefix=/opt/nginx \
+            --add-module=/path/to/ngx_postgres
+            --add-module=/path/to/rds-json-nginx-module
+            --add-module=/path/to/form-input-nginx-module
+            --add-module=/path/to/ngx_devel_kit
+            make -j2
+            make install</code></pre></p>
+<p>Instead of downloading these modules separately you could install the <a href="http://openresty.org">Openresty bundle</a> which contains the aforementioned modules and a lot more third party modules. I didn't want to clutter up my installation with a lot of modules I didn't need, but it's up to you.</p>
+
+<h2>Setting up PostgreSQL</h2>
+<p>If you haven't set up PostgreSQL on your server yet, you should do so - either through the package management system of your operating system, or by compiling it from source. Anyway, it's all in the <a href="http://www.postgresql.org/docs/9.3/static/admin.html">documentation</a>, and if you haven't used PostgreSQL before I highly recommend you read at least the first few chapters. You might also want to create one or more roles for your database system in PostgreSQL now. Once you're done with that, you can start creating your database schema, and using the database.</p>
+<h2>Configuring nginx to interact with PostgreSQL</h2>
+<p>The <a href="https://github.com/FRiCKLE/ngx_postgres">ngx_postgres</a> module itself is fairly well documented, and shows several sample configurations, as well as the additional modules those configurations require. My configuration looks roughly like this:</p>
+<p><pre><code>
+http {
+    upstream database {
+        postgres_server  127.0.0.1 dbname=mydatabase
+        user=myuser password=mypassword;
+    }
+
+    server {
+        listen   80;
+        server_name localhost;
+
+
+        location = /entries/ {
+            postgres_pass     database;
+            rds_json          on;
+
+            postgres_query    HEAD GET  "SELECT foo, bar FROM mytable";
+            postgres_rewrite  HEAD GET no_rows 403;
+
+        }
+
+        location = /entries/(?&lt;num&gt;\d+)/delete/ {
+            
+            postgres_pass     database;
+
+            postgres_query    DELETE    "DELETE FROM mytable WHERE id=$num"i;
+            postgres_rewrite  DELETE    no_changes 410;
+            postgres_rewrite  DELETE    changes 204;
+        }
+
+        location = /entries/create/ {
+            postgres_pass     database;
+
+            # reads the form parameter foo into the variable $foo
+            set_form_input $foo;
+            set_form_input $bar;
+
+            postgres_escape $foo_escaped $foo;
+            postgres_escape $bar_escaped $bar;
+
+            postgres_query POST "INSERT INTO mytable (foo, bar) VALUES ($foo_escaped, $bar_escaped)";
+        }
+    }
+
+}
+</code></pre></p>
+<p>The idea is that you usually have a small, predefined set of requests the client can make to the database. You encode the arguments of these requests into an HTTP request - there is a nice correspondence between types of DML queries and HTTP requests, even. GET requests are used for SELECT queries to the database, POST requests for INSERT operations, PUT for UPDATE operations and DELETE for... well, DELETE operations - of course, you are free to cram your INSERT parameters into a GET request if you must (as long as nginx will put up with the URL length at least, so if you're sending a lot of binary data that may not always be an option). If you are using GET or POST request parameters that contain user input, of course you have to escape them with the postgres_escape directive before you can safely use them in queries to avoid SQL injections.</p>
+<p>When using POST or PUT requests, you can use the form-input-nginx-module to handle request arguments. The request has to have the content type "application/x-www-form-urlencoded", and the request parameters go into the request body; the syntax is the same as in GET requests: "arg1=value1&aand;arg2=value2". Then in your nginx config, set_form_input will parse form parameters into nginx variables. </p>
+<p>The rds_json directive will make sure that the server returns the result of your queries, if any, in JSON, which your client can then parse and use as needed.</p>
+</body>
+</html>
