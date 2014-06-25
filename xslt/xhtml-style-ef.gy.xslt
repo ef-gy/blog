@@ -125,6 +125,8 @@
       <xsl:if test="xhtml:meta[@name='mtime']">
         <meta property="article:modified_time" content="{xhtml:meta[@name='mtime']/@content}"/>
       </xsl:if>
+      <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <link href="https://plus.google.com/106167538536350810461" rel="publisher"/>
     </head>
   </xsl:template>
 
@@ -194,9 +196,6 @@
       <xsl:apply-templates select="node()" />
       <xsl:if test="../xhtml:head/xhtml:meta[@name='mtime'] and (../xhtml:head/xhtml:meta[@name='mtime']/@content != ../xhtml:head/xhtml:meta[@name='date']/@content)">
         <p class="last-modified"><em>Last Modified: <xsl:value-of select="../xhtml:head/xhtml:meta[@name='mtime']/@content" /></em></p>
-      </xsl:if>
-      <xsl:if test="$authordata/@twitter != ''">
-        <p class="follow">Since you came this far, why not <social:follow twitter="{$authordata/@twitter}"/></p>
       </xsl:if>
       <xsl:if test="../@id='phone'">
         <p class="credit"><em>Background photo credit: <a href="http://www.flickr.com/photos/w3p706/2872460783/">w3p706</a> / <a href="http://foter.com">Foter.com</a> / <a href="http://creativecommons.org/licenses/by-nc-sa/2.0/">CC BY-NC-SA</a></em></p>
