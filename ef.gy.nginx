@@ -50,7 +50,7 @@ server {
 
     add_header Vary Accept;
 
-    add_header Content-Security-Policy "default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' platform.twitter.com efgy.disqus.com go.disqus.com c328740.ssl.cf1.rackcdn.com connect.facebook.net apis.google.com; frame-src 'self' platform.twitter.com disqus.com www.youtube.com *.facebook.com *.google.com; img-src 'self' 'unsafe-inline' *.disqus.com *.disquscdn.com c328740.ssl.cf1.rackcdn.com; font-src c328740.ssl.cf1.rackcdn.com";
+    add_header Content-Security-Policy "default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' platform.twitter.com efgy.disqus.com go.disqus.com c328740.ssl.cf1.rackcdn.com cdn.mathjax.org connect.facebook.net apis.google.com; frame-src 'self' platform.twitter.com disqus.com www.youtube.com *.facebook.com *.google.com; img-src 'self' 'unsafe-inline' *.disqus.com *.disquscdn.com c328740.ssl.cf1.rackcdn.com; font-src c328740.ssl.cf1.rackcdn.com cdn.mathjax.org";
 
     access_log  /var/log/nginx/ef.gy.access.log;
 
