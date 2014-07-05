@@ -103,6 +103,7 @@
         <xsl:when test="../@id='unicorn-noms'"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/jpeg/unicorn-noms"/><meta property="og:image" content="{$baseURI}/jpeg/unicorn-noms"/></xsl:when>
         <xsl:when test="../@id='phone'"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/jpeg/corded-phone"/><meta property="og:image" content="{$baseURI}/jpeg/corded-phone"/></xsl:when>
         <xsl:when test="../@id='server-grill'"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/jpeg/7389234452_a0d7b0fd34_o"/><meta property="og:image" content="{$baseURI}/jpeg/7389234452_a0d7b0fd34_o"/></xsl:when>
+        <xsl:when test="../@id='hypercube'"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/png/rasterised/4-cube-black-white"/><meta property="og:image" content="{$baseURI}/png/rasterised/4-cube-black-white"/></xsl:when>
         <xsl:otherwise><meta name="twitter:card" content="summary"/></xsl:otherwise>
       </xsl:choose>
       <xsl:if test="$authordata/@twitter">

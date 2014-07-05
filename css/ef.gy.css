@@ -46,6 +46,12 @@ html#phylactery-session
     background: url(/png/phylactery-corporation-names-session) #000 no-repeat;
 }
 
+html#hypercube
+{
+    background: url(/svg/4-cube-black-white) #fff no-repeat;
+    background-position: -12em -12em;
+}
+
 body
 {
     margin: 14em 0 0 24em;
