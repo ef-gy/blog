@@ -4,13 +4,13 @@
 <title>Social Plugins vs. Do-Not-Track Headers</title>
 <meta name="author" content="Magnus Achim Deininger" />
 <meta name="description" content="I think I found a solid compromise between user privacy and social media, for those who want it. There's also some technical details on how to use this with nginx and XSLT." />
-<meta name="date" content="2014-07-13T22:09:00Z" />
-<meta name="mtime" content="2014-07-13T22:09:00Z" />
+<meta name="date" content="2014-07-13T21:09:00Z" />
+<meta name="mtime" content="2014-07-13T21:09:00Z" />
 <meta name="category" content="Articles" />
 <meta name="unix:name" content="social-plugins-vs-do-not-track" />
 </head>
 <body>
-<p>I've recently started including social media plugins on this website. <a href="/so-long-and-thanks-for-all-the-fish">Basically since I was no longer bound by law not to, to be more precise</a>. Since I am actively using social media sites, these plugins do add value to me. However, I can also understand people who feel somewhat uneasy about being tracked by the providers of social media websites. I think privacy is very important to have when you want it, <a href="/site-news:tor-and-ipv6">which should be obvious by my decision to provide a Tor Hidden Service for this blog</a>. And a fair amount of traffic the exit node at <a href="http://vturtipc7vmz6xjy.onion/">vturtipc7vmz6xjy.onion</a> receives, indeed. I've also recently enabled the blog to be HTTPS-only when viewed without Tor, so as to protect users' privacy even more.</p>
+<p>I've recently started including social media plugins on this website. <a href="/so-long-and-thanks-for-all-the-fish">Basically since I was no longer bound by law not to, to be more precise</a>. Since I am actively using social media sites, these plugins do add value to me. However, I can also understand people who feel somewhat uneasy about being tracked by the providers of social media websites. I think privacy is very important to have when you want it, <a href="/site-news:tor-and-ipv6">which should be obvious by my decision to provide a Tor Hidden Service for this blog</a>. And a fair amount of traffic the hidden service at <a href="http://vturtipc7vmz6xjy.onion/">vturtipc7vmz6xjy.onion</a> receives, indeed. I've also recently enabled the blog to be HTTPS-only when viewed without Tor, so as to protect users' privacy even more.</p>
 <p>So, this put me in a bit of a dilemma, but I think I found a pretty solid compromise.</p>
 <h1>Enter: The Do-Not-Track Header</h1>
 <p>I briefly considered adding a custom 'No Social Media' cookie to the site. However, recent browsers have a feature to send a so-called "Do-Not-Track request" along with every HTTP(S) request they send out. This is often an inconspicuous little checkbox in your browser's settings, e.g. like this one in Chrome:</p>
