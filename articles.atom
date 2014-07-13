@@ -3,6 +3,7 @@
   <title>ef.gy</title>
   <subtitle>Articles</subtitle>
 
+  <entry xlink:href="social-plugins-vs-do-not-track.xhtml" />
   <entry xlink:href="bpjm-leak.xhtml" />
   <entry xlink:href="tech-talk:higher-dimensional-geometry-and-fractals.xhtml" />
   <entry xlink:href="using-postgresql-with-nginx.xhtml" />
