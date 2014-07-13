@@ -20,7 +20,9 @@
   <xsl:param name="documentRoot"/>
   <xsl:param name="baseURI"/>
   <xsl:param name="disqusShortname"/>
+  <xsl:param name="DNT"/>
 
+  <xsl:variable name="nosocial" select="($baseURI = 'http://vturtipc7vmz6xjy.onion') or ($DNT = '1')"/>
   <xsl:variable name="authors" select="document(concat($documentRoot,'/authors.xml'))/data:data/data:author"/>
   <xsl:variable name="indices" select="document(concat($documentRoot,'/index.xml'))/data:data/data:index"/>
 
@@ -91,44 +93,46 @@
       <xsl:if test="$post">
         <link rel="next" href="{$post/@href}" title="{$post/@title}"/>
       </xsl:if>
-      <xsl:if test="$authordata/@googleplus">
-        <link rel="author" href="https://plus.google.com/{$authordata/@googleplus}"/>
+      <xsl:if test="not($nosocial)">
+        <xsl:if test="$authordata/@googleplus">
+          <link rel="author" href="https://plus.google.com/{$authordata/@googleplus}"/>
+        </xsl:if>
+        <xsl:choose>
+          <xsl:when test="(xhtml:meta[@name='category']/@content='Pictures') and //xhtml:a[@class='inline-img-src']"><meta name="photo" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/rasterised{//xhtml:a[@class='inline-img-src'][1]/@href}"/><meta property="og:image" content="{$baseURI}/rasterised{//xhtml:a[@class='inline-img-src'][1]/@href}"/></xsl:when>
+          <xsl:when test="(xhtml:meta[@name='category']/@content='Pictures') and //xhtml:img"><meta name="twitter:card" content="photo"/><meta name="twitter:image:src" content="{$baseURI}/{//xhtml:img[1]/@src}"/><meta property="og:image" content="{$baseURI}/{//xhtml:img[1]/@src}"/></xsl:when>
+          <xsl:when test="xhtml:meta[@property='og:image']"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{xhtml:meta[@property='og:image']/@content}"/></xsl:when>
+          <xsl:when test="//xhtml:a[@class='inline-img-src']"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/rasterised{//xhtml:a[@class='inline-img-src'][1]/@href}"/><meta property="og:image" content="{$baseURI}/rasterised{//xhtml:a[@class='inline-img-src'][1]/@href}"/></xsl:when>
+          <xsl:when test="//xhtml:img"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/{//xhtml:img[1]/@src}"/><meta property="og:image" content="{$baseURI}/{//xhtml:img[1]/@src}"/></xsl:when>
+          <xsl:when test="../@id='unicorn-noms'"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/jpeg/unicorn-noms"/><meta property="og:image" content="{$baseURI}/jpeg/unicorn-noms"/></xsl:when>
+          <xsl:when test="../@id='phone'"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/jpeg/corded-phone"/><meta property="og:image" content="{$baseURI}/jpeg/corded-phone"/></xsl:when>
+          <xsl:when test="../@id='server-grill'"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/jpeg/7389234452_a0d7b0fd34_o"/><meta property="og:image" content="{$baseURI}/jpeg/7389234452_a0d7b0fd34_o"/></xsl:when>
+          <xsl:when test="../@id='hypercube'"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/png/rasterised/4-cube-black-white"/><meta property="og:image" content="{$baseURI}/png/rasterised/4-cube-black-white"/></xsl:when>
+          <xsl:otherwise><meta name="twitter:card" content="summary"/></xsl:otherwise>
+        </xsl:choose>
+        <xsl:if test="$authordata/@twitter">
+          <meta name="twitter:site" content="@{$authordata/@twitter}"/> 
+          <meta name="twitter:creator" content="@{$authordata/@twitter}"/> 
+        </xsl:if>
+        <meta name="twitter:domain" content="ef.gy"/> 
+        <meta name="twitter:title" content="{xhtml:title[1]}"/>
+        <meta name="twitter:description" content="{xhtml:meta[@name='description']/@content}"/>
+        <meta property="og:title" content="{xhtml:title[1]}"/>
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="{$baseURI}{$suri}"/>
+        <meta property="og:description" content="{xhtml:meta[@name='description']/@content}"/>
+        <meta property="og:site_name" content="ef.gy :: le bloeg d'enfer"/>
+        <xsl:if test="xhtml:meta[@name='date']">
+          <meta property="article:published_time" content="{xhtml:meta[@name='date']/@content}"/>
+        </xsl:if>
+        <xsl:if test="xhtml:meta[@name='mtime']">
+          <meta property="article:modified_time" content="{xhtml:meta[@name='mtime']/@content}"/>
+        </xsl:if>
+        <link href="https://plus.google.com/106167538536350810461" rel="publisher"/>
       </xsl:if>
-      <xsl:choose>
-        <xsl:when test="(xhtml:meta[@name='category']/@content='Pictures') and //xhtml:a[@class='inline-img-src']"><meta name="photo" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/rasterised{//xhtml:a[@class='inline-img-src'][1]/@href}"/><meta property="og:image" content="{$baseURI}/rasterised{//xhtml:a[@class='inline-img-src'][1]/@href}"/></xsl:when>
-        <xsl:when test="(xhtml:meta[@name='category']/@content='Pictures') and //xhtml:img"><meta name="twitter:card" content="photo"/><meta name="twitter:image:src" content="{$baseURI}/{//xhtml:img[1]/@src}"/><meta property="og:image" content="{$baseURI}/{//xhtml:img[1]/@src}"/></xsl:when>
-        <xsl:when test="xhtml:meta[@property='og:image']"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{xhtml:meta[@property='og:image']/@content}"/></xsl:when>
-        <xsl:when test="//xhtml:a[@class='inline-img-src']"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/rasterised{//xhtml:a[@class='inline-img-src'][1]/@href}"/><meta property="og:image" content="{$baseURI}/rasterised{//xhtml:a[@class='inline-img-src'][1]/@href}"/></xsl:when>
-        <xsl:when test="//xhtml:img"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/{//xhtml:img[1]/@src}"/><meta property="og:image" content="{$baseURI}/{//xhtml:img[1]/@src}"/></xsl:when>
-        <xsl:when test="../@id='unicorn-noms'"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/jpeg/unicorn-noms"/><meta property="og:image" content="{$baseURI}/jpeg/unicorn-noms"/></xsl:when>
-        <xsl:when test="../@id='phone'"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/jpeg/corded-phone"/><meta property="og:image" content="{$baseURI}/jpeg/corded-phone"/></xsl:when>
-        <xsl:when test="../@id='server-grill'"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/jpeg/7389234452_a0d7b0fd34_o"/><meta property="og:image" content="{$baseURI}/jpeg/7389234452_a0d7b0fd34_o"/></xsl:when>
-        <xsl:when test="../@id='hypercube'"><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image:src" content="{$baseURI}/png/rasterised/4-cube-black-white"/><meta property="og:image" content="{$baseURI}/png/rasterised/4-cube-black-white"/></xsl:when>
-        <xsl:otherwise><meta name="twitter:card" content="summary"/></xsl:otherwise>
-      </xsl:choose>
-      <xsl:if test="$authordata/@twitter">
-        <meta name="twitter:site" content="@{$authordata/@twitter}"/> 
-        <meta name="twitter:creator" content="@{$authordata/@twitter}"/> 
-      </xsl:if>
+      <meta name="viewport" content="width=device-width, initial-scale=1"/>
       <xsl:if test="../descendant::math:math">
         <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       </xsl:if>
-      <meta name="twitter:domain" content="ef.gy"/> 
-      <meta name="twitter:title" content="{xhtml:title[1]}"/>
-      <meta name="twitter:description" content="{xhtml:meta[@name='description']/@content}"/>
-      <meta property="og:title" content="{xhtml:title[1]}"/>
-      <meta property="og:type" content="article" />
-      <meta property="og:url" content="{$baseURI}{$suri}"/>
-      <meta property="og:description" content="{xhtml:meta[@name='description']/@content}"/>
-      <meta property="og:site_name" content="ef.gy :: le bloeg d'enfer"/>
-      <xsl:if test="xhtml:meta[@name='date']">
-        <meta property="article:published_time" content="{xhtml:meta[@name='date']/@content}"/>
-      </xsl:if>
-      <xsl:if test="xhtml:meta[@name='mtime']">
-        <meta property="article:modified_time" content="{xhtml:meta[@name='mtime']/@content}"/>
-      </xsl:if>
-      <meta name="viewport" content="width=device-width, initial-scale=1"/>
-      <link href="https://plus.google.com/106167538536350810461" rel="publisher"/>
     </head>
   </xsl:template>
 
@@ -216,7 +220,7 @@
           <li><a rel="alternate" type="application/epub+zip" href="/epub/{$collection}.epub">EPUB</a></li>
           <li><a rel="alternate" type="application/docbook+xml" href="/docbook/{$collection}">DocBook 5</a></li>
         </ul>
-        <xsl:if test="not(xhtml:ul[@id='feed']) and ($disqusShortname != '')">
+        <xsl:if test="not($nosocial) and not(xhtml:ul[@id='feed']) and ($disqusShortname != '')">
           <div id="disqus_thread"/>
           <script type="text/javascript">var disqus_shortname = '<xsl:value-of select="$disqusShortname"/>'; <xsl:if test="/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']">var disqus_identifier = '<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content"/>';</xsl:if> (function() { var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true; dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js'; (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq); })();</script>
           <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
@@ -255,6 +259,13 @@
     <h6>
       <xsl:apply-templates select="@*|node()" />
     </h6>
+  </xsl:template>
+
+  <xsl:template match="xhtml:iframe">
+    <xsl:choose>
+      <xsl:when test="$nosocial"><p>&lt;iframe/&gt; element redacted due to your privacy settings. <a href="{@src}">Click here to go to the frame's target</a>.</p></xsl:when>
+      <xsl:otherwise><xsl:copy-of select="."/></xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
 
