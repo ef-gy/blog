@@ -3,6 +3,10 @@
   <title>ef.gy</title>
   <subtitle>Articles</subtitle>
 
+  <entry xlink:href="social-plugins-vs-do-not-track.xhtml" />
+  <entry xlink:href="bpjm-leak.xhtml" />
+  <entry xlink:href="tech-talk:higher-dimensional-geometry-and-fractals.xhtml" />
+  <entry xlink:href="using-postgresql-with-nginx.xhtml" />
   <entry xlink:href="van-goch-workshop.xhtml" />
   <entry xlink:href="van-goch-workshop.xhtml" />
   <entry xlink:href="so-long-and-thanks-for-all-the-fish.xhtml" />
@@ -11,7 +15,7 @@
   <entry xlink:href="topologic-fractal-flames.xhtml" />
   <entry xlink:href="topologic-cli.xhtml" />
   <entry xlink:href="fsm-recursive-sql.xhtml" />
-  <entry xlink:href="visualising-syndication-feeds.xhtml" />
+  <entry xlink:href="on-age-rating.xhtml" />
   <entry xlink:href="sql:markov-chains.xhtml" />
   <entry xlink:href="sql:game-of-life.xhtml" />
   <entry xlink:href="vmware-server-redux.xhtml" />

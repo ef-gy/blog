@@ -18,8 +18,11 @@
   <xsl:strip-space elements="*" />
   <xsl:preserve-space elements="xhtml:pre" />
 
+  <xsl:param name="baseURI"/>
   <xsl:param name="documentRoot"/>
+  <xsl:param name="DNT"/>
 
+  <xsl:variable name="nosocial" select="($baseURI = 'http://vturtipc7vmz6xjy.onion') or ($DNT = '1')"/>
   <xsl:variable name="authors" select="document(concat($documentRoot,'/authors.xml'))/data:data/data:author"/>
 
   <xsl:template match="@*|node()">
@@ -31,7 +34,7 @@
   <xsl:template match="xhtml:head">
     <head>
       <xsl:apply-templates select="@*|node()"/>
-      <xsl:if test="//social:social or //social:follow or //social:grid">
+      <xsl:if test="not($nosocial) and (//social:social or //social:follow or //social:grid)">
         <script type="text/javascript">!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='//platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs'); (function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&amp;version=v2.0";fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));(function() {var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true; po.src = '//apis.google.com/js/platform.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
       </xsl:if>
     </head>
@@ -64,10 +67,10 @@
           <img src="{$authordata/@image}" alt="Author Mugshot: {@name}"/>
         </xsl:when>
       </xsl:choose>
-      <xsl:if test="$authordata/@googleplus">
+      <xsl:if test="not($nosocial) and $authordata/@googleplus">
         <div class="g-person" data-href="//plus.google.com/{$authordata/@googleplus}" data-width="260" data-rel="author"/>
       </xsl:if>
-      <xsl:if test="$authordata/@twitter">
+      <xsl:if test="not($nosocial) and $authordata/@twitter">
         <a href="https://twitter.com/{$authordata/@twitter}" class="twitter-follow-button">follow <xsl:value-of select="$authordata/@twitter"/> on Twitter</a>
       </xsl:if>
       <xsl:if test="$authordata/text()">
@@ -81,13 +84,15 @@
   </xsl:template>
 
   <xsl:template match="social:social">
-    <ul id="share">
-      <li><div id="fb-root"/><div class="fb-like" data-href="{@url}" data-layout="button_count" data-action="like" data-show-faces="true"/></li>
-      <xsl:if test="@twitter">
-        <li><a href="https://twitter.com/share" class="twitter-share-button" data-url="{@url}" data-via="{@twitter}">Tweet</a></li>
-      </xsl:if>
-      <li><div class="g-plusone" data-size="medium" data-href="{@url}"/></li>
-    </ul>
+    <xsl:if test="not($nosocial)">
+      <ul id="share">
+        <li><div id="fb-root"/><div class="fb-like" data-href="{@url}" data-layout="button_count" data-action="like" data-show-faces="true"/></li>
+        <xsl:if test="@twitter">
+          <li><a href="https://twitter.com/share" class="twitter-share-button" data-url="{@url}" data-via="{@twitter}">Tweet</a></li>
+        </xsl:if>
+        <li><div class="g-plusone" data-size="medium" data-href="{@url}"/></li>
+      </ul>
+    </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
 

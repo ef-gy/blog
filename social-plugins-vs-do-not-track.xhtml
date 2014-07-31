@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Social Plugins vs. Do-Not-Track Headers</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="I think I found a solid compromise between user privacy and social media, for those who want it. There's also some technical details on how to use this with nginx and XSLT." />
+<meta name="date" content="2014-07-13T21:09:00Z" />
+<meta name="mtime" content="2014-07-13T21:09:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="social-plugins-vs-do-not-track" />
+</head>
+<body>
+<p>I've recently started including social media plugins on this website. <a href="/so-long-and-thanks-for-all-the-fish">Basically since I was no longer bound by law not to, to be more precise</a>. Since I am actively using social media sites, these plugins do add value to me. However, I can also understand people who feel somewhat uneasy about being tracked by the providers of social media websites. I think privacy is very important to have when you want it, <a href="/site-news:tor-and-ipv6">which should be obvious by my decision to provide a Tor Hidden Service for this blog</a>. And a fair amount of traffic the hidden service at <a href="http://vturtipc7vmz6xjy.onion/">vturtipc7vmz6xjy.onion</a> receives, indeed. I've also recently enabled the blog to be HTTPS-only when viewed without Tor, so as to protect users' privacy even more.</p>
+<p>So, this put me in a bit of a dilemma, but I think I found a pretty solid compromise.</p>
+<h1>Enter: The Do-Not-Track Header</h1>
+<p>I briefly considered adding a custom 'No Social Media' cookie to the site. However, recent browsers have a feature to send a so-called "Do-Not-Track request" along with every HTTP(S) request they send out. This is often an inconspicuous little checkbox in your browser's settings, e.g. like this one in Chrome:</p>
+<img src="/png/chrome-do-not-track" alt="Do-Not-Track setting in Chrome."/>
+<p>The intention of setting this flag is to make websites not track the user. D'uh. Basically, website operators that heed this flag should disable targeted advertising or other profiling activites. Since that is precisely why some people would dislike social media sites - and by extension those plugins on blogs and the like - I feel that this flag, in spirit, is exactly the right setting to do this. And it's a standard setting nowadays, too. Perfect!</p>
+<p>So from now on, you folks get to pick whether you want all the social bling when reading blog entries or other content on this site, or not. Simply enable or disable this setting and you'll be golden. Enabling the Do-Not-Track header will disable all Twitter, Google+ and Facebook integration - no more loading scripts off those sites, no more +1 or Like buttons, no more Tweet buttons. It will also disable Disqus comments, because those are loaded off a third party server. I may add static snapshots of comment feeds at some point, but not just yet.</p>
+<p>Futher, setting this flag will also disable all &lt;iframe/&gt; elements on the site and instead display a note and a link to the frame's contents. I feel this adds even more privacy control for the user.</p>
+<p>Oh, accessing the site at its hidden service URL will also disable all of this - since using Tor pretty much screams "I'm concerned about my privacy," and I respect that.</p>
+<h1>Technicalities</h1>
+<p>Setting the flag makes your browser send a new HTTP header, literally called <em>DNT</em>. This header can have one of two values:</p>
+<dl>
+<dt>1</dt>
+<dd>"Please do not track me or profile my usage on your site."</dd>
+<dt>0</dt>
+<dd>"I don't care whether you track me or not."</dd>
+</dl>
+<p>Fairly straightforward - <a href="http://tools.ietf.org/html/draft-mayer-do-not-track-00">although the wording in the specs is somewhat inexplicit</a>. Well, okay, it's a draft spec.</p>
+<pre><blockquote>
+   In processing a request that includes an OPT-OUT header, a server
+   MUST NOT perform THIRD-PARTY TRACKING.  The server MUST instruct the
+   user agent to delete any data previously stored for THIRD-PARTY
+   TRACKING.</blockquote></pre>
+<p>Really not sure how you'd instruct the browser to delete that kind of data... but, oh well. I suppose that's for cookies you might've set that contain tracking IDs, but that'd be something that third party tracking services would do, and we're not supposed to call them in the first place, right?</p>
+<p>Anyway, if you're following along with this on your own site - and you should - and your site is hosted with nginx, you can quite easily grab this flag for futher processing with nginx's <em>$http_dnt</em> config file variable. In the case of this site, the blog's run through a set of XSLTs that turn bland XHTML into something more spicy, so what I did was to add this to the server config:</p>
+<pre><code><![CDATA[server {
+// ...
+    xslt_string_param DNT '$http_dnt';
+// ...
+}]]></code></pre>
+<p>This sets a string parameter in the XSLTs that nginx is instructed to use later in the config file. And in those, we get to do this:</p>
+<pre><code><![CDATA[
+<xsl:stylesheet ...>
+  <xsl:output ... />
+
+  <xsl:param name="DNT"/>
+
+  <xsl:variable name="nosocial" select="$DNT = '1'"/>
+
+  <xsl:template match="...">
+    <!-- ... -->
+    <xsl:if test="not($nosocial)">
+      <!-- parts of your code that include social media plugins or other third
+           party services-->
+    </xsl:if>
+    <!-- ... -->
+  </xsl:template>
+</xsl:stylesheet>
+]]></code></pre>
+<p>If you're adding your social media plugins with XSLTs, constructs like those would eliminate them when the DNT flag is set. Your users will probably thank you for this. Although I still wonder why the draft spec says to return <em>DNT: 1</em> in the reply. It would seem to make a lot more sense in a <em>Vary:</em> header. But that's draft specs for ya, I guess.</p>
+<p>Enjoy your privacy, and as usual: <a href="https://github.com/ef-gy/blog">take a look at the source repository if you need a live sample</a>.</p>
+</body>
+</html>
