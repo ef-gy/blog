@@ -15,6 +15,15 @@ map $http_host $preferredScheme {
   ~^ef.gy$ "https";
 }
 
+map $request_uri $package {
+  ~^/doc/(?<source>[^/]+) $source;
+}
+
+map $request_uri $detail {
+  default "home";
+  ~^/doc/([^/]+)/(?<det>.*)$ $det;
+}
+
 ssl_session_cache   shared:SSL:10m;
 ssl_session_timeout 10m;
 
@@ -67,6 +76,9 @@ server {
     xslt_string_param baseURI '$preferredScheme://$http_host';
     xslt_string_param disqusShortname 'efgy';
     xslt_string_param DNT '$http_dnt';
+
+    xslt_string_param package '$package';
+    xslt_string_param detail '$detail';
 
     if ($preferredScheme != $scheme)
     {
@@ -280,5 +292,14 @@ server {
         xslt_types application/xhtml+xml application/xml;
 
         xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-documentation-post-process.xslt;
+    }
+
+    location /doc/ {
+        alias $documentRoot/documentation/;
+        try_files $package.xml =404;
+
+        xslt_types application/xhtml+xml application/xml;
+
+        xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-transcode-doxygen.xslt;
     }
 }
