@@ -29,11 +29,29 @@
         <xhtml:script type="application/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></xhtml:script>
       </xhtml:head>
       <xhtml:body>
+        <xsl:choose>
+          <xsl:when test="$detail='ls'">
+            <xhtml:h1>Contents</xhtml:h1>
+            <xhtml:ul>
+              <xsl:for-each select="//@id[not(parent::node)]">
+                <xhtml:li><xhtml:a href="./{.}"><xsl:value-of select="."/></xhtml:a></xhtml:li>
+              </xsl:for-each>
+            </xhtml:ul>
+          </xsl:when>
+          <xsl:when test="$detail='mega-graph'">
+            <xhtml:h1>Full Project Graph</xhtml:h1>
+            <svg:svg>
+              <svg:metadata>
+                <xsl:apply-templates select="//node"/>
+              </svg:metadata>
+            </svg:svg>
+          </xsl:when>
+        </xsl:choose>
         <xsl:apply-templates select="node()" />
         <xhtml:script>
 
 var width = $(window).width(),
-    height = 500;
+    height = <xsl:choose><xsl:when test="$detail='mega-graph'">$(window).height()*2</xsl:when><xsl:otherwise>500</xsl:otherwise></xsl:choose>;
 
 d3.selectAll('svg').each(function() {
   var svg = d3.select(this)
@@ -131,9 +149,7 @@ d3.selectAll('svg').each(function() {
 
   <xsl:template match="compounddef">
     <xsl:if test="(ancestor-or-self::compounddef | descendant::memberdef)[@id=$detail]">
-      <xsl:copy>
-        <xsl:apply-templates select="@*|node()" />
-      </xsl:copy>
+      <xsl:apply-templates select="node()" />
     </xsl:if>
   </xsl:template>
 
@@ -146,7 +162,28 @@ d3.selectAll('svg').each(function() {
   </xsl:template>
 
   <xsl:template match="compoundname">
-    <xhtml:h1><xhtml:span><xsl:value-of select="../@kind"/></xhtml:span>&#160;<xsl:value-of select="."/></xhtml:h1>
+    <xsl:choose>
+      <xsl:when test="following-sibling::title"/>
+      <xsl:otherwise>
+        <xhtml:h1><xhtml:span><xsl:value-of select="../@kind"/></xhtml:span>&#160;<xsl:value-of select="."/></xhtml:h1>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="title">
+    <xhtml:h1>
+      <xsl:apply-templates select="node()"/>
+    </xhtml:h1>
+  </xsl:template>
+
+  <xsl:template match="sect1">
+    <xsl:apply-templates select="node()"/>
+  </xsl:template>
+
+  <xsl:template match="sect1[@id]/title">
+    <xhtml:h1 id="{parent::*/@id}">
+      <xsl:apply-templates select="node()"/>
+    </xhtml:h1>
   </xsl:template>
 
   <xsl:template match="templateparamlist">
@@ -157,6 +194,10 @@ d3.selectAll('svg').each(function() {
 
   <xsl:template match="includes">
     <xhtml:p class="include">#include &lt;<xhtml:a href="{@refid}"><xsl:value-of select="."/></xhtml:a>&gt;</xhtml:p>
+  </xsl:template>
+
+  <xsl:template match="ulink[@url]">
+    <xhtml:a href="{@url}"><xsl:value-of select="."/></xhtml:a>
   </xsl:template>
 
   <xsl:template match="param">
@@ -178,7 +219,14 @@ d3.selectAll('svg').each(function() {
   </xsl:template>
 
   <xsl:template match="para">
-    <xhtml:p><xsl:apply-templates select="node()"/></xhtml:p>
+    <xsl:choose>
+      <xsl:when test="heading">
+        <xsl:apply-templates select="node()"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xhtml:p><xsl:apply-templates select="node()"/></xhtml:p>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="sectiondef[@kind='public-func']">
@@ -261,5 +309,33 @@ d3.selectAll('svg').each(function() {
         <xsl:apply-templates select="node()"/>
       </svg:metadata>
     </svg:svg>
+  </xsl:template>
+
+  <xsl:template match="heading[@level=1]">
+    <xhtml:h1><xsl:value-of select="."/></xhtml:h1>
+  </xsl:template>
+
+  <xsl:template match="heading[@level=2]">
+    <xhtml:h2><xsl:value-of select="."/></xhtml:h2>
+  </xsl:template>
+
+  <xsl:template match="heading[@level=3]">
+    <xhtml:h3><xsl:value-of select="."/></xhtml:h3>
+  </xsl:template>
+
+  <xsl:template match="heading[@level=4]">
+    <xhtml:h4><xsl:value-of select="."/></xhtml:h4>
+  </xsl:template>
+
+  <xsl:template match="heading[@level=5]">
+    <xhtml:h5><xsl:value-of select="."/></xhtml:h5>
+  </xsl:template>
+
+  <xsl:template match="heading[@level=6]">
+    <xhtml:h6><xsl:value-of select="."/></xhtml:h6>
+  </xsl:template>
+
+  <xsl:template match="verbatim">
+    <xhtml:pre><xsl:apply-templates select="node()"/></xhtml:pre>
   </xsl:template>
 </xsl:stylesheet>

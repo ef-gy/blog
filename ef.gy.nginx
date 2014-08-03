@@ -20,8 +20,8 @@ map $request_uri $package {
 }
 
 map $request_uri $detail {
-  default "home";
-  ~^/doc/([^/]+)/(?<det>.*)$ $det;
+  default "indexpage";
+  ~^/doc/([^/]+)/(?<det>.+)$ $det;
 }
 
 ssl_session_cache   shared:SSL:10m;

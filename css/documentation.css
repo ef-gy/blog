@@ -11,7 +11,8 @@ p.brief
 p.include
 {
   font-weight: bold;
-  color: #90f;
+  color: purple;
+  margin: 0 inherit;
 }
 
 p.copyright
