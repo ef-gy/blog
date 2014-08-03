@@ -40,6 +40,14 @@ a:hover
   stroke: purple;
 }
 
+.link.public-inheritance {
+  stroke: green;
+}
+
+.link.usage {
+  stroke: blue;
+}
+
 circle {
   fill: #ccc;
   stroke: #333;
@@ -50,4 +58,8 @@ text {
   font: 10px sans-serif;
   pointer-events: none;
   text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+}
+
+svg {
+  width: 100%;
 }

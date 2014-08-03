@@ -26,17 +26,17 @@
         <xhtml:meta name="doxygen-version" content="{@version}"/>
         <xhtml:link href="/css/documentation" rel="stylesheet" type="text/css"/>
         <xhtml:script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></xhtml:script>
+        <xhtml:script type="application/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></xhtml:script>
       </xhtml:head>
       <xhtml:body>
         <xsl:apply-templates select="node()" />
         <xhtml:script>
 
-var width = 500,
+var width = $(window).width(),
     height = 500;
 
 d3.selectAll('svg').each(function() {
   var svg = d3.select(this)
-      .attr('width', width)
       .attr('height', height);
 
   var links = [];
@@ -74,7 +74,7 @@ d3.selectAll('svg').each(function() {
       .start();
 
   svg.append('defs').selectAll('marker')
-      .data(['include'])
+      .data(['include', 'public-inheritance', 'usage'])
     .enter().append('marker')
       .attr("id", function(d) { return d; })
       .attr("viewBox", "0 -5 10 10")
@@ -240,6 +240,22 @@ d3.selectAll('svg').each(function() {
   </xsl:template>
 
   <xsl:template match="invincdepgraph">
+    <svg:svg>
+      <svg:metadata>
+        <xsl:apply-templates select="node()"/>
+      </svg:metadata>
+    </svg:svg>
+  </xsl:template>
+
+  <xsl:template match="inheritancegraph">
+    <svg:svg>
+      <svg:metadata>
+        <xsl:apply-templates select="node()"/>
+      </svg:metadata>
+    </svg:svg>
+  </xsl:template>
+
+  <xsl:template match="collaborationgraph">
     <svg:svg>
       <svg:metadata>
         <xsl:apply-templates select="node()"/>
