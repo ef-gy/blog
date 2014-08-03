@@ -200,6 +200,10 @@ d3.selectAll('svg').each(function() {
     <xhtml:a href="{@url}"><xsl:value-of select="."/></xhtml:a>
   </xsl:template>
 
+  <xsl:template match="ref[@refid]">
+    <xhtml:a href="./{@refid}" class="{@kindref}"><xsl:value-of select="."/></xhtml:a>
+  </xsl:template>
+
   <xsl:template match="param">
     <xhtml:li>
       <xsl:apply-templates select="node()"/>
@@ -227,6 +231,11 @@ d3.selectAll('svg').each(function() {
         <xhtml:p><xsl:apply-templates select="node()"/></xhtml:p>
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="sectiondef[@kind='public-type']">
+    <xhtml:h2>Public Member Types</xhtml:h2>
+    <xsl:apply-templates select="node()"/>
   </xsl:template>
 
   <xsl:template match="sectiondef[@kind='public-func']">
@@ -268,6 +277,10 @@ d3.selectAll('svg').each(function() {
   </xsl:template>
 
   <xsl:template match="parametername">
+    <xhtml:dt><xsl:apply-templates select="node()"/></xhtml:dt>
+  </xsl:template>
+
+  <xsl:template match="parametername[@direction]">
     <xhtml:dt><xsl:apply-templates select="node()"/> [<xsl:value-of select="@direction"/>]</xhtml:dt>
   </xsl:template>
 
@@ -279,36 +292,14 @@ d3.selectAll('svg').each(function() {
     <xhtml:dd><xsl:apply-templates select="node()"/></xhtml:dd>
   </xsl:template>
 
-  <xsl:template match="incdepgraph">
-    <svg:svg>
-      <svg:metadata>
-        <xsl:apply-templates select="node()"/>
-      </svg:metadata>
-    </svg:svg>
-  </xsl:template>
-
-  <xsl:template match="invincdepgraph">
-    <svg:svg>
-      <svg:metadata>
-        <xsl:apply-templates select="node()"/>
-      </svg:metadata>
-    </svg:svg>
-  </xsl:template>
-
-  <xsl:template match="inheritancegraph">
-    <svg:svg>
-      <svg:metadata>
-        <xsl:apply-templates select="node()"/>
-      </svg:metadata>
-    </svg:svg>
-  </xsl:template>
-
-  <xsl:template match="collaborationgraph">
-    <svg:svg>
-      <svg:metadata>
-        <xsl:apply-templates select="node()"/>
-      </svg:metadata>
-    </svg:svg>
+  <xsl:template match="incdepgraph | invincdepgraph | inheritancegraph | collaborationgraph">
+    <xsl:if test="not(preceding-sibling::incdepgraph | preceding-sibling::invincdepgraph | preceding-sibling::inheritancegraph | preceding-sibling::collaborationgraph)">
+      <svg:svg>
+        <svg:metadata>
+          <xsl:apply-templates select="following-sibling::incdepgraph/node() | following-sibling::invincdepgraph/node() | following-sibling::inheritancegraph/node() | following-sibling::collaborationgraph/node() | node()"/>
+        </svg:metadata>
+      </svg:svg>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="heading[@level=1]">
@@ -338,4 +329,26 @@ d3.selectAll('svg').each(function() {
   <xsl:template match="verbatim">
     <xhtml:pre><xsl:apply-templates select="node()"/></xhtml:pre>
   </xsl:template>
+
+  <xsl:template match="programlisting">
+    <xhtml:code>
+      <xhtml:ol>
+        <xsl:apply-templates select="node()"/>
+      </xhtml:ol>
+    </xhtml:code>
+  </xsl:template>
+
+  <xsl:template match="highlight">
+    <xhtml:em><xsl:apply-templates select="@class|node()"/></xhtml:em>
+  </xsl:template>
+
+  <xsl:template match="codeline">
+    <xhtml:li><xsl:apply-templates select="@class|node()"/></xhtml:li>
+  </xsl:template>
+
+  <xsl:template match="codeline[@lineno]">
+    <xhtml:li value="{@lineno}"><xsl:apply-templates select="@class|node()"/></xhtml:li>
+  </xsl:template>
+
+  <xsl:template match="sp">&#160;</xsl:template>
 </xsl:stylesheet>

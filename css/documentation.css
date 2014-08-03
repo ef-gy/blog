@@ -3,6 +3,11 @@
   font-family: sans-serif;
 }
 
+p
+{
+  margin: inherit 0.5em;
+}
+
 p.brief
 {
   font-weight: bold;
@@ -12,13 +17,19 @@ p.include
 {
   font-weight: bold;
   color: purple;
-  margin: 0 inherit;
+  margin: 0;
 }
 
 p.copyright
 {
   border-left: 0.5em solid #933;
-  padding-left: 0.5em;
+  margin-bottom: 0;
+  padding: .5em;
+}
+
+p.copyright + p.copyright
+{
+  margin-top: 0;
 }
 
 a
@@ -64,3 +75,39 @@ text {
 svg {
   width: 100%;
 }
+
+code em
+{
+  font-style: normal;
+}
+
+em.comment
+{
+  color: #494;
+}
+
+em.preprocessor
+{
+  color: #794;
+}
+
+em.keyword
+{
+  color: #449;
+}
+
+em.keywordflow
+{
+  color: #749;
+}
+
+em.keywordtype
+{
+  color: #479;
+}
+
+em.stringliteral
+{
+  color: #944;
+}
+
