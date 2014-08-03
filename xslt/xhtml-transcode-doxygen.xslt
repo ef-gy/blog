@@ -180,6 +180,10 @@ d3.selectAll('svg').each(function() {
     <xsl:apply-templates select="node()"/>
   </xsl:template>
 
+  <xsl:template match="sectiondef">
+    <xsl:apply-templates select="node()"/>
+  </xsl:template>
+
   <xsl:template match="sect1[@id]/title">
     <xhtml:h1 id="{parent::*/@id}">
       <xsl:apply-templates select="node()"/>
