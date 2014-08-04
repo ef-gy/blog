@@ -70,12 +70,9 @@
   </xsl:template>
 
   <xsl:template match="compoundname">
-    <xsl:choose>
-      <xsl:when test="following-sibling::title"/>
-      <xsl:otherwise>
-        <xhtml:h1><xhtml:span><xsl:value-of select="../@kind"/></xhtml:span>&#160;<xsl:value-of select="."/></xhtml:h1>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:if test="not(following-sibling::title)">
+      <xhtml:h1><xhtml:span><xsl:value-of select="../@kind"/></xhtml:span>&#160;<xsl:value-of select="."/></xhtml:h1>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="title">
@@ -108,6 +105,10 @@
     <xhtml:p class="include">#include &lt;<xhtml:a href="{@refid}"><xsl:value-of select="."/></xhtml:a>&gt;</xhtml:p>
   </xsl:template>
 
+  <xsl:template match="includedby">
+    <xhtml:p class="includedby">Included by <xhtml:a href="{@refid}"><xsl:value-of select="."/></xhtml:a></xhtml:p>
+  </xsl:template>
+
   <xsl:template match="ulink[@url]">
     <xhtml:a href="{@url}"><xsl:value-of select="."/></xhtml:a>
   </xsl:template>
@@ -131,7 +132,17 @@
   </xsl:template>
 
   <xsl:template match="detaileddescription">
-    <xsl:apply-templates select="node()"/>
+    <xsl:apply-templates select="node()[not(simplesect[@kind='copyright'])]"/>
+
+    <xsl:if test="descendant::simplesect[@kind='copyright' or @kind='see']">
+      <xhtml:h2>Copyright</xhtml:h2>
+      <xsl:apply-templates select="descendant::simplesect[@kind='copyright']"/>
+    </xsl:if>
+
+    <xsl:if test="descendant::simplesect[@kind='see']">
+      <xhtml:h2>See Also</xhtml:h2>
+      <xsl:apply-templates select="descendant::simplesect[@kind='see']"/>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="para">
@@ -273,6 +284,6 @@
   </xsl:template>
 
   <xsl:template match="location[@file]">
-    <xhtml:p class="see">File <xhtml:cite><xsl:value-of select="@file"/></xhtml:cite> in the source code repository.</xhtml:p>
+    <xhtml:p class="see">Defined in file <xhtml:cite><xsl:value-of select="@file"/></xhtml:cite> in the source code repository.</xhtml:p>
   </xsl:template>
 </xsl:stylesheet>

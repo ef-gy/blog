@@ -32,6 +32,18 @@ p.copyright + p.copyright
   margin-top: 0;
 }
 
+p.see
+{
+  border-left: 0.5em solid #393;
+  margin-bottom: 0;
+  padding: .5em;
+}
+
+p.see + p.see
+{
+  margin-top: 0;
+}
+
 a
 {
   color: inherit;
