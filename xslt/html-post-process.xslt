@@ -15,25 +15,31 @@
     </xsl:copy>
   </xsl:template>
 
+  <xsl:template match="*">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()" />
+    </xsl:copy>
+  </xsl:template>
+
   <xsl:template match="/">
     <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;</xsl:text>
     <xsl:apply-templates select="node()" />
   </xsl:template>
 
   <xsl:template match="math:*">
-    <xsl:element name="{name()}">
+    <xsl:element name="{local-name()}">
       <xsl:apply-templates select="@*|node()" />
     </xsl:element>
   </xsl:template>
 
   <xsl:template match="xhtml:*">
-    <xsl:element name="{name()}">
+    <xsl:element name="{local-name()}">
       <xsl:apply-templates select="@*|node()" />
     </xsl:element>
   </xsl:template>
 
   <xsl:template match="svg:*">
-    <xsl:element name="{name()}">
+    <xsl:element name="{local-name()}">
       <xsl:apply-templates select="@*|node()" />
     </xsl:element>
   </xsl:template>
