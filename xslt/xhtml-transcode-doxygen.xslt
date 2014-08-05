@@ -63,10 +63,28 @@
 
   <xsl:template match="memberdef">
     <xsl:if test="(ancestor-or-self::compounddef | ancestor-or-self::memberdef)[@id=$detail]">
-      <xsl:copy>
-        <xsl:apply-templates select="@*|node()" />
-      </xsl:copy>
+      <xsl:variable name="classes"><xsl:value-of select="concat(@kind,' ')"/>
+        <xsl:value-of select="concat(@prot,' ')"/>
+        <xsl:if test="@writable='yes'">writable </xsl:if>
+        <xsl:if test="@readable='yes'">readable </xsl:if>
+        <xsl:if test="@gettable='yes'">gettable </xsl:if>
+        <xsl:if test="@settable='yes'">settable </xsl:if>
+        <xsl:if test="@static='yes'">static</xsl:if>
+      </xsl:variable>
+
+      <xhtml:li class="{$classes}">
+        <xsl:apply-templates select="node()" />
+      </xhtml:li>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="sectiondef">
+    <xsl:if test="memberdef">
+      <xhtml:ul class="members">
+        <xsl:apply-templates select="memberdef"/>
+      </xhtml:ul>
+    </xsl:if>
+    <xsl:apply-templates select="node()[not(self::memberdef)]"/>
   </xsl:template>
 
   <xsl:template match="compoundname">
@@ -82,10 +100,6 @@
   </xsl:template>
 
   <xsl:template match="sect1">
-    <xsl:apply-templates select="node()"/>
-  </xsl:template>
-
-  <xsl:template match="sectiondef">
     <xsl:apply-templates select="node()"/>
   </xsl:template>
 

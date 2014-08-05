@@ -123,3 +123,14 @@ em.stringliteral
   color: #944;
 }
 
+ul.members li
+{
+  display: block;
+  background: #eee;
+  margin: 0.1em;
+}
+
+ul.members
+{
+  padding-left: 0;
+}
