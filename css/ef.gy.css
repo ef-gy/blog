@@ -325,6 +325,7 @@ iframe
     background: #ddd;
     border-radius: .2em;
     border: .1em solid #bbb;
+    text-decoration: none;
 }
 
 #hardcopies li + li a:hover
@@ -578,6 +579,37 @@ dt
         margin-top: -2em;
         width: 20em;
     }
+
+    h1 + ul
+    {
+        left: auto;
+        right: 0;
+        top: 0;
+        margin: 0;
+        width: auto;
+        text-align: right;
+    }
+
+    h1 + ul li
+    {
+        display: inline-block;
+        background: none;
+        margin: .2em;
+    }
+
+    h1 + ul li a
+    {
+        background: none;
+        color: #000;
+        padding: .2em 2em;
+    }
+
+    h1 + ul li a:hover
+    {
+        background: none;
+        color: #888;
+        text-decoration: none;
+    }
 }
 
 @media (max-width: 45em)
@@ -590,5 +622,16 @@ dt
         left: 0;
         top: 0;
         margin: -2em -2em 0 -4.5em;
+    }
+
+    html
+    {
+        background: #303030 !important;
+    }
+
+    body
+    {
+        background: #fff;
+        margin: 0;
     }
 }
