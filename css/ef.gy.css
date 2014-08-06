@@ -406,6 +406,25 @@ p math
     }
 }
 
+table.proper thead th,
+table.proper thead td
+{
+    background: #eee;
+}
+
+table.proper tbody tr th,
+table.proper tbody tr td
+{
+    border-top: .1em solid black;
+}
+
+table.proper
+{
+    table-layout: fixed;
+    width: 100%;
+    overflow: hidden;
+}
+
 @media (max-width: 58em)
 {
     body
