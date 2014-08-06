@@ -138,11 +138,12 @@ p
 a
 {
     color: inherit;
-    text-decoration: none;
+    text-decoration: underline;
 }
 
 a:hover
 {
+    color: #555;
     text-decoration: underline;
 }
 
@@ -171,6 +172,7 @@ h1+ul li a
     background: #303030;
     margin: -.5em -2em;
     padding: .5em 2em;
+    text-decoration: none;
 }
 
 ul#meta,
@@ -200,6 +202,14 @@ ul#subfeeds li a
     background: #303030;
     margin: -.5em -2em;
     padding: .5em 2em;
+    text-decoration: none;
+}
+
+h1+ul li a:hover,
+ul#meta li a:hover,
+ul#subfeeds li a:hover
+{
+    color: #ccc;
 }
 
 ul#meta li#published
