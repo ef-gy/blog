@@ -398,14 +398,6 @@ p math
     display: inline-block;
 }
 
-@media (max-width: 65em)
-{
-    body
-    {
-        margin-right: 1em
-    }
-}
-
 table.proper thead th,
 table.proper thead td
 {
@@ -423,6 +415,101 @@ table.proper
     table-layout: fixed;
     width: 100%;
     overflow: hidden;
+}
+
+pre
+{
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: monospace;
+}
+
+blockquote
+{
+    width: auto;
+    max-width: 60em;
+    margin: 3.5em auto;
+}
+
+h2 ~ blockquote
+{
+    margin: 0.5em auto;
+}
+
+blockquote pre,
+blockquote p
+{
+    width: auto;
+    max-width: 56em;
+    margin: 0.5em auto;
+    padding: 0 1.5em;
+}
+
+blockquote pre:before,
+blockquote p:before
+{
+    display: block;
+    content: "\201c";
+    font-size: 5em;
+    color: #ccc;
+    margin: 0 -0.5em -0.5em -0.5em;
+}
+
+blockquote pre:after,
+blockquote p:after
+{
+    display: block;
+    content: "\201d";
+    font-size: 5em;
+    color: #ccc;
+    text-align: right;
+    margin: 0 -0.5em;
+}
+
+blockquote[cite]:after
+{
+    display: block;
+    content: attr(cite);
+    max-width: 50em;
+    color: #999;
+    margin: -4em 0 0 7em;
+    font-style: italic;
+    text-align: right;
+}
+
+blockquote.twitter-tweet
+{
+    width: auto;
+    max-width: none;
+    padding: 1em;
+    margin: 1em;
+}
+
+blockquote.twitter-tweet p
+{
+    width: auto;
+    max-width: none;
+    padding: 1em;
+    margin: 0;
+}
+
+blockquote.twitter-tweet p:before,
+blockquote.twitter-tweet p:after
+{
+    display: none;
+}
+
+dt
+{
+    font-weight: bold;
+}
+
+@media (max-width: 65em)
+{
+    body
+    {
+        margin-right: 1em
+    }
 }
 
 @media (max-width: 58em)
