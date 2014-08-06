@@ -207,9 +207,11 @@ ul#subfeeds li a
 
 h1+ul li a:hover,
 ul#meta li a:hover,
-ul#subfeeds li a:hover
+ul#subfeeds li a:hover,
+address p a:hover
 {
     color: #ccc;
+    text-decoration: none;
 }
 
 ul#meta li#published
@@ -392,6 +394,7 @@ address p a
     background: #303030;
     padding: 0.5em 2em;
     margin: 0 -2em;
+    text-decoration: none;
 }
 
 math,
