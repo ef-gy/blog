@@ -91,6 +91,7 @@
           <li><a href="https://twitter.com/share" class="twitter-share-button" data-url="{@url}" data-via="{@twitter}">Tweet</a></li>
         </xsl:if>
         <li><div class="g-plusone" data-size="medium" data-href="{@url}"/></li>
+        <li><iframe src="//www.reddit.com/static/button/button1.html?url={@url}&amp;title={//xhtml:title}"></iframe></li>
       </ul>
     </xsl:if>
   </xsl:template>

@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" id="server-grill">
+<head>
+<title>How to Harden SSH with Identities and Certificates</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="It's 2014 and remote unix shells are as popular as ever. Which is great, except that people don't seem to be using the more advanced security features nearly enough. So, what are they and how can you use them?" />
+<meta name="date" content="2014-08-07T16:13:00Z" />
+<meta name="mtime" content="2014-08-07T16:13:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="hardening-ssh" />
+</head>
+<body>
+<h1>Introduction</h1>
+<p>Whether you just need to feel in power or you actually use shells for day-to-day tasks, the <em>Secure Shell</em> [SSH] is probably the most important administrative access tool to your servers. It's also one of the least secured mission-critical services on most UNIX servers. Why? Because for some reason people are still using mere <em>passwords</em> to protect their <em>root</em> accounts. That's not quite as bad as using <em>telnet</em>, but not by too much. You might as well be using plain <em>FTP</em> to transfer data to your server... oh, wait, that's another article.</p>
+<p>Using passwords for your remote servers exposes you to a whole class of unnecessary security risks, which are easily avoided by either switching to <em>SSH identities</em> or <em>SSH certificates</em>. This article will cover both, since they're conceptually very similar. We'll be working very closely with OpenSSH's configuration files, hopefully explaining some of the more intimidating options you might encounter.</p>
+<h1>Why Passwords are Bad for You</h1>
+<p><a href="http://xkcd.com/936/">I'll have a hard time explaining the entropy part any better than this xkcd</a>, but I would like to hook into the part where you have people <em>guessing</em> your passwords. If you've recently set up a new server with SSH, you've probably found a whole lot of noise in your syslog about authentication failures. The majority of these will be caused by bots, which are trying to guess common user name and password combinations - and oftentimes will also try to exploit known vulnerabilities in certain versions of OpenSSH. <a href="http://www.fail2ban.org">You can mitigate the former of these issues with programmes like Fail2Ban</a>, however you should remember that <em>hope is not a strategy</em>, and bandaids like these only delay the inevitable: the bot getting enough guesses in to guess your password.</p>
+<h1>(Re-)Introducing SSH Identities</h1>
+<p>Fortunately, SSH includes a feature to vastly increase the security aspect - and potentially make things more convenient for you, as well. This little bit of magic is called an <em>SSH identity</em> - or, more commonly, <em>SSH keys</em>. The keys work like this: instead of authenticating to a server by supplying a password, you generate a pair of public/private keys, much like in PGP/GPG. You keep your private key safe while uploading the public key to your server. The advantage? You increase the entropy from something under 50 bits to your key's length: typically 4096 bits or more. That's about two orders of magnitude.</p>
+<h2>Preparing the Client</h2>
+<p>Using SSH keys is very, very easy. Here's how: you generate a new key on the <em>client</em> machine using a command like this:</p>
+<pre><code>$ ssh-keygen -b 4096 -t rsa -f ~/.ssh/id_rsa</code></pre>
+<p>This will create two files: Your private key <em>~/.ssh/id_rsa</em>, and your public key <em>~/.ssh/id_rsa.pub</em>. The command will ask you for a password to secure your private key with - it's up to you whether you feel comfortable that this file won't get into the wrong hands, so choose carefully if you set a password or not. The options we used so far are the following:</p>
+<dl>
+<dt>-b 4096</dt>
+<dd>This instructs <em>ssh-keygen</em> to generate a 4096-bit key. Feel free to increase this to your desired key length - remember to use powers of two.</dd>
+<dt>-t rsa</dt>
+<dd>Makes <em>ssh-keygen</em> generate RSA keys. According to the man page, valid algorithms are <em>rsa</em>, <em>dsa</em>, <em>ecdsa</em> and <em>ed25519</em>. <em>ed25519</em> is a new, elliptic-curve based algorithm that was introduced in OpenSSH 6.5, whereas <em>ecdsa</em> is the old elliptic-curve DSA implementation that is known to have severe vulnerabilites. Elliptic-curve cryptography relies on the infeasibility of finding the discrete logarithm to a random elliptic curve element and is thought to be mathematically harder than the prime factorisation that RSA relies on, so in theory it should be more secure even at significantly lower key strengths. However the only implementation of this available in SSH - until very recently - was flawed the same way DSA was, and <em>ed25519</em> may not be available on a lot of the machines you might want to use the key on. Finally, <em>dsa</em> - the standard, non-elliptic-curve variant of DSA - has many known attack vectors, so you should avoid that.</dd>
+<dt>-f ~/.ssh/id_rsa</dt>
+<dd>The <em>-f</em> option sets the output file name for your new private key. <em>.ssh/id_rsa</em> in your home directory is the default for SSH RSA identities, so it will be used automatically. You're free to use any location you choose, however you must make sure that your private key file is only readable by your own user account or OpenSSH will refuse to use it. Also, the <em>public</em> key is placed alongside this file with a <em>.pub</em> extension.</dd>
+</dl>
+<p>After your key is generated you will be presented with a small ASCII <em>randomart</em> image. Feel free to remember this image, as you can use it at a later point to visually identify a suspect key. To retrieve this image later, use this command:</p>
+<pre><code>$ ssh-keygen -lv -f .ssh/id_rsa.pub 
+2048 fa:86:25:1d:9c:c9:89:58:b2:dd:a5:5c:17:5b:f1:5f  user@some-host.example.com (RSA)
++--[ RSA 2048]----+
+|            ..o. |
+|    . .   o .o . |
+|     * * B ..   E|
+|    o o @       o|
+|       .S.      .|
+|      ..o        |
+|      .+         |
+|      ...        |
+|       ..        |
++-----------------+
+</code></pre>
+<p>The generated randomart is fairly distinct - this one in particular kinda of looks like a palm tree with a coconut falling off on the right side there, doesn't it? You will probably be able to pick yours out after seeing it a few times. You'll rarely be identifying public keys like this, however. The option is rather intended for identifying <em>host</em> keys, by virtue of the <em>VisualHostKey</em> setting in SSH's config file. You should enable this setting in your <em>~/.ssh/config</em> file - or the system-wide <em>/etc/ssh/ssh_config</em> if you have write access to it - by adding the following line at the beginning:</p>
+<pre><code>VisualHostKey yes</code></pre>
+<p>This will present the remote system's randomart picture every time you log in - and if you were using a password, it would do so before you would enter it, which would allow you to visually compare the remote host's key to what it usually looks like and see if something is wrong before giving away any sensitive passwords. This works by SSH host keys pretty much just being a private/public key pair like the one you just generated, unique to each machine.</p>
+<h2>Preparing the Server</h2>
+<p>Now that you have your identity file, you will need to log in on the server and add the contents of the <em>~/.ssh/id_rsa.pub</em> file to your server's <em>~/.ssh/authorized_keys</em> list. If there is no <em>~/.ssh</em> directory on the remote host, create it. Your public key will just be a single line - albeit a long one - and this list of authorised keys will take as many public keys as you want. You're supposed to create a new private/public key pair on each host, by the way - not too many people seem to actually do that, mind you, but if you were to do so you could very easily revoke access from specific, compromised machines by removing the corresponding entry in the list of authorised keys. Note also that the list of keys is user-specific, meaning that any user where your public key is in the user's <em>~/.ssh/authorized_keys</em> file is a user you can log in as, also implying that you can easily give someone else access to your account on a foreign machine without ever giving out any passwords or being root.</p>
+<p>Once the key has been appended you can simply log into the machine using the <em>ssh</em> command line tool as normal. If your key requires a password you will be prompted to enter one - otherwise simply having the private key file will be enough to log in. To make sure that the key was actually used and to verify which key was used, you can use OpenSSH's <em>-v</em> flag, like so:</p>
+<pre><code>$ ssh -v magnus@stinger.becquerel.org
+[...]
+debug1: Authentications that can continue: publickey
+debug1: Next authentication method: publickey
+debug1: Trying private key: /Users/magnusdeininger/.ssh/id_rsa
+debug1: read PEM private key done: type RSA
+debug1: Authentication succeeded (publickey).
+Authenticated to stinger.becquerel.org ([46.226.106.4]:22).
+[...]
+magnus@stinger:~$ 
+</code></pre>
+<p>In this example I logged onto my web server. I cut away a few lines of output as they're not relevant. The highlighted debug1 messages indicate which private key file OpenSSH tried to use and more importantly that it tried - and succeeded - to log on using the <em>publickey</em> authentication method. Scan your debug output for lines like these to make sure it's working before heading to the next section.</p>
+<h2>Disabling Password-based Authentication</h2>
+<p>Now that you can log on with an SSH identity as opposed to a plain password, you should disable password-based authentication altogether. Make sure to only do this once you have verified that you can log in with an account that can escalate to root - or that you have an alternate way of getting back onto your machine. To lock down your server, edit your <em>/etc/sshd/sshd_config</em> and set the following options:</p>
+<pre><code>Protocol 2
+PermitRootLogin without-password
+PubkeyAuthentication yes
+ChallengeResponseAuthentication no
+PasswordAuthentication no
+UsePAM yes</code></pre>
+<p>This sets a fairly strict set of defaults that should make most bots give up right after connecting. The options we used were:</p>
+<dl>
+<dt>Protocol</dt>
+<dd>Verify that only protocol version 2 is allowed. There's no point in supporting the rather dated version 1 and you're only opening yourself up to ye olde bugs of old. If this reads <em>1</em> or <em>1,2</em>, change it to just <em>2</em>.</dd>
+<dt>PermitRootLogin</dt>
+<dd>The setting <em>without-password</em> is a bit of a misnomer. What that does is it enables root logins, but only if the mechanism to authenticate was not a password - i.e. it enables root logins, but only for public key authentication. This is good. Never set this to <em>yes</em>.</dd>
+<dt>PubkeyAuthentication</dt>
+<dd>Make sure this is set to <em>yes</em>, otherwise you won't be able to log in once you disable passwords.</dd>
+<dt>ChallengeResponseAuthentication</dt>
+<dd>Set this to <em>no</em> to disable non-pubkey logins that could otherwise be handled through PAM.</dd>
+<dt>PasswordAuthentication</dt>
+<dd>This is what we were here for: set this to <em>no</em> to disable tunneled clear text passwords.</dd>
+<dt>UsePAM</dt>
+<dd>If your system has PAM set up, it'll still be a good idea to keep this enabled even if you disabled password-based authentication. This is because PAM also provides session and account management, so set this to <em>yes</em>.</dd>
+</dl>
+<p>All you need to do now is restart the SSH server, like so:</p>
+<pre><code># /etc/init.d/ssh restart</code></pre>
+<p>Note that restarting SSH will not kill your active session, so you should verify that the new settings will actually let you log in before closing your current session - and revert and restart SSH again if they don't.</p>
+<p>For maximum effect, make sure that SSH is the <em>only</em> way to log on to your server. At the very least make really certain that you don't have <em>telnet</em> enabled! There, now you're all set and can be very confident that bots won't be able to access your machines through SSH. But wait, there's more!</p>
+<h1>SSH certificates</h1>
+<p>SSH <em>certificates</em> are the latest and greatest enhancement to the public and private key authentication SSH has to offer. They work by introducing a new <em>certificate authority</em> that signs your host or user keys, which adds a few significant improvements to the concept, such as:</p>
+<dl>
+<dt>Central Authority</dt>
+<dd>You probably have more than one server and more than one user account - like, <em>root</em> and your favourite non-root user account for normal, day-to-day work. If you generate a new key or try to give a new user access to your machines, you would have to add that key to a lot of <em>authorized_keys</em> files, which is a slow and error-prone, annoying process. By using SSH certificates, you can cut down on this by simply signing allowed keys once and then you're done with it.</dd>
+<dt>Key Expiration</dt>
+<dd>Ever created a PGP/GPG key and lost the private key afterwards while people are still sending you messages using your old public key? Yeah, that's why you're supposed to set an expiration date for your keys. Unfortunately you can't do that with ordinary public/private key pairs in SSH - but you can with signed keys.</dd>
+<dt>Signed Host Keys</dt>
+<dd>Notice how whenever you set up a new machine and connect to it for the first time, SSH asks you to accept or reject its host key? If you were paranoid enough, you were actually supposed to distribute the host key through some kind of physical medium and be very, very scared of accepting new host keys. Since that is kind of impractical, SSH certificates also let you sign host keys, so that you only need to trust the certificate authority for a domain and then you won't see any warnings about unknown host keys when connecting to new machines on that network.</dd>
+</dl>
+<p>SSH certificates are a relatively new feature. As such they're not used nearly enough. Now that you know why they're a good thing, let's get 'em set up, starting with the root certificate.</p>
+<h2>Creating a Root Certificate</h2>
+<p>To sign anything, you need a <em>certificate authority</em> to sign them with. SSH does not use the more common X.509 certificates used in SSL as they're basically just an extension to the identity concept already in place in SSH. As such you don't need to mess around with obscure OpenSSL commands; like with identities, <em>ssh-keygen</em> is your friend! To create a new root certificate, create a new pair of keys first:</p>
+<pre><code>$ ssh-keygen -b 4096 -t rsa -f example-com-ca -C "CA key for example.com"</code></pre>
+<p>The options we used are pretty much the same, except that this time we didn't place certificates in your <em>~/.ssh/</em> folder. Why? Because those keys are not meant to be used as identities. There is one new option we didn't use last time:</p>
+<dl>
+<dt>-C "CA key for example.com"</dt>
+<dd>The <em>-C</em> option sets a comment in your key file. The default is user@host, but since you'll be dealing with a lot of keys at a time now it might be better to give the keys moe descriptive names.</dd>
+</dl>
+<p>Oh, and please note that most other guides will tell you to do these steps as root. There's no real need to generate keys as root - any ordinary user will do fine. So it's probably best if you do use an ordinary user account. Also, it doesn't matter where you generate the key pair - do it on your workstation if you can, not your server. Just remember to keep the signing keys safe - this one is probably one of those that you should use a password with, because this key is <em>really</em> powerful and you don't need to use it very often.</p>
+<h2>Signing Host Keys</h2>
+<p>The most straightforward use of your new signing key is to sign host keys. In SSH there is no real distinction between user and host keys, and as usual we'll use <em>ssh-keygen</em> for this. The command is as follows:</p>
+<pre><code>$ ssh-keygen -s example-com-ca -h -n host.example.com -V +52w -I host.example.com-key host-key.pub</code></pre>
+<p>This command contains quite a few new flags, so let's have a look at those:</p>
+<dl>
+<dt>-s example-com-ca</dt>
+<dd>Tells <em>ssh-keygen</em> to sign a public key with the private key <em>example-com-ca</em>. Substitute <em>example-com-ca</em> with whatever signing key you'd like to use.</dd>
+<dt>-h</dt>
+<dd>Sign a <em>host</em> key. Without this flag you'd be signing a <em>user</em> certificate. We'll get to that later.</dd>
+<dt>-n host.example.com</dt>
+<dd>Sets the host name for this new signed key to <em>host.example.com</em>. Replace with the host name of whatever machine the host key is intended to be used for. You could specify multiple host names by separating them with commas, e.g. <em>-n host.example.com,ssh.example.com</em>.</dd>
+<dt>-V +52w</dt>
+<dd>For how long the certificate will be valid. <em>+52w</em> means that the certificate will expire 52 weeks in the future, i.e. one year from now. You can also specify a range, e.g. <em>+2w,+52w</em> for a key that will become valid in two weeks and will expire in a year. The standard SSH date format applies, so you can use additional suffixes other than <em>w</em> and you can also specify explicit dates. See the <em>Time Formats</em> section of the <em>sshd_config</em> man page for further details on this.</dd>
+<dt>-I host.example.com-key</dt>
+<dd>Set an identifier for the signed key, which is used in logging (and revoking the certificate later, see below).</dd>
+</dl>
+<p>The final argument, <em>host-key.pub</em>, is the <em>public</em> key to sign. You always sign public keys, never private keys! The certificate will be placed in a new file <em>host-key-cert.pub</em>. For example, if you were to sign the RSA host key of the machine you're on right now, you could do that like this:</p>
+<pre><code># ssh-keygen -s example-com-ca -h -n host.example.com -V +52w -I host.example.com-key /etc/ssh/ssh_host_rsa_key.pub</code></pre>
+<p>Note how you would have to do this as root, as the command will try to write a new file <em>/etc/ssh/ssh_host_rsa_key-cert.pub</em> and that directory is hopefully only writable by root.</p>
+<h2>Using Signed Host Keys</h2>
+<p>No matter where you signed the key, copy the certificate to the appropriate location on your SSH host; i.e. copy it to <em>/etc/ssh/ssh_host_rsa_key-cert.pub</em> if it's an RSA key and substitute the <em>rsa</em> part with the correct algorithm if you signed a different type of key. Next you need to tell the OpenSSH daemon on your SSH server to use the shiny new certificate by editing <em>/etc/ssh/sshd_config</em>:</p>
+<pre><code>HostCertificate /etc/ssh/ssh_host_rsa_key-cert.pub</code></pre>
+<p>Note how you don't need to tell the OpenSSH daemon anything about the CA - this is not necessary as it is the client side that verifies a server's host key, so the server just needs to know where its signature is.</p>
+<p>This is all there is to do on the server side. On the <em>client</em> side, you need to add the signing <em>public</em> key to your user's <em>~/.ssh/known_hosts</em> file. Add a new line like the following:</p>
+<pre><code>@cert-authority *.example.com contents-of-public-key-file</code></pre>
+<p>All of this needs to be on a single line, like always in the <em>known_hosts</em> file. The individual parts of the line are as follows:</p>
+<dl>
+<dt>@cert-authority</dt>
+<dd>Tells SSH that the following key is not the key for a single host, but rather is the expected signing key for a set of hosts.</dd>
+<dt>*.example.com</dt>
+<dd>A comma-separated set of of host name patterns for which this signing key is valid. This has the usual pattern format employed by SSH, where asterisks denote arbitrary character strings. IP adresses are also valid.</dd>
+<dt>contents-of-public-key-file</dt>
+<dd>This is literally the public key in your signing key pair.</dd>
+</dl>
+<p>Remember that all of this has to be on a single line. For example, <a href="/public-keys">the bottom of our Public Keys page lists the line to add for the <em>becquerel.org</em> network where this site is hosted</a>. If you were to add this particular line and test it...</p>
+<pre><code>$ ssh stinger.becquerel.org
+Host key fingerprint is 62:2e:78:67:72:68:dd:05:2f:fb:0e:17:09:2d:1f:9d
++--[RSA-CERT 819--+
+|                 |
+|         . . .   |
+|        + o E    |
+|         * o     |
+|      o S *      |
+|   . = o + .     |
+|  . * * + .      |
+|   o *   +       |
+|         .o      |
++-----------------+
+
+Permission denied (publickey).</code></pre>
+<p>You wouldn't see the last line if you had my private key, of course. Notice how ssh doesn't ask you to add a new host key - that's because it's verified against the signing public key. To verify that it's actually doing this, the <em>-v</em> flag is your fried:</p>
+<pre><code>$ ssh -v stinger.becquerel.org
+[...]
+debug1: ssh_rsa_verify: signature correct
+debug1: Server host key: RSA-CERT 62:2e:78:67:72:68:dd:05:2f:fb:0e:17:09:2d:1f:9d
+debug1: Host 'stinger.becquerel.org' is known and matches the RSA-CERT host certificate.
+debug1: Found CA key in /Users/mdeininger/.ssh/known_hosts:11
+[...]</code></pre>
+<p>Notice how it says that the signature is correct and that it <em>found [the] CA key in [the known_hosts file]</em>. That's how you verify that it was using certificates; if it didn't know about the signing public key, it would instead say:</p>
+<pre><code>$ ssh -v stinger.becquerel.org
+[...]
+debug1: ssh_rsa_verify: signature correct
+debug1: Server host key: RSA-CERT 62:2e:78:67:72:68:dd:05:2f:fb:0e:17:09:2d:1f:9d
+debug1: No matching CA found. Retry with plain key
+[...]</code></pre>
+<p>Output like that means you didn't add the right CA key to your <em>~/.ssh/known_hosts</em>, or that the host pattern was incorrect.</p>
+<h2>Signing User Keys</h2>
+<p>This final step is conceptually very similar to the host certificates: user certificates. Again we use <em>ssh-keygen</em>, like so:</p>
+<pre><code>$ ssh-keygen -s example-com-ca -n user -V +52w -I example.com-user id_rsa.pub</code></pre>
+<p>Note how this command is very similar to the one we used to sign host keys. The only differences are that the <em>-n</em> flag now specifies users and not host names, and this time you need to feed it your user identity's public key. Like last time it will produce a file called <em>id_rsa-cert.pub</em>. If you were to sign your own user key, the command would be this:</p>
+<pre><code>$ ssh-keygen -s example-com-ca -n user -V +52w -I example.com-user ~/.ssh/id_rsa.pub</code></pre>
+<p>And that's all there is to signing user keys. If your server were set up to allow you to log in with keys signed by this certificate, you'd be all set without any need to manually populate any <em>authorized_keys</em> files. So that's what you'll do next.</p>
+<h2>Using Signed User Keys</h2>
+<p>On the client side all you need to do is make sure that the <em>id_rsa-cert.pub</em> sits alongside your <em>id_rsa.pub</em> file, so we're done with this part. We still need to tell the server to accept keys signed by your CA, however. To do so, you need to copy your <em>example-com-ca.pub</em> to your server - <em>/etc/ssh</em> would be a good location, so I'll assume that's where you copied it to. You then need to edit your <em>/etc/ssh/sshd_config</em> file again and add an option like this:</p>
+<pre><code>TrustedUserCAKeys /etc/ssh/example-com-ca.pub</code></pre>
+<p>You could place multiple public keys in the file referenced to by <em>TrustedUserCAKeys</em> - one per CA that is allowed to sign user keys that you trust. As usual, restart your SSH server to have this option take effect. And that's everything you needed to do, you can now log on using your signed key, without needing to update the <em>authorized_keys</em> file for each user you want to log on as. Of course you can still do that, in addition to using the CA.</p>
+<h2>Separate User and Host CAs</h2>
+<p>It is often a good idea to use separate user and host certificate authorities. This is not strictly necessary, but it could increase security if either of the private keys were compromised or if users and hosts were managed by different departments. Feel free to just generate a second CA for your users like you did before creating your host keys and substitute the signing key as appropriate.</p>
+<h1>Revoking Identities and Certificates</h1>
+<p>The final thing to know about using identities and certificates is that you can <em>revoke</em> them. To do so, you would again need to edit your <em>/etc/ssh/sshd_config</em> and add the following option:</p>
+<pre><code>RevokedKeys /etc/ssh/revoked-keys</code></pre>
+<p>Make sure that the file listed here exists and is readable, otherwise public key authentication will be refused altogether! Depending on whether you used straight identities or certificates, you can either populate this file with a list of revoked public keys, or you can use <em>ssh-keygen</em> to populate this file with an <em>OpenSSH Key Revocation List</em>, or <em>KRL</em> for short. Any keys listed either way in this file will be refused access when trying to authenticate. It's like an inverse <em>authorized_keys</em> file. This is not particularly useful to force key rotation, but it is useful if you have a very specific key that got astray - or for blocking keys that are known to suffer from the old RNG bug and are inherently insecure.</p>
+<p>If you want to use a KRL instead of a straight list of revoked public keys, OpenSSH's swiss army knife <em>ssh-keygen</em> is your friend, as usual. To generate or update a KRL, use the following command:</p>
+<pre><code>$ ssh-keygen -k -f revoked-keys -u -s example-com-ca public-key-or-file(s)</code></pre>
+<p>This usage has a couple of new options, so let's have a look at those:</p>
+<dl>
+<dt>-k</dt>
+<dd>This flag puts <em>ssh-keygen</em> in KRL mode, telling it to create or update a Key Revocation List. The new KRL is placed in the file specified by the <em>-f</em> flag, so in this example it would be placed in the <em>revoked-keys</em> file.</dd>
+<dt>-u</dt>
+<dd>If you specify this flag, the output KRL is appended to instead of being overriden with only the contents of the specified files. You should use this if you already have a KRL and just want to quickly revoke another public key. Note that if you specify this flag and the output file does not exist then <em>ssh-keygen</em> will fail with an error, so for your first run you should drop this flag.</dd>
+</dl>
+<p>The <em>-s</em> flag is optional and you only need to use it if you want to revoke a certificate by serial or id. If you only want to revoke public keys that you have then there's no need to specify the CA. The <em>public-key-or-file(s)</em> are the list of files that either contain public keys - one key per line - or revocation specifications. So, if you wanted to create a KRL with your own public key, you would invoke the following command:</p>
+<pre><code>$ ssh-keygen -k -f revoked-keys ~/.ssh/id_rsa.pub</code></pre>
+<p>... and now you have a new file <em>revoked-keys</em> in your current directory that contains this key. If you wanted to revoke an OpenSSH certificate by ID, you would create a new file <em>ids-to-revoke</em> with the following contents:</p>
+<pre><code>id: example.com-user</code></pre>
+<p>And the command to turn that into a KRL would be:</p>
+<pre><code>$ ssh-keygen -k -f revoked-keys -s example-com-ca ids-to-revoke</code></pre>
+<p>This usage lets you revoke keys without actually having the literal certificate or identity file on hand. You can specify multiple lines in your <em>ids-to-revoke</em> file with multiple <em>id:</em> commands. Instead of <em>id:</em> you can also use <em>serial:</em>, <em>key:</em> or <em>sha1:</em> to specify the key's serial, a plain public key or a key's SHA1 hash instead.</p>
+<p>Remember to use the <em>-u</em> flag when updating a KRL and to actually distribute the KRL to the servers. <em>scp</em> and <em>rsync</em> are your friends, as usual.</p>
+<h1>Further Security Improvements</h1>
+<p>Now that you're an expert with certificates, there's a few additional things you can do to increase the security of your servers. Starting with their host keys.</p>
+<h2>Disable Unused Host Key Types</h2>
+<p>In your servers' <em>/etc/ssh/sshd_config</em> file, you will notice several <em>HostKey</em> directives. You should disable all of the host keys with algorithms that you don't use or which you don't trust. For instance on my servers, the block with host keys looks like this:</p>
+<pre><code>HostKey /etc/ssh/ssh_host_rsa_key
+#HostKey /etc/ssh/ssh_host_dsa_key
+#HostKey /etc/ssh/ssh_host_ecdsa_key</code></pre>
+<p>As you can see the DSA and ECDSA keys are commented out, meaning the SSH server will not use them. You could - and should - also remove these other private keys along with their public keys from <em>/etc/ssh</em>, as they serve no purpose. Although some distribution scripts may re-generate these upon restarting SSH.</p>
+<p>Remember: the fewer features you enable, the fewer features can be exploited if it turns out there's a bug lurking somewhere.</p>
+<h2>Strengthen the Remaining Keys</h2>
+<p>The default host keys tend to be mere 1024 bits. There's no reason for that, so if you're paranoid you should create new host keys that are stronger:</p>
+<pre><code># ssh-keygen -b 8192 -t rsa /etc/ssh/ssh_host_rsa_key</code></pre>
+<p>You should also regenerate your host keys if you suspect your host keys were generated when the weak RNG bug was in effect or if you suspect the private key has been compromised. Also remember to sign the public key anew and upload the certificate when you generate a new key, otherwise things will not work as intended.</p>
+<p>Be advised that using keys stronger than 8192 bits with certificates will cause some versions of OpenSSH to ignore keys and fail. Some older versions may even be limited to 4096 bits. You will get very strange error messages citing that your certificate was not a valid certificate at all. So, best to hold off on those really strong keys for now. Also note that you should not assign a password to these keys, as you want your server to boot up automatically with SSH enabled and working.</p>
+<h2>Do not Keep Copies of the Certificates You Signed</h2>
+<p>Some guides will tell you to keep copies of the certificates you signed, or even to generate the public/private key pair for your user and hand the private key and certificate to them via a secure channel and to keep the files around so you can revoke them later.</p>
+<p>This is <em>not</em> necessary, and is in fact a security concern. You do not need to have access to your users' private keys and you actually shouldn't in the first place, since it would allow you to impersonate them. Make your users generate their own key pairs and only ask them for the public key - which is the only thing you need to sign. There is also no need to keep a copy of the certificate; as long as you have the CA private key and the ID of the key which you assigned you can revoke the key using a KRL. Since you need not have the other information it is thus best to delete the public key file and the certificate once you've issued them.</p>
+<h1>Further Reading</h1>
+<p>Congratulations, you now have a tinfoil-hat level SSH server set up.</p>
+<p>For further information on things you can configure in OpenSSH, read the following man pages:</p>
+<pre><code>$ man 5 ssh_config
+$ man 5 sshd_config
+$ man 1 ssh-keygen</code></pre>
+<p>If you need further guidance, you could also look at the following articles on the same subject:</p>
+<ul>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-create-an-ssh-ca-to-validate-hosts-and-clients-with-ubuntu">How To Create an SSH CA to Validate Hosts and Clients with Ubuntu</a></li>
+<li><a href="http://neocri.me/documentation/using-ssh-certificate-authentication/">Using SSH Certificate Authentication</a></li>
+</ul>
+<p>If you have further queries, please use the comment section below or send me an email.</p>
+</body>
+</html>
