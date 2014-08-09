@@ -518,6 +518,25 @@ dt
     font-weight: bold;
 }
 
+p.continue
+{
+     margin: 2em 0;
+}
+
+p.continue a
+{
+    background: rgba(0,0,0,0.8);
+    border-radius: 2em;
+    padding: 1em;
+    color: #fff;
+    text-decoration: none;
+}
+
+p.continue a:hover
+{
+    background: #000;
+}
+
 @media (max-width: 65em)
 {
     body

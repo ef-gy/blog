@@ -114,7 +114,7 @@
                       </xsl:choose>
                     </xsl:if>
                   </xsl:for-each>
-                  <p><a href="{$link}">(read on...)</a></p>
+                  <p class="continue"><a href="{$link}">continue reading</a></p>
                   </li>
                 </xsl:when>
                 <xsl:otherwise>
@@ -142,7 +142,7 @@
                       </xsl:choose>
                     </xsl:if>
                   </xsl:for-each>
-                  <p><a href="{$link}">(read on...)</a></p>
+                  <p class="continue"><a href="{$link}">continue reading</a></p>
                   </li>
                 </xsl:otherwise>
               </xsl:choose>
