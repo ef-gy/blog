@@ -117,7 +117,7 @@
                   <p><a href="{$link}">(read on...)</a></p>
                   </li>
                 </xsl:when>
-                <xsl:when test="($target='home' or $target='') and ((position() &lt; 3) or ($weights[@name=$tname] &gt;= 3))">
+                <xsl:otherwise>
                   <li class="medium"><h1><a href="{$link}"><xsl:value-of select="atom:content/xhtml:html/xhtml:head/xhtml:title"/></a></h1>
                   <ul>
                     <li class="published"><xsl:value-of select="(atom:published | atom:updated)[1]"/></li>
@@ -142,25 +142,6 @@
                       </xsl:choose>
                     </xsl:if>
                   </xsl:for-each>
-                  <p><a href="{$link}">(read on...)</a></p>
-                  </li>
-                </xsl:when>
-                <xsl:otherwise>
-                  <li class="small"><h1><a href="{$link}"><xsl:value-of select="atom:content/xhtml:html/xhtml:head/xhtml:title"/></a></h1>
-                  <ul>
-                    <li class="published"><xsl:value-of select="(atom:published | atom:updated)[1]"/></li>
-                    <xsl:choose>
-                      <xsl:when test="contains(atom:author/atom:name, ' ')">
-                        <li class="author"><xsl:value-of select="substring-before(atom:author/atom:name, ' ')"/></li>
-                      </xsl:when>
-                      <xsl:otherwise>
-                        <li class="author"><xsl:value-of select="atom:author/atom:name"/></li>
-                      </xsl:otherwise>
-                    </xsl:choose>
-                  </ul>
-                  <p>
-                    <xsl:value-of select="atom:summary"/>
-                  </p>
                   <p><a href="{$link}">(read on...)</a></p>
                   </li>
                 </xsl:otherwise>
