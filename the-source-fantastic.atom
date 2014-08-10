@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:id="the-source-fantastic" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>ef.gy</title>
+  <subtitle>The Source Fantastic</subtitle>
+
+  <entry xlink:href="tsf-1-shadow.xhtml" />
+</feed>
