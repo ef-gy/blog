@@ -78,6 +78,10 @@
     </xsl:if>
   </xsl:template>
 
+  <xsl:template match="memberdef/definition">
+    <xhtml:pre><xhtml:code><xsl:apply-templates select="node()" /></xhtml:code></xhtml:pre>
+  </xsl:template>
+
   <xsl:template match="sectiondef">
     <xsl:if test="memberdef">
       <xhtml:ul class="members">

@@ -134,3 +134,15 @@ ul.members
 {
   padding-left: 0;
 }
+
+pre
+{
+  font-family: monospace;
+  white-space: pre-wrap;
+}
+
+pre code
+{
+  border-left: .5em solid purple;
+  padding-left: .5em;
+}
