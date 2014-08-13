@@ -26,8 +26,8 @@ map $request_uri $detail {
 
 map $http_dnt $dnt
 {
-  default "No-DNT";
-  1 "DNT";
+  default "nodnt";
+  1 "dnt";
 }
 
 ssl_session_cache   shared:SSL:10m;
