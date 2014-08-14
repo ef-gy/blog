@@ -28,6 +28,9 @@
         <xhtml:script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></xhtml:script>
         <xhtml:script type="application/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></xhtml:script>
         <xhtml:script type="application/javascript" src="/js/documentation-graphs"></xhtml:script>
+        <xhtml:link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css"/>
+        <xhtml:script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js"></xhtml:script>
+        <xhtml:script>hljs.initHighlightingOnLoad();</xhtml:script>
       </xhtml:head>
       <xhtml:body>
         <xsl:choose>
@@ -59,6 +62,14 @@
       <xsl:apply-templates select="briefdescription | detaileddescription"/>
       <xsl:apply-templates select="node()[not(self::briefdescription or self::detaileddescription or self::compoundname or self::title)]"/>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="basecompoundref">
+    <xsl:variable name="id" select="@refid"/>
+    <xhtml:li>
+      <xhtml:h2><xsl:apply-templates select="node()"/></xhtml:h2>
+      <xsl:apply-templates select="//*[@id=$id]/briefdescription"/>
+    </xhtml:li>
   </xsl:template>
 
   <xsl:template match="memberdef">
