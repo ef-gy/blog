@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" id="phone">
+<head>
+<title>How to Track SSH Offenders with Google Analytics</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="" />
+<meta name="date" content="2014-08-15T13:55:00Z" />
+<meta name="mtime" content="2014-08-15T13:55:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="google-analytics-ssh" />
+</head>
+<body>
+<p>I've got a bit of a strange one today. A while ago I noticed that the rate of erroneous SSH connections had increased quite a bit since I got new servers. It's not that I'm worried about anyone actually getting in, <a href="/hardening-ssh">thanks to some fairly steep hardening of those servers</a>. However, I still wanted to figure out where all these... let's call them <em>offenders</em> are coming from and how frequent these attempted break-ins were. Fortunately we kinda have a thing for that, called <em>Google Analytics</em>.</p>
+<p>Usually this is used to log web site hits and do some fancy reporting, but thanks to the <em>Measurement Protocol</em> you can actually track just about anything else you might want to track. And hits on your SSH server aren't all that different from hits on your website - might be good to correlate those two metrics as it were. To follow along at home, all you need is a Unix-y (e.g. Linux) server running <em>OpenSSH</em> and a <a href="https://google-analytics.com/">Google Analytics account</a> with <a href="https://support.google.com/analytics/answer/2790010?hl=en">Universal Analytics enabled</a> - to be able to push data using the <a href="https://developers.google.com/analytics/devguides/collection/protocol/v1/">Measurement Protocol</a>. Oh, and you'll need <em>bash</em>, <em>sed</em> and <em>curl</em> on your server. <em>curl</em> is kind of nonstandard on some systems, so check your package manager if you don't have it.</p>
+<p>The whole trickery is condensed in this little shell script, which you should save with an apt name, possibly <em>track-ssh-offenders</em>:</p>
+<pre><code><![CDATA[#!/bin/bash
+# track-ssh-offenders
+# -------------------
+# Upload SSH authentication errors to Google Analytics.
+#
+# See https://ef.gy/google-analytics-ssh for further details.
+
+# Change this to the tracking ID you wish to use.
+# WARNING: Make a second property with a new tracking ID for testing! You
+#          CANNOT remove data from Analytics, so make sure it works correctly
+#          BEFORE you put this in with your main website data.
+TID=UA-NNNNNN-1
+host=$(hostname)
+dl=ssh:$host
+
+tail -F /var/log/auth.log -n +0|
+   while read line; do echo "$(expr $(date "+%s") - $(date -d "$(echo $line|cut -f 1,2,3 -d ' ')" "+%s"))000 $line"; done|
+   sed -run \
+     -e "s/([0-9]+) .+ sshd.([0-9]+).: Invalid user (.+) from (.+)/v=1\&tid=$TID\&cid=\2\&t=event\&ec=Service\&ea=SSH\&el=InvalidUser\&uip=\4\&qt=\1\&p=$dl/p"\
+     -e "s/([0-9]+) .+ sshd.([0-9]+).: Received disconnect from (.+): .* Bye Bye .preauth./v=1\&tid=$TID\&cid=\2\&t=event\&ec=Service\&ea=SSH\&el=PreAuthDisconnect\&uip=\3\&qt=\1\&p=$dl/p"\
+     -e "s/([0-9]+) .+ sshd.([0-9]+).: Connection closed by (.+) .preauth./v=1\&tid=$TID\&cid=\2\&t=event\&ec=Service\&ea=SSH\&el=PreAuthClose\&uip=\3\&qt=\1\&p=$dl/p"\
+     -e "s/([0-9]+) .+ sshd.([0-9]+).: Received disconnect from (.+): .* Normal Shutdown.* .preauth./v=1\&tid=$TID\&cid=\2\&t=event\&ec=Service\&ea=SSH\&el=PreAuthNormalShutdown\&uip=\3\&qt=\1\&p=$dl/p"\
+     -e "s/([0-9]+) .+ sshd.([0-9]+).: .* \[(.+)\] .* POSSIBLE BREAK-IN ATTEMPT.+/v=1\&tid=$TID\&cid=\2\&t=event\&ec=Service\&ea=SSH\&el=PossibleBreakInAttempt\&uip=\3\&qt=\1\&p=$dl/p"\
+ | xargs -L 1 curl http://www.google-analytics.com/collect -o /dev/null -s -d
+]]></code></pre>
+<p>Short script, but possibly quite intimidating. If you just want to use it, all you need to do is save this script, modify the <var>TID</var> variable to contain your tracking ID - the one you'd use to set up <em>analytics.js</em>, although it might be a good idea to create a separate property with a separate ID, just for testing. Then make it executable und execute as a user that has read access to your /var/log/auth.log - probably <em>root</em>. Kinda like so:</p>
+<pre><code>$ vim /some/path/track-ssh-offenders
+$ chmod a+x /some/path/track-ssh-offenders
+# nohup /some/path/track-ssh-offenders &amp;</code></pre>
+<p>In a nutshell, this script will process all the log entries in <em>/var/log/auth.log</em>, use some regular expressions to mangle some log lines into event descriptions for the Measurement Protocol and POST them to the Google Analytics servers using <em>curl</em>. It'll also keep doing that even if the logs are rotated so you get real time stats in Google Analytics.</p>
+<p>You should probably automatically launch this script automatically on each boot up, so add something like the following line to your <em>/etc/rc.local</em>:</p>
+<pre><code>logrotate --force /etc/logrotate.conf; nohup /some/path/track-ssh-offenders &amp;</code></pre>
+<p>This will force a log rotation - to prevent re-sending events that presumably have already been sent - and then launches the script in the background. If you don't use <em>logrotate</em>... well, you really should.</p>
+<h1>Detailed Script Description</h1>
+<p>OK, at this point you're probably wondering how this script works, and how you can write your own variant of it to push other system events to Google Analytics. Let's examine the script line by line for that.</p>
+<pre><code><![CDATA[TID=UA-NNNNNN-1]]></code></pre>
+<p>This line just sets a variable with your Google Analytics Tracking ID. In Analytics, go to <em>Admin</em> -> <em>(Select Property)</em> -> <em>Tracking Info</em> to get the one you need to set this to.</p>
+<pre><code><![CDATA[host=$(hostname)]]></code></pre>
+<p>Grabs your system host name as a variable. We use this with the next line...</p>
+<pre><code><![CDATA[dl=ssh:$host]]></code></pre>
+<p>... to generate a fake page name to put the hits on. We'll only generate event data, but it's still neat to know which host was SSH'd into. You can drop this if you only have one host or you just don't care. However, if you have more than one host you should probably keep this, since otherwise you won't be able to distinguish which servers are being hit by bad SSH traffic.</p>
+<pre><code><![CDATA[tail -F /var/log/auth.log -n +0|]]></code></pre>
+<p>This line starts a pipe (note the bar at the end) that follows the <em>/var/log/auth.log</em> file, the default location on Debian - and presumably also Ubuntu - systems where authentication failures (and successes) are logged to by SSH and other services. Some systems keep this in <em>/var/log/secure</em> - e.g. CentOS - or other files, so adjust as necessary. The file is dumped to stdout completely, and the command will keep running - adding new log lines as they appear in here. The options we used were:</p>
+<dl>
+<dt>-F</dt>
+<dd>Follow a log file by name. Note the <em>capital F</em> - the lowercase <em>-f</em> works similarly, but doesn't quite do what you want when logrotate runs. This is a <em>GNU</em> extension, so if you don't have a GNU version of tail you'd have to make to do with the standard <em>-f</em> option.</dd>
+<dt>-n +0</dt>
+<dd>Dump the whole file on the first pass - as opposed to just the last 10 lines. <em>-n</em> sets where to start tailing from and <em>+</em> means to start counting lines from the beginning of the file, not the end.</dd>
+</dl>
+<pre><code><![CDATA[   while read line; do echo "$(expr $(date "+%s") - $(date -d "$(echo $line|cut -f 1,2,3 -d ' ')" "+%s"))000 $line"; done|]]></code></pre>
+<p>This continues the pipe. By default log lines on most Linux systems have the form <em>Month Day Time process[ID]: message</em>. Google Analytics has a feature to specify a <em>queue time</em> for the things you send in milliseconds. To use this feature, we do a first pass over the log lines to add another row to the log lines that contains the number of microseconds that have passed since the time specified on each log line, so we can send this to Google Analytics later.</p>
+<pre><code><![CDATA[   sed -run \]]></code></pre>
+<p>Here we start processing the pipe using <em>sed</em>, our old stream editing swiss army knife. The actual commands follow on separate lines for readability, here we just set it up with these options:</p>
+<dl>
+<dt>-r</dt>
+<dd>Use extended regular expressions. Or proper ones, depending on how you look at it.</dd>
+<dt>-u</dt>
+<dd>Work in an <em>unbuffered></em> mode. This will make sure lines are processed - and uploaded to Analytics - as soon as possible.</dd>
+<dt>-n</dt>
+<dd>Don't print lines by default. We use this so we can specify which lines to actually print using the <em>p</em> command, so that we don't push raw log lines that don't match anything to Analytics.</dd>
+</dl>
+<pre><code><![CDATA[     -e "s/([0-9]+) .+ sshd.([0-9]+).: Invalid user (.+) from (.+)/v=1\&tid=$TID\&cid=\2\&t=event\&ec=Service\&ea=SSH\&el=InvalidUser\&uip=\4\&qt=\1\&p=$dl/p"\]]></code></pre>
+<p>This matches lines where an SSH client tried to use an invalid user name to log on. The regular expression matches such lines and turns them into a standard URL-encoded POST data set using the <em>s</em> command and echoes the result with the <em>p</em> command. Note how we have to escape the ampersand character with a backslash, because otherwise sed would insert the whole matching line instead of the literal character. The data set we send to Analytics uses the following parameters:</p>
+<dl>
+<dt>v</dt>
+<dd>The version of the measurement protocol. There's currently only version 1, so we set it to that.</dd>
+<dt>tid</dt>
+<dd>Your Google Analytics tracking ID. Just like with the JavaScript client, you need to tell Analytics where to put your data set.</dd>
+<dt>cid</dt>
+<dd>This is an anonymous client ID. Since OpenSSH spawns a new process for each connection, we can quite conveniently use the process' PID for this, so that's what we fill in here.</dd>
+<dt>t</dt>
+<dd>The type of measurement we send to Analytics. We set this to <em>event</em> so we can use the event flags - and so the hits don't count as page views.</dd>
+<dt>ec</dt>
+<dd>Event <em>category</em>. This is an event in response to something that happened with a service, so I put that in there.</dd>
+<dt>ea</dt>
+<dd>Event <em>action</em>. I put <em>SSH</em> in here - it's not really the action, but it is what's being acted upon, so I felt this was appropriate.</dd>
+<dt>el</dt>
+<dd>Event <em>label</em>. <em>What</em> happened? This is the one parameter that is different for each of the log entries, for this particular one this sends <em>InvalidUser</em>.</dd>
+<dt>uip</dt>
+<dd>The originating IP address. Set to the one listed in the log line. Analytics uses that to pinpoint where a request came from. It'll also tell you the network operator responsible. Note that, according to the documentation, this IP address is automatically anonymised before it's stored.</dd>
+<dt>qt</dt>
+<dd>The <em>queue time</em> of the event, or rather how many microseconds ago the event happened. This is the value we calculated earlier and injected into the log stream.</dd>
+<dt>p</dt>
+<dd>This is the <em>page path</em>. We put the fake path we calculated earlier here, so that it's clear which host the connection went to.</dd>
+</dl>
+<p>Note that we specifically <em>do not include the user name</em> in the data we send to Analytics. This is because <a href="https://developers.google.com/analytics/devguides/collection/protocol/policy">explicitly forbids sending individually identifiable information to Analytics</a>, and some of the log in attempts might be actual users who just forgot their password or have an old key file. You should <em>not</em> add the user names, as doing so may lead to your Analytics account being terminated, and you don't want that.</p>
+<pre><code><![CDATA[     -e "s/([0-9]+) .+ sshd.([0-9]+).: Received disconnect from (.+): .* Bye Bye .preauth./v=1\&tid=$TID\&cid=\2\&t=event\&ec=Service\&ea=SSH\&el=PreAuthDisconnect\&uip=\3\&qt=\1\&p=$dl/p"\]]></code></pre>
+<p>This regular expression grabs disconnects from SSH that happen before the user is authenticated. This should show up in combination with other issues, but there seem to be some old, exploitable versions of OpenSSH some bots are looking for which only trigger these messages. The event label I picked for this one is <em>PreAuthDisconnect</em>.</p>
+<pre><code><![CDATA[     -e "s/([0-9]+) .+ sshd.([0-9]+).: Connection closed by (.+) .preauth./v=1\&tid=$TID\&cid=\2\&t=event\&ec=Service\&ea=SSH\&el=PreAuthClose\&uip=\3\&qt=\1\&p=$dl/p"\]]></code></pre>
+<p>Grabs instances where a connection is closed before the authentication succeeds. The label for this one is <em>PreAuthClose</em>.</p>
+<pre><code><![CDATA[     -e "s/([0-9]+) .+ sshd.([0-9]+).: Received disconnect from (.+): .* Normal Shutdown.* .preauth./v=1\&tid=$TID\&cid=\2\&t=event\&ec=Service\&ea=SSH\&el=PreAuthNormalShutdown\&uip=\3\&qt=\1\&p=$dl/p"\]]></code></pre>
+<p>Matches log lines where a disconnect is received using the normal shutdown packet. Not all clients seem to do this, so SSH logs it separately. Label for this one is <em>PreAuthNormalShutdown</em>.</p>
+<pre><code><![CDATA[     -e "s/([0-9]+) .+ sshd.([0-9]+).: .* \[(.+)\] .* POSSIBLE BREAK-IN ATTEMPT.+/v=1\&tid=$TID\&cid=\2\&t=event\&ec=Service\&ea=SSH\&el=PossibleBreakInAttempt\&uip=\3\&qt=\1\&p=$dl/p"\]]></code></pre>
+<p>This last one matches lines that contain the warning <em>POSSIBLE BREAK-IN ATTEMPT</em>. These are emitted by OpenSSH when the reverse lookup of incoming connections has unexpected results. Logged as <em>PossibleBreakInAttempt</em>.</p>
+<pre><code><![CDATA[ | xargs -L 1 curl http://www.google-analytics.com/collect -o /dev/null -s -d]]></code></pre>
+<p>This last line uses <em>xargs</em> to send each line of pipe output to Analytics as a separate data point using <em>curl</em>. The arguments to <em>xargs</em> are:</p>
+<dl>
+<dt>-L 1</dt>
+<dd>This instructs xargs to spawn the new subprocess for every 1 line of output, i.e. each line of output to the pipe ends up spawning a new curl instance to push data to Analytics.</dd>
+</dl>
+<p>Finally, the <em>curl</em> options we use are the following:</p>
+<dl>
+<dt>-o /dev/null</dt>
+<dd>Discard the output by sending it to <em>/dev/null</em>. curl would normally print the output to stdout, and the Analytics frontend emits an empty GIF, which we don't need to see.</dd>
+<dt>-s</dt>
+<dd>Be quiet. curl would normally present a progress indicator when writing to a file, but we don't need to see that either.</dd>
+<dt>-d</dt>
+<dd>The argument following <em>-d</em> is sent to the given URL via a POST request. Since xargs will append the strings we output, those are the ones that well be POST'd there, which is what we want.</dd>
+</dl>
+<p><em>curl</em> is instructed to send this data to <em>http://www.google-analytics.com/collect</em>, which is the collection endpoint for the Measurement Protocol API.</p>
+<p>And that's how we get the effect we wanted: SSH break in attempts are now sent to Analytics and you can use these events in your dashboards and reports to your heart's content.</p>
+<h1>In Analytics</h1>
+<p><em>IFF</em> you used the same Analytics property for these SSH scripts as for your regular traffic, you might want to filter the SSH events one way or another. To do so, you can create a <em>custom segment</em> with an <em>advanced filter condition</em> to only include data points based on whether the <em>Event Action</em> dimension does or does not exactly match the string <em>SSH</em> - since all the event data we sent uses that event action.</p>
+<p>It's probably also interesting to try and create a custom dashboard with just the SSH hits - maybe even use the new map overlay feature to see where hits are coming from. You can now do whatever else you could do with event data on Analytics, which is quite a lot, really.</p>
+<p>Since the script keeps running in the background and will process new log lines as they come in, you should be able to see any failed log ins in the <em>Real-Time</em> overview - along with the host name of the system they happened in, since we specified a fake page path for that. This should also make it easy for you to test whether things are working as intended.</p>
+<h1>Where To Go From Here</h1>
+<p>Hope you enjoy your new way of graphing and correlating offending SSH hits! To learn more about the <em>Measurement Protocol</em>, see <a href="https://developers.google.com/analytics/devguides/collection/protocol/v1/">the overview in the Google Analytics API documentation</a> and the content linked from there.</p>
+<p>Remember to <em>not</em> send user names or other personally identifying information, as this can and will get your Analytics account deleted!</p>
+</body>
+</html>
