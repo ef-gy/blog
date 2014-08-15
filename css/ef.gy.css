@@ -4,6 +4,7 @@ html
     background: #303030;
     color: #000;
     background-size: cover;
+    min-height: 100%;
 }
 
 html#phone
@@ -38,6 +39,7 @@ body
     background: #fff;
     background: rgba(255,255,255,0.95);
     padding: .5em 2em 2em 2em;
+    min-height: 100%;
 }
 
 body:before
