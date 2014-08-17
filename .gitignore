@@ -16,6 +16,7 @@ age-rating-distribution*.svg
 flash-integrity*.svg
 index.xml
 css/*.minified.css
+css/*.inline.xml
 png/rasterised
 js/disqus-embed.js
 js/analytics.js

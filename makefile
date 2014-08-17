@@ -134,6 +134,9 @@ css/ef.gy+highlight.css: css/ef.gy.css css/highlight.css
 css/%.minified.css: css/%.css
 	cssmin < $< | sed -r -e 's/calc\(([0-9%em]+)\+([0-9%em]+)\)/calc(\1 + \2)/' > $@
 
+css/%.inline.xml: css/%.minified.css
+	echo "<style xmlns='http://www.w3.org/1999/xhtml'><![CDATA[$$(cat $<)]]></style>" > $@
+
 # .volatile files
 $(BUILDD):
 	mkdir -p $(BUILD); true
