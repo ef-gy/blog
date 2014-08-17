@@ -100,7 +100,7 @@ epubs: $(EPUBESC)
 pngs: $(PNGESC)
 
 csss: css/ef.gy.minified.css css/ef.gy+highlight.minified.css $(CSSDOWNLOADS)
-jss: $(JSDOWNLOADS) js/highlight+social.js
+jss: $(JSDOWNLOADS) js/highlight+social.js js/highlight+highlight-setup+social.js
 
 install: install-pdf install-mobi install-epub
 install-pdf: $(PDFDEST)/.volatile $(addprefix $(PDFDEST)/,$(notdir $(PDFESC)))
@@ -131,6 +131,9 @@ js/google-platform.js:
 	$(CURL) https://apis.google.com/js/platform.js -o $@
 
 js/highlight+social.js: js/highlight.js js/social.js
+	cat $^ > $@
+
+js/highlight+highlight-setup+social.js: js/highlight.js js/highlight-setup.js js/social.js
 	cat $^ > $@
 
 # download remote CSS files and process local ones

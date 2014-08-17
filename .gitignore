@@ -25,5 +25,6 @@ js/highlight.js
 js/twitter-widgets.js
 js/google-platform.js
 js/highlight+social.js
+js/highlight+highlight-setup+social.js
 css/highlight.css
 css/ef.gy+highlight.css
