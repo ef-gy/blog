@@ -99,7 +99,7 @@ mobis: $(MOBIESC)
 epubs: $(EPUBESC)
 pngs: $(PNGESC)
 
-csss: css/ef.gy.minified.css $(CSSDOWNLOADS)
+csss: css/ef.gy.minified.css css/ef.gy+highlight.minified.css $(CSSDOWNLOADS)
 jss: $(JSDOWNLOADS)
 
 install: install-pdf install-mobi install-epub
@@ -124,9 +124,15 @@ js/facebook-sdk.js:
 js/highlight.js:
 	$(CURL) https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js -o $@
 
-# download remote CSS files
+# download remote CSS files and process local ones
 css/highlight.css:
 	$(CURL) https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css -o $@
+
+css/ef.gy+highlight.css: css/ef.gy.css css/highlight.css
+	cat $^ > $@
+
+css/%.minified.css: css/%.css
+	cssmin < $< | sed -r -e 's/calc\(([0-9%em]+)\+([0-9%em]+)\)/calc(\1 + \2)/' > $@
 
 # .volatile files
 $(BUILDD):
@@ -157,9 +163,6 @@ png/rasterised/.volatile:
 	touch $@
 
 # css files (for epub/kindle)
-css/%.minified.css: css/%.css
-	cssmin < $< > $@
-
 $(BUILD)/book.css: css/book.css $(BUILDD)
 	cp $< $@
 

@@ -4,6 +4,7 @@
               xmlns:xhtml="http://www.w3.org/1999/xhtml"
               xmlns:math="http://www.w3.org/1998/Math/MathML"
               xmlns:svg="http://www.w3.org/2000/svg"
+              xmlns="http://www.w3.org/1999/xhtml"
               version="1.0">
   <xsl:output method="xml" version="1.0" encoding="UTF-8"
               doctype-public="-//W3C//DTD XHTML 1.1//EN"
@@ -22,9 +23,9 @@
       <xsl:apply-templates select="*[not(self::xhtml:script)]"/>
       <xsl:apply-templates select="xhtml:script[@src]"/>
       <xsl:if test="xhtml:script[not(@src)]">
-        <xhtml:script type="text/javascript">
+        <script type="text/javascript">
           <xsl:apply-templates select="xhtml:script[not(@src)]/text()"/>
-        </xhtml:script>
+        </script>
       </xsl:if>
     </xhtml:head>
   </xsl:template>
