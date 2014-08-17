@@ -18,3 +18,4 @@ index.xml
 css/*.minified.css
 png/rasterised
 js/disqus-embed.js
+js/analytics.js

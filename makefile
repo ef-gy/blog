@@ -69,7 +69,7 @@ DATABASES:=life.sqlite3
 XSLTPROCARGS:=--stringparam baseURI "http://ef.gy" --stringparam documentRoot "$$(pwd)" --param licence "document('$$(pwd)/$(BUILD)/licence.xml')" --stringparam builddir $(BUILD)
 
 # download files
-JSDOWNLOADS:=js/disqus-embed.js
+JSDOWNLOADS:=js/disqus-embed.js js/analytics.js
 
 # don't delete intermediary files
 .SECONDARY:
@@ -111,6 +111,9 @@ validate: validate-docbook validate-xhtml
 # downloaded remote JavaScript files
 js/disqus-embed.js:
 	$(CURL) https://go.disqus.com/embed.js -o $@
+
+js/analytics.js:
+	$(CURL) https://www.google-analytics.com/analytics.js -o $@
 
 # .volatile files
 $(BUILDD):
