@@ -81,8 +81,10 @@ update: index pdfs mobis epubs pngs install
 all: fortune index svgs pdfs mobis epubs csss jss
 run: run-fortune
 clean:
-	rm -f $(DATABASES) $(INDICES) $(BUILD)/*; true
-	rm -rf $(BUILDTMP); true
+	rm -f $(DATABASES) $(INDICES); true
+	rm -rf $(BUILDTMP) $(BUILD)/*; true
+	rm -f $(CSSDOWNLOADS) $(JSDOWNLOADS)
+
 scrub: clean
 	rm -rf $(BUILD)
 
