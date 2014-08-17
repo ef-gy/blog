@@ -30,13 +30,13 @@
       <xsl:apply-templates select="xhtml:link[@rel='stylesheet'][not(substring-after(@href,'/css/'))]"/>
       <xsl:apply-templates select="*[not(self::xhtml:script) and not(self::xhtml:link[@rel='stylesheet'])]"/>
       <xsl:if test="xhtml:script[@src][substring-after(@src,'/js/')]">
-        <script type="text/javascript">
+        <script type="text/javascript" async="async">
           <xsl:attribute name="src">/js/<xsl:for-each select="xhtml:script[@src][substring-after(@src,'/js/')]"><xsl:if test="not(position()=1)">+</xsl:if><xsl:value-of select="substring-after(@src,'/js/')"/></xsl:for-each></xsl:attribute>
         </script>
       </xsl:if>
       <xsl:apply-templates select="xhtml:script[@src][not(substring-after(@src,'/js/'))]"/>
       <xsl:if test="//xhtml:script[not(@src)]">
-        <script type="text/javascript" async="async">
+        <script type="text/javascript">
           <xsl:apply-templates select="//xhtml:script[not(@src)]/text()"/>
         </script>
       </xsl:if>
