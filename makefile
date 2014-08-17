@@ -70,7 +70,7 @@ XSLTPROCARGS:=--stringparam baseURI "http://ef.gy" --stringparam documentRoot "$
 
 # files to be downloaded
 CSSDOWNLOADS:=css/highlight.css
-JSDOWNLOADS:=js/disqus-embed.js js/analytics.js js/facebook-sdk.js js/highlight.js
+JSDOWNLOADS:=js/disqus-embed.js js/analytics.js js/facebook-sdk.js js/highlight.js js/twitter-widgets.js
 
 # don't delete intermediary files
 .SECONDARY:
@@ -123,6 +123,9 @@ js/facebook-sdk.js:
 
 js/highlight.js:
 	$(CURL) https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js -o $@
+
+js/twitter-widgets.js:
+	$(CURL) https://platform.twitter.com/widgets.js -o $@
 
 # download remote CSS files and process local ones
 css/highlight.css:
