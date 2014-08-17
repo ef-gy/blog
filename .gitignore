@@ -17,3 +17,4 @@ flash-integrity*.svg
 index.xml
 css/*.minified.css
 png/rasterised
+js/disqus-embed.js

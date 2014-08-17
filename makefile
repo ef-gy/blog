@@ -19,6 +19,7 @@ INKSCAPE:=inkscape
 ZIP:=zip
 XVFB:=xvfb-run -a
 SQLITE3:=sqlite3
+CURL:=curl -s
 
 # download locations
 PMML2SVGZIP:=http://heanet.dl.sourceforge.net/project/pmml2svg/pmml2svg/pMML2SVG-0.8.5.zip
@@ -67,13 +68,16 @@ BUILDD:=$(BUILD)/.volatile
 DATABASES:=life.sqlite3
 XSLTPROCARGS:=--stringparam baseURI "http://ef.gy" --stringparam documentRoot "$$(pwd)" --param licence "document('$$(pwd)/$(BUILD)/licence.xml')" --stringparam builddir $(BUILD)
 
+# download files
+JSDOWNLOADS:=js/disqus-embed.js
+
 # don't delete intermediary files
 .SECONDARY:
 
 # meta rules
 update: index pdfs mobis epubs pngs install
 
-all: fortune index svgs pdfs mobis epubs csss
+all: fortune index svgs pdfs mobis epubs csss jss
 run: run-fortune
 clean:
 	rm -f $(DATABASES) $(INDICES) $(BUILD)/*; true
@@ -93,6 +97,7 @@ epubs: $(EPUBESC)
 pngs: $(PNGESC)
 
 csss: css/ef.gy.minified.css
+jss: $(JSDOWNLOADS)
 
 install: install-pdf install-mobi install-epub
 install-pdf: $(PDFDEST)/.volatile $(addprefix $(PDFDEST)/,$(notdir $(PDFESC)))
@@ -102,6 +107,10 @@ install-epub: $(EPUBDEST)/.volatile $(addprefix $(EPUBDEST)/,$(notdir $(EPUBESC)
 uninstall: uninstall-pdf
 
 validate: validate-docbook validate-xhtml
+
+# downloaded remote JavaScript files
+js/disqus-embed.js:
+	$(CURL) https://go.disqus.com/embed.js -o $@
 
 # .volatile files
 $(BUILDD):
