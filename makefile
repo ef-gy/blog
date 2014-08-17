@@ -100,7 +100,7 @@ epubs: $(EPUBESC)
 pngs: $(PNGESC)
 
 csss: css/ef.gy.minified.css css/ef.gy+highlight.minified.css $(CSSDOWNLOADS)
-jss: $(JSDOWNLOADS)
+jss: $(JSDOWNLOADS) js/highlight+social.js
 
 install: install-pdf install-mobi install-epub
 install-pdf: $(PDFDEST)/.volatile $(addprefix $(PDFDEST)/,$(notdir $(PDFESC)))
@@ -126,6 +126,9 @@ js/highlight.js:
 
 js/twitter-widgets.js:
 	$(CURL) https://platform.twitter.com/widgets.js -o $@
+
+js/highlight+social.js: js/highlight.js js/social.js
+	cat $^ > $@
 
 # download remote CSS files and process local ones
 css/highlight.css:
