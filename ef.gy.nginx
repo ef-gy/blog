@@ -286,6 +286,7 @@ server {
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-transcode-atom.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-navigation.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-post-process.xslt;
 	}
 
 	location /html {
@@ -297,6 +298,7 @@ server {
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-transcode-atom.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-navigation.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-post-process.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/html-post-process.xslt;
 	}
 
@@ -313,6 +315,7 @@ server {
         xslt_types application/xhtml+xml application/xml;
 
         xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-transcode-doxygen.xslt;
+		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-post-process.xslt;
         xslt_stylesheet /srv/http/ef.gy/xslt/html-post-process.xslt;
     }
 }
