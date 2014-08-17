@@ -134,8 +134,8 @@
         <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       </xsl:if>
       <xsl:if test="../descendant::xhtml:code">
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css"/>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js"></script>
+        <link rel="stylesheet" href="/css/highlight"/>
+        <script src="/js/highlight"></script>
         <script>hljs.initHighlightingOnLoad();</script>
       </xsl:if>
       <xsl:if test="not($nosocial)">

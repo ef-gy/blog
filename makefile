@@ -68,8 +68,9 @@ BUILDD:=$(BUILD)/.volatile
 DATABASES:=life.sqlite3
 XSLTPROCARGS:=--stringparam baseURI "http://ef.gy" --stringparam documentRoot "$$(pwd)" --param licence "document('$$(pwd)/$(BUILD)/licence.xml')" --stringparam builddir $(BUILD)
 
-# download files
-JSDOWNLOADS:=js/disqus-embed.js js/analytics.js
+# files to be downloaded
+CSSDOWNLOADS:=css/highlight.css
+JSDOWNLOADS:=js/disqus-embed.js js/analytics.js js/facebook-sdk.js js/highlight.js
 
 # don't delete intermediary files
 .SECONDARY:
@@ -96,7 +97,7 @@ mobis: $(MOBIESC)
 epubs: $(EPUBESC)
 pngs: $(PNGESC)
 
-csss: css/ef.gy.minified.css
+csss: css/ef.gy.minified.css $(CSSDOWNLOADS)
 jss: $(JSDOWNLOADS)
 
 install: install-pdf install-mobi install-epub
@@ -114,6 +115,16 @@ js/disqus-embed.js:
 
 js/analytics.js:
 	$(CURL) https://www.google-analytics.com/analytics.js -o $@
+
+js/facebook-sdk.js:
+	$(CURL) https://connect.facebook.net/en_GB/sdk.js -o $@
+
+js/highlight.js:
+	$(CURL) https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js -o $@
+
+# download remote CSS files
+css/highlight.css:
+	$(CURL) https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css -o $@
 
 # .volatile files
 $(BUILDD):

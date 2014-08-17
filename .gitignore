@@ -19,3 +19,6 @@ css/*.minified.css
 png/rasterised
 js/disqus-embed.js
 js/analytics.js
+js/facebook-sdk.js
+js/highlight.js
+css/highlight.css
