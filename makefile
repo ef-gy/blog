@@ -70,7 +70,7 @@ XSLTPROCARGS:=--stringparam baseURI "http://ef.gy" --stringparam documentRoot "$
 
 # files to be downloaded
 CSSDOWNLOADS:=css/highlight.css
-JSDOWNLOADS:=js/disqus-embed.js js/analytics.js js/facebook-sdk.js js/highlight.js js/twitter-widgets.js
+JSDOWNLOADS:=js/disqus-embed.js js/analytics.js js/facebook-sdk.js js/highlight.js js/twitter-widgets.js js/google-platform.js
 
 # don't delete intermediary files
 .SECONDARY:
@@ -126,6 +126,9 @@ js/highlight.js:
 
 js/twitter-widgets.js:
 	$(CURL) https://platform.twitter.com/widgets.js -o $@
+
+js/google-platform.js:
+	$(CURL) https://apis.google.com/js/platform.js -o $@
 
 js/highlight+social.js: js/highlight.js js/social.js
 	cat $^ > $@

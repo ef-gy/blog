@@ -36,7 +36,7 @@
       </xsl:if>
       <xsl:apply-templates select="xhtml:script[@src][not(substring-after(@src,'/js/'))]"/>
       <xsl:if test="//xhtml:script[not(@src)]">
-        <script type="text/javascript">
+        <script type="text/javascript" async="async">
           <xsl:apply-templates select="//xhtml:script[not(@src)]/text()"/>
         </script>
       </xsl:if>
