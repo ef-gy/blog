@@ -100,7 +100,7 @@ epubs: $(EPUBESC)
 pngs: $(PNGESC)
 
 csss: css/ef.gy.minified.css css/ef.gy+highlight.minified.css $(CSSDOWNLOADS)
-jss: $(JSDOWNLOADS) js/highlight+social.js js/analytics-setup+social.js js/highlight+analytics-setup+social.js
+jss: $(JSDOWNLOADS) js/highlight+social.js js/analytics+social.js js/highlight+analytics+social.js
 
 install: install-pdf install-mobi install-epub
 install-pdf: $(PDFDEST)/.volatile $(addprefix $(PDFDEST)/,$(notdir $(PDFESC)))
@@ -115,15 +115,16 @@ validate: validate-docbook validate-xhtml
 js/disqus-embed.js:
 	$(CURL) https://go.disqus.com/embed.js -o $@
 
-js/analytics.js:
+js/analytics.js: js/analytics-setup.js
 	$(CURL) https://www.google-analytics.com/analytics.js -o $@
+	cat $< >> $@
 
 js/facebook-sdk.js:
 	$(CURL) https://connect.facebook.net/en_GB/sdk.js -o $@
 
 js/highlight.js: js/highlight-setup.js
 	$(CURL) https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js -o $@
-	cat js/highlight-setup.js >> $@
+	cat $< >> $@
 
 js/twitter-widgets.js:
 	$(CURL) https://platform.twitter.com/widgets.js -o $@
@@ -137,10 +138,10 @@ js/social.js: js/twitter-widgets.js js/google-platform.js js/social-setup.js
 js/highlight+social.js: js/highlight.js js/social.js
 	cat $^ > $@
 
-js/highlight+analytics-setup+social.js: js/highlight.js js/analytics-setup.js js/social.js
+js/highlight+analytics+social.js: js/highlight.js js/analytics.js js/social.js
 	cat $^ > $@
 
-js/analytics-setup+social.js: js/analytics-setup.js js/social.js
+js/analytics+social.js: js/analytics.js js/social.js
 	cat $^ > $@
 
 # download remote CSS files and process local ones

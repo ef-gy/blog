@@ -138,7 +138,7 @@
         <script src="/js/highlight"></script>
       </xsl:if>
       <xsl:if test="not($nosocial)">
-        <script src="/js/analytics-setup"></script>
+        <script src="/js/analytics"></script>
       </xsl:if>
     </head>
   </xsl:template>
