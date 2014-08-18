@@ -100,7 +100,7 @@ epubs: $(EPUBESC)
 pngs: $(PNGESC)
 
 csss: css/ef.gy.minified.css css/ef.gy+highlight.minified.css $(CSSDOWNLOADS)
-jss: $(JSDOWNLOADS) js/highlight+social.js js/highlight+highlight-setup+social.js
+jss: $(JSDOWNLOADS) js/highlight+social.js
 
 install: install-pdf install-mobi install-epub
 install-pdf: $(PDFDEST)/.volatile $(addprefix $(PDFDEST)/,$(notdir $(PDFESC)))
@@ -121,8 +121,9 @@ js/analytics.js:
 js/facebook-sdk.js:
 	$(CURL) https://connect.facebook.net/en_GB/sdk.js -o $@
 
-js/highlight.js:
+js/highlight.js: js/highlight-setup.js
 	$(CURL) https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js -o $@
+	cat js/highlight-setup.js >> $@
 
 js/twitter-widgets.js:
 	$(CURL) https://platform.twitter.com/widgets.js -o $@
@@ -131,9 +132,6 @@ js/google-platform.js:
 	$(CURL) https://apis.google.com/js/platform.js -o $@
 
 js/highlight+social.js: js/highlight.js js/social.js
-	cat $^ > $@
-
-js/highlight+highlight-setup+social.js: js/highlight.js js/highlight-setup.js js/social.js
 	cat $^ > $@
 
 # download remote CSS files and process local ones
