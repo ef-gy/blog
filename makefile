@@ -100,7 +100,7 @@ epubs: $(EPUBESC)
 pngs: $(PNGESC)
 
 csss: css/ef.gy.minified.css css/ef.gy+highlight.minified.css $(CSSDOWNLOADS)
-jss: $(JSDOWNLOADS) js/highlight+social.js
+jss: $(JSDOWNLOADS) js/highlight+social.js js/analytics-setup+social.js js/highlight+analytics-setup+social.js
 
 install: install-pdf install-mobi install-epub
 install-pdf: $(PDFDEST)/.volatile $(addprefix $(PDFDEST)/,$(notdir $(PDFESC)))
@@ -135,6 +135,12 @@ js/social.js: js/twitter-widgets.js js/google-platform.js js/social-setup.js
 	cat $^ > $@
 
 js/highlight+social.js: js/highlight.js js/social.js
+	cat $^ > $@
+
+js/highlight+analytics-setup+social.js: js/highlight.js js/analytics-setup.js js/social.js
+	cat $^ > $@
+
+js/analytics-setup+social.js: js/analytics-setup.js js/social.js
 	cat $^ > $@
 
 # download remote CSS files and process local ones
