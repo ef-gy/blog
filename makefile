@@ -131,6 +131,9 @@ js/twitter-widgets.js:
 js/google-platform.js:
 	$(CURL) https://apis.google.com/js/platform.js -o $@
 
+js/social.js: js/twitter-widgets.js js/social-setup.js
+	cat $^ > $@
+
 js/highlight+social.js: js/highlight.js js/social.js
 	cat $^ > $@
 
