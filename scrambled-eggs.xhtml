@@ -5,7 +5,7 @@
 <meta name="author" content="Magnus Achim Deininger" />
 <meta name="description" content="I like Chicken. Do you like Chicken? You should because it's awesome. And now for something completely different..." />
 <meta name="date" content="2013-07-19T11:25:00Z" />
-<meta name="mtime" content="2013-07-19T11:25:00Z" />
+<meta name="mtime" content="2014-08-24T10:25:00Z" />
 <meta name="category" content="Site News" />
 <meta name="unix:name" content="scrambled-eggs" />
 </head>
@@ -13,6 +13,7 @@
 <h1>One IP6 Mirror, Coming Right Up!</h1>
 <p>I like Chicken. <a href="http://call-cc.org">The Scheme compiler, that is</a>. It's made of pure awesome and fluffy stuff. It compiles Scheme to C, which is about as awesome as it can get. And it has balls of steel -- err, <a href="http://wiki.call-cc.org/chicken-projects/egg-index-4.html">make those eggs</a>. <em>chicken-install</em> is so handy and has so many extensions that that alone would be a good reason to use Chicken in favour of any other Scheme.</p>
 <p>Unfortunately, the default servers that <em>chicken-install</em> uses do not have IPv6 connectivity. But all my backend servers are IPv6-only! Which means that, thanks to debian's APT, it's really easy to install chicken on those machines, but it's really hard to install any eggs - which contain all those really useful functions you'll need sooner or later. So I decided to help people like me by setting up an IPv6 mirror of those egg repositories: enter <em>flip.becquerel.org</em>. That host ist available via IPv6 <em>only</em> -- and forwarded to via IPv4 at <em>eggnog.becquerel.org</em> if you really just need an IPv4 mirror for some reason. The different host names for IPv4 and IPv6 access are in order to allow you to choose whether you'd want an IPv4 or an IPv6 connection - some software gets glitchy when DNS records for both are available but you don't have IPv4 connectivity. The mirror is updated roughly once an hour.</p>
+<p><em>Update: I had to disable this service because we had to restructure VMs when moving servers to a saner provider. This may or may not be coming back. Let me know if this is a thing for you and I'll look into it.</em></p>
 <p>Using it is a bit more involved, however. <em>chicken-install</em> is currently unable to use IPv6 to access its repositories. I'm looking into ways to patch that up, but that might take a bit. In the mean time, if you're on an IPv6-only host, you can check out the eggs you need <em>manually</em> by downloading the files from <a href="http://flip.becquerel.org/mirror/">http://flip.becquerel.org/mirror/</a>. If you have IPv4 connectivity, you could use the command <em>chicken-install -l eggnog.becquerel.org [egg-name]</em> to use the mirror - note the lowercase 'L' flag. Alternatively, you could modify your <em>setup.defaults</em> file to use the mirror by adding this snippet before the other <em>(server ...)</em> directives:</p>
 <pre><code>(server
  (location "eggnog.becquerel.org")

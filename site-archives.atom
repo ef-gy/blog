@@ -3,6 +3,7 @@
   <title>ef.gy</title>
   <subtitle>Archives</subtitle>
 
+  <entry xlink:href="announcing-the-source-fantastic.xhtml" />
   <entry xlink:href="ebook-wtfs.xhtml" />
   <entry xlink:href="transcoding-atom-to-rss.xhtml" />
   <entry xlink:href="hollywood-algorithmik.xhtml" />
