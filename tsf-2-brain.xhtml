@@ -12,6 +12,7 @@
 <h1>The Source Fantastic: brain.js</h1>
 <p>For our second The Source Fantastic post, I'd like to show you <a href="https://github.com/harthur/brain">brain.js</a>, a <a href="https://en.wikipedia.org/wiki/Artificial_neural_network">neural network</a> library for Javascript by Heather Arthur. I found it randomly looking through other people's projects on Github on a search for inspiration. Now I have never seen a reason to do much with Javascript - I'm not much of a web developer, and tend to use Python for my other scripting needs -, but this was cool enough to want to look into it.</p>
 <p>There is a fairly comprehensive README file that includes examples for pretty much everything that you might want to do with the library, and it is very easy and straightforward to use. To train a simple neural network, you only need a few lines of code:
+</p>
 <pre><code>
 net = new brain.NeuralNetwork();
 
@@ -23,18 +24,19 @@ training_data = [{input: input_data_1, output: output_data_1},
 
 net.train(training_data);
 </code></pre>
-This will create a neural network with one hidden layer, with the size of the hidden layer depending on the size of the input, and default values for the error threshold, learning rate and iterations; if you want a higher number of hidden layers, or to change these parameters, there are options you can use to specify that.</p>
+<p>This will create a neural network with one hidden layer, with the size of the hidden layer depending on the size of the input, and default values for the error threshold, learning rate and iterations; if you want a higher number of hidden layers, or to change these parameters, there are options you can use to specify that.</p>
 <p>I particularly like that the output can be a hash - so, for example, if you're using your neural network to classify, you can specify your output as a hash and "tag" your output, as in
-<pre><code>
+</p><pre><code>
 {input: { r: 0.03, g: 0.7, b: 0.5 }, output: { black: 1 }}
 </code></pre>
-which makes it easy to see what's going on. Same goes for the input - easy to read and understand, no need for special file formats or anything. Javascript's hashes lend itself well to that sort of thing, and Heather made good use of the language's feature here. 
+<p>which makes it easy to see what's going on. Same goes for the input - easy to read and understand, no need for special file formats or anything. Javascript's hashes lend itself well to that sort of thing, and Heather made good use of the language's feature here. 
 </p>
 <p>
 I also found it really useful that brain.js has two functions called toFunction() and toJSON() that export a trained neural network to a Javascript function and to JSON, respectively. You can use that, for example, to train your network offline and then export it to JSON, or to a standalone Javascript function, to use it in your project. Since NN training can get computationally expensive, this comes in handy at times, and it's pretty useful for client-side Javascript as well.
 </p>
 <p>
 Now let's take a brief look at the actual code (as seen on Github). There are not a lot of in-code comments, but the code is pretty self-documenting and clean, as seen in this function from neuralnetwork.js:
+</p>
 <pre><code>
   trainPattern : function(input, target, learningRate) {
     learningRate = learningRate || this.learningRate;
@@ -50,7 +52,7 @@ Now let's take a brief look at the actual code (as seen on Github). There are no
     return error;
   }
 </code></pre>
-This function trains the network with a single pattern, and since the programmer chose to give the variables and functions meaningful names, and wrap up each step of training in its own short function (rather than just putting it all into the trainPattern function body), it is immediately obvious what is being done here. The code is mostly like this - it's just a clean and readable implementation of a neural network, and free of any blatant WTFeries as far as I could see.</p>
+<p>This function trains the network with a single pattern, and since the programmer chose to give the variables and functions meaningful names, and wrap up each step of training in its own short function (rather than just putting it all into the trainPattern function body), it is immediately obvious what is being done here. The code is mostly like this - it's just a clean and readable implementation of a neural network, and free of any blatant WTFeries as far as I could see.</p>
 <p>So basically, here we have a well-documented neural network implementation that makes good use of its language features, has generally tidy and good-quality code and is easy to use. I spent an evening writing a <a href="https://github.com/machinelady/names">demo project</a> to see if it really was that easy to use (I used the first classifying problem that came to mind, although neural networks don't lend themselves particularly well to it, but it was just a really quick demo, anyway), and it was - I didn't curse the programmer, the documentation or the API even once, which I think is a decent benchmark for the quality of a library ;).</p>
 <p>I hope you enjoyed the second installment of The Source Fantastic - the next one will be published on Monday the 8th of September. I'm looking forward to seeing what Magnus will have to show us in two weeks!</p>
 </body>
