@@ -295,6 +295,7 @@ div.auto-abstract
     height: 1.2em;
     vertical-align: text-bottom;
     width: 6em;
+    overflow: hidden;
 }
 
 iframe
@@ -680,7 +681,7 @@ ul.share li a:hover span
         left: 0;
         top: 0;
         margin-right: -2em;
-        margin-top: -2em;
+        margin-top: 2em;
         width: 20em;
     }
 
@@ -725,7 +726,7 @@ ul.share li a:hover span
         width: auto;
         left: 0;
         top: 0;
-        margin: -2em -2em 0 -4.5em;
+        margin: 0 -2em 0 -4.5em;
     }
 
     html
