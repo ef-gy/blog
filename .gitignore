@@ -20,7 +20,6 @@ css/*.inline.xml
 png/rasterised
 js/disqus-embed.js
 js/analytics.js
-js/facebook-sdk.js
 js/highlight.js
 js/twitter-widgets.js
 js/google-platform.js

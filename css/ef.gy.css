@@ -282,14 +282,14 @@ div.auto-abstract
     display: none;
 }
 
-#share
+.share
 {
     border-bottom: .4em solid #303030;
     margin: -2em -2em 2em -2em;
     padding: 2em;
 }
 
-#share li
+.share li
 {
     display: inline-block;
     height: 1.2em;
@@ -537,6 +537,77 @@ p.continue a
 p.continue a:hover
 {
     background: #000;
+}
+
+li.twitter
+{
+    background: rgb(0,170,242);
+    color: #fff;
+}
+
+li.linkedin
+{
+    background: rgb(0,128,182);
+    color: #fff;
+}
+
+li.facebook
+{
+    background: rgb(59,83,154);
+    color: #fff;
+}
+
+li.xing
+{
+    background: rgb(0,103,106);
+    color: rgb(168,209,0);
+}
+
+li.googleplus
+{
+    background: rgb(210,22,0);
+    color: #fff;
+}
+
+li.stumbleupon
+{
+    background: rgb(235,72,35);
+    color: #fff;
+}
+
+ul.share
+{
+    margin: 0 -2em 0 -2em;
+    padding: 0;
+}
+
+ul.share li
+{
+    display: inline-block;
+    width: 20%;
+    margin: 0;
+    padding: 0;
+    height: 4em;
+}
+
+ul.share a
+{
+    display: inline-block;
+    width: 100%;
+    height: 4em;
+    color: inherit;
+    text-decoration: none;
+    padding: .5em 1em;
+}
+
+ul.share a:hover
+{
+    text-decoration: underline;
+}
+
+ul + ul.share
+{
+    margin-top: -1.5em;
 }
 
 @media (max-width: 65em)

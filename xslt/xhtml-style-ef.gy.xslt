@@ -219,6 +219,11 @@
       <xsl:if test="../@id='unicorn-noms'">
         <p class="credit"><em>Background photo credit: <a href="http://www.flickr.com/photos/dolske/7639692938/">Justin Dolske</a> / <a href="http://foter.com">Foter.com</a> / <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA</a></em></p>
       </xsl:if>
+      <xsl:if test="$uname">
+        <social:social url="{$uri}">
+          <xsl:copy-of select="$authordata/@twitter"/>
+        </social:social>
+      </xsl:if>
       <xsl:if test="not(../xhtml:head/xhtml:meta[@name='category'][@content='auxiliary'])">
         <ul id="hardcopies">
           <li>transcripts:</li>

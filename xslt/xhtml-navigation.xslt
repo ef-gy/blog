@@ -24,6 +24,7 @@
 
   <xsl:variable name="nosocial" select="($baseURI = 'http://vturtipc7vmz6xjy.onion') or ($DNT = '1')"/>
   <xsl:variable name="authors" select="document(concat($documentRoot,'/authors.xml'))/data:data/data:author"/>
+  <xsl:variable name="social" select="document(concat($documentRoot,'/social-metadata.xml'))"/>
 
   <xsl:template match="@*|node()">
     <xsl:copy>
@@ -85,12 +86,12 @@
 
   <xsl:template match="social:social">
     <xsl:if test="not($nosocial)">
-      <ul id="share">
-        <li><div id="fb-root"/><div class="fb-like" data-href="{@url}" data-layout="button_count" data-action="like" data-show-faces="true"/></li>
-        <xsl:if test="@twitter">
-          <li><a href="https://twitter.com/share" class="twitter-share-button" data-url="{@url}" data-via="{@twitter}">Tweet</a></li>
-        </xsl:if>
-        <li><div class="g-plusone" data-size="medium" data-href="{@url}"/></li>
+      <ul class="share">
+        <li class="twitter"><a href="https://twitter.com/share?url={@url}&amp;via={@twitter}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">Twitter</a></li>
+        <li class="linkedin"><a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">LinkedIn</a></li>
+        <li class="facebook"><a href="http://www.facebook.com/sharer.php?u={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=630');return false;">Facebook</a></li>
+        <li class="googleplus"><a href="https://plus.google.com/share?url={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">Google+</a></li>
+        <li class="stumbleupon"><a href="http://www.stumbleupon.com/submit?url={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">StumbleUpon</a></li>
       </ul>
     </xsl:if>
   </xsl:template>
