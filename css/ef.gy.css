@@ -587,14 +587,14 @@ ul.share li
     width: 20%;
     margin: 0;
     padding: 0;
-    height: 4em;
+    height: 3em;
 }
 
 ul.share a
 {
-    display: inline-block;
-    width: 100%;
-    height: 4em;
+    display: block;
+    width: auto;
+    height: 3em;
     color: inherit;
     text-decoration: none;
     padding: .5em 1em;
@@ -608,6 +608,18 @@ ul.share a:hover
 ul + ul.share
 {
     margin-top: -1.5em;
+}
+
+ul.share li a span
+{
+    display: block;
+    text-align: right;
+    color: #ddd;
+}
+
+ul.share li a:hover span
+{
+    text-decoration: none;
 }
 
 @media (max-width: 65em)

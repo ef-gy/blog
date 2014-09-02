@@ -21,9 +21,9 @@ png/rasterised
 js/disqus-embed.js
 js/analytics.js
 js/highlight.js
-js/twitter-widgets.js
 js/google-platform.js
 js/*+*.js
 js/social.js
 css/highlight.css
 css/*+*.css
+social-metadata.xml
