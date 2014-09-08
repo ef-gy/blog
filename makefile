@@ -111,9 +111,24 @@ uninstall: uninstall-pdf
 
 validate: validate-docbook validate-xhtml
 
-third-party/highlight.js:
+# third-party module downloads
+third-party/.volatile:
 	mkdir -p third-party || true
+	touch $@
+
+third-party/highlight.js: third-party/.volatile
 	cd third-party && (git clone https://github.com/isagalaev/highlight.js || (cd highlight.js && git pull))
+
+third-party/jquery: third-party/.volatile
+	cd third-party && (git clone https://github.com/jquery/jquery || (cd jquery && git pull))
+
+# third-party module builds
+third-party/jquery/dist/jquery.js third-party/jquery/dist/jquery.min.js: third-party/jquery
+	cd third-party/jquery && npm run build
+
+# third-party module installation
+js/jquery.js: third-party/jquery/dist/jquery.min.js
+	install $< $@
 
 # downloaded remote JavaScript files
 js/disqus-embed.js:
