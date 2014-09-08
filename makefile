@@ -99,7 +99,7 @@ scrub: clean
 	rm -rf $(BUILD)
 
 databases: $(DATABASES)
-index: $(INDICES) index.xml
+index: $(INDICES) $(CACHE)/index.xml
 
 svgs: $(SVGS)
 docbooks: $(DOCBOOKESC)
@@ -155,6 +155,11 @@ $(CACHET)/%.atom: %.atom xslt/atom-merge.xslt $(CACHET)/.volatile xslt/xhtml-pre
 
 $(CACHET)/%.rss: $(CACHET)/%.atom xslt/rss-transcode-atom.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/rss-transcode-atom.xslt $< > $@
+
+# global navigation index
+$(CACHE)/index.xml: $(CACHEO)/everything.atom xslt/atom-sort.xslt xslt/index-transcode-atom.xslt makefile $(CACHE)/.volatile
+	$(XSLTPROC) $(XSLTPROCARGS) xslt/atom-sort.xslt $< |\
+		$(XSLTPROC) $(XSLTPROCARGS) xslt/index-transcode-atom.xslt - > $@
 
 atomcache: $(ATOMCACHE)
 rsscache: $(RSSCACHE)
@@ -417,12 +422,6 @@ $(INDICES): makefile $(filter-out %index.atom, $(wildcard download/*))
 		if [ $${i} != "$@" -a -f $${i} ]; then echo "<entry><id>md5:$$(md5sum -b $${i}|cut -d ' ' -f 1)</id><title>$$(basename $${i})</title><link href='/$${i}' type='$$(file --mime-type $${i}|cut -d ' ' -f 2)'/><updated>$$(stat -c %y $${i}|sed -e 's/\(.\+\) \(.\+\)\(\..*\) \+\(...\)\(..\)/\1T\2\4:\5/')</updated><author><name>$(name)</name></author><category term='$$(echo '$(subst /index.atom,,$@)')'/><summary>File Type: $$(file --mime-type $${i}|cut -d ' ' -f 2). File Checksum (MD5): $$(md5sum -b $${i}|cut -d ' ' -f 1)</summary></entry>"; fi;\
 	done>>$@
 	echo '</feed>'>>$@
-
-# global navigation index
-index.xml: $(BUILD)/everything.atom xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt xslt/index-transcode-atom.xslt
-	$(XSLTPROC) $(XSLTPROCARGS) xslt/atom-style-ef.gy.xslt $< |\
-		$(XSLTPROC) $(XSLTPROCARGS) xslt/atom-sort.xslt - |\
-		$(XSLTPROC) $(XSLTPROCARGS) xslt/index-transcode-atom.xslt - > $@
 
 # pattern rules for databases
 %.sqlite3: src/%.sql

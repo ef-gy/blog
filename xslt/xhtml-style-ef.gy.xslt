@@ -24,7 +24,7 @@
 
   <xsl:variable name="nosocial" select="($baseURI = 'http://vturtipc7vmz6xjy.onion') or ($DNT = '1')"/>
   <xsl:variable name="authors" select="document(concat($documentRoot,'/authors.xml'))/data:data/data:author"/>
-  <xsl:variable name="indices" select="document(concat($documentRoot,'/index.xml'))/data:data/data:index"/>
+  <xsl:variable name="indices" select="document(concat($documentRoot,'/.cache/index.xml'))/data:data/data:index"/>
 
   <data:month-name number="01">January</data:month-name>
   <data:month-name number="02">February</data:month-name>
