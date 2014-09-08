@@ -24,6 +24,11 @@ map $request_uri $detail {
   ~^/doc/([^/]+)/(?<det>.+)$ $det;
 }
 
+map $http_host $hostnameproper {
+  default "ef.gy";
+  ~onion$ "vturtipc7vmz6xjy.onion";
+}
+
 map $http_dnt $dnt
 {
   default "nodnt";
@@ -232,12 +237,8 @@ server {
 	}
 
 	location /atom {
-        alias $documentRoot;
+        alias $documentRoot/.cache/$hostnameproper;
 		try_files $uri.atom $uri =404;
-
-		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-pre-process.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/atom-style-ef.gy.xslt;
 
                 expires 1h;
                 add_header Pragma public;
@@ -246,13 +247,8 @@ server {
 	}
 
 	location /rss {
-        alias $documentRoot;
-		try_files $uri.atom $uri =404;
-
-		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-pre-process.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/atom-style-ef.gy.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/rss-transcode-atom.xslt;
+        alias $documentRoot/.cache/$hostnameproper;
+		try_files $uri.rss $uri =404;
 
                 expires 1h;
                 add_header Pragma public;
