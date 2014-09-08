@@ -111,6 +111,10 @@ uninstall: uninstall-pdf
 
 validate: validate-docbook validate-xhtml
 
+third-party/highlight.js:
+	mkdir -p third-party || true
+	cd third-party && (git clone https://github.com/isagalaev/highlight.js || (cd highlight.js && git pull))
+
 # downloaded remote JavaScript files
 js/disqus-embed.js:
 	$(CURL) https://go.disqus.com/embed.js -o $@

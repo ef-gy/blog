@@ -35,7 +35,7 @@ html#hypercube
 body
 {
     position: relative;
-    margin: 0 5em 0 25em;
+    margin: 0 2.5em 0 25em;
     background: #fff;
     background: rgba(255,255,255,0.95);
     padding: .5em 2em 2em 2em;
@@ -362,6 +362,8 @@ address
     width: 14em;
     color: #fff;
     font-style: normal;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 address h2
@@ -635,7 +637,7 @@ ul.share li a:hover span
 {
     body
     {
-        margin: 0 1em 0 6em;
+        margin: 0 0 0 6em;
     }
 
     body:before
@@ -700,6 +702,7 @@ ul.share li a:hover span
         display: inline-block;
         background: none;
         margin: .2em;
+        padding: 0.5em 0.2em;
     }
 
     h1 + ul li a

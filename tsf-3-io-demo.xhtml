@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>The Source Fantastic: Random Demo of Awesome</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="For this third issue of The Source Fantastic, I decided to go with a nice, short demo I found while browsing some of the people I follow on Twitter."/>
+<meta name="date" content="2014-09-08T00:00:00Z" />
+<meta name="mtime" content="2014-09-08T00:00:00Z" />
+<meta name="category" content="The Source Fantastic" />
+<meta name="unix:name" content="tsf-3-io-demo" />
+</head>
+<body>
+<p>I had a few nice ones lined up for this third issue, but I stumbled upon this rather amazing gem while browsing what some of the people I follow in Twitter hacked on lately. And guess what, I found that <a href="https://twitter.com/0xabad1dea">Melissa Elliot</a> did a rather nice and concise boot sector demo for the #io IRC channel a while back.</p>
+<p>Now, it may seem a bit strange to pick a boot sector demo of all things for a column on nice code. But I have to say, this one is rather readable. And it's so rare to see readable assembly. Especially x86 assembly. So I just had to bring this one to your attention. And to get you started, here's a YouTube video of the most awesome result:</p>
+<iframe width="100%" height="500" src="//www.youtube.com/embed/UWIeyyf66sE" frameborder="0" allowfullscreen="yes"/>
+<p>The code is as follows - scroll down a bit to after the code for some additional explanations and extra hints on how it works:</p>
+<pre><code class="x86asm"><![CDATA[; so bla asked me to write a boot sector demo to go up on io... so here it is!
+; baby's first 16-bit x86 demo. Ugh I hate sectors. So much. 
+; This is not a generic plasma. There are no sines. or even fakey sines.
+; or palette rotations or... 
+; nasm -f bin -o ioripple.iso ioripple.asm
+; dosbox: hit control-f12 10 to 20 times to get a higher clockspeed ;)
+; mount y: /tmp ; y: ; boot ioripple.iso
+; - Melissa <3 
+
+; version 0.1 Aug 26 2011
+; known bugs: the "io" bitmap is too darn flickery. TOO FLICKERY I SAY
+
+BITS 16
+
+jmp codestart
+; this is 18x10px bitmap data for a really small and ugly "io"
+; compression? what's that?
+iotext:
+db 0xff,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xff
+db 0xff,0x0,0x0,0x0,0x0,0x0,0x0, 0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xff
+db 0xff,0x0,0x0,0x0,0x55,0x0,0x0, 0x0,0x55,0x55,0x55,0x55,0x55,0x0,0x0,0x0,0x0,0xff
+db 0xff,0x0,0x0,0x0,0x0,0x0,0x0,	0x55,0x0,0x0,0x0,0x0,0x0,0x55,0x0,0x0,0x0,0xff
+db 0xff,0x0,0x0,0x0,0x55,0x0,0x0, 0x55,0x0,0x0,0x0,0x0,0x0,0x55,0x0,0x0,0x0,0xff
+db 0xff,0x0,0x0,0x0,0x55,0x0,0x0,0x55,0x0,0x0,0x0,0x0,0x0,0x55,0x0,0x0,0x0,0xff
+db 0xff,0x0,0x0,0x0,0x55,0x0,0x0,0x55,0x0,0x0,0x0,0x0,0x0,0x55,0x0,0x0,0x0,0xff
+db 0xff,0x0,0x0,0x0,0x55,0x0,0x0,0x55,0x0,0x0,0x0,0x0,0x0,0x55,0x0,0x0,0x0,0xff
+db 0xff,0x0,0x0,0x0,0x55,0x0,0x0,0x0,0x55,0x55,0x55,0x55,0x55,0x0,0x0,0x0,0x0,0xff
+db 0xff,0x0,0x0,0x0,0x0,0x0,0x0,	0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xff
+
+
+; set display mode
+codestart:
+mov ax,0x13
+int 0x10
+push 0xA000
+pop ds
+
+; noice steel blue generator 
+xor ax,ax
+mov cx, 0xff
+mov dx, 0x3c8
+palette:
+	mov al, cl
+	out dx, al
+	inc dx
+	shr al, 1
+	or al, 8
+	add al, 60
+	out dx, al
+	sub al, 60
+	out dx, al
+	;xor al, al
+	out dx, al
+	dec dx
+	dec cx
+
+jnz palette
+
+
+; cool vertical stripes (can only really see it on a slow emu but we need it
+; to init the screen with something for the ripples to ripple)
+mov bx, 0xfa01
+stripes:
+	mov ax,bx
+	dec ax
+	xor ax,bx
+	mov byte [bx],al
+	dec bx
+jnz stripes
+
+MasterJump:
+; slightly modified from bla's smoothing filter
+mov dx, 8
+smooth:
+	mov bx, 0xfa00-0x140
+	inner:
+		dec bx
+		xor cx, cx
+		xor ax, ax
+		mov al, byte [bx]
+		mov cl, byte [bx-0x140]
+		add ax, cx
+		mov cl, byte [bx+0x140]
+		add ax,cx
+		mov cl, byte [bx-2]
+		add ax,cx
+		mov cl, byte [bx+1]
+		add ax,cx
+		shl ax, 3
+		mov cl, 40 
+		div cl
+		mov byte [bx],al
+		cmp bx, 0x140
+	jne inner
+
+; blitting the "io"
+cld
+mov cx,18
+mov ax,10
+push 0x07c0
+pop ds
+mov si,0x0003
+push 0xa000
+pop es
+mov di, 80*320+150
+
+blit:
+	rep movsb
+	dec ax
+	mov cx,18
+	add di,320-18
+	cmp ax,0
+jne blit
+
+push 0xa000
+pop ds
+
+	dec dx
+jnz smooth
+
+;killing time
+;	mov ah, 0x86
+;	mov dx,20480
+;	mov cx,0
+;	int 0x15
+
+; and here is my beautiful and elegant and lovely rippler
+; a maximally clever person could probably find a way to do both filters in
+; one pass but if I were maximally clever I would be doing something more useful
+
+	mov bx, 0xfa00-0x140
+ripple:
+		dec bx
+		mov al, byte [bx]
+		mov dl, byte[bx]
+		mov cl, byte[bx+1]
+		add al, cl
+		mov cl, byte[bx-1]
+		add al, cl
+		mov cl, byte[bx-320]
+		add al, cl
+		mov cl, byte[bx+320]
+		add al, cl
+		shr al, 5
+		mov dl, byte[bx]
+		sub al,dl
+		mov dl, byte[bx]
+		shr dl,1
+		sub al,dl
+		mov byte [bx],al
+		cmp bx,0x140
+jne ripple
+	
+
+
+	
+push 0xa000
+pop ds
+	
+
+jmp MasterJump
+
+; the one true signature
+db 0xab,0xad,0x1d,0xea
+db 0xab,0xad,0x1d,0xea
+db "written for io.smashthestack.org by Melissa"
+
+
+padding: times 446 - ($-$$) db 0
+partitiontable: times 64 db 0xff
+signature: db 0x55, 0xaa
+]]></code></pre>
+<p>I love how nice, simple and concise this is. Especially the <em>ripple</em> function. I like to think of assembly like this as a puzzle, but since you may not be fluent in assembly I've prepared a few hints for you in the following paragraph; WARNING, SPOILERS AHEAD:</p>
+<ul>
+<li>The <em>db</em> commands just put raw data in the binary, so the <em>iotext</em> section just has - as the comment suggests - a raw bitmap. Since the graphics mode will be set up to an 8 bit, palette-indexed colour graphics mode, each of the bytes in this section represents the colour index of a single pixel.</li>
+<li>The first bit of code to execute simply jumps to the <em>codestart</em> label, which calls interrupt 0x10 - mostly used for graphics BIOS calls - to set a 320x200 pixel, 8 bit graphics output mode; hint: ax=0x13, which is ah=0x0 and al=0x13, where ah=0x0 means 'set graphics mode'. This video mode requires exactly 64000 bytes of memory - 8 bits = 1 byte per pixel, and 320*200 pixels. Also, in this particular video mode the first 64k of graphics memory are bound to segment 0xa000, which is set as the active segment using the push/pop sequence.</li>
+<li>The sections at the end provide padding for the code to be a whole boot sector long and to have an empty partition table. And of course an obligatory author signature. The final two bytes, <em>0x55 0xaa</em> make the sector bootable by a standard PC BIOS.</li>
+</ul>
+<p>Other than that it's pretty much straightforward assembly. Odd, did I really just write that? Anyway, give it a couple looks and be intrigued ;-).</p>
+<p>I hope this blew your mind - if not I'll gladly accept further submissions in either pointers to projects or full articles for future editions! Stay tuned for the next issue, which will be published on Monday, the 22nd of September.</p>
+</body>
+</html>
