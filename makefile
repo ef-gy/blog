@@ -1,6 +1,10 @@
-root:=http://ef.gy/
+root:=https://ef.gy/
 name:=Magnus Achim Deininger
 INDICES:=download/index.atom download/kyuba/index.atom
+
+# domain settings
+DOMAIN:=ef.gy
+HIDDENSERVICE:=vturtipc7vmz6xjy.onion
 
 # directories
 BUILD:=.build
@@ -10,6 +14,9 @@ EPUBDEST:=epub
 DOWNLOAD:=$(BUILD)/download
 BUILDTMP:=$(shell pwd)/$(BUILD)/tmp
 THIRDPARTY:=.third-party
+CACHE:=.cache
+CACHEO:=$(CACHE)/$(DOMAIN)
+CACHET:=$(CACHE)/$(HIDDENSERVICE)
 
 # programmes
 XSLTPROC:=xsltproc
@@ -67,7 +74,9 @@ OPFXHTMLESC:=$(subst :,\:,$(OPFXHTMLS))
 
 BUILDD:=$(BUILD)/.volatile
 DATABASES:=life.sqlite3
-XSLTPROCARGS:=--stringparam baseURI "http://ef.gy" --stringparam documentRoot "$$(pwd)" --param licence "document('$$(pwd)/$(BUILD)/licence.xml')" --stringparam builddir $(BUILD)
+XSLTPROCCACHEOARGS:=--stringparam baseURI "https://$(DOMAIN)" --stringparam documentRoot "$$(pwd)"
+XSLTPROCCACHETARGS:=--stringparam baseURI "http://$(HIDDENSERVICE)" --stringparam documentRoot "$$(pwd)"
+XSLTPROCARGS:=$(XSLTPROCCACHEOARGS) --param licence "document('$$(pwd)/$(BUILD)/licence.xml')" --stringparam builddir $(BUILD)
 
 # files to be downloaded
 CSSDOWNLOADS:=css/highlight.css
@@ -111,6 +120,46 @@ install-epub: $(EPUBDEST)/.volatile $(addprefix $(EPUBDEST)/,$(notdir $(EPUBESC)
 uninstall: uninstall-pdf
 
 validate: validate-docbook validate-xhtml
+
+# create a local cache of post-processed files
+$(CACHE)/.volatile:
+	mkdir -p $(CACHE) || true
+	touch $@
+
+$(CACHEO)/.volatile: $(CACHE)/.volatile
+	mkdir -p $(CACHEO) || true
+	touch $@
+
+$(CACHET)/.volatile: $(CACHE)/.volatile
+	mkdir -p $(CACHET) || true
+	touch $@
+
+ATOMS:=$(notdir $(wildcard *.atom))
+RSSS:=$(addsuffix .rss,$(basename $(ATOMS)))
+
+ATOMCACHE:=$(addprefix $(CACHEO)/,$(ATOMS)) $(addprefix $(CACHET)/,$(ATOMS))
+RSSCACHE:=$(addprefix $(CACHEO)/,$(RSSS)) $(addprefix $(CACHET)/,$(RSSS))
+
+$(CACHEO)/%.atom: %.atom xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt xslt/atom-style-ef.gy.xslt makefile
+	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/atom-merge.xslt $< |\
+		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-pre-process.xslt -|\
+		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/atom-style-ef.gy.xslt - > $@
+
+$(CACHEO)/%.rss: $(CACHEO)/%.atom xslt/rss-transcode-atom.xslt makefile
+	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/rss-transcode-atom.xslt $< > $@
+
+$(CACHET)/%.atom: %.atom xslt/atom-merge.xslt $(CACHET)/.volatile xslt/xhtml-pre-process.xslt xslt/atom-style-ef.gy.xslt makefile
+	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/atom-merge.xslt $< |\
+		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-pre-process.xslt -|\
+		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/atom-style-ef.gy.xslt - > $@
+
+$(CACHET)/%.rss: $(CACHET)/%.atom xslt/rss-transcode-atom.xslt makefile
+	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/rss-transcode-atom.xslt $< > $@
+
+atomcache: $(ATOMCACHE)
+rsscache: $(RSSCACHE)
+
+cache: atomcache rsscache
 
 # $(THIRDPARTY) module downloads
 $(THIRDPARTY)/.volatile:
