@@ -100,7 +100,7 @@ epubs: $(EPUBESC)
 pngs: $(PNGESC)
 
 csss: css/ef.gy.minified.css css/ef.gy+highlight.minified.css $(CSSDOWNLOADS)
-jss: $(JSDOWNLOADS) js/highlight+analytics.js js/analytics+social+disqus-embed.js js/highlight+analytics+social+disqus-embed.js
+jss: $(JSDOWNLOADS) js/highlight+analytics.js js/analytics+social+disqus-embed.js js/highlight+analytics+social+disqus-embed.js js/jquery.js
 
 install: install-pdf install-mobi install-epub
 install-pdf: $(PDFDEST)/.volatile $(addprefix $(PDFDEST)/,$(notdir $(PDFESC)))
@@ -116,14 +116,19 @@ third-party/.volatile:
 	mkdir -p third-party || true
 	touch $@
 
-third-party/highlight.js: third-party/.volatile
+third-party/highlight.js/.git/HEAD: third-party/.volatile
 	cd third-party && (git clone https://github.com/isagalaev/highlight.js || (cd highlight.js && git pull))
 
-third-party/jquery: third-party/.volatile
+third-party/highlight.js/src/styles/default.css: third-party/highlight.js/.git/HEAD
+
+third-party/jquery/.git/HEAD: third-party/.volatile
 	cd third-party && (git clone https://github.com/jquery/jquery || (cd jquery && git pull))
 
 # third-party module builds
-third-party/jquery/dist/jquery.js third-party/jquery/dist/jquery.min.js: third-party/jquery
+third-party/highlight.js/build/highlight.pack.js: third-party/highlight.js/.git/HEAD
+	cd third-party/highlight.js && python3 tools/build.py
+
+third-party/jquery/dist/jquery.js third-party/jquery/dist/jquery.min.js: third-party/jquery/.git/HEAD
 	cd third-party/jquery && npm run build
 
 # third-party module installation
@@ -138,9 +143,8 @@ js/analytics.js: js/analytics-setup.js
 	$(CURL) https://www.google-analytics.com/analytics.js -o $@
 	cat $< >> $@
 
-js/highlight.js: js/highlight-setup.js
-	$(CURL) https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js -o $@
-	cat $< >> $@
+js/highlight.js: third-party/highlight.js/build/highlight.pack.js js/highlight-setup.js
+	cat $^ >> $@
 
 js/google-platform.js:
 	$(CURL) https://apis.google.com/js/platform.js -o $@
@@ -158,8 +162,8 @@ js/analytics+social+disqus-embed.js: js/analytics.js js/social.js js/disqus-embe
 	cat $^ > $@
 
 # download remote CSS files and process local ones
-css/highlight.css:
-	$(CURL) https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css -o $@
+css/highlight.css: third-party/highlight.js/src/styles/default.css
+	cat $^ > $@
 
 css/ef.gy+highlight.css: css/ef.gy.css css/highlight.css
 	cat $^ > $@
