@@ -90,7 +90,6 @@ server {
     xslt_string_param target $target;
     xslt_string_param collection $collection;
     xslt_string_param documentRoot $documentRoot;
-    xslt_string_param userAgent $http_user_agent;
     xslt_string_param baseURI '$preferredScheme://$http_host';
     xslt_string_param disqusShortname 'efgy';
     xslt_string_param DNT '$http_dnt';

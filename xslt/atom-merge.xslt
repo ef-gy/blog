@@ -13,11 +13,9 @@
               media-type="application/atom+xml"/>
 
   <xsl:param name="documentRoot"/>
-  <xsl:param name="userAgent"/>
   <xsl:param name="baseURI"/>
 
   <xsl:variable name="authors" select="document(concat($documentRoot,'/authors.xml'))/data:data/data:author"/>
-  <xsl:variable name="simpleFeed" select="contains($userAgent, 'MagpieRSS')"/>
 
   <xsl:template match="@*|node()">
     <xsl:copy>
@@ -34,11 +32,9 @@
       <title><xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:title" /></title>
       <id><xsl:value-of select="$baseURI"/>/<xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content" /></id>
       <link href="/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}" rel="alternate" type="application/xhtml+xml" />
-      <xsl:if test="not($simpleFeed)">
-        <link href="/pdf/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}" rel="alternate" type="application/pdf" />
-        <link href="/mobi/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}.mobi" rel="alternate" type="application/x-mobipocket-ebook" />
-        <link href="/epub/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}.epub" rel="alternate" type="application/epub+zip" />
-      </xsl:if>
+      <link href="/pdf/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}" rel="alternate" type="application/pdf" />
+      <link href="/mobi/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}.mobi" rel="alternate" type="application/x-mobipocket-ebook" />
+      <link href="/epub/{$source/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content}.epub" rel="alternate" type="application/epub+zip" />
       <summary><xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='description']/@content" /></summary>
       <published><xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='date']/@content" /></published>
       <updated><xsl:value-of select="$source/xhtml:html/xhtml:head/xhtml:meta[@name='mtime']/@content" /></updated>

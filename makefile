@@ -9,6 +9,7 @@ MOBIDEST:=mobi
 EPUBDEST:=epub
 DOWNLOAD:=$(BUILD)/download
 BUILDTMP:=$(shell pwd)/$(BUILD)/tmp
+THIRDPARTY:=.third-party
 
 # programmes
 XSLTPROC:=xsltproc
@@ -111,28 +112,28 @@ uninstall: uninstall-pdf
 
 validate: validate-docbook validate-xhtml
 
-# third-party module downloads
-third-party/.volatile:
-	mkdir -p third-party || true
+# $(THIRDPARTY) module downloads
+$(THIRDPARTY)/.volatile:
+	mkdir -p $(THIRDPARTY) || true
 	touch $@
 
-third-party/highlight.js/.git/HEAD: third-party/.volatile
-	cd third-party && (git clone https://github.com/isagalaev/highlight.js || (cd highlight.js && git pull))
+$(THIRDPARTY)/highlight.js/.git/HEAD: $(THIRDPARTY)/.volatile
+	cd $(THIRDPARTY) && (git clone https://github.com/isagalaev/highlight.js || (cd highlight.js && git pull))
 
-third-party/highlight.js/src/styles/default.css: third-party/highlight.js/.git/HEAD
+$(THIRDPARTY)/highlight.js/src/styles/default.css: $(THIRDPARTY)/highlight.js/.git/HEAD
 
-third-party/jquery/.git/HEAD: third-party/.volatile
-	cd third-party && (git clone https://github.com/jquery/jquery || (cd jquery && git pull))
+$(THIRDPARTY)/jquery/.git/HEAD: $(THIRDPARTY)/.volatile
+	cd $(THIRDPARTY) && (git clone https://github.com/jquery/jquery || (cd jquery && git pull))
 
-# third-party module builds
-third-party/highlight.js/build/highlight.pack.js: third-party/highlight.js/.git/HEAD
-	cd third-party/highlight.js && python3 tools/build.py
+# $(THIRDPARTY) module builds
+$(THIRDPARTY)/highlight.js/build/highlight.pack.js: $(THIRDPARTY)/highlight.js/.git/HEAD
+	cd $(THIRDPARTY)/highlight.js && python3 tools/build.py
 
-third-party/jquery/dist/jquery.js third-party/jquery/dist/jquery.min.js: third-party/jquery/.git/HEAD
-	cd third-party/jquery && npm run build
+$(THIRDPARTY)/jquery/dist/jquery.js $(THIRDPARTY)/jquery/dist/jquery.min.js: $(THIRDPARTY)/jquery/.git/HEAD
+	cd $(THIRDPARTY)/jquery && npm run build
 
-# third-party module installation
-js/jquery.js: third-party/jquery/dist/jquery.min.js
+# $(THIRDPARTY) module installation
+js/jquery.js: $(THIRDPARTY)/jquery/dist/jquery.min.js
 	install $< $@
 
 # downloaded remote JavaScript files
@@ -143,7 +144,7 @@ js/analytics.js: js/analytics-setup.js
 	$(CURL) https://www.google-analytics.com/analytics.js -o $@
 	cat $< >> $@
 
-js/highlight.js: third-party/highlight.js/build/highlight.pack.js js/highlight-setup.js
+js/highlight.js: $(THIRDPARTY)/highlight.js/build/highlight.pack.js js/highlight-setup.js
 	cat $^ >> $@
 
 js/google-platform.js:
@@ -162,7 +163,7 @@ js/analytics+social+disqus-embed.js: js/analytics.js js/social.js js/disqus-embe
 	cat $^ > $@
 
 # download remote CSS files and process local ones
-css/highlight.css: third-party/highlight.js/src/styles/default.css
+css/highlight.css: $(THIRDPARTY)/highlight.js/src/styles/default.css
 	cat $^ > $@
 
 css/ef.gy+highlight.css: css/ef.gy.css css/highlight.css
