@@ -20,11 +20,6 @@
 
   <xsl:template match="xhtml:head">
     <xhtml:head>
-      <xsl:if test="xhtml:link[@rel='stylesheet'][substring-after(@href,'/css/')]">
-        <link rel="stylesheet">
-          <xsl:attribute name="href">/css/<xsl:for-each select="xhtml:link[@rel='stylesheet'][substring-after(@href,'/css/')]"><xsl:if test="not(position()=1)">+</xsl:if><xsl:value-of select="substring-after(@href,'/css/')"/></xsl:for-each></xsl:attribute>
-        </link>
-      </xsl:if>
       <xsl:apply-templates select="xhtml:link[@rel='stylesheet'][not(substring-after(@href,'/css/'))]"/>
       <xsl:apply-templates select="*[not(self::xhtml:script) and not(self::xhtml:link[@rel='stylesheet']) and not(self::xhtml:style)]"/>
       <xsl:if test="//xhtml:script[not(@src)]">
@@ -42,6 +37,11 @@
         <style>
           <xsl:apply-templates select="//xhtml:style/text()"/>
         </style>
+      </xsl:if>
+      <xsl:if test="xhtml:link[@rel='stylesheet'][substring-after(@href,'/css/')]">
+        <link rel="stylesheet">
+          <xsl:attribute name="href">/css/<xsl:for-each select="xhtml:link[@rel='stylesheet'][substring-after(@href,'/css/')]"><xsl:if test="not(position()=1)">+</xsl:if><xsl:value-of select="substring-after(@href,'/css/')"/></xsl:for-each></xsl:attribute>
+        </link>
       </xsl:if>
     </xhtml:head>
   </xsl:template>
