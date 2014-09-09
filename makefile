@@ -5,6 +5,7 @@ INDICES:=download/index.atom download/kyuba/index.atom
 # domain settings
 DOMAIN:=ef.gy
 HIDDENSERVICE:=vturtipc7vmz6xjy.onion
+DISQUS:=efgy
 
 # directories
 BUILD:=.build
@@ -74,8 +75,8 @@ OPFXHTMLESC:=$(subst :,\:,$(OPFXHTMLS))
 
 BUILDD:=$(BUILD)/.volatile
 DATABASES:=life.sqlite3
-XSLTPROCCACHEOARGS:=--stringparam baseURI "https://$(DOMAIN)" --stringparam documentRoot "$$(pwd)"
-XSLTPROCCACHETARGS:=--stringparam baseURI "http://$(HIDDENSERVICE)" --stringparam documentRoot "$$(pwd)"
+XSLTPROCCACHEOARGS:=--nonet --stringparam baseURI "https://$(DOMAIN)" --stringparam documentRoot "$$(pwd)" --stringparam disqusShortname "$(DISQUS)"
+XSLTPROCCACHETARGS:=--nonet --stringparam baseURI "http://$(HIDDENSERVICE)" --stringparam documentRoot "$$(pwd)" --stringparam disqusShortname "$(DISQUS)"
 XSLTPROCARGS:=$(XSLTPROCCACHEOARGS) --param licence "document('$$(pwd)/$(BUILD)/licence.xml')" --stringparam builddir $(BUILD)
 
 # files to be downloaded
@@ -88,12 +89,14 @@ JSDOWNLOADS:=js/disqus-embed.js js/analytics.js js/highlight.js js/google-platfo
 # meta rules
 update: index pdfs mobis epubs pngs install
 
-all: fortune index svgs pdfs mobis epubs csss jss
+all: fortune index pdfs mobis epubs components
 run: run-fortune
 clean:
 	rm -f $(DATABASES) $(INDICES); true
 	rm -rf $(BUILDTMP) $(BUILD)/*; true
 	rm -f $(CSSDOWNLOADS) $(JSDOWNLOADS)
+
+components: svgs csss jss pngs
 
 scrub: clean
 	rm -rf $(BUILD)
@@ -139,11 +142,14 @@ ATOMS:=$(notdir $(wildcard *.atom))
 RSSS:=$(addsuffix .rss,$(basename $(ATOMS)))
 CEXHTMLS:=$(subst :,\:,$(CXHTMLS)) $(addsuffix .xhtml,$(basename $(ATOMS)))
 CDOCBOOKS:=$(addsuffix .docbook,$(basename $(CEXHTMLS)))
+DXHTMLS:=$(addsuffix .dnt.xhtml,$(basename $(CEXHTMLS))) $(addsuffix .nodnt.xhtml,$(basename $(CEXHTMLS)))
+DHTMLS:=$(addsuffix .html,$(basename $(DXHTMLS)))
 
-XHTMLCACHE:=$(addprefix $(CACHEO)/,$(CEXHTMLS)) $(addprefix $(CACHET)/,$(CEXHTMLS))
 ATOMCACHE:=$(addprefix $(CACHEO)/,$(ATOMS)) $(addprefix $(CACHET)/,$(ATOMS))
 RSSCACHE:=$(addprefix $(CACHEO)/,$(RSSS)) $(addprefix $(CACHET)/,$(RSSS))
 DOCBOOKCACHE:=$(addprefix $(CACHEO)/,$(CDOCBOOKS)) $(addprefix $(CACHET)/,$(CDOCBOOKS))
+XHTMLCACHE:=$(addprefix $(CACHEO)/,$(DXHTMLS)) $(addprefix $(CACHET)/,$(DXHTMLS))
+HTMLCACHE:=$(addprefix $(CACHEO)/,$(DHTMLS)) $(addprefix $(CACHET)/,$(DHTMLS))
 
 $(CACHEO)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-pre-process.xslt $< > $@
@@ -159,6 +165,19 @@ $(CACHEO)/%.rss: $(CACHEO)/%.atom xslt/rss-transcode-atom.xslt makefile
 
 $(CACHEO)/%.xhtml: $(CACHEO)/%.atom xslt/xhtml-transcode-atom.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-transcode-atom.xslt $< > $@
+
+$(CACHEO)/%.dnt.xhtml: $(CACHEO)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt makefile social-metadata.xml authors.xml components
+	$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam collection "$*" --stringparam DNT 1 xslt/xhtml-style-ef.gy.xslt $< |\
+		$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam DNT 1 xslt/xhtml-navigation.xslt - |\
+		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-post-process.xslt - > $@
+
+$(CACHEO)/%.nodnt.xhtml: $(CACHEO)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt makefile social-metadata.xml authors.xml components
+	$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam collection "$*" --stringparam DNT 0 xslt/xhtml-style-ef.gy.xslt $< |\
+		$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam DNT 0 xslt/xhtml-navigation.xslt - |\
+		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-post-process.xslt - > $@
+
+$(CACHEO)/%.html: $(CACHEO)/%.xhtml xslt/html-post-process.xslt makefile
+	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/html-post-process.xslt $< > $@
 
 $(CACHEO)/%.docbook: $(CACHEO)/%.atom xslt/docbook-transcode-xhtml.xslt xslt/docbook-transcode-atom.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/docbook-transcode-xhtml.xslt $< |\
@@ -183,6 +202,19 @@ $(CACHET)/%.rss: $(CACHET)/%.atom xslt/rss-transcode-atom.xslt makefile
 $(CACHET)/%.xhtml: $(CACHET)/%.atom xslt/xhtml-transcode-atom.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-transcode-atom.xslt $< > $@
 
+$(CACHET)/%.dnt.xhtml: $(CACHET)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt makefile social-metadata.xml authors.xml components
+	$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam collection "$*" --stringparam DNT 1 xslt/xhtml-style-ef.gy.xslt $< |\
+		$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam DNT 1 xslt/xhtml-navigation.xslt - |\
+		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-post-process.xslt - > $@
+
+$(CACHET)/%.nodnt.xhtml: $(CACHET)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt makefile social-metadata.xml authors.xml components
+	$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam collection "$*" --stringparam DNT 0 xslt/xhtml-style-ef.gy.xslt $< |\
+		$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam DNT 0 xslt/xhtml-navigation.xslt - |\
+		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-post-process.xslt - > $@
+
+$(CACHET)/%.html: $(CACHET)/%.xhtml xslt/html-post-process.xslt makefile
+	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/html-post-process.xslt $< > $@
+
 $(CACHET)/%.docbook: $(CACHET)/%.atom xslt/docbook-transcode-xhtml.xslt xslt/docbook-transcode-atom.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/docbook-transcode-xhtml.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/docbook-transcode-atom.xslt - > $@
@@ -196,11 +228,12 @@ $(CACHE)/index.xml: $(CACHEO)/everything.atom xslt/index-transcode-atom.xslt mak
 	$(XSLTPROC) $(XSLTPROCARGS) xslt/index-transcode-atom.xslt $< > $@
 
 xhtmlcache: $(XHTMLCACHE)
+htmlcache: $(HTMLCACHE)
 atomcache: $(ATOMCACHE)
 rsscache: $(RSSCACHE)
 docbookcache: $(DOCBOOKCACHE)
 
-cache: xhtmlcache atomcache rsscache docbookcache
+cache: xhtmlcache atomcache rsscache docbookcache htmlcache
 
 # $(THIRDPARTY) module downloads
 $(THIRDPARTY)/.volatile:

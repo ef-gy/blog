@@ -54,7 +54,7 @@
   </xsl:template>
 
   <xsl:template match="xhtml:head">
-    <xsl:variable name="suri" select="xhtml:meta[@name='unix:name']/@content"/>
+    <xsl:variable name="suri" select="concat('/',xhtml:meta[@name='unix:name']/@content)"/>
     <xsl:variable name="pre" select="$indices[@href=$suri][1]/data:previous"/>
     <xsl:variable name="post" select="$indices[@href=$suri][1]/data:next"/>
     <xsl:variable name="author" select="xhtml:meta[@name='author']/@content"/>
@@ -140,7 +140,7 @@
     <body>
       <xsl:variable name="author" select="/xhtml:html/xhtml:head/xhtml:meta[@name='author']/@content"/>
       <xsl:variable name="authordata" select="$authors[@name=$author][1]"/>
-      <xsl:variable name="suri" select="xhtml:meta[@name='unix:name']/@content"/>
+      <xsl:variable name="suri" select="concat('/',../xhtml:head/xhtml:meta[@name='unix:name']/@content)"/>
       <xsl:variable name="uri" select="concat($baseURI, $suri)"/>
       <xsl:variable name="uname" select="//xhtml:meta[@name='unix:name']/@content"/>
       <xsl:apply-templates select="@*" />
