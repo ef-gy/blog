@@ -291,12 +291,9 @@ server {
 	}
 
 	location /xhtml {
-        alias $documentRoot;
-		try_files $uri.xhtml $uri.atom $uri =404;
+        alias $documentRoot/.cache/$hostnameproper;
+		try_files $uri.xhtml $uri =404;
 
-		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-pre-process.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-transcode-atom.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-navigation.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-post-process.xslt;
@@ -304,11 +301,8 @@ server {
 
 	location /html {
         alias $documentRoot;
-		try_files $uri.xhtml $uri.atom $uri =404;
+		try_files $uri.xhtml $uri =404;
 
-		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-pre-process.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-transcode-atom.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-style-ef.gy.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-navigation.xslt;
 		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-post-process.xslt;
