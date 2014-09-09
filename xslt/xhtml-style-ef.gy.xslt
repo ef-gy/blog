@@ -15,7 +15,6 @@
               indent="no"
               media-type="application/xhtml+xml" />
 
-  <xsl:param name="target"/>
   <xsl:param name="collection"/>
   <xsl:param name="documentRoot"/>
   <xsl:param name="baseURI"/>
@@ -39,8 +38,6 @@
   <data:month-name number="11">November</data:month-name>
   <data:month-name number="12">December</data:month-name>
 
-  <xsl:variable name="decorateWithCollection" select="(string-length($target) > 0) and (string-length($collection) > 0) and not (//xhtml:body[@id='feed'])"/>
-
   <xsl:strip-space elements="*" />
   <xsl:preserve-space elements="xhtml:pre" />
 
@@ -57,11 +54,7 @@
   </xsl:template>
 
   <xsl:template match="xhtml:head">
-    <xsl:variable name="myname" select="xhtml:meta[@name='unix:name']/@content"/>
-    <xsl:variable name="suri"><xsl:choose>
-      <xsl:when test="(string-length($target) > 0) and (string-length($collection) > 0)">/<xsl:value-of select="$target"/>@<xsl:value-of select="$collection"/></xsl:when>
-      <xsl:otherwise>/<xsl:value-of select="xhtml:meta[@name='unix:name']/@content"/></xsl:otherwise>
-    </xsl:choose></xsl:variable>
+    <xsl:variable name="suri" select="xhtml:meta[@name='unix:name']/@content"/>
     <xsl:variable name="pre" select="$indices[@href=$suri][1]/data:previous"/>
     <xsl:variable name="post" select="$indices[@href=$suri][1]/data:next"/>
     <xsl:variable name="author" select="xhtml:meta[@name='author']/@content"/>
@@ -143,21 +136,11 @@
     </head>
   </xsl:template>
 
-  <xsl:template match="xhtml:a/@href">
-    <xsl:choose>
-      <xsl:when test="$decorateWithCollection"><xsl:attribute name="href"><xsl:value-of select="concat('/',.,'@',$collection)"/></xsl:attribute></xsl:when>
-      <xsl:otherwise><xsl:attribute name="href"><xsl:value-of select="."/></xsl:attribute></xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
   <xsl:template match="xhtml:body">
     <body>
       <xsl:variable name="author" select="/xhtml:html/xhtml:head/xhtml:meta[@name='author']/@content"/>
       <xsl:variable name="authordata" select="$authors[@name=$author][1]"/>
-      <xsl:variable name="suri"><xsl:choose>
-        <xsl:when test="(string-length($target) > 0) and (string-length($collection) > 0)">/<xsl:value-of select="$target"/>@<xsl:value-of select="$collection"/></xsl:when>
-        <xsl:otherwise>/<xsl:value-of select="//xhtml:meta[@name='unix:name']/@content"/></xsl:otherwise>
-      </xsl:choose></xsl:variable>
+      <xsl:variable name="suri" select="xhtml:meta[@name='unix:name']/@content"/>
       <xsl:variable name="uri" select="concat($baseURI, $suri)"/>
       <xsl:variable name="uname" select="//xhtml:meta[@name='unix:name']/@content"/>
       <xsl:apply-templates select="@*" />
@@ -196,9 +179,6 @@
             <xsl:text>-</xsl:text>
             <span class="day"><xsl:value-of select="substring-before(substring-after(substring-after($published, '-'),'-'),'T')"/></span>
           </li>
-        </xsl:if>
-        <xsl:if test="(string-length($collection)>0) and (string-length($target)>0)">
-          <li id="collection"><a href="{$collection}"><xsl:value-of select="$collection"/></a></li>
         </xsl:if>
       </ul>
       <xsl:if test="(../xhtml:head/xhtml:meta[@name='description']/@content) and not(xhtml:div[@class='figure']/xhtml:h1)">

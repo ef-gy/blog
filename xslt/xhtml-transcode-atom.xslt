@@ -14,8 +14,6 @@
               indent="no"
               media-type="application/xhtml+xml" />
 
-  <xsl:param name="target"/>
-  <xsl:param name="collection"/>
   <xsl:param name="documentRoot"/>
   <xsl:param name="baseURI"/>
 
@@ -46,9 +44,7 @@
   </xsl:template>
 
   <xsl:template match="/atom:feed">
-    <xsl:choose>
-      <xsl:when test="(string-length($target) > 0) and atom:entry/atom:content/xhtml:html[xhtml:head/xhtml:meta/@name='unix:name'][xhtml:head/xhtml:meta/@content=str:decode-uri($target)]"><xsl:copy-of select="atom:entry/atom:content/xhtml:html[xhtml:head/xhtml:meta/@name='unix:name'][xhtml:head/xhtml:meta/@content=str:decode-uri($target)]"/></xsl:when>
-        <xsl:otherwise><html xml:lang="en">
+      <html xml:lang="en">
         <head>
           <xsl:choose>
             <xsl:when test="atom:subtitle">
@@ -73,20 +69,46 @@
               <xsl:sort select="atom:published | atom:updated[not(parent::node()/atom:published)]" order="descending"/>
 
               <xsl:variable name="tname" select="atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content"/>
-              <xsl:variable name="link">
-                <xsl:choose>
-                  <xsl:when test="atom:link/@href"><xsl:value-of select="atom:link/@href"/></xsl:when>
-                  <xsl:when test="atom:category[@term='einit.org']">
-                    <xsl:value-of select="concat('/',atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content,'@drupal-einit')"/>
-                  </xsl:when>
-                  <xsl:when test="atom:category[@term='kyuba.org']">
-                    <xsl:value-of select="concat('/',atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content,'@drupal-kyuba')"/>
-                  </xsl:when>
-                  <xsl:otherwise><xsl:value-of select="concat('/',atom:content/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content,'@',$collection)"/></xsl:otherwise>
-                </xsl:choose>
-              </xsl:variable>
+              <xsl:variable name="link" select="atom:link/@href"/>
               <xsl:choose>
-                <xsl:when test="($target='home' or $target='') and ((position() = 1) or ($weights[@name=$tname] &gt;= 5))">
+                <xsl:when test="not($link)">
+                  <li class="large"><h1><xsl:value-of select="atom:content/xhtml:html/xhtml:head/xhtml:title"/></h1>
+                  <ul>
+                    <li class="published"><xsl:value-of select="(atom:published | atom:updated)[1]"/></li>
+                    <xsl:choose>
+                      <xsl:when test="contains(atom:author/atom:name, ' ')">
+                        <li class="author"><xsl:value-of select="substring-before(atom:author/atom:name, ' ')"/></li>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <li class="author"><xsl:value-of select="atom:author/atom:name"/></li>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </ul>
+                  <xsl:for-each select="atom:content/xhtml:html/xhtml:body/xhtml:* | atom:content/xhtml:html/xhtml:body/svg:*">
+                    <xsl:choose>
+                      <xsl:when test="self::xhtml:h1">
+                        <h2><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h2>
+                      </xsl:when>
+                      <xsl:when test="self::xhtml:h2">
+                        <h3><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h3>
+                      </xsl:when>
+                      <xsl:when test="self::xhtml:h3">
+                        <h4><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h4>
+                      </xsl:when>
+                      <xsl:when test="self::xhtml:h4">
+                        <h5><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h5>
+                      </xsl:when>
+                      <xsl:when test="self::xhtml:h5">
+                        <h6><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h6>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:copy-of select="."/>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:for-each>
+                  </li>
+                </xsl:when>
+                <xsl:when test="(position() = 1) or ($weights[@name=$tname] &gt;= 5)">
                   <li class="large"><h1><a href="{$link}"><xsl:value-of select="atom:content/xhtml:html/xhtml:head/xhtml:title"/></a></h1>
                   <ul>
                     <li class="published"><xsl:value-of select="(atom:published | atom:updated)[1]"/></li>
@@ -102,15 +124,24 @@
                   <xsl:for-each select="atom:content/xhtml:html/xhtml:body/xhtml:* | atom:content/xhtml:html/xhtml:body/svg:*">
                     <xsl:if test="position() &lt; 5">
                       <xsl:choose>
-                        <xsl:when test="self::xhtml:p | self::xhtml:img | self::xhtml:blockquote">
-                          <xsl:copy-of select="."/>
-                        </xsl:when>
                         <xsl:when test="self::xhtml:h1">
                           <h2><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h2>
                         </xsl:when>
-                        <xsl:when test="self::svg:svg">
-                          <xsl:copy-of select="."/>
+                        <xsl:when test="self::xhtml:h2">
+                          <h3><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h3>
                         </xsl:when>
+                        <xsl:when test="self::xhtml:h3">
+                          <h4><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h4>
+                        </xsl:when>
+                        <xsl:when test="self::xhtml:h4">
+                          <h5><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h5>
+                        </xsl:when>
+                        <xsl:when test="self::xhtml:h5">
+                          <h6><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h6>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <xsl:copy-of select="."/>
+                        </xsl:otherwise>
                       </xsl:choose>
                     </xsl:if>
                   </xsl:for-each>
@@ -133,12 +164,24 @@
                   <xsl:for-each select="atom:content/xhtml:html/xhtml:body/xhtml:p | atom:content/xhtml:html/xhtml:body/xhtml:img | atom:content/xhtml:html/xhtml:body/xhtml:blockquote | atom:content/xhtml:html/xhtml:body/svg:svg">
                     <xsl:if test="position() &lt; 3">
                       <xsl:choose>
-                        <xsl:when test="self::xhtml:p | self::xhtml:img | self::xhtml:blockquote">
-                          <xsl:copy-of select="."/>
+                        <xsl:when test="self::xhtml:h1">
+                          <h2><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h2>
                         </xsl:when>
-                        <xsl:when test="self::svg:svg">
-                          <xsl:copy-of select="."/>
+                        <xsl:when test="self::xhtml:h2">
+                          <h3><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h3>
                         </xsl:when>
+                        <xsl:when test="self::xhtml:h3">
+                          <h4><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h4>
+                        </xsl:when>
+                        <xsl:when test="self::xhtml:h4">
+                          <h5><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h5>
+                        </xsl:when>
+                        <xsl:when test="self::xhtml:h5">
+                          <h6><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h6>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <xsl:copy-of select="."/>
+                        </xsl:otherwise>
                       </xsl:choose>
                     </xsl:if>
                   </xsl:for-each>
@@ -149,8 +192,7 @@
             </xsl:for-each>
           </ul>
         </body>
-      </html></xsl:otherwise>
-   </xsl:choose>
+      </html>
   </xsl:template>
 </xsl:stylesheet>
 
