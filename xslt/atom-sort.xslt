@@ -21,7 +21,7 @@
   <xsl:template match="/atom:feed">
     <feed>
       <xsl:for-each select="atom:entry">
-        <xsl:sort select="atom:published | atom:updated" order="ascending"/>
+        <xsl:sort select="atom:published | atom:updated" order="descending"/>
         <xsl:apply-templates select="."/>
       </xsl:for-each>
     </feed>

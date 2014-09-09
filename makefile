@@ -140,26 +140,27 @@ RSSS:=$(addsuffix .rss,$(basename $(ATOMS)))
 ATOMCACHE:=$(addprefix $(CACHEO)/,$(ATOMS)) $(addprefix $(CACHET)/,$(ATOMS))
 RSSCACHE:=$(addprefix $(CACHEO)/,$(RSSS)) $(addprefix $(CACHET)/,$(RSSS))
 
-$(CACHEO)/%.atom: %.atom xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt xslt/atom-style-ef.gy.xslt makefile
+$(CACHEO)/%.atom: %.atom $(ATOMS) xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/atom-merge.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-pre-process.xslt -|\
-		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/atom-style-ef.gy.xslt - > $@
+		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/atom-style-ef.gy.xslt -|\
+		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/atom-sort.xslt - > $@
 
 $(CACHEO)/%.rss: $(CACHEO)/%.atom xslt/rss-transcode-atom.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/rss-transcode-atom.xslt $< > $@
 
-$(CACHET)/%.atom: %.atom xslt/atom-merge.xslt $(CACHET)/.volatile xslt/xhtml-pre-process.xslt xslt/atom-style-ef.gy.xslt makefile
+$(CACHET)/%.atom: %.atom $(ATOMS) xslt/atom-merge.xslt $(CACHET)/.volatile xslt/xhtml-pre-process.xslt xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/atom-merge.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-pre-process.xslt -|\
-		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/atom-style-ef.gy.xslt - > $@
+		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/atom-style-ef.gy.xslt -|\
+		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/atom-sort.xslt - > $@
 
 $(CACHET)/%.rss: $(CACHET)/%.atom xslt/rss-transcode-atom.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/rss-transcode-atom.xslt $< > $@
 
 # global navigation index
-$(CACHE)/index.xml: $(CACHEO)/everything.atom xslt/atom-sort.xslt xslt/index-transcode-atom.xslt makefile $(CACHE)/.volatile
-	$(XSLTPROC) $(XSLTPROCARGS) xslt/atom-sort.xslt $< |\
-		$(XSLTPROC) $(XSLTPROCARGS) xslt/index-transcode-atom.xslt - > $@
+$(CACHE)/index.xml: $(CACHEO)/everything.atom xslt/index-transcode-atom.xslt makefile $(CACHE)/.volatile
+	$(XSLTPROC) $(XSLTPROCARGS) xslt/index-transcode-atom.xslt $< > $@
 
 atomcache: $(ATOMCACHE)
 rsscache: $(RSSCACHE)
