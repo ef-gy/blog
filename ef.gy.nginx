@@ -6,10 +6,6 @@ map $request_uri $collection {
   ~^(.*)/(?<co>[^@]+)$ $co;
 }
 
-map $request_uri $target {
-  ~^(.*)/(?<ta>[^@]+)@([^@]+)$ $ta;
-}
-
 map $http_host $preferredScheme {
   default  "http";
   ~^ef.gy$ "https";
@@ -92,7 +88,6 @@ server {
 
     root $documentRoot;
  
-    xslt_string_param target $target;
     xslt_string_param collection $collection;
     xslt_string_param documentRoot $documentRoot;
     xslt_string_param baseURI '$preferredScheme://$http_host';
@@ -126,8 +121,9 @@ server {
     rewrite ^/documentation/metaquest/?$ /documentation/metaquest/index.xhtml redirect;
     rewrite ^/documentation/verthandi/?$ /documentation/verthandi/index.xhtml redirect;
 
-    rewrite ^(.*)/(kyuba:[^@]+)@([^@]*archives)$ $1/$2@drupal-kyuba permanent;
-    rewrite ^(.*)/(einit:[^@]+)@([^@]*archives)$ $1/$2@drupal-einit permanent;
+    # there's no more /target@collection for archive content anymore
+    rewrite ^/([^@/]+)@([^@/]+)$ $2 permanent;
+
     rewrite ^(.*)/([^@]+)@([^@]+)$ $1/$3;
     rewrite ^/source-code$ /about#source-code permanent;
 
