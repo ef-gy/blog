@@ -137,9 +137,8 @@ $(CACHET)/.volatile: $(CACHE)/.volatile
 CXHTMLS:=$(notdir $(wildcard *.xhtml))
 ATOMS:=$(notdir $(wildcard *.atom))
 RSSS:=$(addsuffix .rss,$(basename $(ATOMS)))
-CDOCBOOKS:=$(addsuffix .docbook,$(basename $(ATOMS)))
-#$(addsuffix .docbook,$(basename $(CEXHTMLS)))
 CEXHTMLS:=$(subst :,\:,$(CXHTMLS)) $(addsuffix .xhtml,$(basename $(ATOMS)))
+CDOCBOOKS:=$(addsuffix .docbook,$(basename $(CEXHTMLS)))
 
 XHTMLCACHE:=$(addprefix $(CACHEO)/,$(CEXHTMLS)) $(addprefix $(CACHET)/,$(CEXHTMLS))
 ATOMCACHE:=$(addprefix $(CACHEO)/,$(ATOMS)) $(addprefix $(CACHET)/,$(ATOMS))
@@ -165,6 +164,10 @@ $(CACHEO)/%.docbook: $(CACHEO)/%.atom xslt/docbook-transcode-xhtml.xslt xslt/doc
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/docbook-transcode-xhtml.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/docbook-transcode-atom.xslt - > $@
 
+$(CACHEO)/%.docbook: %.xhtml xslt/xhtml-pre-process.xslt xslt/docbook-transcode-xhtml.xslt makefile
+	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-pre-process.xslt $< |\
+		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/docbook-transcode-xhtml.xslt - > $@
+
 $(CACHET)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHET)/.volatile xslt/xhtml-pre-process.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-pre-process.xslt $< > $@
 
@@ -183,6 +186,10 @@ $(CACHET)/%.xhtml: $(CACHET)/%.atom xslt/xhtml-transcode-atom.xslt makefile
 $(CACHET)/%.docbook: $(CACHET)/%.atom xslt/docbook-transcode-xhtml.xslt xslt/docbook-transcode-atom.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/docbook-transcode-xhtml.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/docbook-transcode-atom.xslt - > $@
+
+$(CACHET)/%.docbook: %.xhtml xslt/xhtml-pre-process.xslt xslt/docbook-transcode-xhtml.xslt makefile
+	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-pre-process.xslt $< |\
+		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/docbook-transcode-xhtml.xslt - > $@
 
 # global navigation index
 $(CACHE)/index.xml: $(CACHEO)/everything.atom xslt/index-transcode-atom.xslt makefile $(CACHE)/.volatile

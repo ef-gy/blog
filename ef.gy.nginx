@@ -253,13 +253,8 @@ server {
 	}
 
 	location /docbook {
-        alias $documentRoot;
-		try_files $uri.atom $uri.xhtml $uri =404;
-
-		xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/xhtml-pre-process.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/docbook-transcode-xhtml.xslt;
-		xslt_stylesheet /srv/http/ef.gy/xslt/docbook-transcode-atom.xslt;
+        alias $documentRoot/.cache/$hostnameproper;
+		try_files $uri.docbook $uri =404;
 
                 expires 1h;
                 add_header Pragma public;
