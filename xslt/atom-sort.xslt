@@ -20,6 +20,7 @@
 
   <xsl:template match="/atom:feed">
     <feed>
+      <xsl:apply-templates select="atom:*[not(self::atom:entry)]"/>
       <xsl:for-each select="atom:entry">
         <xsl:sort select="atom:published | atom:updated" order="descending"/>
         <xsl:apply-templates select="."/>

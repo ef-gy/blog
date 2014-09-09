@@ -12,8 +12,6 @@
               indent="no"
               media-type="application/xhtml+xml" />
 
-  <xsl:param name="documentRoot"/>
-
   <xsl:template match="*|@*">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()" />
