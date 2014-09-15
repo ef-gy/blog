@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>The Source Fantastic 4: quietnet</title>
+<meta name="author" content="Nadja Deininger" />
+<meta name="description" content="Quietnet - a chat programme using high frequency sounds instead of network transmissions" />
+<meta name="date" content="2014-09-15T14:51:00Z" />
+<meta name="mtime" content="2014-09-15T14:51:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="tsf-4-quietnet" />
+</head>
+<body>
+<p>This week I have something for you that is a little more palatable than x86 assembly code (though, let's be honest, anything but Brainfuck and Malbolge is more palatable than x86 assembly - at some point, the developers of the architecture should just have stopped summoning Cthulhu). I'd like to show you <a href="">quietnet</a> by Kate Murphy, a chat programme that does not use the usual network transmission protocols, but instead uses sounds in near ultrasonic frequencies to communicate. It requires speakers and a microphone, but if the speakers are high quality enough, the sounds will not be clearly audible - perfect for situations where you need to quietly communicate with someone but are concerned about your network being monitored (or the network is down or unreliable). Of course, that means it only works for computers who are in the same room or at least close by, and if there is too much ambient noise, the sounds may get drowned out, but we can't have everything.</p>
+<p>Okay, let's have a look at the code. Quietnet is written in Python, and there are two scripts the user is supposed to run: send.py, which encodes a message into high frequency sounds, and listen.py, which listens for these high frequency sounds and attempts to decode them. When I run pylint on it, it has a bunch of complaints, mostly missing docstrings for functions, but most of these functions are clearly named and concise so they document themselves, as seen here for example (quietnet.py):</p>
+<pre><code>
+def has_freq(fft_sample, freq_in_hertz, rate, chunk, offset=3):
+    peak_index = get_peak(freq_in_hertz, rate, chunk)
+    top = max(fft_sample[peak_index-1:peak_index+2])
+
+    avg_around_peak = np.average(weighted_values_around_peak(fft_sample, peak_index, offset))
+
+    if top > avg_around_peak:
+        return fft_sample[peak_index]
+    else:
+        return 0
+</code></pre>
+<p>This function looks for a frequency in a Fourier-transformed audio sample; it does so by checking if there is a peak at the given frequency in the Fourier transform of the sample. The get_peak function returns the index at which to check for the peak; after that, the code compares the maximum of the values around that index to their weighted average to see if there is, indeed, a peak in the Fourier transform. If that is the case, the frequency is present in the sample. Note that the frequency parameter is named freq_in_hertz - for quantities that have units, it is good practice to include the unit in the variable name so there is no confusion about either the unit or its SI prefix. In case the unit is changed the developer is more likely to rename the variable in the actual code they have to change anyway than to update documentation, especially if they are strapped for time. Kate also made sure to name the parameter fft_sample so it is clear the function expects a Fourier-transformed sample. Most of the code is like that - if you know at least a little signal processing, it will make sense to you even without docstrings.</p>
+<p>Now go forth and play with quietnet, unless you have pets that would object of course ;). Stay tuned for the next installment in two weeks, on September the 29th!</p>
+</body>
+</html>
