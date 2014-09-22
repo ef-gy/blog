@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>SSH Noise Report, August 2014</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="Ever seen those odd bot logins on your SSH ports in your syslog? Yeah, me too. If you were wondering where they're from, have a look at this monthly column!" />
+<meta name="date" content="2014-09-22T14:28:00Z" />
+<meta name="mtime" content="2014-09-22T14:28:00Z" />
+<meta name="category" content="Noise Report" />
+<meta name="unix:name" content="report:ssh-noise-august-2014" />
+</head>
+<body>
+<p>Ever since <a href="/google-analytics-ssh">I described how to track SSH offenders using Google Analytics</a>, I've been collecting those stats and I've been quite itching to report on my findings. Collecting these stats holds some strange sort of fascination for me, so please excuse my enthusiasm. I'll try to report on this monthly from now on; hope some of you are interested enough in reading the reports. The collected data is extracted from syslog and contains any and all interactions with SSH; almost all of these include logins to unknown users or otherwise failed login attempts. This data is collected on several systems, spread over America, Europe and South Africa. More importantly, they're with different providers. None of the systems are owned by Google, in case you were wondering.</p>
+<p>So there we go. This first report contains noise from August 14th to September 12th. First the most interesting part: graphs! Starting with the cities and countries where all that noise on the SSH ports that I'm getting is coming from:</p>
+<img src="/png/ssh-noise-cities-201408" alt="Heatmap of SSH crack attempts, August 2014; highlighting cities."/>
+<img src="/png/ssh-noise-countries-201408" alt="Heatmap of SSH crack attempts, August 2014; highlighting countries."/>
+<p>In the given time frame, the top five <em>countries</em> where offending connections were coming from were as follows:</p>
+<table>
+<thead><tr><th>Rank</th><th>Country/Territory</th><th>Sessions</th><th>Events</th></tr></thead>
+<tbody>
+<tr><td>1</td><th>China</th><td>47,835</td><td>104,679</td></tr>
+<tr><td>2</td><th>Germany</th><td>9,847</td><td>17,436</td></tr>
+<tr><td>3</td><th>South Korea</th><td>9,415</td><td>12,912</td></tr>
+<tr><td>4</td><th>United States</th><td>7,925</td><td>13,296</td></tr>
+<tr><td>5</td><th>Canada</th><td>4,505</td><td>9,646</td></tr>
+</tbody></table>
+<p>It is perhaps unsurprising that <em>China</em> takes the lead with approximately 48% of the total number of connections. I'm thinking this is quite unsurprising due to the sheer number of people and - presumably - computers in that country. It'll be interesting to correlate this with the number of people in the country in a future report. More surprising, however, is that <em>Germany</em> is the second most common source of illicit login attempts with approximately 10% of the sessions originating there. Especially considering the archaic computer security laws in that country and the miniscule amount of people living there compared to China. Also, none of the systems used to track offenders were actually in Germany, making this an even more surprising result.</p>
+<p><em>South Korea</em> scores a solid third place. It's too early to determine if this is unusual or not, let's revisit that next month. About half the IP addresses for this experiment were in the <em>United States</em>, so it is somewhat odd that they only managed to secure the fourth place. All other countries have fairly few incidents associated with them and are all under five percent. It'll be interesting to see how this develops over the next few months.</p>
+<p><em>Very</em> surprising, so far, is that there were virtually <em>no events originating in Africa</em>. Especially considering that I do have servers in Johannesburg. Future reports will show whether this is a stable trend or just a fluke this time.</p>
+<p>If you're interested, have a look at the full reports taken straight from Google Analytics:</p>
+<ul>
+<li><a href="/pdf/analytics-20140814-20140912-ssh-cities">Google Analytics Report: SSH Warnings, August 2014; by City</a></li>
+<li><a href="/pdf/analytics-20140814-20140912-ssh-countries">Google Analytics Report: SSH Warnings, August 2014; by Country</a></li>
+<li><a href="/pdf/analytics-20140814-20140912-ssh-hourly">Google Analytics Report: SSH Warnings, August 2014; Hourly Distribution with Top 10 Countries</a></li>
+</ul>
+<p>If you're interested in doing a similar experiment, <a href="https://www.npmjs.org/package/analyticsd">I've since written a node.js daemon called <em>analyticsd</em> that makes it trivially easy to collect this data in combination with Google Analytics</a>.</p>
+<p>Hope this satisfies your curiousity like it did mine. If it did, come back in a month for the next report! Enjoy your week and remember to stay safe!</p>
+</body>
+</html>

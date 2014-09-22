@@ -3,6 +3,7 @@
   <title>ef.gy</title>
   <subtitle>Articles</subtitle>
 
+  <entry xlink:href="report:ssh-noise-august-2014.xhtml" />
   <entry xlink:href="google-analytics-ssh.xhtml" />
   <entry xlink:href="hardening-ssh.xhtml" />
   <entry xlink:href="dublin-maker.xhtml" />
