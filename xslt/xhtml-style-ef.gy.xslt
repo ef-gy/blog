@@ -130,9 +130,6 @@
         <link rel="stylesheet" href="/css/highlight"/>
         <script src="/js/highlight"></script>
       </xsl:if>
-      <xsl:if test="not($nosocial)">
-        <script src="/js/analytics"></script>
-      </xsl:if>
     </head>
   </xsl:template>
 
