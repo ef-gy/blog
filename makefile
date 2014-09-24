@@ -141,6 +141,10 @@ $(CACHE)/jpeg/.volatile: $(CACHE)/.volatile
 	mkdir -p $(CACHE)/jpeg || true
 	touch $@
 
+$(CACHE)/png/.volatile: $(CACHE)/.volatile
+	mkdir -p $(CACHE)/png || true
+	touch $@
+
 CXHTMLS:=$(notdir $(wildcard *.xhtml))
 ATOMS:=$(notdir $(wildcard *.atom))
 RSSS:=$(addsuffix .rss,$(basename $(ATOMS)))
@@ -149,6 +153,7 @@ CDOCBOOKS:=$(addsuffix .docbook,$(basename $(CEXHTMLS)))
 DXHTMLS:=$(addsuffix .dnt.xhtml,$(basename $(CEXHTMLS))) $(addsuffix .nodnt.xhtml,$(basename $(CEXHTMLS)))
 DHTMLS:=$(addsuffix .html,$(basename $(DXHTMLS)))
 JPEGS:=$(notdir $(addsuffix .jpeg,$(basename $(wildcard */*.jpg) $(wildcard */*.jpeg))))
+DPNGS:=$(notdir $(addsuffix .png,$(basename $(wildcard */*.png))))
 
 ATOMCACHE:=$(addprefix $(CACHEO)/,$(ATOMS)) $(addprefix $(CACHET)/,$(ATOMS))
 RSSCACHE:=$(addprefix $(CACHEO)/,$(RSSS)) $(addprefix $(CACHET)/,$(RSSS))
@@ -156,6 +161,7 @@ DOCBOOKCACHE:=$(addprefix $(CACHEO)/,$(CDOCBOOKS)) $(addprefix $(CACHET)/,$(CDOC
 XHTMLCACHE:=$(addprefix $(CACHEO)/,$(DXHTMLS)) $(addprefix $(CACHET)/,$(DXHTMLS))
 HTMLCACHE:=$(addprefix $(CACHEO)/,$(DHTMLS)) $(addprefix $(CACHET)/,$(DHTMLS))
 JPEGCACHE:=$(addprefix $(CACHE)/jpeg/,$(JPEGS))
+PNGCACHE:=$(addprefix $(CACHE)/png/,$(DPNGS))
 
 $(CACHEO)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-pre-process.xslt $< > $@
@@ -235,6 +241,9 @@ $(CACHE)/jpeg/%.jpeg: jpeg/%.jpeg $(CACHE)/jpeg/.volatile makefile
 $(CACHE)/jpeg/%.jpeg: jpeg/%.jpg $(CACHE)/jpeg/.volatile makefile
 	convert "$<" -resize 921600@\> -strip -quality 86 "$@"
 
+$(CACHE)/png/%.png: png/%.png $(CACHE)/png/.volatile makefile
+	convert "$<" -resize 921600@\> -strip "$@"
+
 # global navigation index
 $(CACHE)/index.xml: $(CACHEO)/everything.atom xslt/index-transcode-atom.xslt makefile $(CACHE)/.volatile
 	$(XSLTPROC) $(XSLTPROCARGS) xslt/index-transcode-atom.xslt $< > $@
@@ -245,8 +254,9 @@ atomcache: $(ATOMCACHE)
 rsscache: $(RSSCACHE)
 docbookcache: $(DOCBOOKCACHE)
 jpegcache: $(JPEGCACHE)
+pngcache: $(PNGCACHE)
 
-cache: xhtmlcache atomcache rsscache docbookcache htmlcache jpegcache
+cache: xhtmlcache atomcache rsscache docbookcache htmlcache jpegcache pngcache
 
 # $(THIRDPARTY) module downloads
 $(THIRDPARTY)/.volatile:
