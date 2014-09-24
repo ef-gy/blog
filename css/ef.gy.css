@@ -765,4 +765,12 @@ ul.share li a:hover span
     body {
       padding-top: 0;
     }
+
+    h1 + ul + ul.share {
+      display: none;
+    }
+
+    ul#meta {
+      margin-top: -1.5em;
+    }
 }
