@@ -287,7 +287,7 @@ server {
 	}
 
 	location /html {
-        alias $documentRoot;
+        alias $documentRoot/.cache/$hostnameproper;
 		try_files $uri.$dnt.html $uri.html $uri.$dnt.xhtml $uri.xhtml $uri =404;
 	}
 
