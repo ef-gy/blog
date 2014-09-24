@@ -137,6 +137,10 @@ $(CACHET)/.volatile: $(CACHE)/.volatile
 	mkdir -p $(CACHET) || true
 	touch $@
 
+$(CACHE)/jpeg/.volatile: $(CACHE)/.volatile
+	mkdir -p $(CACHE)/jpeg || true
+	touch $@
+
 CXHTMLS:=$(notdir $(wildcard *.xhtml))
 ATOMS:=$(notdir $(wildcard *.atom))
 RSSS:=$(addsuffix .rss,$(basename $(ATOMS)))
@@ -144,12 +148,14 @@ CEXHTMLS:=$(subst :,\:,$(CXHTMLS)) $(addsuffix .xhtml,$(basename $(ATOMS)))
 CDOCBOOKS:=$(addsuffix .docbook,$(basename $(CEXHTMLS)))
 DXHTMLS:=$(addsuffix .dnt.xhtml,$(basename $(CEXHTMLS))) $(addsuffix .nodnt.xhtml,$(basename $(CEXHTMLS)))
 DHTMLS:=$(addsuffix .html,$(basename $(DXHTMLS)))
+JPEGS:=$(notdir $(addsuffix .jpeg,$(basename $(wildcard */*.jpg) $(wildcard */*.jpeg))))
 
 ATOMCACHE:=$(addprefix $(CACHEO)/,$(ATOMS)) $(addprefix $(CACHET)/,$(ATOMS))
 RSSCACHE:=$(addprefix $(CACHEO)/,$(RSSS)) $(addprefix $(CACHET)/,$(RSSS))
 DOCBOOKCACHE:=$(addprefix $(CACHEO)/,$(CDOCBOOKS)) $(addprefix $(CACHET)/,$(CDOCBOOKS))
 XHTMLCACHE:=$(addprefix $(CACHEO)/,$(DXHTMLS)) $(addprefix $(CACHET)/,$(DXHTMLS))
 HTMLCACHE:=$(addprefix $(CACHEO)/,$(DHTMLS)) $(addprefix $(CACHET)/,$(DHTMLS))
+JPEGCACHE:=$(addprefix $(CACHE)/jpeg/,$(JPEGS))
 
 $(CACHEO)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-pre-process.xslt $< > $@
@@ -223,6 +229,12 @@ $(CACHET)/%.docbook: %.xhtml xslt/xhtml-pre-process.xslt xslt/docbook-transcode-
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-pre-process.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/docbook-transcode-xhtml.xslt - > $@
 
+$(CACHE)/jpeg/%.jpeg: jpeg/%.jpeg $(CACHE)/jpeg/.volatile makefile
+	convert "$<" -resize 921600@\> -strip -quality 86 "$@"
+
+$(CACHE)/jpeg/%.jpeg: jpeg/%.jpg $(CACHE)/jpeg/.volatile makefile
+	convert "$<" -resize 921600@\> -strip -quality 86 "$@"
+
 # global navigation index
 $(CACHE)/index.xml: $(CACHEO)/everything.atom xslt/index-transcode-atom.xslt makefile $(CACHE)/.volatile
 	$(XSLTPROC) $(XSLTPROCARGS) xslt/index-transcode-atom.xslt $< > $@
@@ -232,8 +244,9 @@ htmlcache: $(HTMLCACHE)
 atomcache: $(ATOMCACHE)
 rsscache: $(RSSCACHE)
 docbookcache: $(DOCBOOKCACHE)
+jpegcache: $(JPEGCACHE)
 
-cache: xhtmlcache atomcache rsscache docbookcache htmlcache
+cache: xhtmlcache atomcache rsscache docbookcache htmlcache jpegcache
 
 # $(THIRDPARTY) module downloads
 $(THIRDPARTY)/.volatile:
