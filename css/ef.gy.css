@@ -742,4 +742,27 @@ ul.share li a:hover span
         background: #fff;
         margin: 0;
     }
+
+    ul.share li {
+      width: 25%;
+    }
+
+    ul.share li.stumbleupon {
+      display: none;
+    }
+}
+
+@media (max-width: 30em)
+{
+    h1 + ul {
+      display: none;
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    body {
+      padding-top: 0;
+    }
 }
