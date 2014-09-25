@@ -111,6 +111,8 @@ server {
         rewrite ^/x?html/(.*)$ /$1 permanent;
     }
 
+    rewrite ^/(fibreproduct.rss|rss/fibreproduct)$ http://stream.ef.gy/rss/fibreproduct permanent;
+
     rewrite ^/documentation/libefgy/?$ /documentation/libefgy/index.xhtml redirect;
     rewrite ^/documentation/topologic/?$ /documentation/topologic/index.xhtml redirect;
     rewrite ^/documentation/bourne\+\+/?$ /documentation/bourne++/index.xhtml redirect;
