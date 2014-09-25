@@ -695,6 +695,7 @@ ul.share li a:hover span
         margin: 0;
         width: auto;
         text-align: right;
+        padding-right: 2em;
     }
 
     h1 + ul li
