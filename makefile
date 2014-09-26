@@ -81,7 +81,7 @@ XSLTPROCARGS:=$(XSLTPROCCACHEOARGS) --param licence "document('$$(pwd)/$(BUILD)/
 
 # files to be downloaded
 CSSDOWNLOADS:=css/highlight.css
-JSDOWNLOADS:=js/disqus-embed.js js/highlight.js js/google-platform.js
+JSDOWNLOADS:=js/disqus-embed.js js/highlight.js
 
 # don't delete intermediary files
 .SECONDARY:
@@ -113,7 +113,7 @@ epubs: $(EPUBESC)
 pngs: $(PNGESC)
 
 csss: css/ef.gy.minified.css css/ef.gy+highlight.minified.css $(CSSDOWNLOADS)
-jss: $(JSDOWNLOADS) js/highlight.js js/social+disqus-embed.js js/highlight+social+disqus-embed.js js/jquery.js
+jss: $(JSDOWNLOADS) js/highlight.js js/highlight+disqus-embed.js js/jquery.js
 
 install: install-pdf install-mobi install-epub
 install-pdf: $(PDFDEST)/.volatile $(addprefix $(PDFDEST)/,$(notdir $(PDFESC)))
@@ -282,23 +282,14 @@ $(THIRDPARTY)/jquery/dist/jquery.js $(THIRDPARTY)/jquery/dist/jquery.min.js: $(T
 js/jquery.js: $(THIRDPARTY)/jquery/dist/jquery.min.js
 	install $< $@
 
-# downloaded remote JavaScript files
+# download remote JavaScript files
 js/disqus-embed.js:
 	$(CURL) https://go.disqus.com/embed.js -o $@
 
 js/highlight.js: $(THIRDPARTY)/highlight.js/build/highlight.pack.js js/highlight-setup.js
 	cat $^ >> $@
 
-js/google-platform.js:
-	$(CURL) https://apis.google.com/js/platform.js -o $@
-
-js/social.js: js/google-platform.js js/social-setup.js
-	cat $^ > $@
-
-js/highlight+social+disqus-embed.js: js/highlight.js js/social.js js/disqus-embed.js
-	cat $^ > $@
-
-js/social+disqus-embed.js: js/social.js js/disqus-embed.js
+js/highlight+disqus-embed.js: js/highlight.js js/disqus-embed.js
 	cat $^ > $@
 
 # download remote CSS files and process local ones

@@ -71,6 +71,13 @@ img, svg
     font-size: inherit;
 }
 
+address img
+{
+    width: 91px;
+    margin: 0 -1em 1em 1em;
+    float: right;
+}
+
 h1,
 #full h2
 {
@@ -159,7 +166,7 @@ h1+ul
     display: block;
     position: absolute;
     left: -27.5em;
-    top: 42em;
+    top: 28em;
     width: 18em;
     margin: 0;
     color: #fff;
@@ -187,7 +194,7 @@ ul#subfeeds
 {
     position: absolute;
     left: -27.5em;
-    top: 49em;
+    top: 38em;
     width: 18em;
     margin: 0;
     color: #fff;

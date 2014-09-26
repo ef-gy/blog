@@ -23,7 +23,6 @@
   <xsl:param name="documentRoot"/>
   <xsl:param name="DNT"/>
 
-  <xsl:variable name="nosocial" select="($baseURI = 'http://vturtipc7vmz6xjy.onion') or ($DNT = '1')"/>
   <xsl:variable name="authors" select="document(concat($documentRoot,'/authors.xml'))/data:data/data:author"/>
   <xsl:variable name="social" select="document(concat($documentRoot,'/social-metadata.xml'))"/>
 
@@ -36,9 +35,6 @@
   <xsl:template match="xhtml:head">
     <head>
       <xsl:apply-templates select="@*|node()"/>
-      <xsl:if test="not($nosocial) and (//social:social or //social:follow or //social:grid)">
-        <script type="text/javascript" src="/js/social"></script>
-      </xsl:if>
     </head>
   </xsl:template>
 
@@ -64,18 +60,13 @@
       <address>
       <xsl:attribute name="class">author-box</xsl:attribute>
       <h2>Written by <xsl:value-of select="$authordata/@display"/></h2>
-      <xsl:choose>
-        <xsl:when test="$authordata/@image">
-          <img src="{$authordata/@image}" alt="Author Mugshot: {@name}"/>
-        </xsl:when>
-      </xsl:choose>
-      <xsl:if test="not($nosocial) and $authordata/@googleplus">
-        <div class="g-person" data-href="//plus.google.com/{$authordata/@googleplus}" data-width="260" data-rel="author"/>
+      <xsl:if test="$authordata/@icon">
+        <img src="{$authordata/@icon}" alt="Author Icon: {@name}"/>
       </xsl:if>
       <xsl:if test="$authordata/text()">
         <p><xsl:copy-of select="$authordata/* | $authordata/text()"/></p>
       </xsl:if>
-      <xsl:if test="not($nosocial) and $authordata/@twitter">
+      <xsl:if test="$authordata/@twitter">
         <p><a href="https://twitter.com/{$authordata/@twitter}" class="twitter-follow-button"><xsl:value-of select="$authordata/@twitter"/> on Twitter</a></p>
       </xsl:if>
       <xsl:if test="$authordata/@email">
