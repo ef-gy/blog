@@ -172,7 +172,7 @@ server {
 	location /css {
 		try_files $uri.minified.css $uri.css $uri =404;
 
-                expires 1h;
+                expires 1w;
                 add_header Pragma public;
                 add_header Cache-Control "public";
         add_header Vary "Accept-Encoding";
@@ -181,7 +181,7 @@ server {
 	location /png {
 		try_files $uri.png $uri =404;
 
-                expires 1h;
+                expires 1w;
                 add_header Pragma public;
                 add_header Cache-Control "public";
         add_header Vary "Accept-Encoding";
@@ -191,7 +191,7 @@ server {
         root $documentRoot/.cache;
 		try_files $uri.jpeg $uri =404;
 
-                expires 1h;
+                expires 1w;
                 add_header Pragma public;
                 add_header Cache-Control "public";
         add_header Vary "Accept-Encoding";
@@ -200,7 +200,7 @@ server {
 	location /pdf {
 		try_files $uri.pdf $uri =404;
 
-                expires 1h;
+                expires 1d;
                 add_header Pragma public;
                 add_header Cache-Control "public";
         add_header Vary "Accept-Encoding";
@@ -210,7 +210,7 @@ server {
 		try_files $uri.mobi $uri =404;
         types { application/x-mobipocket-ebook mobi; }
 
-                expires 1h;
+                expires 1d;
                 add_header Pragma public;
                 add_header Cache-Control "public";
         add_header Vary "Accept-Encoding";
@@ -220,7 +220,7 @@ server {
 		try_files $uri.mobi $uri =404;
         types { application/epub+zip epub; }
 
-                expires 1h;
+                expires 1d;
                 add_header Pragma public;
                 add_header Cache-Control "public";
         add_header Vary "Accept-Encoding";
@@ -229,7 +229,7 @@ server {
 	location /js {
 		try_files $uri.js $uri =404;
 
-                expires 1h;
+                expires 1w;
                 add_header Pragma public;
                 add_header Cache-Control "public";
         add_header Vary "Accept-Encoding";
