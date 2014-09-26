@@ -124,28 +124,8 @@ uninstall: uninstall-pdf
 validate: validate-docbook validate-xhtml
 
 # create a local cache of post-processed files
-$(CACHE)/.volatile:
-	mkdir -p $(CACHE) || true
-	touch $@
-
-$(CACHEO)/.volatile: $(CACHE)/.volatile
-	mkdir -p $(CACHEO) || true
-	touch $@
-
-$(CACHET)/.volatile: $(CACHE)/.volatile
-	mkdir -p $(CACHET) || true
-	touch $@
-
-$(CACHE)/jpeg/.volatile: $(CACHE)/.volatile
-	mkdir -p $(CACHE)/jpeg || true
-	touch $@
-
-$(CACHE)/png/.volatile: $(CACHE)/.volatile
-	mkdir -p $(CACHE)/png || true
-	touch $@
-
-$(CACHE)/css/.volatile: $(CACHE)/.volatile
-	mkdir -p $(CACHE)/css || true
+$(CACHE)/.volatile $(CACHEO)/.volatile $(CACHET)/.volatile $(CACHE)/jpeg/.volatile $(CACHE)/png/.volatile $(CACHE)/css/.volatile $(CACHE)/js/.volatile:
+	mkdir -p $(dir $@) || true
 	touch $@
 
 CXHTMLS:=$(notdir $(wildcard *.xhtml))
