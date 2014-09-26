@@ -291,10 +291,10 @@ $(CACHE)/%.base64: $(CACHE)/%
 	openssl base64 -A -in $< -out $@
 
 $(CACHE)/jpeg/%.base64.xml: $(CACHE)/jpeg/%.base64
-	echo "<?xml version='1.0' encoding='utf-8'?><img xmlns='http://www.w3.org/1999/xhtml' src='$$(cat $<)'/>" > $@
+	echo "<?xml version='1.0' encoding='utf-8'?><img xmlns='http://www.w3.org/1999/xhtml' src='data:image/jpeg;base64,$$(cat $<)'/>" > $@
 
 $(CACHE)/png/%.base64.xml: $(CACHE)/png/%.base64
-	echo "<?xml version='1.0' encoding='utf-8'?><img xmlns='http://www.w3.org/1999/xhtml' src='$$(cat $<)'/>" > $@
+	echo "<?xml version='1.0' encoding='utf-8'?><img xmlns='http://www.w3.org/1999/xhtml' src='data:image/png;base64,$$(cat $<)'/>" > $@
 
 zip: $(GZIPCACHE)
 
