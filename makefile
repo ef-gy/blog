@@ -264,7 +264,7 @@ $(CACHE)/css/%.css: css/%.css $(CACHE)/css/.volatile makefile
 
 $(CACHE)/css/%.css.xml: $(CACHE)/css/%.css makefile
 	echo "<?xml version='1.0' encoding='utf-8'?><style xmlns='http://www.w3.org/1999/xhtml' type='text/css'><![CDATA[" > $@
-	xargs echo < $< >> $@
+	cat $< >> $@
 	echo "]]></style>" >> $@
 
 # global navigation index

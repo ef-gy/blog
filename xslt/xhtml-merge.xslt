@@ -20,9 +20,7 @@
     </xsl:copy>
   </xsl:template>
 
-<!--
   <xsl:template match="xhtml:link[@rel='stylesheet'][substring-after(@href,'/css/')]">
     <xsl:apply-templates select="document(concat($documentRoot,'/.cache',@href,'.css.xml'))/xhtml:*"/>
   </xsl:template>
--->
 </xsl:stylesheet>
