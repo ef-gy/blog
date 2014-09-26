@@ -189,15 +189,17 @@ $(CACHEO)/%.rss: $(CACHEO)/%.atom xslt/rss-transcode-atom.xslt makefile
 $(CACHEO)/%.xhtml: $(CACHEO)/%.atom xslt/xhtml-transcode-atom.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-transcode-atom.xslt $< > $@
 
-$(CACHEO)/%.dnt.xhtml: $(CACHEO)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt makefile social-metadata.xml authors.xml components inlinecss
+$(CACHEO)/%.dnt.xhtml: $(CACHEO)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt xslt/xhtml-merge.xslt makefile social-metadata.xml authors.xml components inlinecss
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam collection "$*" --stringparam DNT 1 xslt/xhtml-style-ef.gy.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam DNT 1 xslt/xhtml-navigation.xslt - |\
-		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-post-process.xslt - > $@
+		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-post-process.xslt - |\
+		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-merge.xslt - > $@
 
-$(CACHEO)/%.nodnt.xhtml: $(CACHEO)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt makefile social-metadata.xml authors.xml components inlinecss
+$(CACHEO)/%.nodnt.xhtml: $(CACHEO)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt xslt/xhtml-merge.xslt makefile social-metadata.xml authors.xml components inlinecss
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam collection "$*" --stringparam DNT 0 xslt/xhtml-style-ef.gy.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam DNT 0 xslt/xhtml-navigation.xslt - |\
-		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-post-process.xslt - > $@
+		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-post-process.xslt - |\
+		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-merge.xslt - > $@
 
 $(CACHEO)/%.html: $(CACHEO)/%.xhtml xslt/html-post-process.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/html-post-process.xslt $< > $@
@@ -225,15 +227,17 @@ $(CACHET)/%.rss: $(CACHET)/%.atom xslt/rss-transcode-atom.xslt makefile
 $(CACHET)/%.xhtml: $(CACHET)/%.atom xslt/xhtml-transcode-atom.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-transcode-atom.xslt $< > $@
 
-$(CACHET)/%.dnt.xhtml: $(CACHET)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt makefile social-metadata.xml authors.xml components inlinecss
+$(CACHET)/%.dnt.xhtml: $(CACHET)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt xslt/xhtml-merge.xslt makefile social-metadata.xml authors.xml components inlinecss
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam collection "$*" --stringparam DNT 1 xslt/xhtml-style-ef.gy.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam DNT 1 xslt/xhtml-navigation.xslt - |\
-		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-post-process.xslt - > $@
+		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-post-process.xslt - |\
+		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-merge.xslt - > $@
 
-$(CACHET)/%.nodnt.xhtml: $(CACHET)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt makefile social-metadata.xml authors.xml components inlinecss
+$(CACHET)/%.nodnt.xhtml: $(CACHET)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt xslt/xhtml-merge.xslt makefile social-metadata.xml authors.xml components inlinecss
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam collection "$*" --stringparam DNT 0 xslt/xhtml-style-ef.gy.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam DNT 0 xslt/xhtml-navigation.xslt - |\
-		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-post-process.xslt - > $@
+		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-post-process.xslt - |\
+		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-merge.xslt - > $@
 
 $(CACHET)/%.html: $(CACHET)/%.xhtml xslt/html-post-process.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/html-post-process.xslt $< > $@
@@ -259,7 +263,9 @@ $(CACHE)/css/%.css: css/%.css $(CACHE)/css/.volatile makefile
 	cssmin < $< | sed -r -e 's/calc\(([0-9%em]+)\+([0-9%em]+)\)/calc(\1 + \2)/' > $@
 
 $(CACHE)/css/%.css.xml: $(CACHE)/css/%.css makefile
-	echo "<style xmlns='http://www.w3.org/1999/xhtml'><![CDATA[$$(cat $<)]]></style>" > $@
+	echo "<?xml version='1.0' encoding='utf-8'?><style xmlns='http://www.w3.org/1999/xhtml' type='text/css'><![CDATA[" > $@
+	xargs echo < $< >> $@
+	echo "]]></style>" >> $@
 
 # global navigation index
 $(CACHE)/index.xml: $(CACHEO)/everything.atom xslt/index-transcode-atom.xslt makefile $(CACHE)/.volatile
