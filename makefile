@@ -80,7 +80,6 @@ XSLTPROCCACHETARGS:=--novalid --stringparam baseURI "http://$(HIDDENSERVICE)" --
 XSLTPROCARGS:=$(XSLTPROCCACHEOARGS) --param licence "document('$$(pwd)/$(BUILD)/licence.xml')" --stringparam builddir $(BUILD)
 
 # files to be downloaded
-CSSDOWNLOADS:=css/highlight.css
 JSDOWNLOADS:=js/disqus-embed.js js/highlight.js
 
 # don't delete intermediary files
@@ -94,7 +93,7 @@ run: run-fortune
 clean:
 	rm -f $(DATABASES) $(INDICES); true
 	rm -rf $(BUILDTMP) $(BUILD)/*; true
-	rm -f $(CSSDOWNLOADS) $(JSDOWNLOADS)
+	rm -f css/*+*.css $(JSDOWNLOADS)
 
 components: svgs csss jss pngs
 
@@ -112,7 +111,7 @@ mobis: $(MOBIESC)
 epubs: $(EPUBESC)
 pngs: $(PNGESC)
 
-csss: css/ef.gy.minified.css css/ef.gy+highlight.minified.css $(CSSDOWNLOADS)
+csss: css/ef.gy+highlight.css
 jss: $(JSDOWNLOADS) js/highlight.js js/highlight+disqus-embed.js js/jquery.js
 
 install: install-pdf install-mobi install-epub
@@ -255,6 +254,9 @@ $(CACHE)/png/%.png: png/%.png $(CACHE)/png/.volatile makefile
 $(CACHE)/css/%.css: css/%.css $(CACHE)/css/.volatile makefile
 	cssmin < $< | sed -r -e 's/calc\(([0-9%em]+)\+([0-9%em]+)\)/calc(\1 + \2)/' > $@
 
+$(CACHE)/css/%.inline.xml: css/%.css makefile
+	echo "<style xmlns='http://www.w3.org/1999/xhtml'><![CDATA[$$(cat $<)]]></style>" > $@
+
 # global navigation index
 $(CACHE)/index.xml: $(CACHEO)/everything.atom xslt/index-transcode-atom.xslt makefile $(CACHE)/.volatile
 	$(XSLTPROC) $(XSLTPROCARGS) xslt/index-transcode-atom.xslt $< > $@
@@ -315,12 +317,6 @@ css/highlight.css: $(THIRDPARTY)/highlight.js/src/styles/default.css
 
 css/ef.gy+highlight.css: css/ef.gy.css css/highlight.css
 	cat $^ > $@
-
-css/%.minified.css: css/%.css
-	cssmin < $< | sed -r -e 's/calc\(([0-9%em]+)\+([0-9%em]+)\)/calc(\1 + \2)/' > $@
-
-css/%.inline.xml: css/%.minified.css
-	echo "<style xmlns='http://www.w3.org/1999/xhtml'><![CDATA[$$(cat $<)]]></style>" > $@
 
 # .volatile files
 $(BUILDD):
