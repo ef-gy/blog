@@ -273,7 +273,7 @@ $(THIRDPARTY)/jquery/.git/HEAD: $(THIRDPARTY)/.volatile
 
 # $(THIRDPARTY) module builds
 $(THIRDPARTY)/highlight.js/build/highlight.pack.js: $(THIRDPARTY)/highlight.js/.git/HEAD
-	cd $(THIRDPARTY)/highlight.js && python3 tools/build.py
+	cd $(THIRDPARTY)/highlight.js && python3 tools/build.py :common x86asm
 
 $(THIRDPARTY)/jquery/dist/jquery.js $(THIRDPARTY)/jquery/dist/jquery.min.js: $(THIRDPARTY)/jquery/.git/HEAD
 	cd $(THIRDPARTY)/jquery && npm run build
@@ -284,7 +284,7 @@ js/jquery.js: $(THIRDPARTY)/jquery/dist/jquery.min.js
 
 # download remote JavaScript files
 js/disqus-embed.js:
-	$(CURL) https://go.disqus.com/embed.js -o $@
+	$(CURL) -L https://go.disqus.com/embed.js -o $@
 
 js/highlight.js: $(THIRDPARTY)/highlight.js/build/highlight.pack.js js/highlight-setup.js
 	cat $^ >> $@
