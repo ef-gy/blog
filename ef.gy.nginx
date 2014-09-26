@@ -174,33 +174,35 @@ server {
         error_page 403 /source-code;
 	}
 
-	location /css {
-		try_files $uri.minified.css $uri.css $uri =404;
-
-                expires 1w;
-                add_header Pragma public;
-                add_header Cache-Control "public";
-        add_header Vary "Accept-Encoding";
-	}
-
-	location /png {
-		try_files $uri.png $uri =404;
-
-                expires 1w;
-                add_header Pragma public;
-                add_header Cache-Control "public";
-        add_header Vary "Accept-Encoding";
-	}
-
-	location /jpeg {
+    location /css {
         root $documentRoot/.cache;
-		try_files $uri.jpeg $uri =404;
+        try_files $uri.css =404;
 
-                expires 1w;
-                add_header Pragma public;
-                add_header Cache-Control "public";
+        expires 1w;
+        add_header Pragma public;
+        add_header Cache-Control "public";
         add_header Vary "Accept-Encoding";
-	}
+    }
+
+    location /png {
+        root $documentRoot/.cache;
+        try_files $uri.png =404;
+
+        expires 1w;
+        add_header Pragma public;
+        add_header Cache-Control "public";
+        add_header Vary "Accept-Encoding";
+    }
+
+    location /jpeg {
+        root $documentRoot/.cache;
+        try_files $uri.jpeg =404;
+
+        expires 1w;
+        add_header Pragma public;
+        add_header Cache-Control "public";
+        add_header Vary "Accept-Encoding";
+    }
 
 	location /pdf {
 		try_files $uri.pdf $uri =404;

@@ -145,6 +145,10 @@ $(CACHE)/png/.volatile: $(CACHE)/.volatile
 	mkdir -p $(CACHE)/png || true
 	touch $@
 
+$(CACHE)/css/.volatile: $(CACHE)/.volatile
+	mkdir -p $(CACHE)/css || true
+	touch $@
+
 CXHTMLS:=$(notdir $(wildcard *.xhtml))
 ATOMS:=$(notdir $(wildcard *.atom))
 RSSS:=$(addsuffix .rss,$(basename $(ATOMS)))
@@ -154,6 +158,7 @@ DXHTMLS:=$(addsuffix .dnt.xhtml,$(basename $(CEXHTMLS))) $(addsuffix .nodnt.xhtm
 DHTMLS:=$(addsuffix .html,$(basename $(DXHTMLS)))
 JPEGS:=$(notdir $(addsuffix .jpeg,$(basename $(wildcard */*.jpg) $(wildcard */*.jpeg))))
 DPNGS:=$(notdir $(addsuffix .png,$(basename $(wildcard */*.png))))
+CSSS:=$(notdir $(addsuffix .css,$(basename $(wildcard css/*.css))))
 
 ATOMCACHE:=$(addprefix $(CACHEO)/,$(ATOMS)) $(addprefix $(CACHET)/,$(ATOMS))
 RSSCACHE:=$(addprefix $(CACHEO)/,$(RSSS)) $(addprefix $(CACHET)/,$(RSSS))
@@ -162,8 +167,9 @@ XHTMLCACHE:=$(addprefix $(CACHEO)/,$(DXHTMLS)) $(addprefix $(CACHET)/,$(DXHTMLS)
 HTMLCACHE:=$(addprefix $(CACHEO)/,$(DHTMLS)) $(addprefix $(CACHET)/,$(DHTMLS))
 JPEGCACHE:=$(addprefix $(CACHE)/jpeg/,$(JPEGS))
 PNGCACHE:=$(addprefix $(CACHE)/png/,$(DPNGS))
+CSSCACHE:=$(addprefix $(CACHE)/css/,$(CSSS))
 
-GZIPCACHE:=$(addsuffix .gz,$(ATOMCACHE) $(RSSCACHE) $(DOCBOOKCACHE) $(XHTMLCACHE) $(HTMLCACHE) $(JPEGCACHE) $(PNGCACHE))
+GZIPCACHE:=$(addsuffix .gz,$(ATOMCACHE) $(RSSCACHE) $(DOCBOOKCACHE) $(XHTMLCACHE) $(HTMLCACHE) $(JPEGCACHE) $(PNGCACHE) $(CSSCACHE))
 
 $(CACHEO)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-pre-process.xslt $< > $@
@@ -246,6 +252,9 @@ $(CACHE)/jpeg/%.jpeg: jpeg/%.jpg $(CACHE)/jpeg/.volatile makefile
 $(CACHE)/png/%.png: png/%.png $(CACHE)/png/.volatile makefile
 	convert "$<" -resize 921600@\> -strip "$@"
 
+$(CACHE)/css/%.css: css/%.css $(CACHE)/css/.volatile makefile
+	cssmin < $< | sed -r -e 's/calc\(([0-9%em]+)\+([0-9%em]+)\)/calc(\1 + \2)/' > $@
+
 # global navigation index
 $(CACHE)/index.xml: $(CACHEO)/everything.atom xslt/index-transcode-atom.xslt makefile $(CACHE)/.volatile
 	$(XSLTPROC) $(XSLTPROCARGS) xslt/index-transcode-atom.xslt $< > $@
@@ -257,11 +266,12 @@ rsscache: $(RSSCACHE)
 docbookcache: $(DOCBOOKCACHE)
 jpegcache: $(JPEGCACHE)
 pngcache: $(PNGCACHE)
+csscache: $(CSSCACHE)
 
-cache: xhtmlcache atomcache rsscache docbookcache htmlcache jpegcache pngcache
+cache: xhtmlcache atomcache rsscache docbookcache htmlcache jpegcache pngcache csscache
 
 $(CACHE)/%.gz: $(CACHE)/%
-	gzip -kn9 $<
+	gzip -knf9 $<
 
 zip: $(GZIPCACHE)
 
