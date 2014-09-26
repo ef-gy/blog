@@ -74,6 +74,8 @@ server {
     gzip_proxied    expired no-cache no-store private auth;
     gzip_types      text/plain application/xml text/css text/html application/xhtml+xml application/javascript text/javascript application/x-javascript;
 
+    gzip_static     on;
+
     add_header Vary "Accept";
     add_header Vary "Accept-Encoding";
     add_header DNT $http_dnt;

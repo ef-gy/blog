@@ -163,6 +163,8 @@ HTMLCACHE:=$(addprefix $(CACHEO)/,$(DHTMLS)) $(addprefix $(CACHET)/,$(DHTMLS))
 JPEGCACHE:=$(addprefix $(CACHE)/jpeg/,$(JPEGS))
 PNGCACHE:=$(addprefix $(CACHE)/png/,$(DPNGS))
 
+GZIPCACHE:=$(addsuffix .gz,$(ATOMCACHE) $(RSSCACHE) $(DOCBOOKCACHE) $(XHTMLCACHE) $(HTMLCACHE) $(JPEGCACHE) $(PNGCACHE))
+
 $(CACHEO)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-pre-process.xslt $< > $@
 
@@ -257,6 +259,11 @@ jpegcache: $(JPEGCACHE)
 pngcache: $(PNGCACHE)
 
 cache: xhtmlcache atomcache rsscache docbookcache htmlcache jpegcache pngcache
+
+$(CACHE)/%.gz: $(CACHE)/%
+	gzip -kn9 $<
+
+zip: $(GZIPCACHE)
 
 # $(THIRDPARTY) module downloads
 $(THIRDPARTY)/.volatile:
