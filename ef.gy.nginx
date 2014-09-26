@@ -294,11 +294,21 @@ server {
 	location /xhtml {
         alias $documentRoot/.cache/$hostnameproper;
 		try_files $uri.$dnt.xhtml $uri.xhtml $uri =404;
+
+        expires 3h;
+        add_header Pragma public;
+        add_header Cache-Control "public";
+        add_header Vary "Accept-Encoding";
 	}
 
 	location /html {
         alias $documentRoot/.cache/$hostnameproper;
 		try_files $uri.$dnt.html $uri.html $uri.$dnt.xhtml $uri.xhtml $uri =404;
+
+        expires 3h;
+        add_header Pragma public;
+        add_header Cache-Control "public";
+        add_header Vary "Accept-Encoding";
 	}
 
     location /documentation/ {

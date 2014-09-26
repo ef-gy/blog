@@ -95,7 +95,7 @@ clean:
 	rm -rf $(BUILDTMP) $(BUILD)/*; true
 	rm -f css/*+*.css $(JSDOWNLOADS)
 
-components: svgs csss jss pngs
+components: svgs csss jss pngs inlinecss inlineimg
 
 scrub: clean
 	rm -rf $(BUILD)
@@ -168,11 +168,13 @@ JPEGCACHE:=$(addprefix $(CACHE)/jpeg/,$(JPEGS))
 PNGCACHE:=$(addprefix $(CACHE)/png/,$(DPNGS))
 CSSCACHE:=$(addprefix $(CACHE)/css/,$(CSSS))
 
+INLINEIMG:=$(addsuffix .base64.xml,$(JPEGCACHE) $(PNGCACHE))
 INLINECSS:=$(addsuffix .xml,$(CSSCACHE))
 
 GZIPCACHE:=$(addsuffix .gz,$(ATOMCACHE) $(RSSCACHE) $(DOCBOOKCACHE) $(XHTMLCACHE) $(HTMLCACHE) $(JPEGCACHE) $(PNGCACHE) $(CSSCACHE))
 
 inlinecss: $(INLINECSS)
+inlineimg: $(INLINEIMG)
 
 $(CACHEO)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-pre-process.xslt $< > $@
@@ -189,13 +191,13 @@ $(CACHEO)/%.rss: $(CACHEO)/%.atom xslt/rss-transcode-atom.xslt makefile
 $(CACHEO)/%.xhtml: $(CACHEO)/%.atom xslt/xhtml-transcode-atom.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-transcode-atom.xslt $< > $@
 
-$(CACHEO)/%.dnt.xhtml: $(CACHEO)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt xslt/xhtml-merge.xslt makefile social-metadata.xml authors.xml components inlinecss
+$(CACHEO)/%.dnt.xhtml: $(CACHEO)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt xslt/xhtml-merge.xslt makefile social-metadata.xml authors.xml components
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam collection "$*" --stringparam DNT 1 xslt/xhtml-style-ef.gy.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam DNT 1 xslt/xhtml-navigation.xslt - |\
 		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-post-process.xslt - |\
 		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-merge.xslt - > $@
 
-$(CACHEO)/%.nodnt.xhtml: $(CACHEO)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt xslt/xhtml-merge.xslt makefile social-metadata.xml authors.xml components inlinecss
+$(CACHEO)/%.nodnt.xhtml: $(CACHEO)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt xslt/xhtml-merge.xslt makefile social-metadata.xml authors.xml components
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam collection "$*" --stringparam DNT 0 xslt/xhtml-style-ef.gy.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam DNT 0 xslt/xhtml-navigation.xslt - |\
 		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-post-process.xslt - |\
@@ -227,13 +229,13 @@ $(CACHET)/%.rss: $(CACHET)/%.atom xslt/rss-transcode-atom.xslt makefile
 $(CACHET)/%.xhtml: $(CACHET)/%.atom xslt/xhtml-transcode-atom.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-transcode-atom.xslt $< > $@
 
-$(CACHET)/%.dnt.xhtml: $(CACHET)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt xslt/xhtml-merge.xslt makefile social-metadata.xml authors.xml components inlinecss
+$(CACHET)/%.dnt.xhtml: $(CACHET)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt xslt/xhtml-merge.xslt makefile social-metadata.xml authors.xml components
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam collection "$*" --stringparam DNT 1 xslt/xhtml-style-ef.gy.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam DNT 1 xslt/xhtml-navigation.xslt - |\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-post-process.xslt - |\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-merge.xslt - > $@
 
-$(CACHET)/%.nodnt.xhtml: $(CACHET)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt xslt/xhtml-merge.xslt makefile social-metadata.xml authors.xml components inlinecss
+$(CACHET)/%.nodnt.xhtml: $(CACHET)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt xslt/xhtml-merge.xslt makefile social-metadata.xml authors.xml components
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam collection "$*" --stringparam DNT 0 xslt/xhtml-style-ef.gy.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam DNT 0 xslt/xhtml-navigation.xslt - |\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-post-process.xslt - |\
@@ -284,6 +286,15 @@ cache: xhtmlcache atomcache rsscache docbookcache htmlcache jpegcache pngcache c
 
 $(CACHE)/%.gz: $(CACHE)/%
 	gzip -knf9 $<
+
+$(CACHE)/%.base64: $(CACHE)/%
+	openssl base64 -A -in $< -out $@
+
+$(CACHE)/jpeg/%.base64.xml: $(CACHE)/jpeg/%.base64
+	echo "<?xml version='1.0' encoding='utf-8'?><img xmlns='http://www.w3.org/1999/xhtml' src='$$(cat $<)'/>" > $@
+
+$(CACHE)/png/%.base64.xml: $(CACHE)/png/%.base64
+	echo "<?xml version='1.0' encoding='utf-8'?><img xmlns='http://www.w3.org/1999/xhtml' src='$$(cat $<)'/>" > $@
 
 zip: $(GZIPCACHE)
 
