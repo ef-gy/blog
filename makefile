@@ -138,6 +138,7 @@ DHTMLS:=$(addsuffix .html,$(basename $(DXHTMLS)))
 JPEGS:=$(notdir $(addsuffix .jpeg,$(basename $(wildcard */*.jpg) $(wildcard */*.jpeg))))
 DPNGS:=$(notdir $(addsuffix .png,$(basename $(wildcard */*.png))))
 CSSS:=$(notdir $(addsuffix .css,$(basename $(wildcard css/*.css))))
+DJSS:=$(notdir $(addsuffix .js,$(basename $(wildcard js/*.js))))
 
 ATOMCACHE:=$(addprefix $(CACHEO)/,$(ATOMS)) $(addprefix $(CACHET)/,$(ATOMS))
 RSSCACHE:=$(addprefix $(CACHEO)/,$(RSSS)) $(addprefix $(CACHET)/,$(RSSS))
@@ -147,11 +148,12 @@ HTMLCACHE:=$(addprefix $(CACHEO)/,$(DHTMLS)) $(addprefix $(CACHET)/,$(DHTMLS))
 JPEGCACHE:=$(addprefix $(CACHE)/jpeg/,$(JPEGS))
 PNGCACHE:=$(addprefix $(CACHE)/png/,$(DPNGS))
 CSSCACHE:=$(addprefix $(CACHE)/css/,$(CSSS))
+JSCACHE:=$(addprefix $(CACHE)/js/,$(DJSS))
 
 INLINEIMG:=$(addsuffix .base64.xml,$(JPEGCACHE) $(PNGCACHE))
 INLINECSS:=$(addsuffix .xml,$(CSSCACHE))
 
-GZIPCACHE:=$(addsuffix .gz,$(ATOMCACHE) $(RSSCACHE) $(DOCBOOKCACHE) $(XHTMLCACHE) $(HTMLCACHE) $(JPEGCACHE) $(PNGCACHE) $(CSSCACHE))
+GZIPCACHE:=$(addsuffix .gz,$(ATOMCACHE) $(RSSCACHE) $(DOCBOOKCACHE) $(XHTMLCACHE) $(HTMLCACHE) $(JPEGCACHE) $(PNGCACHE) $(CSSCACHE) $(JSCACHE))
 
 inlinecss: $(INLINECSS)
 inlineimg: $(INLINEIMG)
@@ -249,6 +251,9 @@ $(CACHE)/css/%.css.xml: $(CACHE)/css/%.css makefile
 	cat $< >> $@
 	echo "]]></style>" >> $@
 
+$(CACHE)/js/%.js: js/%.js $(CACHE)/js/.volatile makefile
+	cat $< > $@
+
 # global navigation index
 $(CACHE)/index.xml: $(CACHEO)/everything.atom xslt/index-transcode-atom.xslt makefile $(CACHE)/.volatile
 	$(XSLTPROC) $(XSLTPROCARGS) xslt/index-transcode-atom.xslt $< > $@
@@ -261,8 +266,9 @@ docbookcache: $(DOCBOOKCACHE)
 jpegcache: $(JPEGCACHE)
 pngcache: $(PNGCACHE)
 csscache: $(CSSCACHE)
+jscache: $(JSCACHE)
 
-cache: xhtmlcache atomcache rsscache docbookcache htmlcache jpegcache pngcache csscache
+cache: xhtmlcache atomcache rsscache docbookcache htmlcache jpegcache pngcache csscache jscache
 
 $(CACHE)/%.gz: $(CACHE)/%
 	gzip -knf9 $<
