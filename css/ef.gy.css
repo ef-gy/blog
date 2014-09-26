@@ -9,27 +9,32 @@ html
 
 html#phone
 {
-    background: url(/jpeg/corded-phone) no-repeat center center fixed;
+    background: url(/jpeg/corded-phone) #000 no-repeat center center fixed;
+    background-size: cover;
 }
 
 html#server-grill
 {
     background: url(/jpeg/7389234452_a0d7b0fd34_o) #000 no-repeat center center fixed;
+    background-size: cover;
 }
 
 html#unicorn-noms
 {
     background: url(/jpeg/unicorn-noms) #3c160b no-repeat center center fixed;
+    background-size: cover;
 }
 
 html#phylactery-session
 {
     background: url(/png/phylactery-corporation-names-session) #000 no-repeat center center fixed;
+    background-size: cover;
 }
 
 html#hypercube
 {
     background: url(/svg/4-cube-black-white) #fff no-repeat center center fixed;
+    background-size: cover;
 }
 
 body

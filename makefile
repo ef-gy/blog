@@ -75,8 +75,8 @@ OPFXHTMLESC:=$(subst :,\:,$(OPFXHTMLS))
 
 BUILDD:=$(BUILD)/.volatile
 DATABASES:=life.sqlite3
-XSLTPROCCACHEOARGS:=--nonet --stringparam baseURI "https://$(DOMAIN)" --stringparam documentRoot "$$(pwd)" --stringparam disqusShortname "$(DISQUS)"
-XSLTPROCCACHETARGS:=--nonet --stringparam baseURI "http://$(HIDDENSERVICE)" --stringparam documentRoot "$$(pwd)" --stringparam disqusShortname "$(DISQUS)"
+XSLTPROCCACHEOARGS:=--novalid --stringparam baseURI "https://$(DOMAIN)" --stringparam documentRoot "$$(pwd)" --stringparam disqusShortname "$(DISQUS)"
+XSLTPROCCACHETARGS:=--novalid --stringparam baseURI "http://$(HIDDENSERVICE)" --stringparam documentRoot "$$(pwd)" --stringparam disqusShortname "$(DISQUS)"
 XSLTPROCARGS:=$(XSLTPROCCACHEOARGS) --param licence "document('$$(pwd)/$(BUILD)/licence.xml')" --stringparam builddir $(BUILD)
 
 # files to be downloaded
