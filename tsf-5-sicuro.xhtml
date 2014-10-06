@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>The Source Fantastic: Sicuro</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="The Source Fantastic, the fifth: introducing Sicuro, which lets you execute untrusted Ruby code without having to worry about it doing nasty things you don't want them to do."/>
+<meta name="date" content="2014-10-06T00:00:00Z" />
+<meta name="mtime" content="2014-10-06T00:00:00Z" />
+<meta name="category" content="The Source Fantastic" />
+<meta name="unix:name" content="tsf-5-sicuro" />
+</head>
+<body>
+<p>Whoo, it's the fifth installment of <em>The Source Fantastic</em>! Time to get a little more high-level, lest you get the wrong impression. Ever felt the need to let users execute a script, but didn't entirely trust them not to break things? If your script is in Ruby, that's exactly what <a href="http://marie.codes/">Marie Markwell</a>'s <a href="https://github.com/duckinator/sicuro">sicuro</a> does, by providing a safe ruby execution environment - without the need to hassle with setting up chroots, VMs or containers or similar.</p>
+<p>Before we begin, let's make sure you can play along at home. Install the package using Ruby's <em>gem</em> command:</p>
+<pre><code># gem install sicuro</code></pre>
+<p>This installs a command line tool, called <em>sicuro</em>, which interprets the first argument as a Ruby script - and an optional second argument as the intended result. Here's an example...</p>
+<pre><code>$ sicuro 'print 1+1'  
+2
+$ sicuro 'print 1+1' 2
+Pass: print 1+1
+$ sicuro 'print 1+1' 3
+Fail: print 1+1</code></pre>
+<p>Next to this command line interface, sicuro also provides some code bindings so you can use it from your own Ruby programmes. <a href="https://github.com/duckinator/sicuro">See the project's github for a quick explanation of how to use that</a>.</p>
+<p>Since this is a series of articles on <em>sources</em>, we now must go deeper. This CLI programme seems to be as good a place as any to start, and it looks like this:</p>
+<pre><code>#!/usr/bin/env ruby
+
+begin
+  require 'sicuro'
+rescue LoadError
+  require 'rubygems'
+  require 'sicuro'
+end
+
+if ['--help', '-h'].include?(ARGV[0]) || ARGV.length == 0
+  puts "Usage: #{$0} CODE [EXPECTED]"
+  puts "If EXPECTED is passed, it passes the args to Sicuro.assert,"
+  puts "otherwise it passes CODE to Sicuro.eval."
+  # TODO: Better --help
+elsif ARGV.length > 1
+  ret = Sicuro.assert(ARGV[0], ARGV[1])
+  if ret
+    puts "Pass: #{ARGV[0]}"
+  else
+    puts "Fail: #{ARGV[0]}"
+  end
+  exit (ret ? 0 : 1)
+else
+  puts Sicuro.eval(ARGV[0]).to_s
+end</code></pre>
+<p>Admittedly, the <em>--help</em> output is indeed a bit sparse, but no matter. As we can see, there's two main entry points: <em>Sicuro.assert()</em> and <em>Sicuro.eval()</em>. It's a fair guess that <em>Sicuro.assert()</em> calls the <em>eval()</em> function as well, so let's try to find the latter first. With minimal digging we find that the <em>Sicuro</em> class is defined in <em>lib/sicuro/base.rb</em>, and fortunately that contains quite a bit of commentary. In particular, we can also see that the library allows us to define time and memory limits, which should definitely come in handy in quite a few situations. The actual <em>eval()</em> itself is quite straightforward, so let's have a look:</p>
+<pre><code><![CDATA[  # Runs the specified code, returns STDOUT and STDERR as a single string.
+  #
+  # `code`: the code to run.
+  #
+  # `new_stdin`:  a StringIO that is treated as $stdin.
+  # `new_stdout`: a StringIO that is treated as $stdout.
+  # `new_stderr`: a StringIO that is treated as $stderr.
+  def eval(code, new_stdin = nil, new_stdout = nil, new_stderr = nil, lib_dirs = [])
+
+    new_stdin  ||= StringIO.new
+    new_stdout ||= StringIO.new
+    new_stderr ||= StringIO.new
+
+    i, o, e, t, pid = nil
+    out_reader, err_reader = nil
+
+    start = Time.now
+
+    Timeout.timeout(@timelimit) do
+      i, o, e, t = Open3.popen3(RUBY_USED, '-e', prefix_code(code, lib_dirs))
+      pid = t.pid
+
+      out_reader = Thread.new do
+        ret = ''
+        until o.eof?
+          s = o.read(1)
+          ret += s
+          new_stdout.write s
+        end
+        ret
+      end
+
+      err_reader = Thread.new do
+        ret = ''
+        until e.eof?
+          s = e.read(1)
+          ret += s
+          new_stderr.write s
+        end
+        ret
+      end
+
+      i.close
+      out_reader.join
+      err_reader.join
+    end
+
+    duration = Time.now - start
+
+    # We aim to be API-compatible with eval.so, so we want to return the
+    # wall time as milliseconds. Time-Time yields seconds, so multiply by 1000.
+    # We then call .to_i because we want an int, not a float.
+    wall_time = (duration * 1000).to_i
+
+    stdout = out_reader.value
+    stderr = err_reader.value
+
+    Eval.new(code, stdout, stderr, wall_time, pid)
+  rescue Timeout::Error
+    error = "Timeout::Error: Code took longer than %i seconds to terminate." %
+                @timelimit
+
+    if Sicuro.process_running?(pid)
+      Process.kill('KILL', pid) rescue nil
+    end
+
+    Eval.new(code, '', error, wall_time, pid)
+  end
+]]></code></pre>
+<p>The <em>Open3.popen3()</em> call is used to create a new interpreter instance, and to grab the output of that as well. By wrapping the subprocess handling in <em>Timeout.timeout()</em> the code ensures that the subprocess does not exceed the maximum time we want to give the script to run. If it would, then it would get shot down with a <em>SIGKILL</em>. It also allows for the time it took to run the script to be returned along with the script's output. Speaking of this output, this is represented by the <em>Sicuro.Eval</em> class, which in turn is defined in <em>lib/sicuro/internal/eval.rb</em>. That class nicely wraps the stdout/stderr, a copy of the code and the aforementioned running time of the code. It also lets you turn that into a simple JSON object if you're feeling like plugging these results into your favourite JavaScript interpreter.</p>
+<p>But back to the <em>eval()</em>. On its own this approach would not guard us against anyone running malicious Ruby code just yet. That's why the code that is actually passed to the new interpreter is prefixed by some code in <em>prefix_code()</em> that, in turn, runs the code through the <em>safe_eval()</em> function, which looks like this:</p>
+<pre><code><![CDATA[  # Used internally by Sicuro.eval.
+  # This does not enforce the time limit.
+  # TODO: Since safe_eval itself cannot be tested, separate out what can.
+  def safe_eval(code, lib_dirs)
+    file = File.join(Standalone::ENV['HOME'], 'code.rb')
+    Standalone::DummyFS.add_file(file, code)
+
+    lib_dirs.each do |dir|
+      Standalone::DummyFS.add_real_directory(dir, '*.rb', true)
+    end
+
+    result = nil
+    old_stdout = $stdout
+    old_stderr = $stderr
+    old_stdin = $stdin
+
+    # RAM limit
+    Process.setrlimit(Process::RLIMIT_AS, @memlimit * 1024 * 1024) unless @memlimit.zero?
+
+    # CPU time limit. 5s means 5s of CPU time.
+    Process.setrlimit(Process::RLIMIT_CPU, @timelimit) unless @timelimit.zero?
+    ::Kernel.trap(:XCPU) do # This should be triggered when you hit RLIMIT_CPU.
+      raise Timeout::Error
+      exit!
+    end
+
+    ::Standalone.enable!
+    ::Sicuro::Runtime::Methods.replace_all!
+
+    %w[constants methods dummyfs].each do |file|
+      require "sicuro/runtime/#{file}"
+    end
+
+    unsafe_constants = Object.constants - $TRUSTED_CONSTANTS
+
+    unsafe_constants.each do |x|
+      Object.instance_eval { remove_const x }
+    end
+
+    Object.constants.each do |constant|
+      next unless Object.const_defined?(constant)
+
+      next if [:NIL, :TRUE, :FALSE, :NilClass].include?(constant)
+
+      trusted = $TRUSTED_METHODS[constant] || []
+
+      const = Object.const_get(constant)
+      const = const.class unless const.is_a?(Class) || const.is_a?(Module)
+
+      if const.is_a?(Module)
+        const.module_eval do
+          (const.methods + const.private_methods - $TRUSTED_METHODS_ALL - trusted).each do |meth|
+            # FIXME: This is a hack because we need STDIN (the IO class) to be
+            #        left alone for eval() to work.
+            next if [:STDIN, :STDOUT, :STDERR].include?(constant)
+
+            m = meth.to_sym.inspect
+
+            eval("public #{m}; undef #{m}")
+          end
+        end
+      else
+        const.instance_eval do
+          (const.methods + const.private_methods - $TRUSTED_METHODS_ALL - trusted).each do |meth|
+            next if [:STDIN, :STDOUT, :STDERR].include?(constant)
+
+            m = meth.to_sym.inspect
+
+            #next unless method_defined?('define_method')
+            #define_method(meth) {}
+
+            #remove_method(meth) rescue nil
+            eval("public #{m}; undef #{m}")
+            #puts "Removing #{constant}.#{meth}"
+            #undef_method meth if respond_to?(meth)
+          end
+        end
+      end
+    end
+
+    (global_variables - $TRUSTED_GLOBALS).each do |var|
+      ::Kernel.eval("#{var.to_s}.freeze") 
+    end
+
+    $stdout = StringIO.new
+    $stderr = StringIO.new
+    $stdin = StringIO.new
+
+    Object.instance_eval do
+      [:STDOUT, :STDERR, :STDIN].each { |x| remove_const x }
+    end
+    Object.const_set(:STDOUT, $stdout)
+    Object.const_set(:STDERR, $stderr)
+    Object.const_set(:STDIN, $stdin)
+
+    $done = false
+
+    reader = lambda do |from, to|
+      Thread.new do
+        ret = ''
+        pos = 0
+
+        from.rewind
+
+        loop do
+          s = from.read
+          ret += s
+          pos += s.length
+
+          to.write s
+          to.flush
+
+          from.pos = pos
+
+          break if $done
+        end
+
+        s = from.read
+        ret += s
+        to.write s
+
+        ret
+      end
+    end
+
+    out_reader = reader.call($stdout, old_stdout)
+
+    err_reader = reader.call($stderr, old_stderr)
+
+    require 'sicuro/runtime/whitelist'
+    result = ::Kernel.eval(code, TOPLEVEL_BINDING, file)
+    $done = true
+
+    out_reader.join
+    err_reader.join
+  rescue Exception => e
+    old_stderr.puts "#{e.class}: #{e.message}"
+    old_stderr.puts e.backtrace.join("\n")
+  end
+]]></code></pre>
+<p>This is by far the longest function. What it does is, it changes the (child interpreter) process' RAM and CPU time limits according to the settings set in the constructor. Then it uses some... well... magic, to only whitelist certain functions for the safe interpreter, which prevents bad things from happening. Finally, with the whitelist in effect, the code is then executed and its output is fed back to the original interpreter to grab. The code to do that is also fairly straightforward.</p>
+<p>It's definitely cool to see how 'easy' this is in Ruby - and how readable the result was. Coming from someone who proclaimed Ruby as a write-only language (me ;)), I guess that actually means quite a bit. I just hope I'll never have to see another bit of <em>Rails</em> ever again, either way, regardless of how cool <em>Ruby</em> seems to be :).</p>
+<p>I hope you enjoyed this issue of <em>The Source Fantastic</em>, and I hope you'll be back for Nadja's next issue on the 20th of October! Enjoy your week, and remember to listen to what the dormouse said! ;)</p>
+</body>
+</html>
