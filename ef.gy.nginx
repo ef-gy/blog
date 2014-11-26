@@ -128,6 +128,8 @@ server {
     rewrite ^/documentation/metaquest/?$ /documentation/metaquest/index.xhtml redirect;
     rewrite ^/documentation/verthandi/?$ /documentation/verthandi/index.xhtml redirect;
 
+    rewrite ^/webgl/topologic(-web)?.x?html$ https://dee.pe/r permanent;
+
     # there's no more /target@collection for archive content anymore
     rewrite ^/([^@/]+)@([^@/]+)$ $2 permanent;
 
