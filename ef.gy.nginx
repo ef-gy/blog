@@ -47,10 +47,6 @@ server {
 
     server_name *.ef.gy;
 
-# temporary to fix some bots that caught this name, while that app gets set up
-    server_name verthandi.org;
-    server_name *.verthandi.org;
-
     return 301 https://ef.gy$request_uri;
 
     access_log /var/log/nginx/$scheme-$dnt-$http_host.access.log;
