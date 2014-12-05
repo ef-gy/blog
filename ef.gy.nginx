@@ -25,6 +25,11 @@ map $http_host $hostnameproper {
   ~onion$ "vturtipc7vmz6xjy.onion";
 }
 
+map $http_host $sts {
+  default "max-age=10886400; includeSubDomains; preload";
+  ~onion$ "";
+}
+
 map $http_dnt $dnt
 {
   default "nodnt";
@@ -78,12 +83,14 @@ server {
 
     add_header Vary "Accept";
     add_header Vary "Accept-Encoding";
+    add_header Content-Security-Policy "default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.disquscdn.com ajax.googleapis.com cdnjs.cloudflare.com efgy.disqus.com go.disqus.com cdn.mathjax.org apis.google.com code.jquery.com *.google.com *.gstatic.com; frame-src 'self' disqus.com www.youtube.com *.google.com; img-src 'self' 'unsafe-inline' ssl.gstatic.com *.disqus.com *.disquscdn.com code.jquery.com data:; font-src 'self' 'unsafe-inline' cdn.mathjax.org data: about:; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com code.jquery.com";
+    add_header Strict-Transport-Security $sts;
     add_header DNT $http_dnt;
+    add_header Pragma public;
+    add_header Cache-Control "public";
 
     charset_types text/html application/xhtml+xml text/xml text/plain text/vnd.wap.wml application/javascript application/rss+xml application/atom+xml;
     charset utf-8;
-
-    add_header Content-Security-Policy "default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.disquscdn.com ajax.googleapis.com cdnjs.cloudflare.com efgy.disqus.com go.disqus.com cdn.mathjax.org apis.google.com code.jquery.com *.google.com *.gstatic.com; frame-src 'self' disqus.com www.youtube.com *.google.com; img-src 'self' 'unsafe-inline' ssl.gstatic.com *.disqus.com *.disquscdn.com code.jquery.com data:; font-src 'self' 'unsafe-inline' cdn.mathjax.org data: about:; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com code.jquery.com";
 
     access_log /var/log/nginx/$scheme-$dnt-$http_host.access.log;
 
@@ -181,9 +188,6 @@ server {
         try_files $uri.css =404;
 
         expires 1w;
-        add_header Pragma public;
-        add_header Cache-Control "public";
-        add_header Vary "Accept-Encoding";
     }
 
     location /png {
@@ -191,9 +195,6 @@ server {
         try_files $uri.png =404;
 
         expires 1w;
-        add_header Pragma public;
-        add_header Cache-Control "public";
-        add_header Vary "Accept-Encoding";
     }
 
     location /jpeg {
@@ -201,18 +202,12 @@ server {
         try_files $uri.jpeg =404;
 
         expires 1w;
-        add_header Pragma public;
-        add_header Cache-Control "public";
-        add_header Vary "Accept-Encoding";
     }
 
 	location /pdf {
 		try_files $uri.pdf $uri =404;
 
                 expires 1d;
-                add_header Pragma public;
-                add_header Cache-Control "public";
-        add_header Vary "Accept-Encoding";
 	}
 
 	location /mobi {
@@ -220,9 +215,6 @@ server {
         types { application/x-mobipocket-ebook mobi; }
 
                 expires 1d;
-                add_header Pragma public;
-                add_header Cache-Control "public";
-        add_header Vary "Accept-Encoding";
     }
 
 	location /epub {
@@ -230,9 +222,6 @@ server {
         types { application/epub+zip epub; }
 
                 expires 1d;
-                add_header Pragma public;
-                add_header Cache-Control "public";
-        add_header Vary "Accept-Encoding";
     }
 
 	location /js {
@@ -240,9 +229,6 @@ server {
         try_files $uri.js =404;
 
         expires 1w;
-        add_header Pragma public;
-        add_header Cache-Control "public";
-        add_header Vary "Accept-Encoding";
 	}
 
 	location /atom {
@@ -250,9 +236,6 @@ server {
 		try_files $uri.atom $uri =404;
 
                 expires 1h;
-                add_header Pragma public;
-                add_header Cache-Control "public";
-        add_header Vary "Accept-Encoding";
 	}
 
 	location /rss {
@@ -260,9 +243,6 @@ server {
 		try_files $uri.rss $uri =404;
 
                 expires 1h;
-                add_header Pragma public;
-                add_header Cache-Control "public";
-        add_header Vary "Accept-Encoding";
 	}
 
 	location /docbook {
@@ -270,9 +250,6 @@ server {
 		try_files $uri.docbook $uri =404;
 
                 expires 1h;
-                add_header Pragma public;
-                add_header Cache-Control "public";
-        add_header Vary "Accept-Encoding";
 	}
 
 	location /raw {
@@ -285,13 +262,11 @@ server {
 		try_files $uri.svg $uri =404;
 
 		xslt_stylesheet /srv/http/ef.gy/xslt/svg-style-ef.gy.xslt;
-        add_header Vary "Accept-Encoding";
 	}
 
 	location /rasterised/svg {
                 alias $documentRoot/png/rasterised;
 		try_files $uri.png $uri =404;
-        add_header Vary "Accept-Encoding";
 	}
 
 	location /xhtml {
@@ -299,9 +274,6 @@ server {
 		try_files $uri.$dnt.xhtml $uri.xhtml $uri =404;
 
         expires 3h;
-        add_header Pragma public;
-        add_header Cache-Control "public";
-        add_header Vary "Accept-Encoding";
 	}
 
 	location /html {
@@ -309,9 +281,6 @@ server {
 		try_files $uri.$dnt.html $uri.html $uri.$dnt.xhtml $uri.xhtml $uri =404;
 
         expires 3h;
-        add_header Pragma public;
-        add_header Cache-Control "public";
-        add_header Vary "Accept-Encoding";
 	}
 
     location /documentation/ {
