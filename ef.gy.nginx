@@ -246,6 +246,7 @@ server {
 		try_files $uri.docbook $uri =404;
 
                 expires 1h;
+        types { application/docbook+xml docbook; }
 	}
 
 	location /raw {
