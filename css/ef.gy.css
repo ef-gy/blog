@@ -560,33 +560,15 @@ li.twitter
     color: #fff;
 }
 
-li.linkedin
-{
-    background: rgb(0,128,182);
-    color: #fff;
-}
-
 li.facebook
 {
     background: rgb(59,83,154);
     color: #fff;
 }
 
-li.xing
-{
-    background: rgb(0,103,106);
-    color: rgb(168,209,0);
-}
-
 li.googleplus
 {
     background: rgb(210,22,0);
-    color: #fff;
-}
-
-li.stumbleupon
-{
-    background: rgb(235,72,35);
     color: #fff;
 }
 
@@ -599,7 +581,7 @@ ul.share
 ul.share li
 {
     display: inline-block;
-    width: 20%;
+    width: 33.333%;
     margin: 0;
     padding: 0;
     height: 3em;
@@ -754,14 +736,6 @@ ul.share li a:hover span
     {
         background: #fff;
         margin: 0;
-    }
-
-    ul.share li {
-      width: 25%;
-    }
-
-    ul.share li.stumbleupon {
-      display: none;
     }
 }
 
