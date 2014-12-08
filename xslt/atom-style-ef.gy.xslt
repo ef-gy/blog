@@ -57,10 +57,6 @@
     </feed>
   </xsl:template>
 
-  <xsl:template match="/atom:feed/atom:title">
-    <title><xsl:value-of select="$baseURI"/>/ :: <xsl:value-of select="."/></title>
-  </xsl:template>
-
   <xsl:template match="//atom:entry/atom:link[(@rel!='payment') or not(@rel)]/@href">
     <xsl:attribute name="href"><xsl:value-of select="$baseURI"/><xsl:value-of select="."/></xsl:attribute>
   </xsl:template>

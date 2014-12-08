@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:id="projects" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <title>ef.gy</title>
-  <subtitle>Projects</subtitle>
+  <title>efgy</title>
+  <subtitle>awesome projects of awesome</subtitle>
 
   <entry xlink:href="libefgy-4.xhtml" />
   <entry xlink:href="topologic-ios.xhtml" />

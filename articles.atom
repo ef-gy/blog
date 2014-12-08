@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:id="articles" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <title>ef.gy</title>
-  <subtitle>Articles</subtitle>
+  <title>efgy</title>
+  <subtitle>random articles of randomness</subtitle>
 
   <entry xlink:href="report:ssh-noise-august-2014.xhtml" />
   <entry xlink:href="google-analytics-ssh.xhtml" />
