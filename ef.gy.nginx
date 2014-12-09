@@ -79,7 +79,7 @@ server {
 
     add_header Vary "Accept";
     add_header Vary "Accept-Encoding";
-    add_header Content-Security-Policy "default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.disquscdn.com ajax.googleapis.com cdnjs.cloudflare.com efgy.disqus.com go.disqus.com cdn.mathjax.org apis.google.com code.jquery.com *.google.com *.gstatic.com; frame-src 'self' disqus.com www.youtube.com *.google.com; img-src 'self' 'unsafe-inline' ssl.gstatic.com *.disqus.com *.disquscdn.com code.jquery.com data:; font-src 'self' 'unsafe-inline' cdn.mathjax.org data: about:; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com code.jquery.com";
+    add_header Content-Security-Policy "default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.disquscdn.com ajax.googleapis.com cdnjs.cloudflare.com efgy.disqus.com go.disqus.com cdn.mathjax.org apis.google.com code.jquery.com *.google.com *.gstatic.com; frame-src 'self' dee.pe disqus.com www.youtube.com *.google.com; img-src 'self' 'unsafe-inline' ssl.gstatic.com *.disqus.com *.disquscdn.com code.jquery.com data:; font-src 'self' 'unsafe-inline' cdn.mathjax.org data: about:; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com code.jquery.com";
     add_header Strict-Transport-Security $sts;
     add_header DNT $http_dnt;
     add_header Pragma public;
