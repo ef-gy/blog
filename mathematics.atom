@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:id="mathematics" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <title>ef.gy</title>
-  <subtitle>Mathematics</subtitle>
+  <title>efgy</title>
+  <subtitle>On Mathematics</subtitle>
 
   <entry xlink:href="ssd-endurance-revisited.xhtml" />
   <entry xlink:href="mathematical-proofs-101.xhtml" />
