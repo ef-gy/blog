@@ -227,27 +227,18 @@ server {
         expires 1w;
 	}
 
-	location /atom {
-        alias $documentRoot/.cache/$hostnameproper;
-		try_files $uri.atom $uri =404;
+    location ~ /(?<type>atom|rss|docbook)/(?<file>.+) {
+        alias $documentRoot/.cache/$hostnameproper/;
+        try_files $file.$type $file =404;
 
-                expires 1h;
-	}
+        expires 1h;
 
-	location /rss {
-        alias $documentRoot/.cache/$hostnameproper;
-		try_files $uri.rss $uri =404;
-
-                expires 1h;
-	}
-
-	location /docbook {
-        alias $documentRoot/.cache/$hostnameproper;
-		try_files $uri.docbook $uri =404;
-
-                expires 1h;
-        types { application/docbook+xml docbook; }
-	}
+        types {
+            application/docbook+xml docbook;
+            application/atom+xml atom;
+            application/rss+xml rss;
+        }
+    }
 
 	location /raw {
         alias $documentRoot;
