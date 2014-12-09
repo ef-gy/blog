@@ -85,7 +85,7 @@ server {
     add_header Pragma public;
     add_header Cache-Control "public";
 
-    charset_types text/html application/xhtml+xml text/xml text/plain text/vnd.wap.wml application/javascript application/rss+xml application/atom+xml;
+    charset_types text/html application/xhtml+xml text/xml text/plain text/vnd.wap.wml application/javascript application/atom+xml;
     charset utf-8;
 
     access_log /var/log/nginx/$scheme-$dnt-$http_host.access.log;
@@ -132,6 +132,8 @@ server {
     rewrite ^/documentation/verthandi/?$ /documentation/verthandi/index.xhtml redirect;
 
     rewrite ^/webgl/topologic(-web)?.x?html$ https://dee.pe/r permanent;
+
+    rewrite ^/rss/(.+)$ /atom/$1 permanent;
 
     # there's no more /target@collection for archive content anymore
     rewrite ^/([^@/]+)@([^@/]+)$ $2 permanent;
@@ -227,7 +229,7 @@ server {
         expires 1w;
 	}
 
-    location ~ /(?<type>atom|rss|docbook)/(?<file>.+) {
+    location ~ /(?<type>atom|docbook)/(?<file>.+) {
         alias $documentRoot/.cache/$hostnameproper/;
         try_files $file.$type $file =404;
 
@@ -236,7 +238,6 @@ server {
         types {
             application/docbook+xml docbook;
             application/atom+xml atom;
-            application/rss+xml rss;
         }
     }
 

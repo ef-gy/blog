@@ -36,7 +36,6 @@
         <link href="{$baseURI}/pdf/{@xml:id}" rel="alternate" type="application/pdf" />
         <link href="{$baseURI}/mobi/{@xml:id}.mobi" rel="alternate" type="application/x-mobipocket-ebook" />
         <link href="{$baseURI}/epub/{@xml:id}.epub" rel="alternate" type="application/epub+zip" />
-        <link href="{$baseURI}/rss/{@xml:id}" rel="alternate" type="application/rss+xml" />
         <link href="{$baseURI}/{@xml:id}" rel="alternate" type="application/xhtml+xml" />
       </xsl:if>
 

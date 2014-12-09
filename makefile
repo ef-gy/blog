@@ -130,7 +130,6 @@ $(CACHE)/.volatile $(CACHEO)/.volatile $(CACHET)/.volatile $(CACHE)/jpeg/.volati
 
 CXHTMLS:=$(notdir $(wildcard *.xhtml))
 ATOMS:=$(notdir $(wildcard *.atom))
-RSSS:=$(addsuffix .rss,$(basename $(ATOMS)))
 CEXHTMLS:=$(subst :,\:,$(CXHTMLS)) $(addsuffix .xhtml,$(basename $(ATOMS)))
 CDOCBOOKS:=$(addsuffix .docbook,$(basename $(CEXHTMLS)))
 DXHTMLS:=$(addsuffix .dnt.xhtml,$(basename $(CEXHTMLS))) $(addsuffix .nodnt.xhtml,$(basename $(CEXHTMLS)))
@@ -167,9 +166,6 @@ $(CACHEO)/%.atom: %.atom $(ATOMS) xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/
 		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/atom-style-ef.gy.xslt -|\
 		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/atom-sort.xslt - > $@
 
-$(CACHEO)/%.rss: $(CACHEO)/%.atom xslt/rss-transcode-atom.xslt makefile
-	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/rss-transcode-atom.xslt $< > $@
-
 $(CACHEO)/%.xhtml: $(CACHEO)/%.atom xslt/xhtml-transcode-atom.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-transcode-atom.xslt $< > $@
 
@@ -204,9 +200,6 @@ $(CACHET)/%.atom: %.atom $(ATOMS) xslt/atom-merge.xslt $(CACHET)/.volatile xslt/
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-pre-process.xslt -|\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/atom-style-ef.gy.xslt -|\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/atom-sort.xslt - > $@
-
-$(CACHET)/%.rss: $(CACHET)/%.atom xslt/rss-transcode-atom.xslt makefile
-	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/rss-transcode-atom.xslt $< > $@
 
 $(CACHET)/%.xhtml: $(CACHET)/%.atom xslt/xhtml-transcode-atom.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-transcode-atom.xslt $< > $@
@@ -261,14 +254,13 @@ $(CACHE)/index.xml: $(CACHEO)/everything.atom xslt/index-transcode-atom.xslt mak
 xhtmlcache: $(XHTMLCACHE)
 htmlcache: $(HTMLCACHE)
 atomcache: $(ATOMCACHE)
-rsscache: $(RSSCACHE)
 docbookcache: $(DOCBOOKCACHE)
 jpegcache: $(JPEGCACHE)
 pngcache: $(PNGCACHE)
 csscache: $(CSSCACHE)
 jscache: $(JSCACHE)
 
-cache: xhtmlcache atomcache rsscache docbookcache htmlcache jpegcache pngcache csscache jscache
+cache: xhtmlcache atomcache docbookcache htmlcache jpegcache pngcache csscache jscache
 
 $(CACHE)/%.gz: $(CACHE)/%
 	gzip -knf9 $<

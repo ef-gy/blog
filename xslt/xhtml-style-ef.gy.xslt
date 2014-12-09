@@ -74,12 +74,6 @@
           <link rel="alternate" type="application/atom+xml" href="/atom/site" />
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:choose>
-        <xsl:when test="//xhtml:link[@href=concat($baseURI,'/rss/site')]" />
-        <xsl:otherwise>
-          <link rel="alternate" type="application/rss+xml" href="/rss/site" />
-        </xsl:otherwise>
-      </xsl:choose>
       <xsl:if test="$pre">
         <link rel="prev" href="{$pre/@href}" title="{$pre/@title}"/>
       </xsl:if>

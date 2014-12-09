@@ -4,11 +4,10 @@
               xmlns:xhtml="http://www.w3.org/1999/xhtml"
               xmlns:social="http://ef.gy/2012/social"
               xmlns:atom="http://www.w3.org/2005/Atom"
-              xmlns:georss="http://www.georss.org/georss"
               xmlns:data="http://ef.gy/2013/data"
               xmlns:wst="https://github.com/ef-gy/web-stat-tool"
               xmlns="http://www.w3.org/1999/xhtml"
-              exclude-result-prefixes="xhtml social atom georss xsl data"
+              exclude-result-prefixes="xhtml social atom xsl data"
               version="1.0">
   <xsl:output method="xml" version="1.0" encoding="UTF-8"
               doctype-public="-//W3C//DTD XHTML 1.1//EN"
