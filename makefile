@@ -140,7 +140,6 @@ CSSS:=$(notdir $(addsuffix .css,$(basename $(wildcard css/*.css))))
 DJSS:=$(notdir $(addsuffix .js,$(basename $(wildcard js/*.js))))
 
 ATOMCACHE:=$(addprefix $(CACHEO)/,$(ATOMS)) $(addprefix $(CACHET)/,$(ATOMS))
-RSSCACHE:=$(addprefix $(CACHEO)/,$(RSSS)) $(addprefix $(CACHET)/,$(RSSS))
 DOCBOOKCACHE:=$(addprefix $(CACHEO)/,$(CDOCBOOKS)) $(addprefix $(CACHET)/,$(CDOCBOOKS))
 XHTMLCACHE:=$(addprefix $(CACHEO)/,$(DXHTMLS)) $(addprefix $(CACHET)/,$(DXHTMLS))
 HTMLCACHE:=$(addprefix $(CACHEO)/,$(DHTMLS)) $(addprefix $(CACHET)/,$(DHTMLS))
@@ -152,7 +151,7 @@ JSCACHE:=$(addprefix $(CACHE)/js/,$(DJSS))
 INLINEIMG:=$(addsuffix .base64.xml,$(JPEGCACHE) $(PNGCACHE))
 INLINECSS:=$(addsuffix .xml,$(CSSCACHE))
 
-GZIPCACHE:=$(addsuffix .gz,$(ATOMCACHE) $(RSSCACHE) $(DOCBOOKCACHE) $(XHTMLCACHE) $(HTMLCACHE) $(JPEGCACHE) $(PNGCACHE) $(CSSCACHE) $(JSCACHE))
+GZIPCACHE:=$(addsuffix .gz,$(ATOMCACHE) $(DOCBOOKCACHE) $(XHTMLCACHE) $(HTMLCACHE) $(JPEGCACHE) $(PNGCACHE) $(CSSCACHE) $(JSCACHE))
 
 inlinecss: $(INLINECSS)
 inlineimg: $(INLINEIMG)
