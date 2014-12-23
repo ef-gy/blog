@@ -1,0 +1,663 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" id="hypercube">
+<head>
+<title>Perspective Projections: Beyond 3D</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="The maths behind Topologic - https://dee.pe/r - or, how to take the common 3D projections used in OpenGL waaay to the next level. Or dimension." />
+<meta name="date" content="2014-12-23T13:50:00Z" />
+<meta name="mtime" content="2014-12-23T13:50:00Z" />
+<meta name="category" content="Linear Algebra" />
+<meta name="unix:name" content="linear-algebra:perspective-projections" />
+</head>
+<body>
+<p>I've been pushing this one off for years now. Not because I find it boring or hard to express, but rather because I spent most of my time actually fiddling with <a href="https://dee.pe/r">Topologic and its WebGL frontend</a>, which uses the formulae you're about to see.</p>
+<p>So what is this article about? Well, you may recall how your computer can do 3D graphics, even though your display is only 2D. The way that works is that your graphics card can do certain types of matrix and vector maths that turn points in 3D space into points in 2D space, and some additional bits that draw triangles. These operations, specifically, are called <em>projections</em> - and in the case of video games, they tend to be <em>perspective projections</em> in particular.</p>
+<p>Going further, these projections are not actually limited to 3-space. All they do is remove a dimension from your source vectors. And what OpenGL in particular does is easily extended to projecting from <em>n-d</em> to <em>(n-1)-d</em>. This allows us to, kind of, "see" space as though it was four-dimensional. Or five-dimensional, etc. We simply need to chain these projections and find a way of coming up with projection matrices in arbitrary dimensions.</p>
+<p>This article is exactly about that: coming up with the matrices needed for the projections, and how to apply them to vectors. It'll get kind of math-y, so... you've been warned. In case you need to refresh your memory, have a look at <a href="/linear-algebra:homogeneous-coordinates">my previous article on Homogeneous Coordinates</a>, and <a href="/linear-algebra:normal-vectors-in-higher-dimensional-spaces">the one on Normal Vectors in Higher Dimensional Spaces</a>. I'm also assuming you still remember your standard vector and matrix maths from linear algebra 101.</p>
+<h1>Notes and Notation</h1>
+<p>This is by no means a definitive source for this kind of math. In general, do not trust a computer scientist to do "real" maths. Rather, it describes the particular implementation I derived for <a href="https://github.com/ef-gy/topologic">Topologic, my higher-dimensional geometric primitive and fractal visualiser</a>. There's <a href="https://dee.pe/r">a live demo of that</a>, if these things interest you.</p>
+<p>Some pointers on the notation and conventions used throughout the article:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi mathvariant="bold">vector</mi></math>
+<p><em>Vectors</em> are written in bold.</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><msup><mi mathvariant="bold">vector</mi><mi>c</mi></msup></math>
+<p>A vector with <em>a superscript c</em> on the left hand side of a definition denotes an ordered list of <em>c</em> vectors. On the right hand side the <em>c</em> is used to select a particular vector.</p>
+<p>All indices start at <em>0</em> and extend to <em>n-1</em>. Vectors are supposed to have a dimension of <em>n</em>, and conversions between the "normal" and <em>homogeneous</em> versions are implicit if they should occur and aren't dealt with specifically. To convert a non-homogeneous n-D vector to the homogeneous equivalent, add a new coordinate of <em>1</em>. To convert back, divide by the last coordinate and drop it.</p>
+<p>The same applies to matrices. To extend an <em>n*n</em> matrix to its homogeneous equivalent, add a new row and a new column at the end and set all cells to <em>0</em>, except for the very last one which needs to be <em>1</em>. All matrices are square. The matrices can usually be transposed if you also transpose input vectors, but the article should be self-consistent.</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mfenced>
+<mi mathvariant="bold">V</mi>
+<mi mathvariant="bold">S</mi>
+<mi mathvariant="bold">T</mi>
+</mfenced>
+</mrow></math>
+<p>A set of vectors like this on the right hand side of a definition describes a 3x3, non-homogeneous matrix where the columns are described by the vectors <em>V</em>, <em>S</em> and <em>T</em>, respectively. Columns are also counted starting at <em>0</em> to <em>n-1</em>. Higher-dimensional equivalents of this appear as well.</p>
+<p>Now, without further ado, let's get revisitin'!</p>
+<h1>Revision: Getting from 3D to 2D</h1>
+<p>How do we get from a 3D vector to a 2D vector? There's a few transformations that you want to run on your vector in sequence. All but the last of the lot are affine transformations, so you can combine all the matrices for them into one - a nice property of vector/matrix math that is one of the reasons we're using matrices for just about everything. The other nice thing about matrices is that we can prepare one matrix to use for a lot of vectors in the same scene.</p>
+<h2>Translations</h2>
+<p>The first type of matrix we need is a simple translation matrix. The reason for this is simple: when we want to render a 3D scene, we're always looking at some point from some point. Unless the point we're looking from is at the origin, we need to move our "camera". This is also the reason we use <em>affine</em> transformations instead of linear ones, which means the matrices to manipulate things in 3D are 4x4. I've already pointed out how those matrices work in <a href="/linear-algebra:homogeneous-coordinates">the article on homogeneous coordinates</a>, but it doesn't hurt to repeat it again here. To translate a vector by another vector <em>t</em>, we apply this matrix:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>translate</mi><mn>3</mn></msub>
+<mfenced>
+<mi mathvariant="bold">t</mi>
+</mfenced>
+<mo>:=</mo>
+</mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mfenced><mtable>
+<mtr>
+<mtd><mn>1</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><msub><mi mathvariant="bold">t</mi><mn>0</mn></msub></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>1</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><msub><mi mathvariant="bold">t</mi><mn>1</mn></msub></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>1</mn></mtd>
+<mtd><msub><mi mathvariant="bold">t</mi><mn>2</mn></msub></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>1</mn></mtd>
+</mtr>
+</mtable></mfenced></mrow></math>
+<p>... so, business as usual with homogeneous coordinates and affine transformations. If your input vector were already homogeneous, you'd replace the last cell in the matrix with the fourth coordinate of <em>t</em>. Nothing unusual here.</p>
+<h2>Looking at Things</h2>
+<p>Next we need is a <em>look-at matrix</em>. This transformation will do the equivalent of <em>rotating</em> the "camera" so that it's looking at the target point. Without this, the point we're looking at could be behind the camera - and that would be boring. This matrix is surprisingly the most complicated to construct, because the formula for it is somewhat fuzzy - at least in the general case. We need three vectors as input: the <em>to</em> point is where we're looking at, the <em>from</em> point is where our camera is, and the <em>up</em> vector is used to orient the camera. <em>up</em> is where the hair on your head is when you tilt it.</p>
+<p>The <em>look-at matrix</em> is a <em>rotation matrix</em>. This means that not only is it affine, it is also <em>linear</em>, as rotations are linear transformations. This, in turn, means that we do not need to use homogeneous coordinates, and in 3D we can use a simple 3x3 matrix instead of a 4x4 matrix. It will still be useful to turn it into a 4x4 matrix later, so we can merge it in with the other matrices. In the 3D case, we make use of the <em>cross product</em> - denoted by the <em>&#x2a2f;</em> symbol - to calculate this matrix:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>look-at</mi><mn>3</mn></msub>
+<mfenced>
+<mi mathvariant="bold">to</mi>
+<mi mathvariant="bold">from</mi>
+<mi mathvariant="bold">up</mi>
+</mfenced>
+<mo>:=</mo>
+</mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mfenced>
+<mrow>
+<msub><mi mathvariant="bold">column</mi><mn>1</mn></msub>
+<mo>&#x2a2f;</mo>
+<msub><mi mathvariant="bold">column</mi><mn>2</mn></msub>
+</mrow>
+<mrow>
+<mi mathvariant="bold">up</mi>
+<mo>&#x2a2f;</mo>
+<msub><mi mathvariant="bold">column</mi><mn>2</mn></msub>
+</mrow>
+<mrow>
+<mi mathvariant="bold">to</mi>
+<mo>-</mo>
+<mi mathvariant="bold">from</mi>
+</mrow>
+</mfenced>
+</mrow></math>
+<p>The columns in this matrix are self-referencing; you start with the last column and fill the difference between the <em>to</em> and <em>from</em> vectors. Then you move to the middle column and fill in the cross product of the <em>up</em> vector with the last column you just generated. Then finally you fill in the first column with the cross product of the last two. This approach seems odd at first, but it has two advantages: we don't need any trigonometric functions to calculate the matrix, and this approach actually scales to higher dimensions - which we'll see in the next part of the article.</p>
+<p>Resolving this into the actual matrix would be pretty hard to write down in mathanese, so I'll skip this - I tried, but the resulting matrix didn't fit on the screen, which defeated the goal of making it more readable by writing it out. The row-vector-of-column-vectors-form should be explicit enough, though.</p>
+<h2>The Perspective Projection Matrix</h2>
+<p>Next - and finally - we need the <em>perspective projection matrix</em>. You'll find this in the documentation for OpenGL and it's kind of become the standard way of doing this. The matrix looks like this:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>perspective</mi><mn>3</mn></msub>
+<mfenced>
+<mi>eye-angle</mi>
+<mi>aspect</mi>
+<mi>near</mi>
+<mi>far</mi>
+</mfenced>
+<mo>:=</mo>
+</mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mfenced><mtable>
+<mtr>
+<mtd><mfrac><mfrac><mn>1</mn><mrow><mo>tan</mo><mfenced><mfrac><mi>eye-angle</mi><mn>2</mn></mfrac></mfenced></mrow></mfrac><mi>aspect</mi></mfrac></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mfrac><mn>1</mn><mrow><mo>tan</mo><mfenced><mfrac><mi>eye-angle</mi><mn>2</mn></mfrac></mfenced></mrow></mfrac></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mfrac><mrow><mi>near</mi><mo>+</mo><mi>far</mi></mrow><mrow><mi>near</mi><mo>-</mo><mi>far</mi></mrow></mfrac></mtd>
+<mtd><mn>-1</mn></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>-2</mn><mo>&#x00d7;</mo><mfrac><mrow><mi>near</mi><mo>&#x00d7;</mo><mi>far</mi></mrow>
+<mrow><mi>near</mi><mo>-</mo><mi>far</mi></mrow>
+</mfrac></mtd>
+<mtd><mn>0</mn></mtd>
+</mtr>
+</mtable></mfenced>
+</mrow></math>
+<p>This matrix is better described elsewhere - for instance the OpenGL man pages - so I'll only glance over it briefly. In a nutshell this matrix moves the vertices around so that the trapezoid area in front of the camera, between the <em>near</em> and <em>far</em> cutoff distances and widening along the <em>eye angle</em>, end up as a cubic area in front of the camera. The final transform to move things that are farther away closer to the centre is accomplished by a division with the distance coordinate; more on that in a second. We can still treat this matrix as affine for the purpose of creating a merged matrix with all the transforms we need, which we do like this:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>view-matrix</mi><mn>3</mn></msub>
+<mfenced>
+<mi mathvariant="bold">to</mi>
+<mi mathvariant="bold">from</mi>
+<mi mathvariant="bold">up</mi>
+<mi>eye-angle</mi>
+<mi>aspect</mi>
+<mi>near</mi>
+<mi>far</mi>
+</mfenced>
+<mo>:=</mo>
+</mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>translate</mi><mn>3</mn></msub>
+<mo>(</mo>
+<mo>-</mo>
+<mi mathvariant="bold">from</mi>
+<mo>)</mo>
+<mo>&#x00d7;</mo>
+<msub><mi>look-at</mi><mn>3</mn></msub>
+<mfenced>
+<mi mathvariant="bold">to</mi>
+<mi mathvariant="bold">from</mi>
+<mi mathvariant="bold">up</mi>
+</mfenced>
+<mo>&#x00d7;</mo>
+<msub><mi>perspective</mi><mn>3</mn></msub>
+<mfenced>
+<mi>eye-angle</mi>
+<mi>aspect</mi>
+<mi>near</mi>
+<mi>far</mi>
+</mfenced>
+</mrow></math>
+<p>The <em>look-at</em> matrix would implicitly have been extended to a 4x4 matrix for this formula. Remember that matrix multiplications are not commutative, so the order is important.</p>
+<h2>Projecting Vectors</h2>
+<p>Once you've created your matrix <em>M</em>, you'll want to use it to transform 3D vectors to 2D vectors. To do so, you first need to extend the 3D vector to be homogeneous - by adding a fourth coordinate that is simply set to <em>1</em> - then we multiply that vector with the matrix we got, divide the resulting 4-vector by the fourth coordinate - i.e. normalise the homogeneous 3D vector - drop that last coordinate, and then finally divide the first two remaining coordinates by the remaining third. In mathanese:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi>normalise-reduce</mi>
+<mfenced>
+<mi mathvariant="bold">V</mi>
+</mfenced>
+<mo>:=</mo>
+</mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mfenced><mtable>
+<mtr><mtd><mfrac><msub><mi mathvariant="bold">V</mi><mn>0</mn></msub><msub><mi mathvariant="bold">V</mi><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></mfrac></mtd></mtr>
+<mtr><mtd><mfrac><msub><mi mathvariant="bold">V</mi><mn>1</mn></msub><msub><mi mathvariant="bold">V</mi><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></mfrac></mtd></mtr>
+<mtr><mtext>...</mtext></mtr>
+<mtr><mtd><mfrac><msub><mi mathvariant="bold">V</mi><mrow><mi>n</mi><mo>-</mo><mn>2</mn></mrow></msub><msub><mi mathvariant="bold">V</mi><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></mfrac></mtd></mtr>
+</mtable></mfenced>
+</mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>project</mi><mn>3</mn></msub>
+<mfenced>
+<mi mathvariant="bold">V</mi>
+<mi>M</mi>
+</mfenced>
+<mo>:=</mo>
+</mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi>normalise-reduce</mi>
+<mo>(</mo>
+<mi>normalise-reduce</mi>
+<mo>(</mo>
+<mfenced><mtable>
+<mtr><mtd><msub><mi mathvariant="bold">V</mi><mn>0</mn></msub></mtd></mtr>
+<mtr><mtd><msub><mi mathvariant="bold">V</mi><mn>1</mn></msub></mtd></mtr>
+<mtr><mtd><msub><mi mathvariant="bold">V</mi><mn>2</mn></msub></mtd></mtr>
+<mtr><mtd><mn>1</mn></mtd></mtr>
+</mtable></mfenced>
+<mo>&#x00d7;</mo>
+<mi>M</mi>
+<mo>)</mo>
+<mo>)</mo>
+</mrow></math>
+<p><em>normalise-reduce</em> is a helper function that takes a vector of <em>n</em> dimensions, divides every coordinate by the last one and then drops that last one. The result is an <em>n-1</em> dimensional vector. This is the operation that is performed to turn a <em>homogeneous</em> vector into a "normal" one. Since we're interested in <em>perspective</em> projections, this is also the way we need to "cut off" the third coordinate of our 3D vector.</p>
+<p>For the sake of completeness, we could also apply <em>normalise-reduce</em> once and simply drop the last coordinate instead of applying <em>normalise-reduce</em> twice. The result would be closer to a <em>parallel</em> projection. The reason for this is that the matrix we constructed earlier moves everything in front of the camera. The final, third coordinate after the transform represents the <em>distance</em> from the camera. By dividing by this coordinate, things that are farther away from the camera are moved towards the centre.</p>
+<p>You can use the same matrix for as many vectors projected by the same camera as you like. To draw triangles and the like, you would usually draw the triangles in 2D <em>after</em> projecting all the component vectors. This is something your graphics card does for you, however, and they've become increasingly efficient at it.</p>
+<p>Interestingly, none of the things we did here are particularly specific to 3D. Which means we can easily extend this general concept to higher dimensions...</p>
+<h1>Getting from 4D (or higher) to 3D</h1>
+<p>So, how <em>do</em> we extend this? The first thing to realise is that a projection will only "shave off" one dimension. If you have a 4D model, then by doing a perspective - or parallel, or similar - projection will simply land you a 3D model. But that's OK. You just take that 3D model, do another projection and you get something in 2D to put on your screen.</p>
+<p>A corollary of this is that for your projections you will have separate camera locations for each of your projections. That means you have a separate set of <em>to</em> and <em>from</em> vectors in 3D, 4D, 5D, etc. It would in theory be possible to merge all the transforms into one, but that makes it a lot harder to understand, so we'll only do the easy variant here, with separate sets of cameras.</p>
+<p>On the bright side, this is also closer to how a 4D (or higher) eye really would be working. A hypothetical 4D eye would "see" all sides of a 3D object at the same time, and moving it in 4D would create a whole new 3D space - just like moving our 3D eyes create completely new slices through 2D space whenever we move them. Since our eyes cannot see all the sides of a 3D object at the same time, we would need a way to look at different parts of the created 3D space. <a href="http://en.wikipedia.org/wiki/Flatland">Flatland has kind of an olden but golden take on this</a>.</p>
+<h2>Translations</h2>
+<p>So, on to creating those projective matrices for a 4D-to-3D projection. Just like last time, we need to be able to have affine transformations, to step away from the scene. These work exactly the same way as in 3D in any kind of dimension. Instead of a 4x4 matrix in 3D, we now have a 5x5 matrix in 4D - or an <em>(n+1)x(n+1)</em> matrix in <em>n-D</em>.</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>translate</mi><mn>4</mn></msub>
+<mfenced>
+<mi mathvariant="bold">t</mi>
+</mfenced>
+<mo>:=</mo>
+</mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mfenced><mtable>
+<mtr>
+<mtd><mn>1</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><msub><mi mathvariant="bold">t</mi><mn>0</mn></msub></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>1</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><msub><mi mathvariant="bold">t</mi><mn>1</mn></msub></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>1</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><msub><mi mathvariant="bold">t</mi><mn>2</mn></msub></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>1</mn></mtd>
+<mtd><msub><mi mathvariant="bold">t</mi><mn>3</mn></msub></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>1</mn></mtd>
+</mtr>
+</mtable></mfenced></mrow></math>
+<p>It's immediately obvious how this translates to even higher dimensions:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>translate</mi><mi>n</mi></msub>
+<mfenced>
+<mi mathvariant="bold">t</mi>
+</mfenced>
+<mo>:=</mo>
+</mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mfenced><mtable>
+<mtr>
+<mtd><mn>1</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><msub><mi mathvariant="bold">t</mi><mn>0</mn></msub></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>1</mn></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><msub><mi mathvariant="bold">t</mi><mn>1</mn></msub></mtd>
+</mtr>
+<mtr>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mtext>...</mtext></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mn>1</mn></mtd>
+<mtd><msub><mi mathvariant="bold">t</mi><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>1</mn></mtd>
+</mtr>
+</mtable></mfenced></mrow></math>
+<p>In a nutshell, we just create the right size of identity matrix - i.e. all ones in the diagonal - and fill in the last column with the homogeneous vector we want to translate by. Easy as that.</p>
+<h2>Looking at Things - in Space!</h2>
+<p>On to the hard part. The <em>look-at</em> matrix is, again, the hardest part of the lot. Mostly because of us having to construct it in a somewhat odd way. This is analogous to the way we did it in 3D, but the explanation was also somewhat convoluted in that case.</p>
+<p>Before we can construct this <em>rotation</em> matrix, we find there is one problem with the approach above: we used a <em>cross product</em> in the 3D case. There is no cross product in 4D, however. It turns out this is actually the single biggest problem in the whole process. Fortunately, I've <a href="/linear-algebra:normal-vectors-in-higher-dimensional-spaces">previously described a solution to this in the article on normal vectors in higher dimensional spaces</a>. It turns out we only used the cross product in the 3D case, because what we really wanted was a <em>normal</em> to a given set of vectors. A <em>normal</em> - in this case - is any vector that is orthogonal to all of a given set of other vectors.</p>
+<p>In 3D, the cross product is <em>the</em> way of computing the normal of two vectors. To the point where the two terms are used completely interchangeably, even in some of the more scientific books on geometry. The reason we don't have a cross product in 4D is <em>the other</em> property of cross products: it's the product of <em>two</em> vectors. It's easy to see why we can't keep this constraint in 4D: if we try to find normals in 4D with only two vectors, the resulting set of normals is actually a whole 2D plane - as opposed to the 1D set of two potential vectors we get in 3D with two vectors. Just like in 2D we only need <em>one</em> vector to find an orthogonal vector. For this reason we need to use <em>three</em> 4D vectors to get our normal - introducing the following notation:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msup><mi>V</mi><mn>0</mn></msup>
+<mo>&#x2a2f;</mo>
+<msup><mi>V</mi><mn>1</mn></msup>
+<mo>&#x2a2f;</mo>
+<mtext>...</mtext>
+<mo>&#x2a2f;</mo>
+<msup><mi>V</mi><mrow><mi>n</mi><mo>-</mo><mn>2</mn></mrow></msup>
+</mrow></math>
+<p>We still use the cross product sign, but we use it to get the normal of <em>n-1</em> vectors, for <em>n</em> being the dimension we care about. <a href="/linear-algebra:normal-vectors-in-higher-dimensional-spaces">The previously mentioned article on normals covers how to calculate that</a>.</p>
+<p>Now that we covered this, let's see how we can actually calculate the matrix we need. As mentioned before, this is a rotation matrix, so in 4D we only need a 4x4 matrix - which we implicitly convert to a homogeneous 4D matrix at the size of 5x5 by filling the empty cells with 0 - except for the very last one which needs to be one. Same in 5D, where we calculate a 5x5 matrix, and scale it up to 6x6. The procedure in 4D goes like this:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>look-at</mi><mn>4</mn></msub>
+<mfenced>
+<mi mathvariant="bold">to</mi>
+<mi mathvariant="bold">from</mi>
+<mi mathvariant="bold">up</mi>
+<mi mathvariant="bold">back</mi>
+</mfenced>
+<mo>:=</mo>
+</mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mfenced>
+<mrow>
+<msub><mi mathvariant="bold">col</mi><mn>1</mn></msub>
+<mo>&#x2a2f;</mo>
+<msub><mi mathvariant="bold">col</mi><mn>2</mn></msub>
+<mo>&#x2a2f;</mo>
+<msub><mi mathvariant="bold">col</mi><mn>3</mn></msub>
+</mrow>
+<mrow>
+<mi mathvariant="bold">back</mi>
+<mo>&#x2a2f;</mo>
+<msub><mi mathvariant="bold">col</mi><mn>2</mn></msub>
+<mo>&#x2a2f;</mo>
+<msub><mi mathvariant="bold">col</mi><mn>3</mn></msub>
+</mrow>
+<mrow>
+<mi mathvariant="bold">up</mi>
+<mo>&#x2a2f;</mo>
+<mi mathvariant="bold">back</mi>
+<mo>&#x2a2f;</mo>
+<msub><mi mathvariant="bold">col</mi><mn>3</mn></msub>
+</mrow>
+<mrow>
+<mi mathvariant="bold">to</mi>
+<mo>-</mo>
+<mi mathvariant="bold">from</mi>
+</mrow>
+</mfenced>
+</mrow></math>
+<p>Notice how we needed an additional base vector - <em>back</em>. In order to orient our 4D camera we need <em>two</em> vectors to pinpoint a <em>plane</em>. Think of the <em>up</em> vector in the 3D case as pinning one of the axes. The result in 3D is then obviously a plane. In 4D, if we only pinned one axis then we'd end up with a hyperplane. But we only want a 2-plane. So we use two vectors to pin that. And why do we want this to be a plane, you ask? Well, the reason for that is that want to have <em>one</em> axis along which there will be the <em>depth</em> of our projection. And in order to fix a single axis, we need to be looking from a 2-plane.</p>
+<p>The algorithm for this is pretty much the same as for the 3D case. Fill in the last column with the difference between <em>to</em> and <em>from</em>. Then, starting from the second-to-last column, create the normal of the base vectors and the last column. For each subsequent vector to the left, you add the column you just calculated and "slide out" your set of base vectors, until in the very first column you just create the normal for all of the other columns. In even higher dimensions, a generalised description of this could be:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>look-at</mi><mi>n</mi></msub>
+<mfenced>
+<mi mathvariant="bold">to</mi>
+<mi mathvariant="bold">from</mi>
+<msup><mi mathvariant="bold">b</mi><mrow><mi>n</mi><mo>-</mo><mn>2</mn></mrow></msup>
+</mfenced>
+<mo>:=</mo>
+</mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mfenced>
+<mrow>
+<msub><mi mathvariant="bold">c</mi><mn>1</mn></msub>
+<mo>&#x2a2f;</mo>
+<mtext>...</mtext>
+<mo>&#x2a2f;</mo>
+<msub><mi mathvariant="bold">c</mi><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub>
+</mrow>
+<mtext>...</mtext>
+<mrow>
+<msup><mi mathvariant="bold">b</mi><mn>1</mn></msup>
+<mo>&#x2a2f;</mo>
+<mtext>...</mtext>
+<mo>&#x2a2f;</mo>
+<msup><mi mathvariant="bold">b</mi><mrow><mi>n</mi><mo>-</mo><mn>4</mn></mrow></msup>
+<mo>&#x2a2f;</mo>
+<msub><mi mathvariant="bold">c</mi><mrow><mi>n</mi><mo>-</mo><mn>2</mn></mrow></msub>
+<mo>&#x2a2f;</mo>
+<msub><mi mathvariant="bold">c</mi><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub>
+</mrow>
+<mrow>
+<msup><mi mathvariant="bold">b</mi><mn>0</mn></msup>
+<mo>&#x2a2f;</mo>
+<mtext>...</mtext>
+<mo>&#x2a2f;</mo>
+<msup><mi mathvariant="bold">b</mi><mrow><mi>n</mi><mo>-</mo><mn>3</mn></mrow></msup>
+<mo>&#x2a2f;</mo>
+<msub><mi mathvariant="bold">c</mi><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub>
+</mrow>
+<mrow>
+<mi mathvariant="bold">to</mi>
+<mo>-</mo>
+<mi mathvariant="bold">from</mi>
+</mrow>
+</mfenced>
+</mrow></math>
+<p>... yeah. This really is kind of hard to read. The textual description was <em>probably</em> clearer. <a href="https://github.com/ef-gy/libefgy/blob/master/include/ef.gy/projection.h">Have a look at my generic C++ template implementation in <em>libefgy</em> for something a bit more concrete</a>.</p>
+<p>Aaaanyway, it is what it is and you've now successfully tackled the hardest part. On to the one thing that actually gets <em>easier</em> in higher dimensions.</p>
+<h2>The Perspective Projection Matrix</h2>
+<p>Much like in 3D, we need a perspective projection matrix. This is easier in 4D - or higher - because the aspect ratio correction and the near/far cutoff will be handled by the 3D-to-2D projections we'll have to do afterwards, anyway. This means we only need to take the eye angle into consideration, resulting in a much simpler 4D-specific matrix:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>perspective</mi><mn>4</mn></msub>
+<mfenced>
+<mi>eye-angle</mi>
+</mfenced>
+<mo>:=</mo>
+</mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mfenced><mtable>
+<mtr>
+<mtd><mfrac><mn>1</mn><mrow><mo>tan</mo><mfenced><mfrac><mi>eye-angle</mi><mn>2</mn></mfrac></mfenced></mrow></mfrac></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mfrac><mn>1</mn><mrow><mo>tan</mo><mfenced><mfrac><mi>eye-angle</mi><mn>2</mn></mfrac></mfenced></mrow></mfrac></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mfrac><mn>1</mn><mrow><mo>tan</mo><mfenced><mfrac><mi>eye-angle</mi><mn>2</mn></mfrac></mfenced></mrow></mfrac></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>1</mn></mtd>
+<mtd><mn>0</mn></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>1</mn></mtd>
+</mtr>
+</mtable></mfenced>
+</mrow></math>
+<p>The basic thing to take away from this, is that you want to correct for eye angle in all of the dimensions but the last one. So in 3D you correct for it in the first three, which means only the last two cells on the diagonal are set to 1 - homogeneous 4D matrix and all. In higher dimensions this looks pretty much the same:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>perspective</mi><mi>n</mi></msub>
+<mfenced>
+<mi>eye-angle</mi>
+</mfenced>
+<mo>:=</mo>
+</mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mfenced><mtable>
+<mtr>
+<mtd><mfrac><mn>1</mn><mrow><mo>tan</mo><mfenced><mfrac><mi>eye-angle</mi><mn>2</mn></mfrac></mfenced></mrow></mfrac></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mfrac><mn>1</mn><mrow><mo>tan</mo><mfenced><mfrac><mi>eye-angle</mi><mn>2</mn></mfrac></mfenced></mrow></mfrac></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+</mtr>
+<mtr>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mtext>...</mtext></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mn>1</mn></mtd>
+<mtd><mn>0</mn></mtd>
+</mtr>
+<mtr>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mtext>...</mtext></mtd>
+<mtd><mn>0</mn></mtd>
+<mtd><mn>1</mn></mtd>
+</mtr>
+</mtable></mfenced>
+</mrow></math>
+<p>Assembling the full view matrices is also quite the same as in 3D. In the 4D case we get:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>view-matrix</mi><mn>4</mn></msub>
+<mfenced>
+<mi mathvariant="bold">to</mi>
+<mi mathvariant="bold">from</mi>
+<mi mathvariant="bold">up</mi>
+<mi mathvariant="bold">back</mi>
+<mi>eye-angle</mi>
+</mfenced>
+<mo>:=</mo>
+</mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>translate</mi><mn>4</mn></msub>
+<mo>(</mo>
+<mo>-</mo>
+<mi mathvariant="bold">from</mi>
+<mo>)</mo>
+<mo>&#x00d7;</mo>
+<msub><mi>look-at</mi><mn>4</mn></msub>
+<mfenced>
+<mi mathvariant="bold">to</mi>
+<mi mathvariant="bold">from</mi>
+<mi mathvariant="bold">up</mi>
+<mi mathvariant="bold">back</mi>
+</mfenced>
+<mo>&#x00d7;</mo>
+<msub><mi>perspective</mi><mn>4</mn></msub>
+<mfenced>
+<mi>eye-angle</mi>
+</mfenced>
+</mrow></math>
+<p>... and in the general case:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>view-matrix</mi><mi>n</mi></msub>
+<mfenced>
+<mi mathvariant="bold">to</mi>
+<mi mathvariant="bold">from</mi>
+<msup><mi mathvariant="bold">base</mi><mrow><mi>n</mi><mo>-</mo><mn>2</mn></mrow></msup>
+<mi>eye-angle</mi>
+</mfenced>
+<mo>:=</mo>
+</mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>translate</mi><mi>n</mi></msub>
+<mo>(</mo>
+<mo>-</mo>
+<mi mathvariant="bold">from</mi>
+<mo>)</mo>
+<mo>&#x00d7;</mo>
+<msub><mi>look-at</mi><mi>n</mi></msub>
+<mfenced>
+<mi mathvariant="bold">to</mi>
+<mi mathvariant="bold">from</mi>
+<msup><mi mathvariant="bold">base</mi><mrow><mi>n</mi><mo>-</mo><mn>2</mn></mrow></msup>
+</mfenced>
+<mo>&#x00d7;</mo>
+<msub><mi>perspective</mi><mi>n</mi></msub>
+<mfenced>
+<mi>eye-angle</mi>
+</mfenced>
+</mrow></math>
+<p>Nothing special here, at all. We could almost stop here, but for completeness - and, since the whole point of writing this is to actually have a complete text on this online...</p>
+<h2>Projecting Vectors</h2>
+<p>We're still doing perspective projections, and the note on parallel projections instead of perspective ones from the above 3D case still applies. To project a vector, we first have to multiply it with the right view matrix - which we only need to calculate once for all vectors - then normalise the vector to be non-homogeneous, then divide and drop the last coordinate. Again, normalising and the projection part are the same <em>normalise-reduce</em> function. In the 4D case, we get:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>project</mi><mn>4</mn></msub>
+<mfenced>
+<mi mathvariant="bold">V</mi>
+<mi>M</mi>
+</mfenced>
+<mo>:=</mo>
+</mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi>normalise-reduce</mi>
+<mo>(</mo>
+<mi>normalise-reduce</mi>
+<mo>(</mo>
+<mfenced><mtable>
+<mtr><mtd><msub><mi mathvariant="bold">V</mi><mn>0</mn></msub></mtd></mtr>
+<mtr><mtd><msub><mi mathvariant="bold">V</mi><mn>1</mn></msub></mtd></mtr>
+<mtr><mtd><msub><mi mathvariant="bold">V</mi><mn>2</mn></msub></mtd></mtr>
+<mtr><mtd><msub><mi mathvariant="bold">V</mi><mn>3</mn></msub></mtd></mtr>
+<mtr><mtd><mn>1</mn></mtd></mtr>
+</mtable></mfenced>
+<mo>&#x00d7;</mo>
+<mi>M</mi>
+<mo>)</mo>
+<mo>)</mo>
+</mrow></math>
+<p>This is almost identical to the 3D function, except that we need a 4D input vector. In the general case, the function is as follows:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi>project</mi><mi>n</mi></msub>
+<mfenced>
+<mi mathvariant="bold">V</mi>
+<mi>M</mi>
+</mfenced>
+<mo>:=</mo>
+</mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi>normalise-reduce</mi>
+<mo>(</mo>
+<mi>normalise-reduce</mi>
+<mo>(</mo>
+<mfenced><mtable>
+<mtr><mtd><msub><mi mathvariant="bold">V</mi><mn>0</mn></msub></mtd></mtr>
+<mtr><mtd><msub><mi mathvariant="bold">V</mi><mn>1</mn></msub></mtd></mtr>
+<mtr><mtd><msub><mi mathvariant="bold">V</mi><mn>2</mn></msub></mtd></mtr>
+<mtr><mtd><mtext>...</mtext></mtd></mtr>
+<mtr><mtd><msub><mi mathvariant="bold">V</mi><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msub></mtd></mtr>
+<mtr><mtd><mn>1</mn></mtd></mtr>
+</mtable></mfenced>
+<mo>&#x00d7;</mo>
+<mi>M</mi>
+<mo>)</mo>
+<mo>)</mo>
+</mrow></math>
+<p>And there you have it. That's how you do a perspective projection of vectors in arbitrary dimensions - and remember that you actually draw triangles in 2D, once you're done with all the projecting. So that's all you need to create arbitrary-dimensional perspective projections.</p>
+<h1>Sources</h1>
+<p>It's hard to name sources for this, because the 3D part is basically just describing basic linear algebra and things from the OpenGL manual; so for these parts...</p>
+<ul>
+<li>Your favourite linear algebra book - for all the absolute basics</li>
+<li><a href="https://www.opengl.org/sdk/docs/man2/xhtml/gluPerspective.xml">OpenGL: gluPerspective()</a> - for the basic 3D perspective matrix</li>
+<li><a href="http://steve.hollasch.net/thesis/">Steven Richard Hollasch's thesis "Four-Space Visualization of 4D Objects"</a> - an excellent reference for 4D projections</li>
+</ul>
+<p>... the generalised n-D projections were not based on others' work, as I could not find a decent reference anywhere on the internet. That said, I'm sure there's some good linear algebra textbooks that cover these parts. I came up with these particular 5D+ projections for these projects:</p>
+<ul>
+<li><a href="https://github.com/ef-gy/libefgy">libefgy, a C++ template-y maths library</a></li>
+<li><a href="https://github.com/ef-gy/topologic">Topologic, a higher-dimensional primitive and fractal renderer using libefgy</a></li>
+<li><a href="https://dee.pe/r">Interactive browser version of Topologic</a></li>
+</ul>
+<p>If you spot any particular issues in this article, <em>please</em> tell me so I can fix them. Thanks!</p>
+<p><em>This article is part of a <a href="/linear-algebra">series on linear algebra</a>.</em></p>
+</body>
+</html>

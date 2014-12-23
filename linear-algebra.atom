@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:id="mathematics" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>efgy</title>
+  <subtitle>On Linear Algebra</subtitle>
+
+  <entry xlink:href="linear-algebra:perspective-projections.xhtml" />
+  <entry xlink:href="linear-algebra:normal-vectors-in-higher-dimensional-spaces.xhtml" />
+  <entry xlink:href="linear-algebra:homogeneous-coordinates.xhtml" />
+</feed>

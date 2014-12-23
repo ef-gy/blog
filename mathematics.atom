@@ -3,9 +3,8 @@
   <title>efgy</title>
   <subtitle>On Mathematics</subtitle>
 
+  <feed xlink:href="linear-algebra.atom"/>
   <entry xlink:href="ssd-endurance-revisited.xhtml" />
   <entry xlink:href="mathematical-proofs-101.xhtml" />
   <entry xlink:href="statistics:ssd-write-endurance.xhtml" />
-  <entry xlink:href="linear-algebra:normal-vectors-in-higher-dimensional-spaces.xhtml" />
-  <entry xlink:href="linear-algebra:homogeneous-coordinates.xhtml" />
 </feed>
