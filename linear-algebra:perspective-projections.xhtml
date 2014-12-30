@@ -5,7 +5,7 @@
 <meta name="author" content="Magnus Achim Deininger" />
 <meta name="description" content="The maths behind Topologic - https://dee.pe/r - or, how to take the common 3D projections used in OpenGL waaay to the next level. Or dimension." />
 <meta name="date" content="2014-12-23T13:50:00Z" />
-<meta name="mtime" content="2014-12-23T13:50:00Z" />
+<meta name="mtime" content="2014-12-30T13:00:00Z" />
 <meta name="category" content="Linear Algebra" />
 <meta name="unix:name" content="linear-algebra:perspective-projections" />
 </head>
@@ -407,7 +407,7 @@
 <mo>&#x2a2f;</mo>
 <mtext>...</mtext>
 <mo>&#x2a2f;</mo>
-<msup><mi mathvariant="bold">b</mi><mrow><mi>n</mi><mo>-</mo><mn>4</mn></mrow></msup>
+<msup><mi mathvariant="bold">b</mi><mrow><mi>n</mi><mo>-</mo><mn>3</mn></mrow></msup>
 <mo>&#x2a2f;</mo>
 <msub><mi mathvariant="bold">c</mi><mrow><mi>n</mi><mo>-</mo><mn>2</mn></mrow></msub>
 <mo>&#x2a2f;</mo>
@@ -430,6 +430,7 @@
 </mfenced>
 </mrow></math>
 <p>... yeah. This really is kind of hard to read. The textual description was <em>probably</em> clearer. <a href="https://github.com/ef-gy/libefgy/blob/master/include/ef.gy/projection.h">Have a look at my generic C++ template implementation in <em>libefgy</em> for something a bit more concrete</a>.</p>
+<p><em>Update (2014-12-30): the previous formula had a minor glitch. Thanks to <a href="https://twitter.com/langley_va">@langley_va on Twitter</a> for finding this and pointing it out! :)</em></p>
 <p>Aaaanyway, it is what it is and you've now successfully tackled the hardest part. On to the one thing that actually gets <em>easier</em> in higher dimensions.</p>
 <h2>The Perspective Projection Matrix</h2>
 <p>Much like in 3D, we need a perspective projection matrix. This is easier in 4D - or higher - because the aspect ratio correction and the near/far cutoff will be handled by the 3D-to-2D projections we'll have to do afterwards, anyway. This means we only need to take the eye angle into consideration, resulting in a much simpler 4D-specific matrix:</p>
