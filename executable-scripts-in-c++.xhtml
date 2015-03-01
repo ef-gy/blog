@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Executable C++ Scripts</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="A tiny shell script wrapper for writing scripts in proper C++. Because I can."/>
+<meta name="date" content="2015-03-01T19:30:00Z" />
+<meta name="mtime" content="2015-03-01T19:30:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="executable-scripts-in-c++" />
+</head>
+<body>
+<h1>Taking a Note from TCC's Book</h1>
+<p>For quite some I've been meaning to write/convert more scripts in C++. But doing so is rather annoying, since you have to compile the scripts. Well, OK maybe it wouldn't be all THAT annoying, but it is somewhat. Plus, if you want to give the script to others, you have to either compile it for them or make them use your makefile and possibly explain quite a bit along the way. It's a hassle.</p>
+<p>Apparently I'm not the only person who would like this feature, seeing as <a href="http://bellard.org/tcc/">TCC (the Tiny C Compiler) has this very feature by providing a <em>-run</em> command line flag</a>. As a minor extension, the compiler even supports a shebang with this flag. But alas, it's not <em>clang</em>. And it definitely doesn't support C++11. Or C++. And <em>clang++</em> will barf on a shebang line (I've tried).</p>
+<p>So, there I was, about to file a feature request for such a flag in <em>clang++</em>, when it dawned on me: I can just wrap this up in a tiny shell script. I guess sometimes the easy solutions are those that you can do with the tools you already have. Behold, the following tiny "hello world" programme:</p>
+<pre><code class="language-cpp"><![CDATA[#!/bin/sh
+# vim: set ft=cpp:
+
+md5=$( (md5 -q || md5sum -b) < $0 2>/dev/null | cut -d ' ' -f1)
+script="/tmp/$(basename $0).${md5}"
+cxx="clang++ -O2 -std=c++11 -pipe -Wall"
+[ -e "${script}" ] || ${cxx} -x c++ -o ${script} - <<INLINE && exec ${script} $@
+#include <iostream>
+
+int main() {
+  std::cout << "Hello, world!\n";
+  return 42;
+}
+INLINE]]></code></pre>
+<p>Save this as "hello-world", then call it like this:</p>
+<pre><code>$ ./hello-world
+Hello, world!</code></pre>
+<p>Yep, it's a C++ script right there alright. So, how does it work? Let's check out how this works line-by-line:</p>
+<pre><code class="language-shell"><![CDATA[#!/bin/sh
+# vim: set ft=cpp:]]></code></pre>
+<p>The first line is a standard shebang for using the system's standard shell to interpret this script. I've tried it with <em>bash</em> and <em>zsh</em>, and both seem to work. Huzzah! The second line is strictly optional; it tells vim - and other editors supporting vim modelines - that this file is supposed to be highlighted like a c++ file. This makes sense in that most of the file will actually be C++, not shell, so shell highlights are useless.</p>
+<pre><code class="language-shell"><![CDATA[md5=$( (md5 -q || md5sum -b) < $0 2>/dev/null | cut -d ' ' -f1)
+script="/tmp/$(basename $0).${md5}"
+cxx="clang++ -O2 -std=c++11 -pipe -Wall"]]></code></pre>
+<p>This set of lines first grabs an MD5 checksum of the script, then constructs a path under /tmp for the compiled version of the script. The final line is the command to call to compile a bit of C++ code. The example here uses <em>clang++</em> and compiles in C++11 mode. If you need to link your script to some libraries, this would be a good place to put your extra command line flags.</p>
+<pre><code class="language-shell"><![CDATA[[ -e "${script}" ] || ${cxx} -x c++ -o ${script} - <<INLINE && exec ${script} $@]]></code></pre>
+<p>This line tries to find out if the output script already exists; if it doesn't, it calls the compiler command line from above to compile it. Either way, it will subsequently try to run the script if it exists or compiled without an error. Note the <em>INLINE</em> heredoc, which we use to include the actual script...</p>
+<pre><code class="language-cpp"><![CDATA[#include <iostream>
+
+int main() {
+  std::cout << "Hello, world!\n";
+  return 42;
+}]]></code></pre>
+<p>... which turns out to be a simple C++ hello world in this case. But any ol' C++ will do.</p>
+<pre><code class="language-shell"><![CDATA[INLINE]]></code></pre>
+<p>This final line terminates the inline script. I've found that most shells seem to not care if this is omitted, so you could probably get away with not including this, but meh. Might as well leave it.</p>
+<p>Enjoy your C++ scripts, using this handy 5-line shell script header :).</p>
+<p>(Also, dreadfully sorry that the <em>TSF</em> series is currently on hold. Things are a bit busy at work for me and Nadja. But we'll revive it, promise!)</p>
+</body>
+</html>
