@@ -148,11 +148,12 @@ PNGCACHE:=$(addprefix $(CACHE)/png/,$(DPNGS))
 CSSCACHE:=$(addprefix $(CACHE)/css/,$(CSSS))
 JSCACHE:=$(addprefix $(CACHE)/js/,$(DJSS))
 SVGCACHE:=$(addprefix $(CACHE)/svg/,$(SVGS) $(wildcard *.svg))
+METACACHE:=$(addprefix $(CACHE)/,index.xml .gitignore)
 
 INLINEIMG:=$(addsuffix .base64.xml,$(JPEGCACHE) $(PNGCACHE))
 INLINECSS:=$(addsuffix .xml,$(CSSCACHE))
 
-CACHEFILES:=$(ATOMCACHE) $(DOCBOOKCACHE) $(XHTMLCACHE) $(HTMLCACHE) $(JPEGCACHE) $(PNGCACHE) $(CSSCACHE) $(JSCACHE) $(SVGCACHE)
+CACHEFILES:=$(ATOMCACHE) $(DOCBOOKCACHE) $(XHTMLCACHE) $(HTMLCACHE) $(JPEGCACHE) $(PNGCACHE) $(CSSCACHE) $(JSCACHE) $(SVGCACHE) $(METACACHE)
 
 GZIPCACHE:=$(addsuffix .gz,$(CACHEFILES))
 
@@ -276,9 +277,12 @@ $(CACHE)/.gitignore:
 	echo "*.base64.xml" >> $@
 	echo "*.xhtml" >> $@
 	echo "!*dnt.xhtml" >> $@
+	echo "*.css.xml" >> $@
 
-cache: $(CACHE)/.git/config $(CACHE)/.gitignore xhtmlcache atomcache docbookcache htmlcache jpegcache pngcache csscache jscache svgcache
-	cd $(CACHE) && git add .gitignore $(CACHEFILES:$(CACHE)/%=%) && git commit -m "cache update"
+metacache: $(METACACHE)
+
+cache: $(CACHE)/.git/config metacache xhtmlcache atomcache docbookcache htmlcache jpegcache pngcache csscache jscache svgcache
+	cd $(CACHE) && git add $(CACHEFILES:$(CACHE)/%=%) && git commit -m "cache update"
 
 $(CACHE)/%.gz: $(CACHE)/%
 	gzip -knf9 $<
