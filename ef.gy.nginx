@@ -89,7 +89,7 @@ server {
 
     access_log /var/log/nginx/$scheme-$dnt-$http_host.access.log;
 
-    xslt_types application/xhtml+xml application/atom+xml image/svg+xml;
+    xslt_types application/xhtml+xml application/atom+xml;
 
     set $documentRoot /srv/http/ef.gy;
 
@@ -180,7 +180,7 @@ server {
         error_page 403 /source-code;
     }
 
-    location ~ /(?<type>css|jpeg|js|png)/(?<file>.+) {
+    location ~ /(?<type>css|jpeg|js|png|svg)/(?<file>.+) {
         alias $documentRoot/.cache/$type/;
         try_files $file.$type $file =404;
 
@@ -215,13 +215,6 @@ server {
     location /raw {
         alias $documentRoot;
         try_files $uri =404;
-    }
-
-    location /svg {
-        alias $documentRoot;
-        try_files $uri.svg $uri =404;
-
-        xslt_stylesheet /srv/http/ef.gy/xslt/svg-style-ef.gy.xslt;
     }
 
     location /rasterised/svg {

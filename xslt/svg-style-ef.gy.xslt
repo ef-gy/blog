@@ -31,16 +31,4 @@
       <xsl:apply-templates select="@*|node()" />
     </xsl:copy>
   </xsl:template>
-
-<!--
-  <xsl:template match="/svg:svg">
-    <xsl:processing-instruction name="xml-stylesheet">
-      <xsl:text>type="text/css" href="/css/ef.gy"</xsl:text>
-    </xsl:processing-instruction>
-    <svg>
-      <xsl:apply-templates select="@*|node()" />
-    </svg>
-  </xsl:template>
-  -->
 </xsl:stylesheet>
-

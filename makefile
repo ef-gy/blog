@@ -124,7 +124,7 @@ uninstall: uninstall-pdf
 validate: validate-docbook validate-xhtml
 
 # create a local cache of post-processed files
-$(CACHE)/.volatile $(CACHEO)/.volatile $(CACHET)/.volatile $(CACHE)/jpeg/.volatile $(CACHE)/png/.volatile $(CACHE)/css/.volatile $(CACHE)/js/.volatile:
+$(CACHE)/.volatile $(CACHEO)/.volatile $(CACHET)/.volatile $(CACHE)/jpeg/.volatile $(CACHE)/png/.volatile $(CACHE)/css/.volatile $(CACHE)/js/.volatile $(CACHE)/svg/.volatile:
 	mkdir -p $(dir $@) || true
 	touch $@
 
@@ -147,11 +147,12 @@ JPEGCACHE:=$(addprefix $(CACHE)/jpeg/,$(JPEGS))
 PNGCACHE:=$(addprefix $(CACHE)/png/,$(DPNGS))
 CSSCACHE:=$(addprefix $(CACHE)/css/,$(CSSS))
 JSCACHE:=$(addprefix $(CACHE)/js/,$(DJSS))
+SVGCACHE:=$(addprefix $(CACHE)/svg/,$(SVGS) $(wildcard *.svg))
 
 INLINEIMG:=$(addsuffix .base64.xml,$(JPEGCACHE) $(PNGCACHE))
 INLINECSS:=$(addsuffix .xml,$(CSSCACHE))
 
-GZIPCACHE:=$(addsuffix .gz,$(ATOMCACHE) $(DOCBOOKCACHE) $(XHTMLCACHE) $(HTMLCACHE) $(JPEGCACHE) $(PNGCACHE) $(CSSCACHE) $(JSCACHE))
+GZIPCACHE:=$(addsuffix .gz,$(ATOMCACHE) $(DOCBOOKCACHE) $(XHTMLCACHE) $(HTMLCACHE) $(JPEGCACHE) $(PNGCACHE) $(CSSCACHE) $(JSCACHE) $(SVGCACHE))
 
 inlinecss: $(INLINECSS)
 inlineimg: $(INLINEIMG)
@@ -226,6 +227,9 @@ $(CACHET)/%.docbook: %.xhtml xslt/xhtml-pre-process.xslt xslt/docbook-transcode-
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-pre-process.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/docbook-transcode-xhtml.xslt - > $@
 
+$(CACHE)/svg/%.svg: %.svg $(CACHE)/svg/.volatile xslt/svg-style-ef.gy.xslt makefile
+	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/svg-style-ef.gy.xslt $< > $@
+
 $(CACHE)/jpeg/%.jpeg: jpeg/%.jpeg $(CACHE)/jpeg/.volatile makefile
 	convert "$<" -resize 921600@\> -strip -quality 86 "$@"
 
@@ -258,8 +262,9 @@ jpegcache: $(JPEGCACHE)
 pngcache: $(PNGCACHE)
 csscache: $(CSSCACHE)
 jscache: $(JSCACHE)
+svgcache: $(SVGCACHE)
 
-cache: xhtmlcache atomcache docbookcache htmlcache jpegcache pngcache csscache jscache
+cache: xhtmlcache atomcache docbookcache htmlcache jpegcache pngcache csscache jscache svgcache
 
 $(CACHE)/%.gz: $(CACHE)/%
 	gzip -knf9 $<
@@ -275,7 +280,7 @@ $(CACHE)/png/%.base64.xml: $(CACHE)/png/%.base64
 
 zip: $(GZIPCACHE)
 
-# $(THIRDPARTY) module downloads
+# third-party module downloads
 $(THIRDPARTY)/.volatile:
 	mkdir -p $(THIRDPARTY) || true
 	touch $@
