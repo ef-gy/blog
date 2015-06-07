@@ -152,7 +152,9 @@ SVGCACHE:=$(addprefix $(CACHE)/svg/,$(SVGS) $(wildcard *.svg))
 INLINEIMG:=$(addsuffix .base64.xml,$(JPEGCACHE) $(PNGCACHE))
 INLINECSS:=$(addsuffix .xml,$(CSSCACHE))
 
-GZIPCACHE:=$(addsuffix .gz,$(ATOMCACHE) $(DOCBOOKCACHE) $(XHTMLCACHE) $(HTMLCACHE) $(JPEGCACHE) $(PNGCACHE) $(CSSCACHE) $(JSCACHE) $(SVGCACHE))
+CACHEFILES:=$(ATOMCACHE) $(DOCBOOKCACHE) $(XHTMLCACHE) $(HTMLCACHE) $(JPEGCACHE) $(PNGCACHE) $(CSSCACHE) $(JSCACHE) $(SVGCACHE)
+
+GZIPCACHE:=$(addsuffix .gz,$(CACHEFILES))
 
 inlinecss: $(INLINECSS)
 inlineimg: $(INLINEIMG)
@@ -264,7 +266,19 @@ csscache: $(CSSCACHE)
 jscache: $(JSCACHE)
 svgcache: $(SVGCACHE)
 
-cache: xhtmlcache atomcache docbookcache htmlcache jpegcache pngcache csscache jscache svgcache
+$(CACHE)/.git/config:
+	cd $(CACHE) && git init
+
+$(CACHE)/.gitignore:
+	echo ".volatile" > $@
+	echo "*.gz" >> $@
+	echo "*.base64" >> $@
+	echo "*.base64.xml" >> $@
+	echo "*.xhtml" >> $@
+	echo "!*dnt.xhtml" >> $@
+
+cache: $(CACHE)/.git/config $(CACHE)/.gitignore xhtmlcache atomcache docbookcache htmlcache jpegcache pngcache csscache jscache svgcache
+	cd $(CACHE) && git add .gitignore $(CACHEFILES:$(CACHE)/%=%) && git commit -m "cache update"
 
 $(CACHE)/%.gz: $(CACHE)/%
 	gzip -knf9 $<
@@ -278,7 +292,7 @@ $(CACHE)/jpeg/%.base64.xml: $(CACHE)/jpeg/%.base64
 $(CACHE)/png/%.base64.xml: $(CACHE)/png/%.base64
 	echo "<?xml version='1.0' encoding='utf-8'?><img xmlns='http://www.w3.org/1999/xhtml' src='data:image/png;base64,$$(cat $<)'/>" > $@
 
-zip: $(GZIPCACHE)
+zip: cache $(GZIPCACHE)
 
 # third-party module downloads
 $(THIRDPARTY)/.volatile:
