@@ -180,64 +180,36 @@ server {
         error_page 403 /source-code;
     }
 
-    location /css {
-        root $documentRoot/.cache;
-        try_files $uri.css =404;
+    location ~ /(?<type>css|jpeg|js|png)/(?<file>.+) {
+        alias $documentRoot/.cache/$type/;
+        try_files $file.$type $file =404;
 
         expires 1w;
     }
 
-    location /png {
-        root $documentRoot/.cache;
-        try_files $uri.png =404;
+    location ~ /(?<type>epub|mobi|pdf)/(?<file>.+) {
+        alias $documentRoot/$type/;
+        try_files $file.$type $file =404;
 
-        expires 1w;
-    }
+        types {
+            application/epub+zip epub;
+            application/x-mobipocket-ebook mobi;
+            application/pdf pdf;
+        }
 
-    location /jpeg {
-        root $documentRoot/.cache;
-        try_files $uri.jpeg =404;
-
-        expires 1w;
-    }
-
-    location /pdf {
-        try_files $uri.pdf $uri =404;
-
-                expires 1d;
-    }
-
-    location /mobi {
-        try_files $uri.mobi $uri =404;
-        types { application/x-mobipocket-ebook mobi; }
-
-                expires 1d;
-    }
-
-    location /epub {
-        try_files $uri.mobi $uri =404;
-        types { application/epub+zip epub; }
-
-                expires 1d;
-    }
-
-    location /js {
-        root $documentRoot/.cache;
-        try_files $uri.js =404;
-
-        expires 1w;
+        expires 1d;
     }
 
     location ~ /(?<type>atom|docbook)/(?<file>.+) {
         alias $documentRoot/.cache/$hostnameproper/;
         try_files $file.$type $file =404;
 
-        expires 1h;
-
         types {
-            application/docbook+xml docbook;
             application/atom+xml atom;
+            application/docbook+xml docbook;
         }
+
+        expires 1h;
     }
 
     location /raw {
@@ -253,20 +225,13 @@ server {
     }
 
     location /rasterised/svg {
-                alias $documentRoot/png/rasterised;
+        alias $documentRoot/png/rasterised;
         try_files $uri.png $uri =404;
     }
 
-    location /xhtml {
-        alias $documentRoot/.cache/$hostnameproper;
-        try_files $uri.$dnt.xhtml $uri.xhtml $uri =404;
-
-        expires 3h;
-    }
-
-    location /html {
-        alias $documentRoot/.cache/$hostnameproper;
-        try_files $uri.$dnt.html $uri.html $uri.$dnt.xhtml $uri.xhtml $uri =404;
+    location ~ /(?<type>x?html)/(?<file>.+) {
+        alias $documentRoot/.cache/$hostnameproper/;
+        try_files $file.$dnt.$type $file.$type $file.$dnt.xhtml $file.xhtml $file =404;
 
         expires 3h;
     }
