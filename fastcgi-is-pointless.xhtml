@@ -5,7 +5,7 @@
 <meta name="author" content="Magnus Achim Deininger" />
 <meta name="description" content="Why do we have a plethora of gateway interfaces with new protocols that mimic CGI when we could have just used a web server instead?" />
 <meta name="date" content="2014-01-13T08:05:00Z" />
-<meta name="mtime" content="2014-01-13T08:05:00Z" />
+<meta name="mtime" content="2015-06-08T21:00:00Z" />
 <meta name="category" content="Articles" />
 <meta name="unix:name" content="fastcgi-is-pointless" />
 <style>table.proper th { min-width: 12em; }
@@ -66,5 +66,6 @@ S: <DISCONNECT>]]></code></pre></td></tr>
 <p>... so what does tell us? Well, basically, it'll be a lot easier to just use or implement your own HTTP server and run that on a Unix socket instead of implementing FastCGI for the same purpose. You'll probably be prone to fewer bugs in other people's code and you'll get the exact request you're trying to respond to, and considering HTTP is a lot easier to read, you'll also be making fewer bugs parsing it yourself. It's quite easy, really, <a href="https://github.com/jyujin/libefgy/blob/master/include/ef.gy/http.h">I came up with a 400-ish line C++ header that implements an HTTP server with Boost::ASIO</a>.</p>
 <p>Using your own HTTP server has another advantage: it's easier to debug since you can just run it on a TCP/IP socket and connect to it with your browser. You can't do that in FastCGI - although you could run that directly on the command line. But then you'd have to set up tons of environment variables and hope the library you're using acts the same with regular CGI requests than with FastCGI requests and the bug isn't just in the latter.</p>
 <p>There's absolutely no point to FastCGI or other "improved" CGI variants these days, so don't fall for them for your next web application project. Go straight for the real thing, use HTTP.</p>
+<p><em>Update: <a href="/partial-http">I've gotten some very out-of-band feedback to the above proof-of-concept HTTP mini-server, and I've taken some time to write up some thoughts on that feedback in a separate blog post</a>.</em></p>
 </body>
 </html>

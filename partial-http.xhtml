@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" id="server-grill">
+<head>
+<title>The Case of the Incomplete HTTP Implementation</title>
+<meta name="author" content="Magnus Achim Deininger" />
+<meta name="description" content="The other month I wrote this little HTTP/1.1 mini server in C++. People had fun comments to that, and I'd kind of like to examine those a little closer."/>
+<meta name="date" content="2015-06-08T21:00:00Z" />
+<meta name="mtime" content="2015-06-08T21:00:00Z" />
+<meta name="category" content="Articles" />
+<meta name="unix:name" content="partial-http" />
+</head>
+<body>
+<p>People write the darndest things. Early last year <a href="/fastcgi-is-pointless">I wrote a little piece on why I felt that FastCGI was rather pointless</a>. As expected, responses were quite mixed - some people agreed, some people got their panties in a bunch. So far, so good. 'tis the Internet, after all.</p>
+<p>So, what's interesting about this? Well, the stance of some of the comments, of course. Let's recap: in TFA, I was trying to point out that FastCGI was rather pointless as HTTP can fill the exact same position, only more legibly so. To put my money where my mouth was, I linked to a really short and concise HTTP implementation I threw together a while ago, and that I was using for some projects as backends behind nginx frontends. I honestly didn't expect any kind of reaction out of that, but hey, I'm notoriously wrong at judging which content will fly and which won't.</p>
+<h1>The Comments</h1>
+<p>Apart from nods of agreements there's strange ones cropping up all over the place every other month. Not entirely unexpectedly, some of the more elaborate ones were on <a href="https://news.ycombinator.com/item?id=9202411">Hacker News</a> and <a href="http://forums.somethingawful.com/showthread.php?threadid=2803713&amp;pagenumber=741&amp;perpage=40#post444447026">The Something Awful Forums</a>. The latter is a first, I believe. Yay! Maybe :)</p>
+<p>I realise I'm not supposed to feed the trolls. But I'll play anyway. Not in any particular order, people were saying...</p>
+<h2>"Unsurprisingly [this] falls far short of supporting the full HTTP spec."</h2>
+<p>Right, I agree with that. It was never meant to be a full implementation. In particular, it was meant to be used behind an nginx reverse proxy that would not need any of the other features of the protocol. The original version I had posted at the time was actually only capable of running on a UNIX socket. This has since been fixed with some templating magic, but that <em>should</em> have told you something about whether this was meant to be a full implementation or not.</p>
+<p></p>
+<h2>"It looks like multiple occurrences of the same header will be ignored"</h2>
+<p>That's oddly specific... but okay. "It looks like" is the operative word here, as that's not entirely correct: repeated headers override the first instance. Is that proper HTTP behavior? Probably not. That actually was a design decision of sorts, as it turns out <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2">section 4.2 of RFC 2616</a> mandates that repeated header fields are only allowed for fields that represent comma-separated lists of values and they must be collapsible into a single header line of that form.</p>
+<p>For my use case, this simply wasn't an issue. But guess what? This would've been a <em>really</em> short fix. So, since someone already took out enough time of their day to read the code and post on <em>Hacker News</em> about how this is kinda broken, why not... fire off an email with that comment so it can be fixed? Or an issue on the same GitHub page that was presumably used to read the file? Or a line comment?</p>
+<h2>"It will just close the connection instead of returning status 400 on protocol errors - in the best case"</h2>
+<p>OK, first of all, closing the connection when you get garbage input is a pretty solid strategy. Since the use case established by TFA clearly indicates <em>usage behind a proxy</em> - since we're comparing the utility of HTTP versus FastCGI implementations, remember? - that means that the only access the server is ever supposed to get is from your very own frontend reverse proxy. You know what's wrong if you get requests with plain obvious protocol errors from those? Yep, basically you're boned. Your frontend is screwed, might as well stop right there. Which would elicit a proper 500 error from the frontend, as it were.</p>
+<p>That said, the server code actually only ever closes the connection when the connection is dropped by the client. Or when the OS interferes. Turns out that in those cases, it's quite impossible to send a reply, much less a 400 code. Ooops. On the other hand, the code is in fact rather lenient during the header parsing stage, which could be tightened to produce 400 errors on some conditions. Again, would've been nice feedback.</p>
+<h2>"[Perhaps it could] implement chunked transfers"</h2>
+<p>Again, oddly specific. <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.6.1">The spec does clearly state that that's required to be implemented</a>. On the other hand, <a href="http://wiki.nginx.org/HttpChunkinModule">even production-ready web servers like nginx - up until version 1.3.9 - do not support this for inbound request bodies natively</a> and simply tell the client that they must send a Content-Length using a <em>411 Length Required</em> status. And on the server side, while the library will forcibly add a Content-Length header, which would prevent you from issuing a chunked encoded message, it doesn't prevent you from simply not using that function and replying to the stream directly.</p>
+<p>Yes, there could be some extra helpers and some added tightness. But the code was meant to be used behind an nginx reverse proxy, which wouldn't have been able to handle this on inbound requests anyway, and it didn't actively prevent you from going around it to send chunked replies if you really wanted to. And, again, I say this would've been nice feedback to actually get, and the fix would be in the tens of lines.</p>
+<p>I do still quite firmly believe that if you really do need a chunked Transfer-Encoding, you're doing something wrong. But that's a different story.</p>
+<h2>"[Perhaps it could] accept abnormally cased header names"</h2>
+<p>I've seen comments like that float around, so it's worth repeating: it does do that. That's why there's a case-insensitive comparison functor in there that's used in the headers map.</p>
+<h2>"[Perhaps it could] enforce some mandatory request validations"</h2>
+<p>... such as? The whole point of the thing was to be as slim as possible a layer so that the application using it gets to decide what it needs to check for. And, of course, it's intended to be used behind a reverse proxy, which in turn will do a lot of those rather unspecified mandatory request validations...</p>
+<h2>"[Perhaps it could do] those other little things that httpd takes more than 400 lines to do"</h2>
+<p>This one is funny, because it's missing the point completely. The article was specifically comparing the use of HTTP <em>as opposed to</em> FastCGI and similar. It doesn't need to do any of the things any old httpd does, because there's still an httpd in use that actually does all those things.</p>
+<p>Not that the comment was particularly specific; I'm assuming this would then be about all those fun modules that apache or nginx have, or serving static files, or gzipping the output what have you. But in the given scope that doesn't make sense at all. And it's nothing that FastCGI does, either, simply because the both of them are in the same scope.</p>
+<h2>"It totally doesn't deal with garbage input"</h2>
+<p>Uuuuh, d'uuuuh. Does your FastCGI app deal with garbage noise on the input stream? Oh, it segfaults? Well, funny how this one didn't, even though I let it run unprotected on a host that was an active Tor relay as an experiment... hmmm...</p>
+<h2>"Lol, it's using POSIX regexen"</h2>
+<p>I seriously saw this one somewhere. That's just... what? What does that have to do with anything. Yeah it's using regexen, because in the average case they have a runtime of O(n) and are quite well suited to parsing things that don't have bracket-like constructs. Such as, well, HTTP headers, which are always of the form <em>Field: Value</em>. Oh, and they're part of the C++ standard library, thanks to C++11. So, uh, someone please elaborate on that one.</p>
+<h2>Bonus credits: nginx configs are apparently lulzy</h2>
+<p><a href="https://github.com/ef-gy/kinsei/blob/master/kinsei.ef.gy.nginx">I started hacking on a star chart database with a JSON interface, but didn't get very far</a>. Apparently that config file is somehow funny, so I didn't want you to miss out on it. If someone could enlighten me, I'd quite appreciate it, though.</p>
+<p>I was thinking whoever read it may be thinking that it allows SQL injections, but then the input is actually validated using the regex in the location block. Or maybe it's the very part that it's using regexen to parse the input URL. I hear those are funny to look at if you don't get them.</p>
+<p>Or <em>maybe</em> it's the part where what I committed has suggests a really weak default db name/user/password combo, which is not actually used on that throw-away VM that had hosted the project, and which only allowed db logins via loopback.</p>
+<p>Then again, given where I saw the comment, it was probably the lack of easily exploitable PHP all around it. But I'd really like to hear the answer to this, as it's rather puzzling :).</p>
+<h1>The missing comments</h1>
+<p>So, with all those fun notes all scattered over the 'net, it turns out people forgot some more serious ones, such as...</p>
+<h2>Does HTTP/1.1 really support multi-line MIME headers?</h2>
+<p>When I wrote the original implementation, for some reason I was thinking in terms of MIME messages. So I added support for MIME multi-line messages. If ever I'd see one of those in the wild, it'd be the first time.</p>
+<p>That said, <a href="http://tools.ietf.org/html/rfc2616#section-2.2">section 2.2 of RFC 2616</a> actually explicitly allows this. Fun times. Not hard, but fun.</p>
+<h2>Why does it not send status code descriptions?</h2>
+<p>This one is fun. It turns out nginx actually fixes this up for you if you don't send a proper status code description. Not that this shows up anywhere in the browser, so unless you're telnetting or netcatting into the server, you won't see it. But seriously, people found all the other stuff but completely zoned that? That's such an obvious flaw... sort of.</p>
+<h2>It's impossible to use the 100-continue flow!</h2>
+<p>... just seeing how people actually found time to complain about the lack of the <em>chunked</em> encoding, I'd really figured people would also get vocal about this, but, not so much.</p>
+<p>Not that you'd see it behind a reverse proxy...</p>
+<h1>It's all a matter of scope</h1>
+<p>The server implementation was merely intended to highlight that it's not nearly as hard to write a thin layer that connects a backend to your frontend reverse proxy using HTTP as the communication protocol between the two, at least for roughly the same functionality that FastCGI would offer.</p>
+<p>I maintain that the library was quite successful at that, and still is. Does it implement the full HTTP/1.1 spec? Hardly. But it doesn't need to. It needed to implement <em>enough</em> of it to work as a backend for the given task - connecting simple backends in C++, over a local UNIX socket, to a frontend server.</p>
+<p>Conversely, it was pointed out that a spec such as FastCGI would be easier to implement completely, and therefore preferable in a context where one would have to roll their own client. I maintain that is a pointless comparison - especially in light of the fact that a lot of popular frontends don't do that either. Seriously, when's the last time you've seen a decent web server implement <em>all</em> of FastCGI? Including process pool management and the arbitrary authenticator and filter roles?</p>
+<p>Apache might, but some of those FastCGI modules carry other significant drawbacks. And <em>nginx</em> sure doesn't. Because it doesn't need to, either.</p>
+<h1>Fun aside...</h1>
+<p>... I actually like getting feedback. And I put this particular header in a completely open source library. With that in mind, people actually <em>read</em> the code, and took time out of their day to complain about parts of it online. That is <em>awesome</em>. Except for one part: they complained about it all over the 'tubes - <em>to everyone but the actual dev</em>.</p>
+<p>Yeah I know complaining is fun, but... seriously? Why would you do that and not at least write an email, or a github issue, or tweet the link to your post at me? It's not like all of the feedback was bad or invalid. It's quite useful, even. But if you don't tell that to someone who's interested in writing this code, then it becomes exceedingly less useful so.</p>
+<p>So yes, feel free to complain all you want, all day. I'm happy you're finding the issues. Just please also keep me in the loop so I can actually fix the issues you find.</p>
+<p>Thank you :).</p>
+</body>
+</html>
