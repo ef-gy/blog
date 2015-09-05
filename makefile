@@ -116,6 +116,7 @@ $(CACHET)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHET)/.volatile xslt/xhtml-p
 	markdown --html4tags $< >> $@
 	echo '</body></html>' >> $@
 	xsltproc -o $@ xslt/xhtml-fix-markdown.xslt $@
+	grep -q -F $@ .gitignore || echo $@ >> .gitignore
 
 $(CACHEO)/%.atom: %.atom $(ATOMS) xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt makefile mdxhtmls
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/atom-merge.xslt $< |\
