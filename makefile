@@ -128,7 +128,7 @@ $(CACHE)/.volatile $(CACHEO)/.volatile $(CACHET)/.volatile $(CACHE)/jpeg/.volati
 	mkdir -p $(dir $@) || true
 	touch $@
 
-CXHTMLS:=$(notdir $(wildcard *.xhtml))
+CXHTMLS:=$(notdir $(wildcard *.xhtml) $(wildcard *.md))
 ATOMS:=$(notdir $(wildcard *.atom))
 CEXHTMLS:=$(subst :,\:,$(CXHTMLS)) $(addsuffix .xhtml,$(basename $(ATOMS)))
 CDOCBOOKS:=$(addsuffix .docbook,$(basename $(CEXHTMLS)))
@@ -163,8 +163,10 @@ inlineimg: $(INLINEIMG)
 $(CACHEO)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-pre-process.xslt $< > $@
 
-%.xhtml: %.md 
-	markdown --html4tags $< > $@ 
+%.xhtml: %.md makefile
+	echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?><html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\"><head><meta name=\"unix:name\" content=\"$*\" /></head><body>" > $@
+	markdown --html4tags $< >> $@
+	echo '</body></html>' >> $@
 
 $(CACHEO)/%.atom: %.atom $(ATOMS) xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/atom-merge.xslt $< |\

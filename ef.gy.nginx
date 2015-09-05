@@ -119,6 +119,7 @@ server {
     }
 
     rewrite ^/(fibreproduct.rss|rss/fibreproduct)$ http://stream.ef.gy/rss/fibreproduct permanent;
+		rewrite ^/svg/tesseract$ https://dee.pe/r permanent;
 
     rewrite ^/documentation/libefgy/?$ /documentation/libefgy/index.xhtml redirect;
     rewrite ^/documentation/topologic/?$ /documentation/topologic/index.xhtml redirect;
