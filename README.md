@@ -19,4 +19,4 @@ How to add a blog post
 - Write your post in XHTML or Markdown
 - Add an entry to the relevant .atom feeds and commit/push
 - Run git pull on server if you wrote the post locally
-- Run make index
+- Run "make zip"
