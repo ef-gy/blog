@@ -138,7 +138,6 @@ JPEGS:=$(notdir $(addsuffix .jpeg,$(basename $(wildcard */*.jpg) $(wildcard */*.
 DPNGS:=$(notdir $(addsuffix .png,$(basename $(wildcard */*.png))))
 CSSS:=$(notdir $(addsuffix .css,$(basename $(wildcard css/*.css))))
 DJSS:=$(notdir $(addsuffix .js,$(basename $(wildcard js/*.js))))
-MDS:=$(notdir $(addsuffix .md,$(basename $(wildcard md/*.md))))
 
 ATOMCACHE:=$(addprefix $(CACHEO)/,$(ATOMS)) $(addprefix $(CACHET)/,$(ATOMS))
 DOCBOOKCACHE:=$(addprefix $(CACHEO)/,$(CDOCBOOKS)) $(addprefix $(CACHET)/,$(CDOCBOOKS))
@@ -149,7 +148,6 @@ PNGCACHE:=$(addprefix $(CACHE)/png/,$(DPNGS))
 CSSCACHE:=$(addprefix $(CACHE)/css/,$(CSSS))
 JSCACHE:=$(addprefix $(CACHE)/js/,$(DJSS))
 SVGCACHE:=$(addprefix $(CACHE)/svg/,$(SVGS) $(wildcard *.svg))
-MDCACHE:=$(addprefix $(CACHE)/md/, $(MDS))
 METACACHE:=$(addprefix $(CACHE)/,index.xml .gitignore)
 
 INLINEIMG:=$(addsuffix .base64.xml,$(JPEGCACHE) $(PNGCACHE))
@@ -165,8 +163,8 @@ inlineimg: $(INLINEIMG)
 $(CACHEO)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-pre-process.xslt $< > $@
 
-$(CACHEO)/%.xhtml: %.md markdown --html4tags $< > $@ 
-$(CACHET)/%.xhtml: %.md markdown --html4tags $< > $@ 
+%.xhtml: %.md 
+	markdown --html4tags $< > $@ 
 
 $(CACHEO)/%.atom: %.atom $(ATOMS) xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/atom-merge.xslt $< |\
@@ -270,7 +268,6 @@ jpegcache: $(JPEGCACHE)
 pngcache: $(PNGCACHE)
 csscache: $(CSSCACHE)
 jscache: $(JSCACHE)
-mdcache: $(MDCACHE)
 svgcache: $(SVGCACHE)
 
 $(CACHE)/.git/config:
@@ -287,7 +284,7 @@ $(CACHE)/.gitignore:
 
 metacache: $(METACACHE)
 
-cache: $(CACHE)/.git/config metacache xhtmlcache atomcache docbookcache htmlcache jpegcache pngcache csscache mdcache jscache svgcache
+cache: $(CACHE)/.git/config metacache xhtmlcache atomcache docbookcache htmlcache jpegcache pngcache csscache jscache svgcache
 	cd $(CACHE) && git add $(CACHEFILES:$(CACHE)/%=%) && git commit -m "cache update"
 
 $(CACHE)/%.gz: $(CACHE)/%
