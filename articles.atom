@@ -3,6 +3,7 @@
   <title>efgy</title>
   <subtitle>random articles of randomness</subtitle>
 
+  <entry xlink:href="on-the-spot.xhtml" />
   <entry xlink:href="partial-http.xhtml" />
   <entry xlink:href="executable-scripts-in-c++.xhtml" />
   <entry xlink:href="report:ssh-noise-august-2014.xhtml" />
