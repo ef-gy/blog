@@ -13,3 +13,10 @@ The site uses a custom pseudo-CMS in XSLT, so reading the sources could actually
     $ git clone http://ef.gy/.git
 
 Alternatively, this site is also mirrored to GitHub, at: https://github.com/jyujin/ef.gy - you can browse the sources or download straight from GitHub.
+
+How to add a blog post
+----------------------
+- Write your post in XHTML or Markdown
+- Add an entry to the relevant .atom feeds and commit/push
+- Run git pull on server if you wrote the post locally
+- Run make index
