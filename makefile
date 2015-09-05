@@ -1,7 +1,3 @@
-root:=https://ef.gy/
-name:=Magnus Achim Deininger
-INDICES:=download/index.atom download/kyuba/index.atom
-
 # domain settings
 DOMAIN:=ef.gy
 HIDDENSERVICE:=vturtipc7vmz6xjy.onion
@@ -41,6 +37,7 @@ PNGESC:=$(subst :,\:,$(PNGS))
 DATABASES:=life.sqlite3
 XSLTPROCCACHEOARGS:=--novalid --stringparam baseURI "https://$(DOMAIN)" --stringparam documentRoot "$$(pwd)" --stringparam disqusShortname "$(DISQUS)"
 XSLTPROCCACHETARGS:=--novalid --stringparam baseURI "http://$(HIDDENSERVICE)" --stringparam documentRoot "$$(pwd)" --stringparam disqusShortname "$(DISQUS)"
+XSLTPROCARGS:=$(XSLTPROCCACHEOARGS)
 
 # files to be downloaded
 JSDOWNLOADS:=js/disqus-embed.js js/highlight.js
@@ -62,7 +59,7 @@ components: svgs csss jss pngs inlinecss inlineimg
 scrub: clean
 
 databases: $(DATABASES)
-index: $(INDICES) $(CACHE)/index.xml
+index: $(CACHE)/index.xml
 
 svgs: $(SVGS)
 pngs: $(PNGESC)
@@ -75,6 +72,7 @@ $(CACHE)/.volatile $(CACHEO)/.volatile $(CACHET)/.volatile $(CACHE)/jpeg/.volati
 	mkdir -p $(dir $@) || true
 	touch $@
 
+MDXHTMLS:=$(addsuffix .xhtml,$(basename $(wildcard *.md)))
 CXHTMLS:=$(notdir $(wildcard *.xhtml) $(wildcard *.md))
 ATOMS:=$(notdir $(wildcard *.atom))
 CEXHTMLS:=$(subst :,\:,$(CXHTMLS)) $(addsuffix .xhtml,$(basename $(ATOMS)))
@@ -93,7 +91,7 @@ PNGCACHE:=$(addprefix $(CACHE)/png/,$(DPNGS))
 CSSCACHE:=$(addprefix $(CACHE)/css/,$(CSSS))
 JSCACHE:=$(addprefix $(CACHE)/js/,$(DJSS))
 SVGCACHE:=$(addprefix $(CACHE)/svg/,$(SVGS) $(wildcard *.svg))
-METACACHE:=$(addprefix $(CACHE)/,index.xml .gitignore)
+METACACHE:=$(addprefix $(CACHE)/,index.xml .gitignore) $(CACHEO)/sitemap.xml $(CACHET)/sitemap.xml
 
 INLINEIMG:=$(addsuffix .base64.xml,$(JPEGCACHE) $(PNGCACHE))
 INLINECSS:=$(addsuffix .xml,$(CSSCACHE))
@@ -113,12 +111,13 @@ $(CACHET)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHET)/.volatile xslt/xhtml-p
 	DATES=$$(git log --date=iso "$*.xhtml"|grep 'Date:'|sed -E 's/Date:\s*(.+) (.+) (.+)/\1T\2\3/'|sort) \
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam ctime "$$(echo "$$DATES"|head -n1)" --stringparam mtime "$$(echo "$$DATES"|tail -n1)" --stringparam name "$*" xslt/xhtml-pre-process.xslt $< > $@
 
-%.xhtml: %.md makefile
-	echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?><html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\"><head><meta name=\"unix:name\" content=\"$*\" /></head><body>" > $@
+%.xhtml: %.md makefile xslt/xhtml-fix-markdown.xslt
+	echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?><html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\"><head><meta name=\"unix:name\" content=\"$*\"/><meta name=\"date\" content=\"$$(git log --date=iso "$*.md"|grep 'Date:'|sed -E 's/Date:\s*(.+) (.+) (.+)/\1T\2\3/'|sort|head -n1)\"/><meta name=\"mtime\" content=\"$$(git log --date=iso "$*.md"|grep 'Date:'|sed -E 's/Date:\s*(.+) (.+) (.+)/\1T\2\3/'|sort|tail -n1)\"/><meta name=\"author\" content=\"$$(git log "$*.md" |grep Author:|sed -E 's/Author: (.+) <.+>/\1/'|tail -n1)\"/></head><body>" > $@
 	markdown --html4tags $< >> $@
 	echo '</body></html>' >> $@
+	xsltproc -o $@ xslt/xhtml-fix-markdown.xslt $@
 
-$(CACHEO)/%.atom: %.atom $(ATOMS) xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt makefile
+$(CACHEO)/%.atom: %.atom $(ATOMS) xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt makefile mdxhtmls
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/atom-merge.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-pre-process.xslt -|\
 		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/atom-style-ef.gy.xslt -|\
@@ -142,7 +141,7 @@ $(CACHEO)/%.nodnt.xhtml: $(CACHEO)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtm
 $(CACHEO)/%.html: $(CACHEO)/%.xhtml xslt/html-post-process.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/html-post-process.xslt $< > $@
 
-$(CACHET)/%.atom: %.atom $(ATOMS) xslt/atom-merge.xslt $(CACHET)/.volatile xslt/xhtml-pre-process.xslt xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt makefile
+$(CACHET)/%.atom: %.atom $(ATOMS) xslt/atom-merge.xslt $(CACHET)/.volatile xslt/xhtml-pre-process.xslt xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt makefile mdxhtmls
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/atom-merge.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-pre-process.xslt -|\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/atom-style-ef.gy.xslt -|\
@@ -189,10 +188,17 @@ $(CACHE)/css/%.css.xml: $(CACHE)/css/%.css makefile
 $(CACHE)/js/%.js: js/%.js $(CACHE)/js/.volatile makefile
 	cat $< > $@
 
+$(CACHEO)/sitemap.xml: $(CACHEO)/everything.atom xslt/sitemap-transcode-atom.xslt
+	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/sitemap-transcode-atom.xslt $< > $@
+
+$(CACHET)/sitemap.xml: $(CACHET)/everything.atom xslt/sitemap-transcode-atom.xslt
+	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/sitemap-transcode-atom.xslt $< > $@
+
 # global navigation index
 $(CACHE)/index.xml: $(CACHEO)/everything.atom xslt/index-transcode-atom.xslt makefile $(CACHE)/.volatile
 	$(XSLTPROC) $(XSLTPROCARGS) xslt/index-transcode-atom.xslt $< > $@
 
+mdxhtmls: $(MDXHTMLS)
 xhtmlcache: $(XHTMLCACHE)
 htmlcache: $(HTMLCACHE)
 atomcache: $(ATOMCACHE)
@@ -293,17 +299,6 @@ png/rasterised/%.png: %.svg png/rasterised/.volatile
 # pattern rule for R graphs
 %.svg: src/%.r
 	$(R) --no-save < $<
-
-# pattern rule to generate directory indices
-$(INDICES): makefile $(filter-out %index.atom, $(wildcard download/*))
-	echo '<?xml version="1.0" encoding="utf-8"?>'\
-		'<feed xmlns="http://www.w3.org/2005/Atom">'\
-		'<id>$(root)$@</id><title>/$(subst /index.atom,,$@)</title><link rel="self" href="$(root)atom/$(subst .atom,,$@)"/>'\
-		"<updated>$$(stat -c %y "$(subst /index.atom,,$@)"|sed -e 's/\(.\+\) \(.\+\)\(\..*\) \+\(...\)\(..\)/\1T\2\4:\5/')</updated>">$@
-	for i in $(subst /index.atom,,$@)/*; do\
-		if [ $${i} != "$@" -a -f $${i} ]; then echo "<entry><id>md5:$$(md5sum -b $${i}|cut -d ' ' -f 1)</id><title>$$(basename $${i})</title><link href='/$${i}' type='$$(file --mime-type $${i}|cut -d ' ' -f 2)'/><updated>$$(stat -c %y $${i}|sed -e 's/\(.\+\) \(.\+\)\(\..*\) \+\(...\)\(..\)/\1T\2\4:\5/')</updated><author><name>$(name)</name></author><category term='$$(echo '$(subst /index.atom,,$@)')'/><summary>File Type: $$(file --mime-type $${i}|cut -d ' ' -f 2). File Checksum (MD5): $$(md5sum -b $${i}|cut -d ' ' -f 1)</summary></entry>"; fi;\
-	done>>$@
-	echo '</feed>'>>$@
 
 # pattern rules for databases
 %.sqlite3: src/%.sql

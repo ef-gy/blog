@@ -147,10 +147,9 @@ server {
     location = /favicon.ico {
         types { image/svg+xml ico; }
     }
-    location = /sitemap.xml {
-        xslt_stylesheet /srv/http/ef.gy/xslt/atom-merge.xslt;
-        xslt_stylesheet /srv/http/ef.gy/xslt/atom-style-ef.gy.xslt;
-        xslt_stylesheet /srv/http/ef.gy/xslt/sitemap-transcode-atom.xslt;
+    location /sitemap.xml {
+        alias $documentRoot/.cache/$hostnameproper/;
+        try_files sitemap.xml =404;
     }
 
     location / {

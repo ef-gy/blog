@@ -3,5 +3,4 @@
   <title>kyuba.org/becquerel.org</title>
 
   <feed xlink:href="drupal-kyuba.atom"/>
-  <feed xlink:href="download/kyuba/index.atom"/>
 </feed>
