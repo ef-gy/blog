@@ -11,13 +11,31 @@
               media-type="application/xhtml+xml" />
 
   <xsl:param name="documentRoot"/>
-  <xsl:param name="baseURI"/>
+  <xsl:param name="ctime"/>
+  <xsl:param name="mtime"/>
+  <xsl:param name="name"/>
 
   <xsl:strip-space elements="*" />
   <xsl:preserve-space elements="xhtml:pre" />
 
   <xsl:template match="@*|node()">
     <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
+  </xsl:template>
+
+<!--
+  <xsl:template match="//xhtml:html/xhtml:head/xhtml:meta[@name='date']"/>
+  <xsl:template match="//xhtml:html/xhtml:head/xhtml:meta[@name='mtime']"/>
+  <xsl:template match="//xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']"/>
+-->
+
+  <xsl:template match="//xhtml:html/xhtml:head">
+    <xsl:copy><xsl:apply-templates select="@*|node()"/>
+<!--
+      <xhtml:meta name="date" content="{$ctime}"/>
+      <xhtml:meta name="mtime" content="{$mtime}"/>
+      <xhtml:meta name="unix:name" content="{$name}"/>
+-->
+    </xsl:copy>
   </xsl:template>
 
   <xsl:template match="xhtml:img[substring-after(@src, '/svg/') != '']">
