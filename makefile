@@ -166,6 +166,7 @@ $(CACHEO)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-p
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-pre-process.xslt $< > $@
 
 $(CACHEO)/%.xhtml: %.md markdown --html4tags $< > $@ 
+$(CACHET)/%.xhtml: %.md markdown --html4tags $< > $@ 
 
 $(CACHEO)/%.atom: %.atom $(ATOMS) xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/atom-merge.xslt $< |\
@@ -269,6 +270,7 @@ jpegcache: $(JPEGCACHE)
 pngcache: $(PNGCACHE)
 csscache: $(CSSCACHE)
 jscache: $(JSCACHE)
+mdcache: $(MDCACHE)
 svgcache: $(SVGCACHE)
 
 $(CACHE)/.git/config:
@@ -285,7 +287,7 @@ $(CACHE)/.gitignore:
 
 metacache: $(METACACHE)
 
-cache: $(CACHE)/.git/config metacache xhtmlcache atomcache docbookcache htmlcache jpegcache pngcache csscache jscache svgcache
+cache: $(CACHE)/.git/config metacache xhtmlcache atomcache docbookcache htmlcache jpegcache pngcache csscache mdcache jscache svgcache
 	cd $(CACHE) && git add $(CACHEFILES:$(CACHE)/%=%) && git commit -m "cache update"
 
 $(CACHE)/%.gz: $(CACHE)/%
