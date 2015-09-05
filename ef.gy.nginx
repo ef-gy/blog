@@ -119,6 +119,8 @@ server {
     }
 
     rewrite ^/(fibreproduct.rss|rss/fibreproduct)$ http://stream.ef.gy/rss/fibreproduct permanent;
+		rewrite ^/svg/tesseract$ https://dee.pe/r permanent;
+    rewrite ^/(pdf|mobi|epub|docbook)/(.+)$ /$2 permanent;
 
     rewrite ^/documentation/libefgy/?$ /documentation/libefgy/index.xhtml redirect;
     rewrite ^/documentation/topologic/?$ /documentation/topologic/index.xhtml redirect;
@@ -187,26 +189,12 @@ server {
         expires 1w;
     }
 
-    location ~ /(?<type>epub|mobi|pdf)/(?<file>.+) {
-        alias $documentRoot/$type/;
-        try_files $file.$type $file =404;
-
-        types {
-            application/epub+zip epub;
-            application/x-mobipocket-ebook mobi;
-            application/pdf pdf;
-        }
-
-        expires 1d;
-    }
-
-    location ~ /(?<type>atom|docbook)/(?<file>.+) {
+    location ~ /(?<type>atom)/(?<file>.+) {
         alias $documentRoot/.cache/$hostnameproper/;
         try_files $file.$type $file =404;
 
         types {
             application/atom+xml atom;
-            application/docbook+xml docbook;
         }
 
         expires 1h;

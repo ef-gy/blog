@@ -61,12 +61,6 @@
     <xsl:variable name="authordata" select="$authors[@name=$author][1]"/>
     <head>
       <link href="/css/ef.gy" rel="stylesheet" type="text/css" />
-      <xsl:if test="not(xhtml:meta[@name='category'][@content='auxiliary'])">
-        <link rel="alternate" type="application/pdf" href="/pdf/{$collection}"/>
-        <link rel="alternate" type="application/x-mobipocket-ebook" href="/mobi/{$collection}.mobi"/>
-        <link rel="alternate" type="application/epub+zip" href="/epub/{$collection}.epub"/>
-        <link rel="alternate" type="application/docbook+xml" href="/docbook/{$collection}"/>
-      </xsl:if>
       <xsl:apply-templates select="@*|node()" />
       <xsl:choose>
         <xsl:when test="//xhtml:link[@href=concat($baseURI,'/atom/site')]" />
@@ -197,13 +191,6 @@
         </social:social>
       </xsl:if>
       <xsl:if test="not(../xhtml:head/xhtml:meta[@name='category'][@content='auxiliary'])">
-        <ul id="hardcopies">
-          <li>transcripts:</li>
-          <li><a rel="alternate" type="application/pdf" href="/pdf/{$collection}">PDF</a></li>
-          <li><a rel="alternate" type="application/x-mobipocket-ebook" href="/mobi/{$collection}.mobi">Kindle/MobiPocket</a></li>
-          <li><a rel="alternate" type="application/epub+zip" href="/epub/{$collection}.epub">EPUB</a></li>
-          <li><a rel="alternate" type="application/docbook+xml" href="/docbook/{$collection}">DocBook 5</a></li>
-        </ul>
         <xsl:if test="not($nosocial) and not(xhtml:ul[@id='feed']) and ($disqusShortname != '')">
           <div id="disqus_thread"/>
           <script type="text/javascript">var disqus_shortname = '<xsl:value-of select="$disqusShortname"/>'; <xsl:if test="/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']">var disqus_identifier = '<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content"/>';</xsl:if></script>

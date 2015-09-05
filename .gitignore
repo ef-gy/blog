@@ -27,3 +27,4 @@ css/*+*.css
 social-metadata.xml
 .third-party
 .cache
+node_modules
