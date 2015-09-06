@@ -20,15 +20,11 @@ XHTMLS:=$(wildcard *.xhtml)
 RS:=$(wildcard src/*.r)
 DOCUMENTS:=$(filter-out about.xhtml public-keys.xhtml,$(wildcard *.xhtml) $(wildcard *.atom))
 
-# escaped file names
-XHTMLESC:=$(subst :,\:,$(XHTMLS))
-
 # target files
 SVGS:=$(addsuffix .svg,$(basename $(notdir $(RS))))
 PNGS:=$(addprefix png/rasterised/,$(addsuffix .png,$(basename $(SVGS) $(basename $(notdir $(wildcard *.svg))))))
 
 # escaped target file names
-PPXHTMLESC:=$(subst :,\:,$(PPXHTMLS))
 PNGESC:=$(subst :,\:,$(PNGS))
 
 DATABASES:=life.sqlite3
@@ -71,7 +67,8 @@ $(CACHE)/.volatile $(CACHEO)/.volatile $(CACHET)/.volatile $(CACHE)/jpeg/.volati
 
 MDXHTMLS:=$(addsuffix .xhtml,$(basename $(wildcard *.md)))
 CXHTMLS:=$(notdir $(wildcard *.xhtml) $(wildcard *.md))
-ATOMS:=$(notdir $(wildcard *.atom))
+XHTMLESCS:=$(subst :,\:,$(filter-out $(MDXHTMLS),$(CXHTMLS)))
+ATOMS:=$(filter-out everything.atom,$(notdir $(wildcard *.atom))) everything.atom
 CEXHTMLS:=$(subst :,\:,$(CXHTMLS)) $(addsuffix .xhtml,$(basename $(ATOMS)))
 DXHTMLS:=$(addsuffix .dnt.xhtml,$(basename $(CEXHTMLS))) $(addsuffix .nodnt.xhtml,$(basename $(CEXHTMLS)))
 DHTMLS:=$(addsuffix .html,$(basename $(DXHTMLS)))
@@ -314,3 +311,10 @@ game-of-life.xml: life.sqlite3
 
 game-of-life.svg: game-of-life.xml xslt/svg-0p-game-of-life.xslt
 	$(XSLTPROC) $(XSLTPROCARGS) -o $@ xslt/svg-0p-game-of-life.xslt $<
+
+everything.atom: $(XHTMLESCS) makefile
+	echo "<?xml version=\"1.0\" encoding=\"utf-8\"?><feed xmlns=\"http://www.w3.org/2005/Atom\" xml:id=\"$(basename $@)\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><title>$(DOMAIN)</title>" > $@
+	for file in $(basename $(sort $(XHTMLESCS))); do \
+	  echo "<entry xlink:href=\"$${file}.xhtml\"/>"; \
+	done >> $@
+	echo "</feed>" >> $@
