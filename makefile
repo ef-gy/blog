@@ -11,15 +11,12 @@ CACHET:=$(CACHE)/$(HIDDENSERVICE)
 
 # programmes
 XSLTPROC:=xsltproc
-GNUPLOT:=gnuplot
 R:=R
-KINDLEGEN:=kindlegen
 SQLITE3:=sqlite3
 CURL:=curl -s
 
 # source files
 XHTMLS:=$(wildcard *.xhtml)
-PLOTS:=$(filter-out src/flash-integrity.plot,$(wildcard src/*.plot))
 RS:=$(wildcard src/*.r)
 DOCUMENTS:=$(filter-out about.xhtml public-keys.xhtml,$(wildcard *.xhtml) $(wildcard *.atom))
 
@@ -27,7 +24,7 @@ DOCUMENTS:=$(filter-out about.xhtml public-keys.xhtml,$(wildcard *.xhtml) $(wild
 XHTMLESC:=$(subst :,\:,$(XHTMLS))
 
 # target files
-SVGS:=$(addsuffix .svg,$(basename $(notdir $(PLOTS))) $(basename $(notdir $(RS))))
+SVGS:=$(addsuffix .svg,$(basename $(notdir $(RS))))
 PNGS:=$(addprefix png/rasterised/,$(addsuffix .png,$(basename $(SVGS) $(basename $(notdir $(wildcard *.svg))))))
 
 # escaped target file names
@@ -103,22 +100,22 @@ GZIPCACHE:=$(addsuffix .gz,$(CACHEFILES))
 inlinecss: $(INLINECSS)
 inlineimg: $(INLINEIMG)
 
-$(CACHEO)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt makefile
+$(CACHEO)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt makefile components
 	DATES=$$(git log --date=iso "$*.xhtml"|grep 'Date:'|sed -E 's/Date:\s*(.+) (.+) (.+)/\1T\2\3/'|sort) \
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam ctime "$$(echo "$$DATES"|head -n1)" --stringparam mtime "$$(echo "$$DATES"|tail -n1)" --stringparam name "$*" xslt/xhtml-pre-process.xslt $< > $@
 
-$(CACHET)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHET)/.volatile xslt/xhtml-pre-process.xslt makefile
+$(CACHET)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHET)/.volatile xslt/xhtml-pre-process.xslt makefile components
 	DATES=$$(git log --date=iso "$*.xhtml"|grep 'Date:'|sed -E 's/Date:\s*(.+) (.+) (.+)/\1T\2\3/'|sort) \
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam ctime "$$(echo "$$DATES"|head -n1)" --stringparam mtime "$$(echo "$$DATES"|tail -n1)" --stringparam name "$*" xslt/xhtml-pre-process.xslt $< > $@
 
-%.xhtml: %.md makefile xslt/xhtml-fix-markdown.xslt
+%.xhtml: %.md makefile xslt/xhtml-fix-markdown.xslt components
 	echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?><html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\"><head><meta name=\"unix:name\" content=\"$*\"/><meta name=\"date\" content=\"$$(git log --date=iso "$*.md"|grep 'Date:'|sed -E 's/Date:\s*(.+) (.+) (.+)/\1T\2\3/'|sort|head -n1)\"/><meta name=\"mtime\" content=\"$$(git log --date=iso "$*.md"|grep 'Date:'|sed -E 's/Date:\s*(.+) (.+) (.+)/\1T\2\3/'|sort|tail -n1)\"/><meta name=\"author\" content=\"$$(git log "$*.md" |grep Author:|sed -E 's/Author: (.+) <.+>/\1/'|tail -n1)\"/></head><body>" > $@
 	markdown $< >> $@
 	echo '</body></html>' >> $@
 	xsltproc -o $@ xslt/xhtml-fix-markdown.xslt $@
 	grep -q -F $@ .gitignore || echo $@ >> .gitignore
 
-$(CACHEO)/%.atom: %.atom $(ATOMS) xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt makefile mdxhtmls
+$(CACHEO)/%.atom: %.atom $(ATOMS) xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt makefile mdxhtmls components
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/atom-merge.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-pre-process.xslt -|\
 		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/atom-style-ef.gy.xslt -|\
@@ -142,7 +139,7 @@ $(CACHEO)/%.nodnt.xhtml: $(CACHEO)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtm
 $(CACHEO)/%.html: $(CACHEO)/%.xhtml xslt/html-post-process.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/html-post-process.xslt $< > $@
 
-$(CACHET)/%.atom: %.atom $(ATOMS) xslt/atom-merge.xslt $(CACHET)/.volatile xslt/xhtml-pre-process.xslt xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt makefile mdxhtmls
+$(CACHET)/%.atom: %.atom $(ATOMS) xslt/atom-merge.xslt $(CACHET)/.volatile xslt/xhtml-pre-process.xslt xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt makefile mdxhtmls components
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/atom-merge.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-pre-process.xslt -|\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/atom-style-ef.gy.xslt -|\
@@ -289,13 +286,6 @@ png/rasterised/.volatile:
 # SVG rasterisation rules
 png/rasterised/%.png: %.svg png/rasterised/.volatile
 	rsvg-convert --keep-aspect-ratio --width 1920 $< -o $@
-
-# pattern rule for gnuplot graphs
-%.svg: src/%.plot src/flash-integrity.plot xslt/clean.xslt
-	$(GNUPLOT)\
-		-e 'set terminal svg size 1200,600 dynamic fname "sans-serif"'\
-		$< > $@
-	$(XSLTPROC) $(XSLTPROCARGS) -o $@ xslt/clean.xslt $@
 
 # pattern rule for R graphs
 %.svg: src/%.r

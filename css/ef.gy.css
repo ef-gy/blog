@@ -67,6 +67,7 @@ img, svg
     right: 0;
     width: 100%;
     width: calc(100% + 4em);
+    height: auto;
     margin: 1em -2em;
     font-size: inherit;
 }
