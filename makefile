@@ -113,7 +113,7 @@ $(CACHET)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHET)/.volatile xslt/xhtml-p
 
 %.xhtml: %.md makefile xslt/xhtml-fix-markdown.xslt
 	echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?><html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\"><head><meta name=\"unix:name\" content=\"$*\"/><meta name=\"date\" content=\"$$(git log --date=iso "$*.md"|grep 'Date:'|sed -E 's/Date:\s*(.+) (.+) (.+)/\1T\2\3/'|sort|head -n1)\"/><meta name=\"mtime\" content=\"$$(git log --date=iso "$*.md"|grep 'Date:'|sed -E 's/Date:\s*(.+) (.+) (.+)/\1T\2\3/'|sort|tail -n1)\"/><meta name=\"author\" content=\"$$(git log "$*.md" |grep Author:|sed -E 's/Author: (.+) <.+>/\1/'|tail -n1)\"/></head><body>" > $@
-	markdown --html4tags $< >> $@
+	markdown $< >> $@
 	echo '</body></html>' >> $@
 	xsltproc -o $@ xslt/xhtml-fix-markdown.xslt $@
 	grep -q -F $@ .gitignore || echo $@ >> .gitignore
