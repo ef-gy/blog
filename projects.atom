@@ -3,6 +3,7 @@
   <title>efgy</title>
   <subtitle>awesome projects of awesome</subtitle>
 
+  <entry xlink:href="introducing-analyticsd.xhtml" />
   <entry xlink:href="libefgy-4.xhtml" />
   <entry xlink:href="topologic-ios.xhtml" />
   <entry xlink:href="topologic-7.xhtml" />
