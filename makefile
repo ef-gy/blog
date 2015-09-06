@@ -100,11 +100,11 @@ GZIPCACHE:=$(addsuffix .gz,$(CACHEFILES))
 inlinecss: $(INLINECSS)
 inlineimg: $(INLINEIMG)
 
-$(CACHEO)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt makefile components
+$(CACHEO)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt makefile components $(CACHE)/index.xml
 	DATES=$$(git log --date=iso "$*.xhtml"|grep 'Date:'|sed -E 's/Date:\s*(.+) (.+) (.+)/\1T\2\3/'|sort) \
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam ctime "$$(echo "$$DATES"|head -n1)" --stringparam mtime "$$(echo "$$DATES"|tail -n1)" --stringparam name "$*" xslt/xhtml-pre-process.xslt $< > $@
 
-$(CACHET)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHET)/.volatile xslt/xhtml-pre-process.xslt makefile components
+$(CACHET)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHET)/.volatile xslt/xhtml-pre-process.xslt makefile components $(CACHE)/index.xml
 	DATES=$$(git log --date=iso "$*.xhtml"|grep 'Date:'|sed -E 's/Date:\s*(.+) (.+) (.+)/\1T\2\3/'|sort) \
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam ctime "$$(echo "$$DATES"|head -n1)" --stringparam mtime "$$(echo "$$DATES"|tail -n1)" --stringparam name "$*" xslt/xhtml-pre-process.xslt $< > $@
 
