@@ -16,7 +16,6 @@ SQLITE3:=sqlite3
 CURL:=curl -s
 
 # source files
-XHTMLS:=$(wildcard *.xhtml)
 RS:=$(wildcard src/*.r)
 DOCUMENTS:=$(filter-out about.xhtml public-keys.xhtml,$(wildcard *.xhtml) $(wildcard *.atom))
 
@@ -66,10 +65,10 @@ $(CACHE)/.volatile $(CACHEO)/.volatile $(CACHET)/.volatile $(CACHE)/jpeg/.volati
 	touch $@
 
 MDXHTMLS:=$(addsuffix .xhtml,$(basename $(wildcard *.md)))
-CXHTMLS:=$(notdir $(wildcard *.xhtml) $(wildcard *.md))
-XHTMLESCS:=$(subst :,\:,$(filter-out $(MDXHTMLS),$(CXHTMLS)))
+XHTMLS:=$(notdir $(wildcard *.xhtml) $(wildcard *.md))
+XHTMLESCS:=$(subst :,\:,$(filter-out $(MDXHTMLS),$(XHTMLS)))
 ATOMS:=$(filter-out everything.atom,$(notdir $(wildcard *.atom))) everything.atom
-CEXHTMLS:=$(subst :,\:,$(CXHTMLS)) $(addsuffix .xhtml,$(basename $(ATOMS)))
+CEXHTMLS:=$(subst :,\:,$(XHTMLS)) $(addsuffix .xhtml,$(basename $(ATOMS)))
 DXHTMLS:=$(addsuffix .dnt.xhtml,$(basename $(CEXHTMLS))) $(addsuffix .nodnt.xhtml,$(basename $(CEXHTMLS)))
 DHTMLS:=$(addsuffix .html,$(basename $(DXHTMLS)))
 JPEGS:=$(notdir $(addsuffix .jpeg,$(basename $(wildcard */*.jpg) $(wildcard */*.jpeg))))
