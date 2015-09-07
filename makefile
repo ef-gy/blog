@@ -97,15 +97,13 @@ inlinecss: $(INLINECSS)
 inlineimg: $(INLINEIMG)
 
 $(CACHEO)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt makefile components $(CACHE)/index.xml
-	DATES=$$(git log --date=iso "$*.xhtml"|grep 'Date:'|sed -E 's/Date:\s*(.+) (.+) (.+)/\1T\2\3/'|sort) \
-	$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam ctime "$$(echo "$$DATES"|head -n1)" --stringparam mtime "$$(echo "$$DATES"|tail -n1)" --stringparam name "$*" xslt/xhtml-pre-process.xslt $< > $@
+	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-pre-process.xslt $< > $@
 
 $(CACHET)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHET)/.volatile xslt/xhtml-pre-process.xslt makefile components $(CACHE)/index.xml
-	DATES=$$(git log --date=iso "$*.xhtml"|grep 'Date:'|sed -E 's/Date:\s*(.+) (.+) (.+)/\1T\2\3/'|sort) \
-	$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam ctime "$$(echo "$$DATES"|head -n1)" --stringparam mtime "$$(echo "$$DATES"|tail -n1)" --stringparam name "$*" xslt/xhtml-pre-process.xslt $< > $@
+	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-pre-process.xslt $< > $@
 
 %.xhtml: %.md makefile xslt/xhtml-fix-markdown.xslt components
-	echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?><html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\"><head><meta name=\"unix:name\" content=\"$*\"/><meta name=\"date\" content=\"$$(git log --date=iso "$*.md"|grep 'Date:'|sed -E 's/Date:\s*(.+) (.+) (.+)/\1T\2\3/'|sort|head -n1)\"/><meta name=\"mtime\" content=\"$$(git log --date=iso "$*.md"|grep 'Date:'|sed -E 's/Date:\s*(.+) (.+) (.+)/\1T\2\3/'|sort|tail -n1)\"/><meta name=\"author\" content=\"$$(git log "$*.md" |grep Author:|sed -E 's/Author: (.+) <.+>/\1/'|tail -n1)\"/></head><body>" > $@
+	echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?><html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\"><head><meta name=\"unix:name\" content=\"$*\"/><meta name=\"date\" content=\"$$(git log --date=iso "$*.md"|grep 'Date:'|sed -E 's/Date:\s*(.+) (.+) (...)(..)/\1T\2\3:\4/'|sort|head -n1)\"/><meta name=\"mtime\" content=\"$$(git log --date=iso "$*.md"|grep 'Date:'|sed -E 's/Date:\s*(.+) (.+) (...)(..)/\1T\2\3:\4/'|sort|tail -n1)\"/><meta name=\"author\" content=\"$$(git log "$*.md" |grep Author:|sed -E 's/Author: (.+) <.+>/\1/'|tail -n1)\"/></head><body>" > $@
 	markdown $< >> $@
 	echo '</body></html>' >> $@
 	xsltproc -o $@ xslt/xhtml-fix-markdown.xslt $@
