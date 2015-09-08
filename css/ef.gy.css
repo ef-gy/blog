@@ -100,7 +100,6 @@ h1:after,
 }
 
 h1:before,
-/*li.large*/
 #feed h2:before
 {
     position: absolute;
@@ -116,16 +115,6 @@ h1:before,
     text-align: center;
     margin-top: -.5em;
     background: black;
-}
-
-#feed li.medium h2:before
-{
-    content: "✎";
-}
-
-#feed li.small h2:before
-{
-    content: "✎";
 }
 
 h3

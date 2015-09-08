@@ -72,7 +72,7 @@
               <xsl:variable name="link" select="atom:link/@href"/>
               <xsl:choose>
                 <xsl:when test="not($link)">
-                  <li class="large"><h1><xsl:value-of select="atom:content/xhtml:html/xhtml:head/xhtml:title"/></h1>
+                  <li><h1><xsl:value-of select="atom:content/xhtml:html/xhtml:head/xhtml:title"/></h1>
                   <ul>
                     <li class="published"><xsl:value-of select="(atom:published | atom:updated)[1]"/></li>
                     <xsl:choose>
@@ -108,8 +108,8 @@
                   </xsl:for-each>
                   </li>
                 </xsl:when>
-                <xsl:when test="(position() = 1) or ($weights[@name=$tname] &gt;= 5)">
-                  <li class="large"><h1><a href="{$link}"><xsl:value-of select="atom:content/xhtml:html/xhtml:head/xhtml:title"/></a></h1>
+                <xsl:otherwise>
+                  <li><h1><a href="{$link}"><xsl:value-of select="atom:content/xhtml:html/xhtml:head/xhtml:title"/></a></h1>
                   <ul>
                     <li class="published"><xsl:value-of select="(atom:published | atom:updated)[1]"/></li>
                     <xsl:choose>
@@ -123,46 +123,6 @@
                   </ul>
                   <xsl:for-each select="atom:content/xhtml:html/xhtml:body/xhtml:* | atom:content/xhtml:html/xhtml:body/svg:*">
                     <xsl:if test="position() &lt; 5">
-                      <xsl:choose>
-                        <xsl:when test="self::xhtml:h1">
-                          <h2><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h2>
-                        </xsl:when>
-                        <xsl:when test="self::xhtml:h2">
-                          <h3><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h3>
-                        </xsl:when>
-                        <xsl:when test="self::xhtml:h3">
-                          <h4><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h4>
-                        </xsl:when>
-                        <xsl:when test="self::xhtml:h4">
-                          <h5><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h5>
-                        </xsl:when>
-                        <xsl:when test="self::xhtml:h5">
-                          <h6><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h6>
-                        </xsl:when>
-                        <xsl:otherwise>
-                          <xsl:copy-of select="."/>
-                        </xsl:otherwise>
-                      </xsl:choose>
-                    </xsl:if>
-                  </xsl:for-each>
-                  <p class="continue"><a href="{$link}">continue reading</a></p>
-                  </li>
-                </xsl:when>
-                <xsl:otherwise>
-                  <li class="medium"><h1><a href="{$link}"><xsl:value-of select="atom:content/xhtml:html/xhtml:head/xhtml:title"/></a></h1>
-                  <ul>
-                    <li class="published"><xsl:value-of select="(atom:published | atom:updated)[1]"/></li>
-                    <xsl:choose>
-                      <xsl:when test="contains(atom:author/atom:name, ' ')">
-                        <li class="author"><xsl:value-of select="substring-before(atom:author/atom:name, ' ')"/></li>
-                      </xsl:when>
-                      <xsl:otherwise>
-                        <li class="author"><xsl:value-of select="atom:author/atom:name"/></li>
-                      </xsl:otherwise>
-                    </xsl:choose>
-                  </ul>
-                  <xsl:for-each select="atom:content/xhtml:html/xhtml:body/xhtml:p | atom:content/xhtml:html/xhtml:body/xhtml:img | atom:content/xhtml:html/xhtml:body/xhtml:blockquote | atom:content/xhtml:html/xhtml:body/svg:svg">
-                    <xsl:if test="position() &lt; 3">
                       <xsl:choose>
                         <xsl:when test="self::xhtml:h1">
                           <h2><xsl:copy-of select="@*"/><xsl:copy-of select="text()"/></h2>

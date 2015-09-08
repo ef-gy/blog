@@ -28,6 +28,10 @@ social-metadata.xml
 .third-party
 .cache
 node_modules
+everything.atom
+site.atom
+latest.atom
+popular.atom
 README.xhtml
 introducing-analyticsd.xhtml
-everything.atom
+on-the-spot.xhtml

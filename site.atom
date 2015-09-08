@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom" xml:id="site" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <title>efgy</title>
-  <subtitle>the unnamed blog</subtitle>
-
-  <feed xlink:href="articles.atom"/>
-  <feed xlink:href="projects.atom"/>
-</feed>

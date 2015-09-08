@@ -67,7 +67,7 @@ $(CACHE)/.volatile $(CACHEO)/.volatile $(CACHET)/.volatile $(CACHE)/jpeg/.volati
 MDXHTMLS:=$(addsuffix .xhtml,$(basename $(wildcard *.md)))
 XHTMLS:=$(notdir $(wildcard *.xhtml) $(wildcard *.md))
 XHTMLESCS:=$(subst :,\:,$(filter-out $(MDXHTMLS),$(XHTMLS)))
-ATOMS:=$(filter-out everything.atom,$(notdir $(wildcard *.atom))) everything.atom
+ATOMS:=$(filter-out everything.atom site.atom,$(notdir $(wildcard *.atom))) everything.atom site.atom
 CEXHTMLS:=$(subst :,\:,$(XHTMLS)) $(addsuffix .xhtml,$(basename $(ATOMS)))
 DXHTMLS:=$(addsuffix .dnt.xhtml,$(basename $(CEXHTMLS))) $(addsuffix .nodnt.xhtml,$(basename $(CEXHTMLS)))
 DHTMLS:=$(addsuffix .html,$(basename $(DXHTMLS)))
@@ -315,3 +315,21 @@ everything.atom: $(XHTMLESCS) makefile
 	  echo "<entry xlink:href=\"$${file}.xhtml\"/>"; \
 	done >> $@
 	echo "</feed>" >> $@
+
+social-metadata.xml::
+	wst-sitemap-xml https://$(DOMAIN)/sitemap.xml > $@
+	$(XSLTPROC) --stringparam base https://$(DOMAIN)/ -o $@ xslt/social-sort.xslt $@
+
+popular.atom: social-metadata.xml xslt/atom-transcode-social.xslt
+	$(XSLTPROC) --stringparam domain $(DOMAIN) -o $@ xslt/atom-transcode-social.xslt $<
+
+latest.atom: everything.atom xslt/atom-filter-latest.xslt
+	$(XSLTPROC) --stringparam documentRoot "$$(pwd)" xslt/atom-merge.xslt $< | \
+		$(XSLTPROC) --stringparam domain $(DOMAIN) -o $@ xslt/atom-filter-latest.xslt -
+
+site.atom: popular.atom latest.atom
+	echo "<?xml version=\"1.0\" encoding=\"utf-8\"?><feed xmlns=\"http://www.w3.org/2005/Atom\" xml:id=\"$(basename $@)\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><title>$(DOMAIN)</title><subtitle>the latest and greatest</subtitle>" > $@
+	for file in $^; do echo "<feed xlink:href=\"$${file}\"/>"; done >> $@
+	echo "</feed>" >> $@
+	$(XSLTPROC) --stringparam documentRoot $$(pwd) -o "$@" xslt/atom-merge-plain.xslt "$@"
+	$(XSLTPROC) -o "$@" xslt/atom-dedupe.xslt "$@"
