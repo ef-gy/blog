@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:id="archives" xmlns:xlink="http://www.w3.org/1999/xlink">
   <title>ef.gy, einit.org and kyuba.org Archives</title>
 
-  <feed xlink:href="site-archives.atom"/>
+  <feed xlink:href="everything.atom"/>
   <feed xlink:href="drupal-einit.atom"/>
   <feed xlink:href="drupal-kyuba.atom"/>
 </feed>
