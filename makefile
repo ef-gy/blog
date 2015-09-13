@@ -201,7 +201,7 @@ jscache: $(JSCACHE)
 svgcache: $(SVGCACHE)
 
 $(CACHE)/.git/config:
-	cd $(CACHE) && git init
+	mkdir -p $(CACHE); cd $(CACHE) && git init
 
 $(CACHE)/.gitignore:
 	echo ".volatile" > $@
