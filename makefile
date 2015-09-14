@@ -40,8 +40,7 @@ JSDOWNLOADS:=js/disqus-embed.js js/highlight.js
 # meta rules
 update: index pngs
 
-all: fortune index components
-run: run-fortune
+all: index components cache zip
 clean:
 	rm -f $(DATABASES) $(INDICES); true
 	rm -f css/*+*.css $(JSDOWNLOADS)
@@ -288,14 +287,6 @@ png/rasterised/%.png: %.svg png/rasterised/.volatile
 # pattern rules for databases
 %.sqlite3: src/%.sql
 	rm -f $@ && $(SQLITE3) $@ < $<
-
-# specific rule to build the fortune daemon
-fortune: src/fortune.cpp include/ef.gy/http.h
-	clang++ -Iinclude/ -O2 src/fortune.cpp -lboost_system -lboost_regex -lboost_filesystem -lboost_iostreams -o fortune && strip -x fortune
-
-# specific rule to run the fortune daemon
-run-fortune: fortune
-	killall fortune; rm -f /var/tmp/fortune.socket && (nohup ./fortune /var/tmp/fortune.socket &) && sleep 1 && chmod a+w /var/tmp/fortune.socket
 
 # specific rules for silly gadgets
 game-of-life.xslt.xml::
