@@ -24,7 +24,6 @@
   <xsl:template match="xhtml:head">
     <head>
       <xsl:apply-templates select="node()"/>
-      <link href="/css/ef.gy.doxygen" rel="stylesheet" type="text/css" />
       <meta name="viewport" content="width=device-width, initial-scale=1"/>
     </head>
   </xsl:template>
