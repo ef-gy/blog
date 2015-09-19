@@ -94,20 +94,12 @@ server {
     }
 
     rewrite ^/(fibreproduct.rss|rss/fibreproduct)$ http://stream.ef.gy/rss/fibreproduct permanent;
-		rewrite ^/svg/tesseract$ https://dee.pe/r permanent;
     rewrite ^/(mobi|epub)/(.+)\.(epub|mobi)$ /$2 permanent;
     rewrite ^/(pdf|mobi|epub|docbook)/(.+)$ /$2 permanent;
 
-    rewrite ^/documentation/libefgy/?$ /documentation/libefgy/index.xhtml redirect;
-    rewrite ^/documentation/topologic/?$ /documentation/topologic/index.xhtml redirect;
-    rewrite ^/documentation/bourne\+\+/?$ /documentation/bourne++/index.xhtml redirect;
-    rewrite ^/documentation/libcurie/?$ /documentation/curie/index.xhtml redirect;
-    rewrite ^/documentation/curie/?$ /documentation/curie/index.xhtml redirect;
-    rewrite ^/documentation/duat/?$ /documentation/duat/index.xhtml redirect;
-    rewrite ^/documentation/dev9/?$ /documentation/dev9/index.xhtml redirect;
-    rewrite ^/documentation/metaquest/?$ /documentation/metaquest/index.xhtml redirect;
-    rewrite ^/documentation/verthandi/?$ /documentation/verthandi/index.xhtml redirect;
+    rewrite ^/documentation/([a-z+-]+)/?$ /documentation/$1/index.xhtml redirect;
 
+		rewrite ^/svg/tesseract$ https://dee.pe/r permanent;
     rewrite ^/webgl/topologic(-web)?.x?html$ https://dee.pe/r permanent;
 
     rewrite ^/rss/(.+)$ /atom/$1 permanent;
