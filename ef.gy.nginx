@@ -100,7 +100,7 @@ server {
     rewrite ^/documentation/([a-z+-]+)/?$ /documentation/$1/index.xhtml redirect;
 
 		rewrite ^/svg/tesseract$ https://dee.pe/r permanent;
-    rewrite ^/webgl/topologic(-web)?.x?html$ https://dee.pe/r permanent;
+    rewrite ^/(webgl/)?topologic(-web)?(.x?html)?$ https://dee.pe/r permanent;
 
     rewrite ^/rss/(.+)$ /atom/$1 permanent;
 
