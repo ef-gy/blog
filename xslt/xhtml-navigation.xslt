@@ -57,7 +57,6 @@
     <xsl:variable name="authordata" select="$authors[@name=$author][1]"/>
     <xsl:if test="$authordata">
       <address>
-      <xsl:attribute name="class">author-box</xsl:attribute>
       <h2>Written by <xsl:value-of select="$authordata/@display"/></h2>
       <xsl:if test="$authordata/@icon">
         <img src="{$authordata/@icon}" alt="Author Icon: {@name}"/>
