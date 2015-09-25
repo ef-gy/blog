@@ -1,7 +1,6 @@
 html
 {
     font-family: sans-serif;
-    background: #303030;
     color: #000;
     background-size: cover;
     min-height: 100%;
@@ -40,7 +39,7 @@ html#hypercube
 body
 {
     position: relative;
-    margin: 0 2.5em 0 25em;
+    margin: 0 2.5em 0 20em;
     background: #fff;
     background: rgba(255,255,255,0.95);
     padding: .5em 2em 2em 2em;
@@ -53,10 +52,10 @@ body:before
     display: block;
     position: absolute;
     top: 0;
-    left: -25em;
+    left: -20em;
     bottom: 0;
     width: 18em;
-    background: rgba(0,0,0,0.8);
+    background: rgba(255,255,255,0.8);
 }
 
 img, svg
@@ -82,39 +81,9 @@ address img
 h1,
 #full h2
 {
-    background: #f5f5f5;
-    background: rgba(230,230,230,0.9);
     margin: 1em -1.3em 1em -1.3em;
     padding: .5em 1.3em;
-    font-size: 1.5em;
-}
-
-h1:after,
-#full h2:after
-{
-    position: absolute;
-    content: "◀";
-    color: #f5f5f5;
-    color: rgba(230,230,230,0.9);
-    left: -.5em;
-}
-
-h1:before,
-#feed h2:before
-{
-    position: absolute;
-    content: "★";
-    display: inline-block;
-    color: #fff;
-    left: -3em;
-    border-radius: 2em;
-    width: 1.5em;
-    height: 1.5em;
-    font-size: 1.1em;
-    padding: .4em;
-    text-align: center;
-    margin-top: -.5em;
-    background: black;
+    font-size: 1.8em;
 }
 
 h3
@@ -151,87 +120,45 @@ a:hover
     text-decoration: underline;
 }
 
-h1+ul
+h1+ul,
+ul#meta
 {
-    display: block;
     position: absolute;
-    left: -27.5em;
+    left: -20.5em;
     top: 28em;
-    width: 18em;
+    width: 14em;
     margin: 0;
-    color: #fff;
 }
 
-h1+ul li
+h1+ul li,
+ul#meta li
 {
     display: block;
     margin: 0;
-    padding: .5em 2em;
-    background: #603030; 
 }
 
-h1+ul li a
+h1+ul li a,
+ul#meta li a
 {
     display: block;
-    background: #303030;
-    margin: -.5em -2em;
-    padding: .5em 2em;
     text-decoration: none;
 }
 
-ul#meta,
-ul#subfeeds
+ul#meta
 {
-    position: absolute;
-    left: -27.5em;
     top: 38em;
-    width: 18em;
-    margin: 0;
-    color: #fff;
-}
-
-ul#meta li,
-ul#subfeeds li
-{
-    display: block;
-    margin: 0;
-    padding: .5em 2em;
-    background: #603030; 
-}
-
-ul#meta li a,
-ul#subfeeds li a
-{
-    display: block;
-    background: #303030;
-    margin: -.5em -2em;
-    padding: .5em 2em;
-    text-decoration: none;
 }
 
 h1+ul li a:hover,
 ul#meta li a:hover,
-ul#subfeeds li a:hover,
 address p a:hover
 {
-    color: #ccc;
-    text-decoration: none;
-}
-
-ul#meta li#published
-{
-    color: #603030;
-}
-
-ul#meta li#published span
-{
-    color: #fff;
+    text-decoration: underline;
 }
 
 ul#meta li#published:before
 {
     content: "published ";
-    color: #fff;
     font-weight: bold;
 }
 
@@ -249,46 +176,16 @@ ul#meta li.previous a:before
     margin-right: .5em;
 }
 
-#full h1:before
-{
-    content: "❖";
-    margin-left: 8em;
-    margin-top: 2em;
-    transform: rotate(17deg);
-}
-
 #full h1
 {
     position: absolute;
-    left: -16em;
-    width: 12em;
-    top: 10em;
-    transform: rotate(-28deg);
-}
-
-#full h1:after
-{
-    content: "[ this space intentionally left blank for future fancy icon ]";
-    width: 15em;
-    top: -5em;
-    left: 2em;
-    color: #888;
-    text-align: center;
-    background: rgba(255,255,255,0.7);
-    transform: rotate(40deg);
-    padding: 1em;
+    left: -10em;
+    width: 10em;
 }
 
 div.auto-abstract
 {
     display: none;
-}
-
-.share
-{
-    border-bottom: .4em solid #303030;
-    margin: -2em -2em 2em -2em;
-    padding: 2em;
 }
 
 .share li
@@ -303,40 +200,6 @@ div.auto-abstract
 iframe
 {
     border: 0;
-}
-
-#hardcopies
-{
-    border-top: .4em solid #303030;
-    border-bottom: .4em solid #303030;
-    margin: 2em -2em;
-    padding: 1.6em;
-}
-
-#hardcopies li
-{
-    display: none;
-}
-
-#hardcopies li + li
-{
-    display: inline-block;
-    margin: .2em;
-}
-
-#hardcopies li + li a
-{
-    padding: .2em;
-    background: #ddd;
-    border-radius: .2em;
-    border: .1em solid #bbb;
-    text-decoration: none;
-}
-
-#hardcopies li + li a:hover
-{
-    border: .1em solid #999;
-    text-decoration: none;
 }
 
 #feed li h2 + ul
@@ -359,10 +222,9 @@ address
 {
     position: absolute;
     top: 0;
-    left: -25em;
+    left: -20em;
     padding: 2em;
     width: 14em;
-    color: #fff;
     font-style: normal;
     margin-bottom: 0;
     padding-bottom: 0;
@@ -399,7 +261,6 @@ address p + p
 address p a
 {
     display: block;
-    background: #303030;
     padding: 0.5em 2em;
     margin: 0 -2em;
     text-decoration: none;
@@ -525,25 +386,6 @@ dt
     font-weight: bold;
 }
 
-p.continue
-{
-     margin: 2em 0;
-}
-
-p.continue a
-{
-    background: rgba(0,0,0,0.8);
-    border-radius: 2em;
-    padding: 1em;
-    color: #fff;
-    text-decoration: none;
-}
-
-p.continue a:hover
-{
-    background: #000;
-}
-
 li.twitter
 {
     background: rgb(0,170,242);
@@ -609,19 +451,11 @@ ul.share li a:hover span
     text-decoration: none;
 }
 
-@media (max-width: 65em)
-{
-    body
-    {
-        margin-right: 1em
-    }
-}
-
 @media (max-width: 58em)
 {
     body
     {
-        margin: 0 0 0 6em;
+        margin: 0;
     }
 
     body:before
@@ -655,11 +489,6 @@ ul.share li a:hover span
         font-size: 1em;
     }
 
-    address p a
-    {
-        color: #fff;
-    }
-
     ul#meta
     {
         position: relative;
@@ -668,6 +497,7 @@ ul.share li a:hover span
         top: 0;
         margin-right: -2em;
         margin-top: 2em;
+        margin-bottom: 2em;
         width: 20em;
     }
 
@@ -685,21 +515,18 @@ ul.share li a:hover span
     h1 + ul li
     {
         display: inline-block;
-        background: none;
         margin: .2em;
         padding: 0.5em 0.2em;
     }
 
     h1 + ul li a
     {
-        background: none;
         color: #000;
         padding: .2em 2em;
     }
 
     h1 + ul li a:hover
     {
-        background: none;
         color: #888;
         text-decoration: none;
     }
@@ -714,17 +541,16 @@ ul.share li a:hover span
         width: auto;
         left: 0;
         top: 0;
-        margin: 0 -2em 0 -4.5em;
+        margin: 0 -2em 2em -4.5em;
     }
 
     html
     {
-        background: #303030 !important;
+        background: #fff !important;
     }
 
     body
     {
-        background: #fff;
         margin: 0;
     }
 }
@@ -733,10 +559,6 @@ ul.share li a:hover span
 {
     h1 + ul {
       display: none;
-    }
-
-    h1 {
-      margin-top: 0;
     }
 
     body {

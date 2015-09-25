@@ -132,23 +132,10 @@
       <h1><xsl:value-of select="/xhtml:html/xhtml:head/xhtml:title"/></h1>
       <ul>
         <li><a href="/the-source-fantastic">The Source Fantastic</a></li>
-        <li><a href="/site">ef.gy Blog Archive</a></li>
+        <li><a href="/site">Blog Archive</a></li>
+        <li><a href="/everything">Blog Archive (Unabridged)</a></li>
         <li><a href="/about">About</a></li>
       </ul>
-      <xsl:choose>
-        <xsl:when test="$collection='site'">
-          <ul id="subfeeds">
-            <li>abridged</li>
-            <li><a href="/everything">unabridged</a></li>
-          </ul>
-        </xsl:when>
-        <xsl:when test="$collection='everything'">
-          <ul id="subfeeds">
-            <li><a href="/site">abridged</a></li>
-            <li>unabridged</li>
-          </ul>
-        </xsl:when>
-      </xsl:choose>
       <xsl:if test="$uname">
         <social:social url="{$uri}">
           <xsl:copy-of select="$authordata/@twitter"/>
