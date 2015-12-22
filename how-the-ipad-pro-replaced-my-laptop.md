@@ -22,7 +22,7 @@ So which Apps do work fine? Not sure about the SSH client, to be honest. The bes
 
 As for typing things up, I rather like "Working Copy." It seems to have a decent GIT client with GitHub integration - perfect for writing articles for this here blog. On a plane, if need be. :3
 
-<img src="/jpeg/ipad-pro-plane" alt="My iPad Pro all set up and ready to go. I'm writing this article on an Aer Lingus flight to Paris."/>
+![My iPad Pro all set up and ready to go. I'm writing this article on an Aer Lingus flight to Paris.](/jpeg/ipad-pro-plane)
 
 ## That new smart keyboard is the duck's nuts
 
