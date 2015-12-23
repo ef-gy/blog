@@ -21,6 +21,11 @@ map $http_dnt $dnt {
     1 "dnt";
 }
 
+map $http_user_agent $capa {
+    default "default";
+    ~Feedly "dumb";
+}
+
 ssl_session_cache   shared:SSL:10m;
 ssl_session_timeout 10m;
 
@@ -158,7 +163,7 @@ server {
 
     location ~ /(?<type>atom)/(?<file>.+) {
         alias $documentRoot/.cache/$hostnameproper/;
-        try_files $file.$type $file =404;
+        try_files $file.$capa.$type $file.$type $file =404;
 
         types {
             application/atom+xml atom;

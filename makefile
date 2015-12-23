@@ -76,6 +76,7 @@ CSSS:=$(notdir $(addsuffix .css,$(basename $(wildcard css/*.css))))
 DJSS:=$(notdir $(addsuffix .js,$(basename $(wildcard js/*.js))))
 
 ATOMCACHE:=$(addprefix $(CACHEO)/,$(ATOMS)) $(addprefix $(CACHET)/,$(ATOMS))
+DUMBATOMCACHE:=$(addsuffix .dumb.atom,$(basename $(ATOMCACHE)))
 XHTMLCACHE:=$(addprefix $(CACHEO)/,$(DXHTMLS)) $(addprefix $(CACHET)/,$(DXHTMLS))
 HTMLCACHE:=$(addprefix $(CACHEO)/,$(DHTMLS)) $(addprefix $(CACHET)/,$(DHTMLS))
 JPEGCACHE:=$(addprefix $(CACHE)/jpeg/,$(JPEGS))
@@ -88,7 +89,7 @@ METACACHE:=$(addprefix $(CACHE)/,index.xml .gitignore) $(CACHEO)/sitemap.xml $(C
 INLINEIMG:=$(addsuffix .base64.xml,$(JPEGCACHE) $(PNGCACHE))
 INLINECSS:=$(addsuffix .xml,$(CSSCACHE))
 
-CACHEFILES:=$(ATOMCACHE) $(XHTMLCACHE) $(HTMLCACHE) $(JPEGCACHE) $(PNGCACHE) $(CSSCACHE) $(JSCACHE) $(SVGCACHE) $(METACACHE)
+CACHEFILES:=$(ATOMCACHE) $(DUMBATOMCACHE) $(XHTMLCACHE) $(HTMLCACHE) $(JPEGCACHE) $(PNGCACHE) $(CSSCACHE) $(JSCACHE) $(SVGCACHE) $(METACACHE)
 
 GZIPCACHE:=$(addsuffix .gz,$(CACHEFILES))
 
@@ -107,6 +108,9 @@ $(CACHET)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHET)/.volatile xslt/xhtml-p
 	echo '</body></html>' >> $@
 	xsltproc -o $@ xslt/xhtml-fix-markdown.xslt $@
 	grep -q -F $@ .gitignore || echo $@ >> .gitignore
+
+$(CACHE)/%.dumb.atom: $(CACHE)/%.atom xslt/atom-filter-dumb.xslt
+	$(XSLTPROC) xslt/atom-filter-dumb.xslt $< > $@
 
 $(CACHEO)/%.atom: %.atom $(ATOMS) xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt makefile mdxhtmls components
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/atom-merge.xslt $< |\
