@@ -88,6 +88,7 @@ ID labels can differ, but in general this is a single *div* inside *body* that c
 From what I've seen, this is often used in conjunction with fixed-width layouts, a class of evil on its own. The general use case here is to give the content a fixed width and to then align the block either centred or on the left of a browser window that will invariably be larger than the fixed width layout. Often in a misguided attempt at supporting irrelevant old browsers where CSS may not have worked as intended on *html* and *body* elements.
 
 Regardless of why you're doing it, generally you're trying to have an HTML element to style that is inside another HTML element you can style. Like so:
+
     <body>
       <div id="content">
         <!-- ... -->
