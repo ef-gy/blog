@@ -46,12 +46,12 @@ Set up udhcpd by editing /etc/udhcp.conf. You could set it up like this:
     end 10.4.0.254
     interface ap0
 
-    opt     dns     8.8.8.8 4.2.2.2
+    opt     dns     8.8.8.8
     opt     subnet  255.255.255.0
     opt     router  10.4.0.1
     opt     lease   864000
 
-The "dns" option is probably not needed, as you won't be enabling IP forwarding anyway, but setting it to the public Google DNS servers shouldn't hurt, either.
+The "dns" option is probably not needed, as you won't be enabling IP forwarding anyway, but setting it to the public Google DNS server shouldn't hurt, either. On the other hand, without that option iOS - and probably also other systems - assumes that the network doesn't provide internet connectivity, and will then revert to using 3G even when you're associated with the AP.
 
 To enable udhcpd, edit /etc/default/udhcpd and change the "DHCPD_ENABLED" variable to "yes."
 
