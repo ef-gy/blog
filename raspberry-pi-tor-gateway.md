@@ -114,3 +114,34 @@ Finally, set the HTTP proxy to "Auto" in iOS' network settings, and set the URL 
 ![This is what your settings should look like once you're done.](/png/raspberry-pi-tor-proxy)
 
 Your iDevice should now be able to use the SOCKS proxy. Yay! :)
+
+## Alternate Usage: Good ol' Privoxy
+
+So, after playing around with this for a bit, I've noticed that some devices seem to send out DNS queries before attempting to use the proxy set in the proxy auto-config file. Given that SOCKS4 proxies don't support DNS lookups themselves, this does make sense. However, as we didn't enable IP forwarding so as not to leak any connections through clients ignoring the proxy settings, these DNS queries will just time out and things will go awry. And we can't unset the DNS settings, as certain clients will then ignore our WiFi AP's internet abilities.
+
+So, on to plan B then! Which is kind of plan A, really, as it precedes direct use of the Tor SOCKS proxy in practice. Because, back in the day when browsers didn't really do SOCKS right, we'd just use Privoxy. And that's exactly what we can still do.
+
+So, first order of business: install privoxy!
+
+    # apt-get install privoxy
+
+Next, set up privoxy. To do so, edit /etc/privoxy/config, and search for the block that has lots of examples about forward.* instructions. Add the following lines there:
+
+    forward-socks5t / 127.0.0.1:9050 .
+    forward 192.168.*.*/ .
+    forward 10.*.*.*/ .
+
+The first line tells Privoxy to route connections through Tor. Newer versions of privoxy provide the forward-socks5t setting specifically for this - if your version doesn't have that yet, just substitute forward-socks5. The following two lines allow direct access to LAN services via your shiny new Raspberry Pi Tor proxy. You could omit those for most uses.
+
+Also in the same file, go to the listen-address setting and add the following lines:
+
+    listen-address 10.4.0.1:8118
+    listen-address 127.0.0.1:8118
+
+This will allow access to Privoxy from the AP side.
+
+Once Privoxy is all set up, restart it using:
+
+    # /etc/init.d/privoxy restart
+
+And finally, set it up in your device/browser (hint: host 10.4.0.1 and port: 8118) and you're good to go! For iOS, that setting is in the same config area as the screenshot above, but under the "Manual" proxy heading.
