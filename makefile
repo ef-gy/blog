@@ -196,7 +196,7 @@ $(CACHE)/index.xml: $(CACHEO)/everything.atom xslt/index-transcode-atom.xslt mak
 mdxhtmls: $(MDXHTMLS)
 xhtmlcache: $(XHTMLCACHE)
 htmlcache: $(HTMLCACHE)
-atomcache: $(ATOMCACHE)
+atomcache: $(ATOMCACHE) $(DUMBATOMCACHE)
 jpegcache: $(JPEGCACHE)
 pngcache: $(PNGCACHE)
 csscache: $(CSSCACHE)
