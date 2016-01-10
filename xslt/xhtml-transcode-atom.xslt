@@ -3,7 +3,6 @@
               xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
               xmlns:xhtml="http://www.w3.org/1999/xhtml"
               xmlns:atom="http://www.w3.org/2005/Atom"
-              xmlns:data="http://ef.gy/2013/data"
               xmlns:str="http://exslt.org/strings"
               xmlns:svg="http://www.w3.org/2000/svg"
               xmlns="http://www.w3.org/1999/xhtml"
@@ -16,8 +15,6 @@
 
   <xsl:param name="documentRoot"/>
   <xsl:param name="baseURI"/>
-
-  <xsl:variable name="weights" select="document(concat($documentRoot, '/data.xml'))//data:weight"/>
 
   <xsl:key name="entry-by-category" match="atom:entry" use="atom:category[1]/@term" />
 
