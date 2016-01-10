@@ -17,7 +17,7 @@ To do this in a reasonably roundabout way, we bring together a few different pro
   * SSH, to authenticate Prometheus to our monitoring target and prevent data from being tampered with in-flight.
   * socat (or netcat, etc), to allow the SSH client to talk to our Hidden Service.
   * [eldritchd](https://github.com/ef-gy/eldritchd) (or autossh, etc), to make sure our SSH tunnel actually stays alive.
-  * Some Prometheus target. It'd be boring without that - I'll go with [imperiald](https://github.com/ef-gy/imperiald) here, because that's basically a node_exporter that I wrote before I knew about [node_exporter](https://github.com/prometheus/node_exporter).
+  * Some Prometheus target. It'd be boring without that - I'll go with [imperiald](https://github.com/ef-gy/imperiald) here, because that's basically a node\_exporter that I wrote before I knew about [node\_exporter](https://github.com/prometheus/node_exporter).
 
 I've a feeling that lineup would make Cronenberg proud. Basically, we'll get this:
 
