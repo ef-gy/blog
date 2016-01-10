@@ -71,16 +71,16 @@ Then, configure the SSH client to use Tor for .onion addresses by adding the fol
     Host *.onion
       ProxyCommand socat STDIO SOCKS4A:127.0.0.1:%h:%p,socksport=9050
 
-    Host myhiddenservice
+    Host myhiddenservice.onion
       HostName foobarbaz1234.onion
 
 The first block here is what allows .onion addresses to work with SSH - it assumes socat is installed and Tor is running locally, on the default port 9050.
 
-The second block is just to give your SSH Hidden Service a more memorable name. That part is optional, but this would be a good place to e.g. put the hostname so you can just type "ssh hostname" to connect through Tor.
+The second block is just to give your SSH Hidden Service a more memorable name. That part is optional, but this would be a good place to e.g. put the hostname so you can just type "ssh hostname.onion" to connect through Tor.
 
 Once you're done with all that, do a quick connection test to make sure you can actually connect to your monitoring target:
 
-    $ ssh myhiddenservice
+    $ ssh myhiddenservice.onion
 
 This might be a bit slower than usual, but you should be able to log on and get a shell.
 
@@ -96,7 +96,7 @@ Note that this section assumes that you're running the following as an unprivile
 
 Since we already made SSH connections work in the previous step, creating this tunnel is dead simple. Assuming your Prometheus target is exporting metrics at port 9091, and the local port for scraping should be 2345, you'd simply run this:
 
-    $ ssh myhiddenservice -L 2345:127.0.0.1:9091 -N
+    $ ssh myhiddenservice.onion -L 2345:127.0.0.1:9091 -N
 
 And there we go. The *-L* option sets up the port forwarding as described, and the *-N* option makes sure that SSH does not start a shell - which we don't need. As long as that command is running, you can access your metrics at localhost:2345. To test this, use curl on your Prometheus host:
 
@@ -108,15 +108,15 @@ The only drawback to this, is that OpenSSH won't just reconnect if something hap
 
 You may remember that I mentioned *eldritchd* in the outline. This is a daemon I cooked up that tries to revive programmes if they die - and it also exports some Prometheus metrics of its own. It's still very much a work in progress, but if you want to give it a shot then just [install it from sources](https://github.com/ef-gy/eldritchd) and prepend it to the command line:
 
-    $ eldritchd -- ssh myhiddenservice -L 2345:127.0.0.1:9091 -N
+    $ eldritchd -- ssh myhiddenservice.onion -L 2345:127.0.0.1:9091 -N
 
 To make it spawn in the background, add the 'daemonise' flag:
 
-    $ eldritchd daemonise -- ssh myhiddenservice -L 2345:127.0.0.1:9091 -N
+    $ eldritchd daemonise -- ssh myhiddenservice.onion -L 2345:127.0.0.1:9091 -N
 
 And to enable monitoring...
 
-    $ eldritchd daemonise http:127.0.0.1:3456 -- ssh myhiddenservice -L 2345:127.0.0.1:9091 -N
+    $ eldritchd daemonise http:127.0.0.1:3456 -- ssh myhiddenservice.onion -L 2345:127.0.0.1:9091 -N
 
 ... which would also open port 3456 for Prometheus to scrape. It doesn't export all that many metrics, yet, but I'll be adding things along the way. One of the metrics it does have, is a counter of how many times it had to respawn your tunnel, which is a good metric to have.
 
