@@ -96,72 +96,72 @@ GZIPCACHE:=$(addsuffix .gz,$(CACHEFILES))
 inlinecss: $(INLINECSS)
 inlineimg: $(INLINEIMG)
 
-$(CACHEO)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt makefile components $(CACHE)/index.xml
-	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-pre-process.xslt $< > $@
+$(CACHEO)/%.xhtml: %.xhtml src/atom-merge.xslt $(CACHEO)/.volatile src/xhtml-pre-process.xslt makefile components $(CACHE)/index.xml
+	$(XSLTPROC) $(XSLTPROCCACHEOARGS) src/xhtml-pre-process.xslt $< > $@
 
-$(CACHET)/%.xhtml: %.xhtml xslt/atom-merge.xslt $(CACHET)/.volatile xslt/xhtml-pre-process.xslt makefile components $(CACHE)/index.xml
-	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-pre-process.xslt $< > $@
+$(CACHET)/%.xhtml: %.xhtml src/atom-merge.xslt $(CACHET)/.volatile src/xhtml-pre-process.xslt makefile components $(CACHE)/index.xml
+	$(XSLTPROC) $(XSLTPROCCACHETARGS) src/xhtml-pre-process.xslt $< > $@
 
-%.xhtml: %.md makefile xslt/xhtml-fix-markdown.xslt components
+%.xhtml: %.md makefile src/xhtml-fix-markdown.xslt components
 	echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?><html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\"><head><meta name=\"unix:name\" content=\"$*\"/><meta name=\"date\" content=\"$$(git log --date=iso "$*.md"|grep 'Date:'|sed -E 's/Date:\s*(.+) (.+) (...)(..)/\1T\2\3:\4/'|sort|head -n1)\"/><meta name=\"mtime\" content=\"$$(git log --date=iso "$*.md"|grep 'Date:'|sed -E 's/Date:\s*(.+) (.+) (...)(..)/\1T\2\3:\4/'|sort|tail -n1)\"/><meta name=\"author\" content=\"$$(git log "$*.md" |grep Author:|sed -E 's/Author: (.+) <.+>/\1/'|tail -n1)\"/></head><body>" > $@
 	markdown $< >> $@
 	echo '</body></html>' >> $@
-	xsltproc -o $@ xslt/xhtml-fix-markdown.xslt $@
+	xsltproc -o $@ src/xhtml-fix-markdown.xslt $@
 	grep -q -F $@ .gitignore || echo $@ >> .gitignore
 
-$(CACHE)/%.dumb.atom: $(CACHE)/%.atom xslt/atom-filter-dumb.xslt
-	$(XSLTPROC) xslt/atom-filter-dumb.xslt $< > $@
+$(CACHE)/%.dumb.atom: $(CACHE)/%.atom src/atom-filter-dumb.xslt
+	$(XSLTPROC) src/atom-filter-dumb.xslt $< > $@
 
-$(CACHEO)/%.atom: %.atom $(ATOMS) xslt/atom-merge.xslt $(CACHEO)/.volatile xslt/xhtml-pre-process.xslt xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt makefile mdxhtmls components
-	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/atom-merge.xslt $< |\
-		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-pre-process.xslt -|\
-		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/atom-style-ef.gy.xslt -|\
-		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/atom-sort.xslt - > $@
+$(CACHEO)/%.atom: %.atom $(ATOMS) src/atom-merge.xslt $(CACHEO)/.volatile src/xhtml-pre-process.xslt src/atom-style-ef.gy.xslt src/atom-sort.xslt makefile mdxhtmls components
+	$(XSLTPROC) $(XSLTPROCCACHEOARGS) src/atom-merge.xslt $< |\
+		$(XSLTPROC) $(XSLTPROCCACHEOARGS) src/xhtml-pre-process.xslt -|\
+		$(XSLTPROC) $(XSLTPROCCACHEOARGS) src/atom-style-ef.gy.xslt -|\
+		$(XSLTPROC) $(XSLTPROCCACHEOARGS) src/atom-sort.xslt - > $@
 
-$(CACHEO)/%.xhtml: $(CACHEO)/%.atom xslt/xhtml-transcode-atom.xslt makefile
-	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-transcode-atom.xslt $< > $@
+$(CACHEO)/%.xhtml: $(CACHEO)/%.atom src/xhtml-transcode-atom.xslt makefile
+	$(XSLTPROC) $(XSLTPROCCACHEOARGS) src/xhtml-transcode-atom.xslt $< > $@
 
-$(CACHEO)/%.dnt.xhtml: $(CACHEO)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt xslt/xhtml-merge.xslt makefile social-metadata.xml authors.xml components
-	$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam collection "$*" --stringparam DNT 1 xslt/xhtml-style-ef.gy.xslt $< |\
-		$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam DNT 1 xslt/xhtml-navigation.xslt - |\
-		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-post-process.xslt - |\
-		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-merge.xslt - > $@
+$(CACHEO)/%.dnt.xhtml: $(CACHEO)/%.xhtml src/xhtml-style-ef.gy.xslt src/xhtml-navigation.xslt src/xhtml-post-process.xslt src/xhtml-merge.xslt makefile social-metadata.xml authors.xml components
+	$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam collection "$*" --stringparam DNT 1 src/xhtml-style-ef.gy.xslt $< |\
+		$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam DNT 1 src/xhtml-navigation.xslt - |\
+		$(XSLTPROC) $(XSLTPROCCACHEOARGS) src/xhtml-post-process.xslt - |\
+		$(XSLTPROC) $(XSLTPROCCACHEOARGS) src/xhtml-merge.xslt - > $@
 
-$(CACHEO)/%.nodnt.xhtml: $(CACHEO)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt xslt/xhtml-merge.xslt makefile social-metadata.xml authors.xml components
-	$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam collection "$*" --stringparam DNT 0 xslt/xhtml-style-ef.gy.xslt $< |\
-		$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam DNT 0 xslt/xhtml-navigation.xslt - |\
-		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-post-process.xslt - |\
-		$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/xhtml-merge.xslt - > $@
+$(CACHEO)/%.nodnt.xhtml: $(CACHEO)/%.xhtml src/xhtml-style-ef.gy.xslt src/xhtml-navigation.xslt src/xhtml-post-process.xslt src/xhtml-merge.xslt makefile social-metadata.xml authors.xml components
+	$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam collection "$*" --stringparam DNT 0 src/xhtml-style-ef.gy.xslt $< |\
+		$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam DNT 0 src/xhtml-navigation.xslt - |\
+		$(XSLTPROC) $(XSLTPROCCACHEOARGS) src/xhtml-post-process.xslt - |\
+		$(XSLTPROC) $(XSLTPROCCACHEOARGS) src/xhtml-merge.xslt - > $@
 
-$(CACHEO)/%.html: $(CACHEO)/%.xhtml xslt/html-post-process.xslt makefile
-	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/html-post-process.xslt $< > $@
+$(CACHEO)/%.html: $(CACHEO)/%.xhtml src/html-post-process.xslt makefile
+	$(XSLTPROC) $(XSLTPROCCACHEOARGS) src/html-post-process.xslt $< > $@
 
-$(CACHET)/%.atom: %.atom $(ATOMS) xslt/atom-merge.xslt $(CACHET)/.volatile xslt/xhtml-pre-process.xslt xslt/atom-style-ef.gy.xslt xslt/atom-sort.xslt makefile mdxhtmls components
-	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/atom-merge.xslt $< |\
-		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-pre-process.xslt -|\
-		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/atom-style-ef.gy.xslt -|\
-		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/atom-sort.xslt - > $@
+$(CACHET)/%.atom: %.atom $(ATOMS) src/atom-merge.xslt $(CACHET)/.volatile src/xhtml-pre-process.xslt src/atom-style-ef.gy.xslt src/atom-sort.xslt makefile mdxhtmls components
+	$(XSLTPROC) $(XSLTPROCCACHETARGS) src/atom-merge.xslt $< |\
+		$(XSLTPROC) $(XSLTPROCCACHETARGS) src/xhtml-pre-process.xslt -|\
+		$(XSLTPROC) $(XSLTPROCCACHETARGS) src/atom-style-ef.gy.xslt -|\
+		$(XSLTPROC) $(XSLTPROCCACHETARGS) src/atom-sort.xslt - > $@
 
-$(CACHET)/%.xhtml: $(CACHET)/%.atom xslt/xhtml-transcode-atom.xslt makefile
-	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-transcode-atom.xslt $< > $@
+$(CACHET)/%.xhtml: $(CACHET)/%.atom src/xhtml-transcode-atom.xslt makefile
+	$(XSLTPROC) $(XSLTPROCCACHETARGS) src/xhtml-transcode-atom.xslt $< > $@
 
-$(CACHET)/%.dnt.xhtml: $(CACHET)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt xslt/xhtml-merge.xslt makefile social-metadata.xml authors.xml components
-	$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam collection "$*" --stringparam DNT 1 xslt/xhtml-style-ef.gy.xslt $< |\
-		$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam DNT 1 xslt/xhtml-navigation.xslt - |\
-		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-post-process.xslt - |\
-		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-merge.xslt - > $@
+$(CACHET)/%.dnt.xhtml: $(CACHET)/%.xhtml src/xhtml-style-ef.gy.xslt src/xhtml-navigation.xslt src/xhtml-post-process.xslt src/xhtml-merge.xslt makefile social-metadata.xml authors.xml components
+	$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam collection "$*" --stringparam DNT 1 src/xhtml-style-ef.gy.xslt $< |\
+		$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam DNT 1 src/xhtml-navigation.xslt - |\
+		$(XSLTPROC) $(XSLTPROCCACHETARGS) src/xhtml-post-process.xslt - |\
+		$(XSLTPROC) $(XSLTPROCCACHETARGS) src/xhtml-merge.xslt - > $@
 
-$(CACHET)/%.nodnt.xhtml: $(CACHET)/%.xhtml xslt/xhtml-style-ef.gy.xslt xslt/xhtml-navigation.xslt xslt/xhtml-post-process.xslt xslt/xhtml-merge.xslt makefile social-metadata.xml authors.xml components
-	$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam collection "$*" --stringparam DNT 0 xslt/xhtml-style-ef.gy.xslt $< |\
-		$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam DNT 0 xslt/xhtml-navigation.xslt - |\
-		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-post-process.xslt - |\
-		$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/xhtml-merge.xslt - > $@
+$(CACHET)/%.nodnt.xhtml: $(CACHET)/%.xhtml src/xhtml-style-ef.gy.xslt src/xhtml-navigation.xslt src/xhtml-post-process.xslt src/xhtml-merge.xslt makefile social-metadata.xml authors.xml components
+	$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam collection "$*" --stringparam DNT 0 src/xhtml-style-ef.gy.xslt $< |\
+		$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam DNT 0 src/xhtml-navigation.xslt - |\
+		$(XSLTPROC) $(XSLTPROCCACHETARGS) src/xhtml-post-process.xslt - |\
+		$(XSLTPROC) $(XSLTPROCCACHETARGS) src/xhtml-merge.xslt - > $@
 
-$(CACHET)/%.html: $(CACHET)/%.xhtml xslt/html-post-process.xslt makefile
-	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/html-post-process.xslt $< > $@
+$(CACHET)/%.html: $(CACHET)/%.xhtml src/html-post-process.xslt makefile
+	$(XSLTPROC) $(XSLTPROCCACHETARGS) src/html-post-process.xslt $< > $@
 
-$(CACHE)/svg/%.svg: %.svg $(CACHE)/svg/.volatile xslt/svg-style-ef.gy.xslt makefile
-	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/svg-style-ef.gy.xslt $< > $@
+$(CACHE)/svg/%.svg: %.svg $(CACHE)/svg/.volatile src/svg-style-ef.gy.xslt makefile
+	$(XSLTPROC) $(XSLTPROCCACHEOARGS) src/svg-style-ef.gy.xslt $< > $@
 
 $(CACHE)/jpeg/%.jpeg: jpeg/%.jpeg $(CACHE)/jpeg/.volatile makefile
 	convert "$<" -resize 921600@\> -strip -quality 86 "$@"
@@ -183,15 +183,15 @@ $(CACHE)/css/%.css.xml: $(CACHE)/css/%.css makefile
 $(CACHE)/js/%.js: js/%.js $(CACHE)/js/.volatile makefile
 	cat $< > $@
 
-$(CACHEO)/sitemap.xml: $(CACHEO)/everything.atom xslt/sitemap-transcode-atom.xslt
-	$(XSLTPROC) $(XSLTPROCCACHEOARGS) xslt/sitemap-transcode-atom.xslt $< > $@
+$(CACHEO)/sitemap.xml: $(CACHEO)/everything.atom src/sitemap-transcode-atom.xslt
+	$(XSLTPROC) $(XSLTPROCCACHEOARGS) src/sitemap-transcode-atom.xslt $< > $@
 
-$(CACHET)/sitemap.xml: $(CACHET)/everything.atom xslt/sitemap-transcode-atom.xslt
-	$(XSLTPROC) $(XSLTPROCCACHETARGS) xslt/sitemap-transcode-atom.xslt $< > $@
+$(CACHET)/sitemap.xml: $(CACHET)/everything.atom src/sitemap-transcode-atom.xslt
+	$(XSLTPROC) $(XSLTPROCCACHETARGS) src/sitemap-transcode-atom.xslt $< > $@
 
 # global navigation index
-$(CACHE)/index.xml: $(CACHEO)/everything.atom xslt/index-transcode-atom.xslt makefile $(CACHE)/.volatile
-	$(XSLTPROC) $(XSLTPROCARGS) xslt/index-transcode-atom.xslt $< > $@
+$(CACHE)/index.xml: $(CACHEO)/everything.atom src/index-transcode-atom.xslt makefile $(CACHE)/.volatile
+	$(XSLTPROC) $(XSLTPROCARGS) src/index-transcode-atom.xslt $< > $@
 
 mdxhtmls: $(MDXHTMLS)
 xhtmlcache: $(XHTMLCACHE)
@@ -294,15 +294,15 @@ png/rasterised/%.png: %.svg png/rasterised/.volatile
 
 # specific rules for silly gadgets
 game-of-life.xslt.xml::
-	$(XSLTPROC) $(XSLTPROCARGS) xslt/0p-game-of-life.xslt $@
+	$(XSLTPROC) $(XSLTPROCARGS) src/0p-game-of-life.xslt $@
 
 game-of-life.xml: life.sqlite3
 	echo '<?xml version="1.0"?><game-of-life xmlns="http://ef.gy/2013/0p">' > $@
 	echo "select fragment from vxmlfragment;" | $(SQLITE3) $< >> $@
 	echo '</game-of-life>' >> $@
 
-game-of-life.svg: game-of-life.xml xslt/svg-0p-game-of-life.xslt
-	$(XSLTPROC) $(XSLTPROCARGS) -o $@ xslt/svg-0p-game-of-life.xslt $<
+game-of-life.svg: game-of-life.xml src/svg-0p-game-of-life.xslt
+	$(XSLTPROC) $(XSLTPROCARGS) -o $@ src/svg-0p-game-of-life.xslt $<
 
 everything.atom: $(XHTMLESCS) makefile
 	echo "<?xml version=\"1.0\" encoding=\"utf-8\"?><feed xmlns=\"http://www.w3.org/2005/Atom\" xml:id=\"$(basename $@)\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><title>$(DOMAIN)</title>" > $@
@@ -313,18 +313,18 @@ everything.atom: $(XHTMLESCS) makefile
 
 social-metadata.xml::
 	wst-sitemap-xml https://$(DOMAIN)/sitemap.xml > $@
-	$(XSLTPROC) --stringparam base https://$(DOMAIN)/ -o $@ xslt/social-sort.xslt $@
+	$(XSLTPROC) --stringparam base https://$(DOMAIN)/ -o $@ src/social-sort.xslt $@
 
-popular.atom: social-metadata.xml xslt/atom-transcode-social.xslt
-	$(XSLTPROC) --stringparam domain $(DOMAIN) -o $@ xslt/atom-transcode-social.xslt $<
+popular.atom: social-metadata.xml src/atom-transcode-social.xslt
+	$(XSLTPROC) --stringparam domain $(DOMAIN) -o $@ src/atom-transcode-social.xslt $<
 
-latest.atom: everything.atom xslt/atom-filter-latest.xslt
-	$(XSLTPROC) --stringparam documentRoot "$$(pwd)" xslt/atom-merge.xslt $< | \
-		$(XSLTPROC) --stringparam domain $(DOMAIN) -o $@ xslt/atom-filter-latest.xslt -
+latest.atom: everything.atom src/atom-filter-latest.xslt
+	$(XSLTPROC) --stringparam documentRoot "$$(pwd)" src/atom-merge.xslt $< | \
+		$(XSLTPROC) --stringparam domain $(DOMAIN) -o $@ src/atom-filter-latest.xslt -
 
 site.atom: popular.atom latest.atom
 	echo "<?xml version=\"1.0\" encoding=\"utf-8\"?><feed xmlns=\"http://www.w3.org/2005/Atom\" xml:id=\"$(basename $@)\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><title>$(DOMAIN)</title><subtitle>the latest and greatest</subtitle>" > $@
 	for file in $^; do echo "<feed xlink:href=\"$${file}\"/>"; done >> $@
 	echo "</feed>" >> $@
-	$(XSLTPROC) --stringparam documentRoot $$(pwd) -o "$@" xslt/atom-merge-plain.xslt "$@"
-	$(XSLTPROC) -o "$@" xslt/atom-dedupe.xslt "$@"
+	$(XSLTPROC) --stringparam documentRoot $$(pwd) -o "$@" src/atom-merge-plain.xslt "$@"
+	$(XSLTPROC) -o "$@" src/atom-dedupe.xslt "$@"
