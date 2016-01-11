@@ -108,15 +108,15 @@ The only drawback to this, is that OpenSSH won't just reconnect if something hap
 
 You may remember that I mentioned *eldritchd* in the outline. This is a daemon I cooked up that tries to revive programmes if they die - and it also exports some Prometheus metrics of its own. It's still very much a work in progress, but if you want to give it a shot then just [install it from sources](https://github.com/ef-gy/eldritchd) and prepend it to the command line:
 
-    $ eldritchd -- ssh myhiddenservice.onion -L 2345:127.0.0.1:9091 -N
+    $ eldritchd -- /usr/bin/ssh myhiddenservice.onion -L 2345:127.0.0.1:9091 -N
 
 To make it spawn in the background, add the 'daemonise' flag:
 
-    $ eldritchd daemonise -- ssh myhiddenservice.onion -L 2345:127.0.0.1:9091 -N
+    $ eldritchd daemonise -- /usr/bin/ssh myhiddenservice.onion -L 2345:127.0.0.1:9091 -N
 
 And to enable monitoring...
 
-    $ eldritchd daemonise http:127.0.0.1:3456 -- ssh myhiddenservice.onion -L 2345:127.0.0.1:9091 -N
+    $ eldritchd daemonise http:127.0.0.1:3456 -- /usr/bin/ssh myhiddenservice.onion -L 2345:127.0.0.1:9091 -N
 
 ... which would also open port 3456 for Prometheus to scrape. It doesn't export all that many metrics, yet, but I'll be adding things along the way. One of the metrics it does have, is a counter of how many times it had to respawn your tunnel, which is a good metric to have.
 
