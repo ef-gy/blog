@@ -4,7 +4,7 @@ You may remember the picture of my shiny little To-enabled Pi on the last blog p
 
 For one thing, it was a wee bit too big to fit in the current case, so I had to make room by getting a new one. Which obviously made the Pi rather happy:
 
-![salty-dog with its shiny new battery pack and a fitting case.](/jpeg/salty-dog-battery-pack-2.jpeg)
+![salty-dog with its shiny new battery pack and a fitting case.](/jpeg/salty-dog-battery-pack-2)
 
 For another, the device actually requires you to run a Python script as root so that the firmware can figure out if your Pi is booted or not, and to get it to shut down if a power failure is imminent. Now, I don't know [if you follow my Twitter](https://twitter.com/jyujinX), but on there I'd previously quite proudly declared that I'd gotten rid of Python on the sucker, and I wasn't about to put it back on permanently just to get the UPS to work.
 
