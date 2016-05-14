@@ -132,8 +132,7 @@
       <h1><xsl:value-of select="/xhtml:html/xhtml:head/xhtml:title"/></h1>
       <ul>
         <li><a href="/the-source-fantastic">The Source Fantastic</a></li>
-        <li><a href="/site">Blog Archive</a></li>
-        <li><a href="/everything">Blog Archive (Unabridged)</a></li>
+        <li><a href="/everything">Blog Archive</a></li>
         <li><a href="/about">About</a></li>
       </ul>
       <xsl:if test="$uname">

@@ -71,13 +71,6 @@ img, svg
     font-size: inherit;
 }
 
-address img
-{
-    width: 91px;
-    margin: 0 -1em 1em 1em;
-    float: right;
-}
-
 h1,
 #full h2
 {
@@ -234,17 +227,6 @@ address
 address h2
 {
     font-size: 1em;
-}
-
-address div
-{
-    font-size: inherit !important;
-}
-
-address div iframe
-{
-    margin: 0 -1em !important;
-    font-size: inherit !important;
 }
 
 address p
@@ -482,16 +464,6 @@ ul.share li a:hover span
         padding: 0;
         margin: 2em -2em;
         padding: 2em;
-    }
-
-    address div iframe
-    {
-        margin: 0 !important;
-    }
-
-    address div
-    {
-        float: right !important;
     }
 
     address p

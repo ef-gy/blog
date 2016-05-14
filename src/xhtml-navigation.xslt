@@ -58,9 +58,6 @@
     <xsl:if test="$authordata">
       <address>
       <h2>Written by <xsl:value-of select="$authordata/@display"/></h2>
-      <xsl:if test="$authordata/@icon">
-        <img src="{$authordata/@icon}" alt="Author Icon: {@name}"/>
-      </xsl:if>
       <xsl:if test="$authordata/text()">
         <p><xsl:copy-of select="$authordata/* | $authordata/text()"/></p>
       </xsl:if>
