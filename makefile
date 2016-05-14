@@ -45,7 +45,7 @@ clean:
 	rm -f $(DATABASES) $(INDICES); true
 	rm -f css/*+*.css $(JSDOWNLOADS)
 
-components: svgs csss jss pngs inlinecss inlineimg
+components: svgs csss jss pngs inlinecss
 
 scrub: clean
 
@@ -86,7 +86,6 @@ JSCACHE:=$(addprefix $(CACHE)/js/,$(DJSS))
 SVGCACHE:=$(addprefix $(CACHE)/svg/,$(SVGS) $(wildcard *.svg))
 METACACHE:=$(addprefix $(CACHE)/,index.xml .gitignore) $(CACHEO)/sitemap.xml $(CACHET)/sitemap.xml
 
-INLINEIMG:=$(addsuffix .base64.xml,$(JPEGCACHE) $(PNGCACHE))
 INLINECSS:=$(addsuffix .xml,$(CSSCACHE))
 
 CACHEFILES:=$(ATOMCACHE) $(DUMBATOMCACHE) $(XHTMLCACHE) $(HTMLCACHE) $(JPEGCACHE) $(PNGCACHE) $(CSSCACHE) $(JSCACHE) $(SVGCACHE) $(METACACHE)
@@ -94,7 +93,6 @@ CACHEFILES:=$(ATOMCACHE) $(DUMBATOMCACHE) $(XHTMLCACHE) $(HTMLCACHE) $(JPEGCACHE
 GZIPCACHE:=$(addsuffix .gz,$(CACHEFILES))
 
 inlinecss: $(INLINECSS)
-inlineimg: $(INLINEIMG)
 
 $(CACHEO)/%.xhtml: %.xhtml src/atom-merge.xslt $(CACHEO)/.volatile src/xhtml-pre-process.xslt makefile components $(CACHE)/index.xml
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) src/xhtml-pre-process.xslt $< > $@
@@ -209,8 +207,6 @@ $(CACHE)/.git/config:
 $(CACHE)/.gitignore:
 	echo ".volatile" > $@
 	echo "*.gz" >> $@
-	echo "*.base64" >> $@
-	echo "*.base64.xml" >> $@
 	echo "*.xhtml" >> $@
 	echo "!*dnt.xhtml" >> $@
 	echo "*.css.xml" >> $@
@@ -222,15 +218,6 @@ cache: $(CACHE)/.git/config metacache xhtmlcache atomcache htmlcache jpegcache p
 
 $(CACHE)/%.gz: $(CACHE)/%
 	gzip -knf9 $<
-
-$(CACHE)/%.base64: $(CACHE)/%
-	openssl base64 -A -in $< -out $@
-
-$(CACHE)/jpeg/%.base64.xml: $(CACHE)/jpeg/%.base64
-	echo "<?xml version='1.0' encoding='utf-8'?><img xmlns='http://www.w3.org/1999/xhtml' src='data:image/jpeg;base64,$$(cat $<)'/>" > $@
-
-$(CACHE)/png/%.base64.xml: $(CACHE)/png/%.base64
-	echo "<?xml version='1.0' encoding='utf-8'?><img xmlns='http://www.w3.org/1999/xhtml' src='data:image/png;base64,$$(cat $<)'/>" > $@
 
 zip: cache $(GZIPCACHE)
 
