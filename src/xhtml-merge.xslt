@@ -23,8 +23,4 @@
   <xsl:template match="xhtml:link[@rel='stylesheet'][substring-after(@href,'/css/')]">
     <xsl:apply-templates select="document(concat($documentRoot,'/.cache',@href,'.css.xml'))/xhtml:*"/>
   </xsl:template>
-
-  <xsl:template match="xhtml:address/xhtml:img[substring-after(@src,'/jpeg/')]/@src">
-    <xsl:apply-templates select="document(concat($documentRoot,'/.cache',.,'.jpeg.base64.xml'))/xhtml:img/@src"/>
-  </xsl:template>
 </xsl:stylesheet>
