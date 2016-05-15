@@ -54,7 +54,7 @@ index: $(CACHE)/index.xml
 svgs: $(SVGS)
 pngs: $(PNGESC)
 
-csss: css/ef.gy+highlight.css
+csss: css/blog+highlight.css
 jss: $(JSDOWNLOADS) js/highlight.js js/jquery.js
 
 # create a local cache of post-processed files
@@ -252,7 +252,7 @@ js/highlight.js: $(THIRDPARTY)/highlight.js/build/highlight.pack.js js/highlight
 css/highlight.css: $(THIRDPARTY)/highlight.js/src/styles/default.css
 	cat $^ > $@
 
-css/ef.gy+highlight.css: css/ef.gy.css css/highlight.css
+css/blog+highlight.css: css/blog.css css/highlight.css
 	cat $^ > $@
 
 # .volatile files

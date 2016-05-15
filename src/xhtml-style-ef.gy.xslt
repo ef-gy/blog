@@ -59,7 +59,7 @@
     <xsl:variable name="author" select="xhtml:meta[@name='author']/@content"/>
     <xsl:variable name="authordata" select="$authors[@name=$author][1]"/>
     <head>
-      <link href="/css/ef.gy" rel="stylesheet" type="text/css" />
+      <link href="/css/blog" rel="stylesheet" type="text/css" />
       <xsl:apply-templates select="@*|node()" />
       <xsl:choose>
         <xsl:when test="//xhtml:link[@href=concat($baseURI,'/atom/site')]" />
