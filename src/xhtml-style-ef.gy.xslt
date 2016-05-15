@@ -134,11 +134,6 @@
         <li><a href="/everything">Blog Archive</a></li>
         <li><a href="/about">About</a></li>
       </ul>
-      <xsl:if test="$uname">
-        <social:social url="{$uri}">
-          <xsl:copy-of select="$authordata/@twitter"/>
-        </social:social>
-      </xsl:if>
       <ul id="meta">
         <xsl:if test="../xhtml:head/xhtml:meta[@name='date']/@content">
           <xsl:variable name="published" select="../xhtml:head/xhtml:meta[@name='date']/@content"/>
@@ -170,13 +165,13 @@
       <xsl:if test="../@id='unicorn-noms'">
         <p class="credit"><em>Background photo credit: <a href="http://www.flickr.com/photos/dolske/7639692938/">Justin Dolske</a> / <a href="http://foter.com">Foter.com</a> / <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA</a></em></p>
       </xsl:if>
+      <xsl:if test="$author != ''">
+        <social:grid author-box="yes" name="{$author}"/>
+      </xsl:if>
       <xsl:if test="$uname">
         <social:social url="{$uri}">
           <xsl:copy-of select="$authordata/@twitter"/>
         </social:social>
-      </xsl:if>
-      <xsl:if test="$author != ''">
-        <social:grid author-box="yes" name="{$author}"/>
       </xsl:if>
     </body>
   </xsl:template>

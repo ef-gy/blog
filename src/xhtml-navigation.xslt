@@ -56,18 +56,15 @@
     <xsl:variable name="author" select="@name"/>
     <xsl:variable name="authordata" select="$authors[@name=$author][1]"/>
     <xsl:if test="$authordata">
-      <address>
-      <h2>Written by <xsl:value-of select="$authordata/@display"/></h2>
-      <xsl:if test="$authordata/text()">
-        <p><xsl:copy-of select="$authordata/* | $authordata/text()"/></p>
-      </xsl:if>
-      <xsl:if test="$authordata/@twitter">
-        <p><a href="https://twitter.com/{$authordata/@twitter}" class="twitter-follow-button"><xsl:value-of select="$authordata/@twitter"/> on Twitter</a></p>
-      </xsl:if>
-      <xsl:if test="$authordata/@email">
-        <p><a href="mailto:{$authordata/@email}">E-Mail the author.</a></p>
-      </xsl:if>
-      </address>
+      <address><p>Written by <xsl:choose>
+        <xsl:when test="$authordata/@email">
+         <a href="mailto:{$authordata/@email}"><xsl:value-of select="$authordata/@display"/></a>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$authordata/@display"/>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:if test="$authordata/@twitter"> (<a href="https://twitter.com/{$authordata/@twitter}" class="twitter-follow-button"><xsl:value-of select="$authordata/@twitter"/> on Twitter</a>)</xsl:if>.</p></address>
     </xsl:if>
   </xsl:template>
 
