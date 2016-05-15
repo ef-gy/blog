@@ -18,7 +18,6 @@
   <xsl:param name="collection"/>
   <xsl:param name="documentRoot"/>
   <xsl:param name="baseURI"/>
-  <xsl:param name="disqusShortname"/>
   <xsl:param name="DNT"/>
 
   <xsl:variable name="nosocial" select="($baseURI = 'http://vturtipc7vmz6xjy.onion') or ($DNT = '1')"/>
@@ -175,15 +174,6 @@
         <social:social url="{$uri}">
           <xsl:copy-of select="$authordata/@twitter"/>
         </social:social>
-      </xsl:if>
-      <xsl:if test="not(../xhtml:head/xhtml:meta[@name='category'][@content='auxiliary'])">
-        <xsl:if test="not($nosocial) and not(xhtml:ul[@id='feed']) and ($disqusShortname != '')">
-          <div id="disqus_thread"/>
-          <script type="text/javascript">var disqus_shortname = '<xsl:value-of select="$disqusShortname"/>'; <xsl:if test="/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']">var disqus_identifier = '<xsl:value-of select="/xhtml:html/xhtml:head/xhtml:meta[@name='unix:name']/@content"/>';</xsl:if></script>
-          <script src="/js/disqus-embed"></script>
-          <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-          <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-        </xsl:if>
       </xsl:if>
       <xsl:if test="$author != ''">
         <social:grid author-box="yes" name="{$author}"/>

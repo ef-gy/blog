@@ -1,7 +1,6 @@
 # domain settings
 DOMAIN:=ef.gy
 HIDDENSERVICE:=vturtipc7vmz6xjy.onion
-DISQUS:=efgy
 
 # directories
 THIRDPARTY:=.third-party
@@ -27,12 +26,12 @@ PNGS:=$(addprefix png/rasterised/,$(addsuffix .png,$(basename $(SVGS) $(basename
 PNGESC:=$(subst :,\:,$(PNGS))
 
 DATABASES:=life.sqlite3
-XSLTPROCCACHEOARGS:=--novalid --stringparam baseURI "https://$(DOMAIN)" --stringparam documentRoot "$$(pwd)" --stringparam disqusShortname "$(DISQUS)"
-XSLTPROCCACHETARGS:=--novalid --stringparam baseURI "http://$(HIDDENSERVICE)" --stringparam documentRoot "$$(pwd)" --stringparam disqusShortname "$(DISQUS)"
+XSLTPROCCACHEOARGS:=--novalid --stringparam baseURI "https://$(DOMAIN)" --stringparam documentRoot "$$(pwd)"
+XSLTPROCCACHETARGS:=--novalid --stringparam baseURI "http://$(HIDDENSERVICE)" --stringparam documentRoot "$$(pwd)"
 XSLTPROCARGS:=$(XSLTPROCCACHEOARGS)
 
 # files to be downloaded
-JSDOWNLOADS:=js/disqus-embed.js js/highlight.js
+JSDOWNLOADS:=js/highlight.js
 
 # don't delete intermediary files
 .SECONDARY:
@@ -56,7 +55,7 @@ svgs: $(SVGS)
 pngs: $(PNGESC)
 
 csss: css/ef.gy+highlight.css
-jss: $(JSDOWNLOADS) js/highlight.js js/highlight+disqus-embed.js js/jquery.js
+jss: $(JSDOWNLOADS) js/highlight.js js/jquery.js
 
 # create a local cache of post-processed files
 $(CACHE)/.volatile $(CACHEO)/.volatile $(CACHET)/.volatile $(CACHE)/jpeg/.volatile $(CACHE)/png/.volatile $(CACHE)/css/.volatile $(CACHE)/js/.volatile $(CACHE)/svg/.volatile:
@@ -246,14 +245,8 @@ js/jquery.js: $(THIRDPARTY)/jquery/dist/jquery.min.js
 	install $< $@
 
 # download remote JavaScript files
-js/disqus-embed.js:
-	$(CURL) -L https://go.disqus.com/embed.js -o $@
-
 js/highlight.js: $(THIRDPARTY)/highlight.js/build/highlight.pack.js js/highlight-setup.js
 	cat $^ >> $@
-
-js/highlight+disqus-embed.js: js/highlight.js js/disqus-embed.js
-	cat $^ > $@
 
 # download remote CSS files and process local ones
 css/highlight.css: $(THIRDPARTY)/highlight.js/src/styles/default.css
