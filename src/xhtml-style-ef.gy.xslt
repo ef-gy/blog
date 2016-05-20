@@ -95,12 +95,14 @@
         </xsl:if>
         <meta name="twitter:domain" content="ef.gy"/> 
         <meta name="twitter:title" content="{xhtml:title[1]}"/>
-        <meta name="twitter:description" content="{xhtml:meta[@name='description']/@content}"/>
         <meta property="og:title" content="{xhtml:title[1]}"/>
         <meta property="og:type" content="article" />
         <meta property="og:url" content="{$baseURI}{$suri}"/>
-        <meta property="og:description" content="{xhtml:meta[@name='description']/@content}"/>
         <meta property="og:site_name" content="ef.gy :: le bloeg d'enfer"/>
+        <xsl:if test="xhtml:meta[@name='description']/@content and (xhtml:meta[@name='description']/@content != '')">
+          <meta name="twitter:description" content="{xhtml:meta[@name='description']/@content}"/>
+          <meta property="og:description" content="{xhtml:meta[@name='description']/@content}"/>
+        </xsl:if>
         <xsl:if test="xhtml:meta[@name='date']">
           <meta property="article:published_time" content="{xhtml:meta[@name='date']/@content}"/>
         </xsl:if>
