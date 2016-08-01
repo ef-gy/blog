@@ -20,7 +20,6 @@
 
   <xsl:param name="baseURI"/>
   <xsl:param name="documentRoot"/>
-  <xsl:param name="DNT"/>
 
   <xsl:variable name="authors" select="document(concat($documentRoot,'/authors.xml'))/data:data/data:author"/>
   <xsl:variable name="social" select="document(concat($documentRoot,'/social-metadata.xml'))"/>
