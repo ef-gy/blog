@@ -1,0 +1,31 @@
+Format: 1.8
+Date: Sun, 06 Mar 2016 14:09:19 -0500
+Source: rpi-ups-pico
+Binary: rpi-ups-pico
+Architecture: source armhf
+Version: 3-1
+Distribution: unstable
+Urgency: medium
+Maintainer: Magnus Deininger <magnus@ef.gy>
+Changed-By: Magnus Deininger <magnus@ef.gy>
+Description:
+ rpi-ups-pico - <insert up to 60 chars description>
+Changes:
+ rpi-ups-pico (3-1) unstable; urgency=medium
+ .
+   * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+Checksums-Sha1:
+ 55fd678037ece5cd8435ac67f1c0390940609eb4 832 rpi-ups-pico_3-1.dsc
+ 36e04751aa3ff449bbf7a2bd59dd1158e74b1d36 13882 rpi-ups-pico_3.orig.tar.gz
+ 3821922c1f4a89b976b5c52c80d0fd56672ebd53 2536 rpi-ups-pico_3-1.debian.tar.xz
+ 26ac34026b4ed9ce91ceff86b5f7c757b6470d62 9526 rpi-ups-pico_3-1_armhf.deb
+Checksums-Sha256:
+ 4f8c978bc403dd3296a598451b16af4156d43fd013e94c582cf94c8ef32978a1 832 rpi-ups-pico_3-1.dsc
+ 3727692c049346c654acc6d480d0ec00e33ce4a2dca5662838abc1dc02d8ffe4 13882 rpi-ups-pico_3.orig.tar.gz
+ d82d80cbc30b17e6ce567d607b61d97529f6a7bd5fc53d1f771f7e67b9d0555e 2536 rpi-ups-pico_3-1.debian.tar.xz
+ d5568fa8a81e305e7d1d35f583dc26065a8a3ed3dd1ef4e9246e549da676357c 9526 rpi-ups-pico_3-1_armhf.deb
+Files:
+ 6769563429d4d1dca40a3c82c6c1e493 832 unknown optional rpi-ups-pico_3-1.dsc
+ f848bcf8eb00cdaab14ecb51859ef351 13882 unknown optional rpi-ups-pico_3.orig.tar.gz
+ ad860ef97b4fe21e849ebb1088210a1c 2536 unknown optional rpi-ups-pico_3-1.debian.tar.xz
+ 909f6d2d8b2ea821b692fa0f8774a50f 9526 unknown optional rpi-ups-pico_3-1_armhf.deb

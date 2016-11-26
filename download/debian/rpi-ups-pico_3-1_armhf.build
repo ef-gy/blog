@@ -1,0 +1,89 @@
+ dpkg-buildpackage -rfakeroot -D -us -uc
+dpkg-buildpackage: source package rpi-ups-pico
+dpkg-buildpackage: source version 3-1
+dpkg-buildpackage: source distribution unstable
+dpkg-buildpackage: source changed by Magnus Deininger <magnus@ef.gy>
+ dpkg-source --before-build rpi-ups-pico-3
+dpkg-buildpackage: host architecture armhf
+ fakeroot debian/rules clean
+dh clean 
+   dh_testdir
+   dh_auto_clean
+make[1]: Entering directory '/home/magnus/projects/release/rpi-ups-pico-3'
+rm -f picod pico-i2cd
+make[1]: Leaving directory '/home/magnus/projects/release/rpi-ups-pico-3'
+   dh_clean
+ dpkg-source -b rpi-ups-pico-3
+dpkg-source: info: using source format `3.0 (quilt)'
+dpkg-source: info: building rpi-ups-pico using existing ./rpi-ups-pico_3.orig.tar.gz
+dpkg-source: info: building rpi-ups-pico in rpi-ups-pico_3-1.debian.tar.xz
+dpkg-source: info: building rpi-ups-pico in rpi-ups-pico_3-1.dsc
+ debian/rules build
+dh build 
+   dh_testdir
+   dh_auto_configure
+   dh_auto_build
+make[1]: Entering directory '/home/magnus/projects/release/rpi-ups-pico-3'
+cc -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wall -pedantic -Os -D_FORTIFY_SOURCE=2 -Wl,-z,relro  picod.c   -o picod
+picod.c: In function ‘main’:
+picod.c:367:7: warning: ignoring return value of ‘system’, declared with attribute warn_unused_result [-Wunused-result]
+       (void)system("shutdown -h now");
+       ^
+picod.c: In function ‘set’:
+picod.c:182:7: warning: ignoring return value of ‘write’, declared with attribute warn_unused_result [-Wunused-result]
+       (void)write(fd, state ? "1\n" : "0\n", 2);
+       ^
+cc -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wall -pedantic -Os -D_FORTIFY_SOURCE=2 -Wl,-z,relro  pico-i2cd.c   -o pico-i2cd
+pico-i2cd.c: In function ‘main’:
+pico-i2cd.c:372:9: warning: initializer element is not computable at load time
+         "Raspberry Pi PIco UPS", {BUS_I2C, 0x0000, 0x0000, version}, 0};
+         ^
+pico-i2cd.c:466:9: warning: ignoring return value of ‘write’, declared with attribute warn_unused_result [-Wunused-result]
+         (void)write(device, &syn, sizeof(syn));
+         ^
+make[1]: Leaving directory '/home/magnus/projects/release/rpi-ups-pico-3'
+   dh_auto_test
+ fakeroot debian/rules binary
+dh binary 
+   dh_testroot
+   dh_prep
+   dh_auto_install
+make[1]: Entering directory '/home/magnus/projects/release/rpi-ups-pico-3'
+mkdir -p /home/magnus/projects/release/rpi-ups-pico-3/debian/rpi-ups-pico/sbin || true
+mkdir -p /home/magnus/projects/release/rpi-ups-pico-3/debian/rpi-ups-pico/usr/share/man/man1 || true
+install picod /home/magnus/projects/release/rpi-ups-pico-3/debian/rpi-ups-pico/sbin
+install pico-i2cd /home/magnus/projects/release/rpi-ups-pico-3/debian/rpi-ups-pico/sbin
+install picod.1 /home/magnus/projects/release/rpi-ups-pico-3/debian/rpi-ups-pico/usr/share/man/man1
+install pico-i2cd.1 /home/magnus/projects/release/rpi-ups-pico-3/debian/rpi-ups-pico/usr/share/man/man1
+make[1]: Leaving directory '/home/magnus/projects/release/rpi-ups-pico-3'
+   dh_installdocs
+   dh_installchangelogs
+   dh_installman
+   dh_installinit
+   dh_perl
+   dh_link
+   dh_compress
+   dh_fixperms
+   dh_strip
+   dh_makeshlibs
+   dh_shlibdeps
+   dh_installdeb
+   dh_gencontrol
+   dh_md5sums
+   dh_builddeb
+dpkg-deb: building package `rpi-ups-pico' in `../rpi-ups-pico_3-1_armhf.deb'.
+ dpkg-genchanges  >../rpi-ups-pico_3-1_armhf.changes
+dpkg-genchanges: including full source code in upload
+ dpkg-source --after-build rpi-ups-pico-3
+dpkg-buildpackage: full upload (original source is included)
+Now running lintian...
+W: rpi-ups-pico: wrong-bug-number-in-closes l3:#nnnn
+W: rpi-ups-pico: new-package-should-close-itp-bug
+E: rpi-ups-pico: changelog-is-dh_make-template
+E: rpi-ups-pico: helper-templates-in-copyright
+W: rpi-ups-pico: copyright-has-url-from-dh_make-boilerplate
+E: rpi-ups-pico: description-is-dh_make-template
+E: rpi-ups-pico: section-is-dh_make-template
+E: rpi-ups-pico: init.d-script-missing-dependency-on-local_fs etc/init.d/rpi-ups-pico: required-start
+E: rpi-ups-pico: init.d-script-missing-dependency-on-local_fs etc/init.d/rpi-ups-pico: required-stop
+Finished running lintian.
