@@ -102,8 +102,6 @@ server {
     rewrite ^/(mobi|epub)/(.+)\.(epub|mobi)$ /$2 permanent;
     rewrite ^/(pdf|mobi|epub|docbook)/(.+)$ /$2 permanent;
 
-    rewrite ^/documentation/([a-z+-]+)/?$ /documentation/$1/index.xhtml redirect;
-
 		rewrite ^/svg/tesseract$ https://dee.pe/r permanent;
     rewrite ^/(webgl/)?topologic(-web)?(.x?html)?$ https://dee.pe/r permanent;
 
@@ -190,5 +188,6 @@ server {
     }
 
     location /documentation/ {
+        index index.html index.xhtml;
     }
 }
