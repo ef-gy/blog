@@ -188,6 +188,6 @@ server {
     }
 
     location /documentation/ {
-        index index.html index.xhtml;
+        rewrite ^/documentation/(.*) https://documentation.ef.gy/$1 redirect;
     }
 }
