@@ -36,8 +36,6 @@ server {
     server_name *.ef.gy;
 
     return 301 https://ef.gy$request_uri;
-
-    access_log /var/log/nginx/$scheme-$dnt-$http_host.access.log;
 }
 
 server {
@@ -73,8 +71,6 @@ server {
 
     charset_types text/html application/xhtml+xml text/xml text/plain text/vnd.wap.wml application/javascript application/atom+xml;
     charset utf-8;
-
-    access_log /var/log/nginx/$scheme-$dnt-$http_host.access.log;
 
     set $documentRoot /srv/http/ef.gy;
 
