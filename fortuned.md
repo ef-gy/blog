@@ -62,3 +62,18 @@ I wonder if embedding works... it gave me the worst headache on GitHub:
 <iframe width="100%" height="300" src="//jsfiddle.net/jyujin/t87whwjr/62/embedded/js,html,css,result/dark/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
 If you saw that, then good for you! :P
+
+## It's Tor-enabled!
+
+The normal entry point for the API server is at
+[https://api.ef.gy/fortune](https://api.ef.gy/fortune). But
+silly API or not, I do think Tor users deserve some love, so I've also created
+a Hidden Service endpoint at
+[http://664ov6iyvgpe63xn.onion/fortune](http://664ov6iyvgpe63xn.onion/fortune).
+It works precisely the same as the other endpoint, but your tools need to be set
+up for hidden service. I reckon the JSFiddle above might actually work in the
+latest Tor browser with the endpoint URL replaced. You should try that.
+
+Or you can run the thing on your own,
+[the source is on GitHub](https://github.com/ef-gy/fortuned). Compiling is a
+pain on Ubuntu LTS, though, but then that's nothing new. You'll sort it.
