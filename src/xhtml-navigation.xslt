@@ -22,7 +22,6 @@
   <xsl:param name="documentRoot"/>
 
   <xsl:variable name="authors" select="document(concat($documentRoot,'/authors.xml'))/data:data/data:author"/>
-  <xsl:variable name="social" select="document(concat($documentRoot,'/social-metadata.xml'))"/>
 
   <xsl:template match="@*|node()">
     <xsl:copy>
@@ -69,11 +68,10 @@
 
   <xsl:template match="social:social">
     <xsl:variable name="url" select="@url"/>
-    <xsl:variable name="meta" select="$social/wst:social/wst:url[@id=$url]"/>
     <ul class="share">
       <li class="twitter"><a href="https://twitter.com/share?url={@url}&amp;via={@twitter}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">Twitter</a></li>
-      <li class="facebook"><a href="http://www.facebook.com/sharer.php?u={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=630');return false;">Facebook&#160;<span><xsl:value-of select="$meta/@facebook"/></span></a></li>
-      <li class="googleplus"><a href="https://plus.google.com/share?url={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">Google+&#160;<span><xsl:value-of select="$meta/@google-plus"/></span></a></li>
+      <li class="facebook"><a href="http://www.facebook.com/sharer.php?u={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=630');return false;">Facebook&#160;</a></li>
+      <li class="googleplus"><a href="https://plus.google.com/share?url={@url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">Google+&#160;</a></li>
     </ul>
   </xsl:template>
 </xsl:stylesheet>

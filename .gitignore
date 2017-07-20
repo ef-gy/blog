@@ -24,7 +24,6 @@ js/social.js
 js/jquery.js
 css/highlight.css
 css/*+*.css
-social-metadata.xml
 .third-party
 .cache
 node_modules

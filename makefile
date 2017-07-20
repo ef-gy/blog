@@ -118,13 +118,13 @@ $(CACHEO)/%.atom: %.atom $(ATOMS) src/atom-merge.xslt $(CACHEO)/.volatile src/xh
 $(CACHEO)/%.xhtml: $(CACHEO)/%.atom src/xhtml-transcode-atom.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) src/xhtml-transcode-atom.xslt $< > $@
 
-$(CACHEO)/%.dnt.xhtml: $(CACHEO)/%.xhtml src/xhtml-style-ef.gy.xslt src/xhtml-navigation.xslt src/xhtml-post-process.xslt src/xhtml-merge.xslt makefile social-metadata.xml authors.xml components
+$(CACHEO)/%.dnt.xhtml: $(CACHEO)/%.xhtml src/xhtml-style-ef.gy.xslt src/xhtml-navigation.xslt src/xhtml-post-process.xslt src/xhtml-merge.xslt makefile authors.xml components
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam collection "$*" --stringparam DNT 1 src/xhtml-style-ef.gy.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam DNT 1 src/xhtml-navigation.xslt - |\
 		$(XSLTPROC) $(XSLTPROCCACHEOARGS) src/xhtml-post-process.xslt - |\
 		$(XSLTPROC) $(XSLTPROCCACHEOARGS) src/xhtml-merge.xslt - > $@
 
-$(CACHEO)/%.nodnt.xhtml: $(CACHEO)/%.xhtml src/xhtml-style-ef.gy.xslt src/xhtml-navigation.xslt src/xhtml-post-process.xslt src/xhtml-merge.xslt makefile social-metadata.xml authors.xml components
+$(CACHEO)/%.nodnt.xhtml: $(CACHEO)/%.xhtml src/xhtml-style-ef.gy.xslt src/xhtml-navigation.xslt src/xhtml-post-process.xslt src/xhtml-merge.xslt makefile authors.xml components
 	$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam collection "$*" --stringparam DNT 0 src/xhtml-style-ef.gy.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHEOARGS) --stringparam DNT 0 src/xhtml-navigation.xslt - |\
 		$(XSLTPROC) $(XSLTPROCCACHEOARGS) src/xhtml-post-process.xslt - |\
@@ -142,13 +142,13 @@ $(CACHET)/%.atom: %.atom $(ATOMS) src/atom-merge.xslt $(CACHET)/.volatile src/xh
 $(CACHET)/%.xhtml: $(CACHET)/%.atom src/xhtml-transcode-atom.xslt makefile
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) src/xhtml-transcode-atom.xslt $< > $@
 
-$(CACHET)/%.dnt.xhtml: $(CACHET)/%.xhtml src/xhtml-style-ef.gy.xslt src/xhtml-navigation.xslt src/xhtml-post-process.xslt src/xhtml-merge.xslt makefile social-metadata.xml authors.xml components
+$(CACHET)/%.dnt.xhtml: $(CACHET)/%.xhtml src/xhtml-style-ef.gy.xslt src/xhtml-navigation.xslt src/xhtml-post-process.xslt src/xhtml-merge.xslt makefile authors.xml components
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam collection "$*" --stringparam DNT 1 src/xhtml-style-ef.gy.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam DNT 1 src/xhtml-navigation.xslt - |\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) src/xhtml-post-process.xslt - |\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) src/xhtml-merge.xslt - > $@
 
-$(CACHET)/%.nodnt.xhtml: $(CACHET)/%.xhtml src/xhtml-style-ef.gy.xslt src/xhtml-navigation.xslt src/xhtml-post-process.xslt src/xhtml-merge.xslt makefile social-metadata.xml authors.xml components
+$(CACHET)/%.nodnt.xhtml: $(CACHET)/%.xhtml src/xhtml-style-ef.gy.xslt src/xhtml-navigation.xslt src/xhtml-post-process.xslt src/xhtml-merge.xslt makefile authors.xml components
 	$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam collection "$*" --stringparam DNT 0 src/xhtml-style-ef.gy.xslt $< |\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) --stringparam DNT 0 src/xhtml-navigation.xslt - |\
 		$(XSLTPROC) $(XSLTPROCCACHETARGS) src/xhtml-post-process.xslt - |\
@@ -291,18 +291,11 @@ everything.atom: $(XHTMLESCS) makefile
 	done >> $@
 	echo "</feed>" >> $@
 
-social-metadata.xml::
-	wst-sitemap-xml https://$(DOMAIN)/sitemap.xml > $@
-	$(XSLTPROC) --stringparam base https://$(DOMAIN)/ -o $@ src/social-sort.xslt $@
-
-popular.atom: social-metadata.xml src/atom-transcode-social.xslt
-	$(XSLTPROC) --stringparam domain $(DOMAIN) -o $@ src/atom-transcode-social.xslt $<
-
 latest.atom: everything.atom src/atom-filter-latest.xslt
 	$(XSLTPROC) --stringparam documentRoot "$$(pwd)" src/atom-merge.xslt $< | \
 		$(XSLTPROC) --stringparam domain $(DOMAIN) -o $@ src/atom-filter-latest.xslt -
 
-site.atom: popular.atom latest.atom
+site.atom: latest.atom
 	echo "<?xml version=\"1.0\" encoding=\"utf-8\"?><feed xmlns=\"http://www.w3.org/2005/Atom\" xml:id=\"$(basename $@)\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><title>$(DOMAIN)</title><subtitle>the latest and greatest</subtitle>" > $@
 	for file in $^; do echo "<feed xlink:href=\"$${file}\"/>"; done >> $@
 	echo "</feed>" >> $@
