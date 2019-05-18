@@ -47,8 +47,8 @@ server {
     server_name ef.gy;
     server_name vturtipc7vmz6xjy.onion;
 
-    ssl_certificate     /srv/certificates/ef.gy/ef.gy.crt;
-    ssl_certificate_key /srv/certificates/ef.gy/ef.gy.key;
+    ssl_certificate     /etc/letsencrypt/live/ef.gy/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/ef.gy/privkey.pem;
 
     ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
     ssl_prefer_server_ciphers on;
@@ -75,6 +75,9 @@ server {
     set $documentRoot /srv/http/ef.gy;
 
     root $documentRoot;
+
+    location /.well-known {
+    }
 
     if ($preferredScheme != $scheme)
     {
@@ -107,6 +110,7 @@ server {
 
     location = /robots.txt {
     }
+
     location = /favicon.ico {
         types { image/svg+xml ico; }
     }
