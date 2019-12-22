@@ -4,8 +4,8 @@ Long time no update!
 
 I've been busy with quite a lot of randomness. Among them is that I'm now streaming synthwave and similar music on a live internet radio station. If you'd care to have a listen, try one of the following streams:
 
-* (https://streams.radiomast.io/3dd94b4d-5756-4685-b03c-e64c9967b850)[Ogg Vorbis]
-* (https://streams.radiomast.io/92eece62-f8f7-487a-850c-7c985937c353)[MP3]
+* [Ogg Vorbis](https://streams.radiomast.io/3dd94b4d-5756-4685-b03c-e64c9967b850)
+* [MP3](https://streams.radiomast.io/92eece62-f8f7-487a-850c-7c985937c353)
 
 Alternatively, have the radio stream provider I'm with seems to have a widget, let's see if that works:
 
