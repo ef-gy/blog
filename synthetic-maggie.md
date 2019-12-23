@@ -7,7 +7,7 @@ I've been busy with quite a lot of randomness. Among them is that I'm now stream
 * [Ogg Vorbis](https://streams.radiomast.io/3dd94b4d-5756-4685-b03c-e64c9967b850)
 * [MP3](https://streams.radiomast.io/92eece62-f8f7-487a-850c-7c985937c353)
 
-Alternatively, have the radio stream provider I'm with seems to have a widget, let's see if that works:
+Alternatively, the radio stream provider I'm with seems to have a widget, let's see if that works:
 
 <iframe src="https://streams.radiomast.io/station/d000d857-aeb6-4bac-bf9b-a7b34c472322/player/widget?t=heatwave?s=92eece62-f8f7-487a-850c-7c985937c353" width="360" height="320" frameborder="0"></iframe>
 
