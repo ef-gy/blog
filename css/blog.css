@@ -41,7 +41,7 @@ body
     position: relative;
     margin: 0 2.5em 0 20em;
     background: #fff;
-    background: rgba(255,255,255,0.95);
+    background: rgba(255,255,255,0.8);
     padding: .5em 2em 2em 2em;
     min-height: 100%;
 }
@@ -429,7 +429,7 @@ h1 + ul li
 {
     html
     {
-        background: #fff !important;
+        background-color: rgba(255,255,255,0.7) !important;
     }
 
     p.credit
@@ -439,7 +439,13 @@ h1 + ul li
 
     body
     {
+        background: #fff;
+        background: rgba(255,255,255,0.8);
+        padding: .5em 2em 2em 2em;
         margin: 0;
+        column-count: 3;
+        columm-gap: 2em;
+        column-rule-width: 1em;
     }
 }
 
@@ -451,6 +457,7 @@ h1 + ul li
 
     body {
       padding-top: 0;
+      column-count: 1;
     }
 
     ul#meta {
