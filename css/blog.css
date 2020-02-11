@@ -389,6 +389,8 @@ ul.share li a:hover span
 body
 {
     margin: 0;
+    columm-gap: 2em;
+    column-rule-width: 1em;
 }
 
 ul#meta
@@ -425,6 +427,13 @@ h1 + ul li
     width: auto
 }
 
+@media (min-width: 45em)
+{
+    body {
+        column-count: 3;
+    }
+}
+
 @media (max-width: 45em)
 {
     html
@@ -443,9 +452,7 @@ h1 + ul li
         background: rgba(255,255,255,0.8);
         padding: .5em 2em 2em 2em;
         margin: 0;
-        column-count: 3;
-        columm-gap: 2em;
-        column-rule-width: 1em;
+        column-count: 2;
     }
 }
 
