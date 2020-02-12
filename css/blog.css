@@ -429,7 +429,7 @@ h1 + ul li
 
 @media (min-width: 45em)
 {
-    body {
+    body#full {
         column-count: 3;
     }
 }
@@ -452,6 +452,9 @@ h1 + ul li
         background: rgba(255,255,255,0.8);
         padding: .5em 2em 2em 2em;
         margin: 0;
+    }
+
+    body#full {
         column-count: 2;
     }
 }
@@ -459,15 +462,18 @@ h1 + ul li
 @media (max-width: 37em)
 {
     h1 + ul {
-      display: none;
+        display: none;
     }
 
     body {
-      padding-top: 0;
-      column-count: 1;
+        padding-top: 0;
+    }
+
+    body#full {
+        column-count: 1;
     }
 
     ul#meta {
-      margin-top: -1.5em;
+        margin-top: -1.5em;
     }
 }
