@@ -388,8 +388,8 @@ ul.share li a:hover span
 
 body
 {
-    margin: 0;
-    columm-gap: 2em;
+    margin: 0em;
+    column-gap: 2em;
     column-rule-width: 1em;
 }
 
