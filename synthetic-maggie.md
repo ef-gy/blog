@@ -13,6 +13,6 @@ Alternatively, the radio stream provider I'm with seems to have a widget, let's 
 
 I'm currently streaming this from one of my iMacs, for some reason Mixxx is not happy on it, though. It occasionally crashes in embarrassing ways. 🤷‍♂️ Enjoy it when it's on 😇.
 
-Let me know if you'd like something added to the rota, I do take Bandcamp links - I've kinda nuked my FB and Twitter, but my IG should still work for DMs: https://www.instagram.com/the.effin.maggie/.
+Let me know if you'd like something added to the rota, I do take Bandcamp links - I've kinda nuked my FB and Twitter, but [my IG should still work for DMs](https://www.instagram.com/the.effin.maggie/).
 
 Happy Holidays!
