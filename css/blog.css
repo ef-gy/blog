@@ -434,10 +434,17 @@ h1 + ul li
     width: auto
 }
 
-@media (min-width: 45em)
+@media (min-width: 80em)
 {
     body#full {
         column-count: 3;
+    }
+}
+
+@media (max-width: 80em)
+{
+    body#full {
+        column-count: 2;
     }
 }
 
@@ -462,7 +469,7 @@ h1 + ul li
     }
 
     body#full {
-        column-count: 2;
+        column-count: 1;
     }
 }
 
@@ -474,10 +481,6 @@ h1 + ul li
 
     body {
         padding-top: 0;
-    }
-
-    body#full {
-        column-count: 1;
     }
 
     ul#meta {
